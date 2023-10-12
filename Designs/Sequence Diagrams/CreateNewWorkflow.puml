@@ -1,0 +1,26 @@
+@startuml Create New Workflow
+
+actor "Business User" as bu
+participant "Web Management Portal" as wmp
+participant "Portal BFF" as pbff
+participant "Communication API" as cAPI
+database "Gateway DB" as gwdb
+participant "Temporal" as temporal
+
+autonumber
+
+bu -> wmp: Clicks create new workflow
+wmp -> pbff: Create Workflow Request
+pbff -> cAPI: Create Workflow Request
+cAPI -> gwdb: Get Gateway By ID
+gwdb -> cAPI: Return Gateway Object
+rnote over cAPI
+    Checks that gatewayID is valid
+endrnote
+cAPI -> temporal: Create Scheduled Workflow
+temporal -> cAPI: Creation Result
+cAPI -> pbff: Creation Result
+pbff -> wmp: Creation Result
+wmp -> bu: Creation Result Displayed
+
+@enduml

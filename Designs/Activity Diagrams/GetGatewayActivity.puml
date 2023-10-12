@@ -1,0 +1,19 @@
+@startuml GetGatewayActivity;
+|Worker|
+
+start
+
+:GetGatewayFromDbByID;
+
+|Gateway Database|
+:Resolves Query;
+
+|Worker|
+if (query resolved?) is (ok) then
+:return gateway URL;
+else (error)
+:return error;
+endif
+
+stop
+@enduml

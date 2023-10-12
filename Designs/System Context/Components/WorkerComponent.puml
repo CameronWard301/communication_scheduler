@@ -1,0 +1,31 @@
+@startuml WorkerComponent
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title [Component] Worker
+
+Person(customer, "Customer", "Customer receiving communications from a particular business")
+
+
+ContainerDb(gatewayDB, "Gateway Database", "Stores information about the available gateways")
+Container(temporal, "Temporal", "Container: Temporal", "Schedules workflows to send communications to customers")
+
+
+System_Ext(email_gateway, "Email Gateway")
+System_Ext(sms_gateway, "SMS Gateway")
+
+Rel(email_gateway, customer, "Sends email to customer")
+Rel(sms_gateway, customer, "Sends sms to customer")
+
+Container_Boundary(component, "Worker") {
+    Component(communicationWorker, "Communication Worker", "Component: Spring Component", "Runs and completes workflows scheduled by temporal. See WorkflowClassDiagram.puml")
+}
+
+Rel(temporal, communicationWorker, "Shchedules Workflow", "JSON/HTTPS")
+Rel(communicationWorker, gatewayDB, "Reads from", "SQL/TCP")
+Rel(communicationWorker, email_gateway, "Sends API request to", "JSON/HTTPS")
+Rel(communicationWorker, sms_gateway, "Sends API request to", "JSON/HTTPS")
+
+@enduml

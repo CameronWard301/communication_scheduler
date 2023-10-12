@@ -1,0 +1,50 @@
+@startuml CommunicationAPIComponent
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title [Component] Communication API
+
+Container(webBFF, "Portal Backend For Frontend API (BFF)", "Container: Javascript Express Server")
+ContainerDb(gatewayDB, "Gateway Database", "Stores information about the available gateways")
+Container(temporal, "Temporal", "Container: Temporal", "Schedules workflows to send communications to customers")
+Container(workers, "Workers", "Container: Worker", "Runs the workflow to send the communication to the specific gateway")
+
+
+Container_Boundary(component, "Communication API") {
+    Component(gatewayController, "Communication Gateway Controller", "Component: Spring MVC Rest Controller")
+    Component(prefecencesController, "Preferences Controller", "Component: Spring MVC Rest Controller")
+    Component(scheduleController, "Communication Schedule Controller", "Component: Spring MVC Rest Controller")
+    Component(historyController, "History Controller", "Component: Spring MVC Rest Controller")
+    Component(platformController, "Platform Monitoring Controller", "Component: Spring MVC Rest Controller")
+
+    Component(gatewayComponent, "Gateway Component", "Component: Spring Bean", "Provides functionality related to adding, removing and updating communication gateways")
+    Component(scheduleComponent, "Schedule Component", "Component: Spring Bean", "Provides functionality related to creating, updating and removing scheduled workflows")
+    Component(preferencesComponent, "Preferences Component", "Component: Spring Bean", "Configures platform preferences such as workflow and activity retry schedules")
+    Component(historyComponent, "History Component", "Component: Spring Bean", "Provides functionality related to querying the status of previous workflows, monthly statistics and reports")
+    Component(monitoringComponent, "Monitoring Component", "Component: Spring Bean", "Provides functionality related to querying performance metrics from temporal and the workers.")
+}
+
+Rel(webBFF, gatewayController, "Makes API Calls to", "JSON/HTTPS")
+Rel(webBFF, scheduleController, "Makes API Calls to", "JSON/HTTPS")
+Rel(webBFF, prefecencesController, "Makes API Calls to", "JSON/HTTPS")
+Rel(webBFF, historyController, "Makes API Calls to", "JSON/HTTPS")
+Rel(webBFF, platformController, "Makes API Calls to", "JSON/HTTPS")
+
+Rel(gatewayController, gatewayComponent, "Uses")
+Rel(gatewayComponent, gatewayDB, "Reads from and writes to", "SQL/TCP")
+
+Rel(scheduleController, scheduleComponent, "Uses")
+Rel(scheduleComponent, temporal, "Creates and updates scheduled workflows", "tctl CLI")
+
+Rel(prefecencesController, preferencesComponent, "Uses")
+
+Rel(historyController, historyComponent, "Uses")
+Rel(historyComponent, temporal, "Queries previous workflows", "tctl CLI")
+
+Rel(platformController, monitoringComponent, "Uses")
+Rel(monitoringComponent, temporal, "Queries metrics", "tctl CLI")
+Rel(monitoringComponent, workers, "Queries worker metrics", "Prometheus Endpoint")
+
+@enduml

@@ -1,0 +1,20 @@
+@startuml Send Message To Gateway Activity;
+|Worker|
+
+start
+
+:Send UserID to Gateway URL;
+
+|Gateway|
+:Sends Communication To User;
+
+
+if (message delivered?) is (yes) then
+:return delivered status;
+else (error)
+:return error;
+endif
+|Worker|
+:return gateway response;
+stop
+@enduml

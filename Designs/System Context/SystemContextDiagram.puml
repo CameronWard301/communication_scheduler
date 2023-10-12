@@ -1,0 +1,26 @@
+@startuml SystemContextDiagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+title [System Context] Communication Orchestration Platform
+
+Person(customer, "Customer", "Customer receiving communications from a particular business")
+Person(business, "Business", "Business sending communications to their customers")
+
+System(communicationSchedulingPlatform, "Communication Scheduling Platform", "Orchestrates the communication schedule with customers")
+
+System_Ext(email_gateway, "Email Gateway")
+System_Ext(sms_gateway, "SMS Gateway")
+
+
+Rel(business, communicationSchedulingPlatform, "Manages Customer Communication Schedules and Preferences")
+Rel(business, communicationSchedulingPlatform, "Monitors Platform and Queries Communications")
+
+Rel(communicationSchedulingPlatform, email_gateway, "Invoke email gateway to send communication")
+Rel(communicationSchedulingPlatform, sms_gateway, "Invoke sms gateway to send communication")
+
+Rel(email_gateway, customer, "Sends email to customer")
+Rel(sms_gateway, customer, "Sends sms to customer")
+
+@enduml

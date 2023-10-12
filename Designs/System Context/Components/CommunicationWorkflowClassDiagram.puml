@@ -1,0 +1,50 @@
+@startuml WorkflowClassDiagram
+
+note top of WorkflowInterface
+    Interface from Temporal SDK
+end note
+
+interface WorkflowInterface {
+
+}
+
+note top of ActivityInterface
+    Interface from Temporal SDK
+end note
+interface ActivityInterface {
+
+}
+
+interface CommunicationWorkflow extends WorkflowInterface {
+    + String sendCommunication(Map<String, String> payload)
+}
+
+class CommunicationWorkflowImpl implements CommunicationWorkflow{
+    - ActivityOptions activityOptions
+    - GetGatewayFromDbActivity getGatewayFromDbActivity
+    - SendMessageToGatewayActivity sendMessageToGatewayActivity
+    + String sendCommunication(Map<String, String> payload)
+
+}
+
+interface GetGatewayFromDbActivity extends ActivityInterface{
+    + String getGatewayEndpointURL(String gatewayId)
+}
+
+class GetGatewayFromDbActivityImpl implements GetGatewayFromDbActivity{
+    - GatewayRepository gatewayRepository
+    + String getGatewayEndpointURL(String gatewayId)
+}
+
+interface SendMessageToGatewayActivity extends ActivityInterface {
+    + Map<String, String> invokeGateway(String gatewayUrl)
+}
+
+class SendMessageToGatewayActivityImpl implements SendMessageToGatewayActivity {
+    - RestTemplate restTemplate
+    + Map<String, String> invokeGateway(String gatewayUrl)
+}
+
+
+
+@enduml
