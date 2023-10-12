@@ -1,0 +1,37 @@
+@startuml SystemContainerDiagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+title [Container] Communication Orchestration Platform
+
+Person(customer, "Customer", "Customer receiving communications from a particular business")
+Person(business, "Business", "Business sending communications to their customers")
+
+System_Boundary(system, "Communication Scheduling Platform") {
+    Container(temporal, "Temporal", "Container: Temporal", "Schedules workflows to send communications to customers")
+    Container(workers, "Workers", "Container: Worker", "Runs the workflow to send the communication to the specific gateway")
+    ContainerDb(gatewayDB, "Gateway Database", "Stores information about the available gateways")
+    Container(platformAPI, "Communication API", "Container: Java & Spring Boot MVC")
+    Container(webBFF, "Portal Backend For Frontend API (BFF)", "Container: Javascript Express Server")
+    Container(webPortal, "Web Management Portal", "Container: Javascript React")
+}
+
+
+System_Ext(email_gateway, "Email Gateway")
+System_Ext(sms_gateway, "SMS Gateway")
+
+Rel(business, webPortal, "Monitors and configures platform, creates/updates/deletes customer communication schedules.", "HTTPS")
+Rel(webPortal, webBFF, "Makes API calls to", "JSON/HTTPS")
+Rel(webBFF, platformAPI, "Makes API calls to", "JSON/HTTPS")
+Rel(platformAPI, gatewayDB, "Read from and writes to", "SQL/TCP")
+Rel(platformAPI, temporal, "Creates/Updates/Deletes scheduled workflows", "tctl CLI")
+Rel(temporal, workers, "Schedule triggers worker to run workflow for sending a message to the user", "JSON/HTTPS")
+Rel(workers, gatewayDB, "Reads from", "SQL/TCP")
+Rel(workers, email_gateway, "Sends user ID to", "JSON/HTTPS")
+Rel(workers, sms_gateway, "Sends user ID to", "JSON/HTTPS")
+
+Rel(email_gateway, customer, "Sends email to customer")
+Rel(sms_gateway, customer, "Sends sms to customer")
+
+@enduml

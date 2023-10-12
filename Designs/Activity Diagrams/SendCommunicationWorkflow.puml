@@ -1,0 +1,33 @@
+@startuml SendCommunicationActivity
+|Temporal|
+start
+
+:Schedules Workflow;
+repeat
+|Worker|
+partition CommunicationWorkflow {
+    
+    repeat
+        :GetGatewayActivity;
+        floating note: See GetGatewayActivity.puml
+
+    backward: Retry Activity;
+    repeat while (Activity completed) is (no)
+
+    ->yes;
+    repeat
+        :SendMessageToGatewayActivity;
+        floating note: See SendMessageToGatewayActivity.puml
+
+    backward: Retry Activity;
+    repeat while (Activity completed) is (no)
+    ->yes;
+}
+|Temporal|
+backward: Retry Workflow;
+repeat while (Workflow completed) is (no)
+->yes;
+:Workflow Complete;
+stop
+
+@enduml

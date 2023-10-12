@@ -1,0 +1,26 @@
+@startuml Create New Workflow
+
+participant "Temporal" as temporal
+participant "Worker" as worker
+database "Gateway DB" as gwdb
+participant "Communication Gateway" as cgw
+
+autonumber
+
+temporal -> worker: Schedules workflow
+worker -> temporal: Workflow scheduled
+temporal -> worker: Schedules GetGatewayActivity
+worker -> gwdb: Get gateway by id
+gwdb -> worker: Returns gateway object
+worker -> temporal: Activity completed
+temporal -> worker: Schedules SendCommunicationActivity
+worker -> cgw: Send user id
+cgw -> worker: Returns error response
+worker -> temporal: Activity failed
+temporal -> worker: Retry SendCommunicationActivity
+worker -> cgw: Send user id
+cgw -> worker: Returns delivery response
+worker -> temporal: Activity completed
+temporal -> worker: Complete workflow
+worker-> temporal: Workflow complete
+@enduml
