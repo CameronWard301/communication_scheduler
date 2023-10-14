@@ -6,13 +6,21 @@ start
 :Send UserID to Gateway URL;
 
 |Gateway|
+
+:Check if message is in the SQS queue;
+if (message in SQS queue) is (yes) then
+:return delivered status;
+else (no)
+
 :Sends Communication To User;
 
+    if (message delivered?) is (yes) then
+    :Stores completed status in SQS Queue;
+    :return delivered status;
+    else (error)
+    :return error;
+    endif
 
-if (message delivered?) is (yes) then
-:return delivered status;
-else (error)
-:return error;
 endif
 |Worker|
 :return gateway response;
