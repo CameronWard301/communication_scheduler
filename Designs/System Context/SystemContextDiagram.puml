@@ -20,6 +20,9 @@ Rel(business, communicationSchedulingPlatform, "Monitors Platform and Queries Co
 Rel(communicationSchedulingPlatform, email_gateway, "Invoke email gateway to send communication")
 Rel(communicationSchedulingPlatform, sms_gateway, "Invoke sms gateway to send communication")
 
+Rel_Up(email_gateway, communicationSchedulingPlatform, "Stores result")
+Rel_Up(sms_gateway, communicationSchedulingPlatform, "Stores result")
+
 Rel(email_gateway, customer, "Sends email to customer")
 Rel(sms_gateway, customer, "Sends sms to customer")
 

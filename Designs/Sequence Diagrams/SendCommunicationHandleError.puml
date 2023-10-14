@@ -3,12 +3,18 @@
 participant "Temporal" as temporal
 participant "Worker" as worker
 database "Gateway DB" as gwdb
+collections "Settings Config Map" as scfmp
+
 participant "Communication Gateway" as cgw
 
 autonumber
 
-temporal -> worker: Schedules workflow
-worker -> temporal: Workflow scheduled
+worker -> temporal: Polls task queue
+temporal -> temporal: Schedules workflow
+worker -> worker: Starts workflow
+temporal -> worker: Schedules GetSettingsActivity
+worker -> scfmp: Get Settings
+scfmp -> worker: Returns settings
 temporal -> worker: Schedules GetGatewayActivity
 worker -> gwdb: Get gateway by id
 gwdb -> worker: Returns gateway object

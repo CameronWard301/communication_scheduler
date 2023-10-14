@@ -21,9 +21,13 @@ Rel(sms_gateway, customer, "Sends sms to customer")
 
 Container_Boundary(component, "Worker") {
     Component(communicationWorker, "Communication Worker", "Component: Spring Component", "Runs and completes workflows scheduled by temporal. See WorkflowClassDiagram.puml")
+    Component(dataConverter, "Data Converter", "Component: Spring Component", "Encrypts and decrypts data to and from temporal")
 }
 
-Rel(temporal, communicationWorker, "Shchedules Workflow", "JSON/HTTPS")
+Rel_Up(dataConverter, temporal, "Polls Task Queue", "JSON/HTTPS")
+Rel(dataConverter, communicationWorker, "Decrypts Data")
+Rel_Up(communicationWorker, dataConverter, "Encrypts Data")
+
 Rel(communicationWorker, gatewayDB, "Reads from", "SQL/TCP")
 Rel(communicationWorker, email_gateway, "Sends API request to", "JSON/HTTPS")
 Rel(communicationWorker, sms_gateway, "Sends API request to", "JSON/HTTPS")

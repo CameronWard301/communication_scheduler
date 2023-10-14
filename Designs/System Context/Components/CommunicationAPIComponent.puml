@@ -8,13 +8,14 @@ title [Component] Communication API
 
 Container(webBFF, "Portal Backend For Frontend API (BFF)", "Container: Javascript Express Server")
 ContainerDb(gatewayDB, "Gateway Database", "Stores information about the available gateways")
+Container(settings, "Settings Config Map", "Kubernetes Config Map")
 Container(temporal, "Temporal", "Container: Temporal", "Schedules workflows to send communications to customers")
 Container(workers, "Workers", "Container: Worker", "Runs the workflow to send the communication to the specific gateway")
 
 
 Container_Boundary(component, "Communication API") {
     Component(gatewayController, "Communication Gateway Controller", "Component: Spring MVC Rest Controller")
-    Component(prefecencesController, "Preferences Controller", "Component: Spring MVC Rest Controller")
+    Component(preferencesController, "Preferences Controller", "Component: Spring MVC Rest Controller")
     Component(scheduleController, "Communication Schedule Controller", "Component: Spring MVC Rest Controller")
     Component(historyController, "History Controller", "Component: Spring MVC Rest Controller")
     Component(platformController, "Platform Monitoring Controller", "Component: Spring MVC Rest Controller")
@@ -28,7 +29,7 @@ Container_Boundary(component, "Communication API") {
 
 Rel(webBFF, gatewayController, "Makes API Calls to", "JSON/HTTPS")
 Rel(webBFF, scheduleController, "Makes API Calls to", "JSON/HTTPS")
-Rel(webBFF, prefecencesController, "Makes API Calls to", "JSON/HTTPS")
+Rel(webBFF, preferencesController, "Makes API Calls to", "JSON/HTTPS")
 Rel(webBFF, historyController, "Makes API Calls to", "JSON/HTTPS")
 Rel(webBFF, platformController, "Makes API Calls to", "JSON/HTTPS")
 
@@ -36,15 +37,16 @@ Rel(gatewayController, gatewayComponent, "Uses")
 Rel(gatewayComponent, gatewayDB, "Reads from and writes to", "SQL/TCP")
 
 Rel(scheduleController, scheduleComponent, "Uses")
-Rel(scheduleComponent, temporal, "Creates and updates scheduled workflows", "tctl CLI")
+Rel(scheduleComponent, temporal, "Creates and updates scheduled workflows", "Temporal SDK")
 
-Rel(prefecencesController, preferencesComponent, "Uses")
+Rel(preferencesController, preferencesComponent, "Uses")
+Rel(preferencesComponent, settings, "Reads from and writes to", "Kubernetes Java Client")
 
 Rel(historyController, historyComponent, "Uses")
-Rel(historyComponent, temporal, "Queries previous workflows", "tctl CLI")
+Rel(historyComponent, temporal, "Queries previous workflows", "Temporal SDK")
 
 Rel(platformController, monitoringComponent, "Uses")
-Rel(monitoringComponent, temporal, "Queries metrics", "tctl CLI")
-Rel(monitoringComponent, workers, "Queries worker metrics", "Prometheus Endpoint")
+Rel(monitoringComponent, temporal, "Queries metrics", "Prometheus Endpoint")
+Rel(monitoringComponent, workers, "Queries worker metrics", "Micrometer Prometheus Endpoint")
 
 @enduml

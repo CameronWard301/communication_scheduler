@@ -31,24 +31,27 @@
 6. [Send Communication Workflow](Designs/Activity%20Diagrams/SendCommunicationWorkflow.puml)  
     ![Send Communication Workflow](Designs/Images/Activity%20Diagrams/SendCommunicationWorkflow.png)
 
-7. [GetGatewayActivity](Designs/Activity%20Diagrams/GetGatewayActivity.puml)  
+7. [GetSettingsActivity](Designs/Activity%20Diagrams/GetSettingsActivity.puml)  
+    ![GetSettingsActivity](Designs/Images/Activity%20Diagrams/GetSettingsActivity.png)
+
+8. [GetGatewayActivity](Designs/Activity%20Diagrams/GetGatewayActivity.puml)  
     ![GatGatewayActivity](Designs/Images/Activity%20Diagrams/GetGatewayActivity.png)
 
-8. [SendMessageToGatewayActivity](Designs/Activity%20Diagrams/SendMessageToGatewayActivity.puml)  
+9. [SendMessageToGatewayActivity](Designs/Activity%20Diagrams/SendMessageToGatewayActivity.puml)  
     ![SendMessageToGatewayActivity](Designs/Images/Activity%20Diagrams/Send%20Message%20To%20Gateway%20Activity.png)
 
 ### Sequence Diagrams:
-9. [Create New Workflow:](Designs/Sequence%20Diagrams/CreateNewWorkflow.puml)  
+10. [Create New Workflow:](Designs/Sequence%20Diagrams/CreateNewWorkflow.puml)  
 This describes a business user using the web portal to manually create a new communication schedule between a gateway and a user.  
     ![Create New Workflow](Designs/Images/Sequence%20Diagrams/Create%20New%20Workflow.png)
 
-10. [Send Communication:](Designs/Sequence%20Diagrams/SendCommunication.puml) This demonstrates the messages transferred between temporal, the workers, the database and the communication gateway when executing a workflow.  
+11. [Send Communication:](Designs/Sequence%20Diagrams/SendCommunication.puml) This demonstrates the messages transferred between temporal, the workers, the database and the communication gateway when executing a workflow.  
     ![Send Communication](Designs/Images/Sequence%20Diagrams/SendCommunication.png)
 
-11. [Handle Send Communication Activity Error:](Designs/Sequence%20Diagrams/SendCommunicationHandleError.puml)  
+12. [Handle Send Communication Activity Error:](Designs/Sequence%20Diagrams/SendCommunicationHandleError.puml)  
 This diagram demonstrates how temporal can retry an activity if one of the activities are not executing correctly 
     ![HandleActivityErrorSendCommunication](Designs/Images/Sequence%20Diagrams/SendCommunicationHandleError.png)
 
 ### Database Schema:
-12. [GatewayDatabase](Designs/Database/gatewayDbSchema.puml)  
+13. [GatewayDatabase](Designs/Database/gatewayDbSchema.puml)  
     ![GatewayDatabase](Designs/Images/Database/Gateway%20Database%20Schema.png)

@@ -10,7 +10,7 @@ start
 
 |Worker|
 if (query resolved?) is (ok) then
-:return gateway URL;
+:return gateway object;
 else (error)
 :return error;
 endif

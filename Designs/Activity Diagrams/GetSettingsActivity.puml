@@ -1,0 +1,19 @@
+@startuml GetSettingsActivity;
+|Worker|
+
+start
+
+:GetSettingsFromConfigMap;
+
+|Kubernetes Cluster|
+:Returns Config Map;
+
+|Worker|
+if (Config Map?) is (ok) then
+:return settings object;
+else (error)
+:return error;
+endif
+
+stop
+@enduml
