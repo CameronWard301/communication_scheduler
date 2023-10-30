@@ -3,7 +3,6 @@
 participant "Temporal" as temporal
 participant "Worker" as worker
 database "Gateway DB" as gwdb
-collections "Settings Config Map" as scfmp
 
 participant "Communication Gateway" as cgw
 
@@ -13,20 +12,19 @@ worker -> temporal: Polls task queue
 temporal -> temporal: Schedules workflow
 worker -> worker: Starts workflow
 temporal -> worker: Schedules GetSettingsActivity
-worker -> scfmp: Get Settings
-scfmp -> worker: Returns settings
+worker -> worker: Get Settings
 temporal -> worker: Schedules GetGatewayActivity
 worker -> gwdb: Get gateway by id
-gwdb -> worker: Returns gateway object
-worker -> temporal: Activity completed
+gwdb --> worker: Returns gateway object
+worker --> temporal: Activity completed
 temporal -> worker: Schedules SendCommunicationActivity
 worker -> cgw: Send user id
-cgw -> worker: Returns error response
-worker -> temporal: Activity failed
+cgw --> worker: Returns error response
+worker --> temporal: Activity failed
 temporal -> worker: Retry SendCommunicationActivity
 worker -> cgw: Send user id
-cgw -> worker: Returns delivery response
-worker -> temporal: Activity completed
+cgw --> worker: Returns delivery response
+worker --> temporal: Activity completed
 temporal -> worker: Complete workflow
-worker-> temporal: Workflow complete
+worker --> temporal: Workflow complete
 @enduml

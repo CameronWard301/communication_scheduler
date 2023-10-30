@@ -4,34 +4,49 @@
 
 LAYOUT_WITH_LEGEND()
 
-title [Component] Communication API
+title [Component] Communication APIs
 
 Container(webBFF, "Portal Backend For Frontend API (BFF)", "Container: Javascript Express Server")
 ContainerDb(gatewayDB, "Gateway Database", "Stores information about the available gateways")
-Container(settings, "Settings Config Map", "Kubernetes Config Map")
+ContainerDb(settings, "Settings Config Map", "Kubernetes Config Map")
 Container(temporal, "Temporal", "Container: Temporal", "Schedules workflows to send communications to customers")
-Container(workers, "Workers", "Container: Worker", "Runs the workflow to send the communication to the specific gateway")
 
 
-Container_Boundary(component, "Communication API") {
-    Component(gatewayController, "Communication Gateway Controller", "Component: Spring MVC Rest Controller")
-    Component(preferencesController, "Preferences Controller", "Component: Spring MVC Rest Controller")
-    Component(scheduleController, "Communication Schedule Controller", "Component: Spring MVC Rest Controller")
-    Component(historyController, "History Controller", "Component: Spring MVC Rest Controller")
-    Component(platformController, "Platform Monitoring Controller", "Component: Spring MVC Rest Controller")
+System_Boundary(component, "Communication APIs") {
+    
+    Container_Boundary(gatewayAPI, "Gateway API") {
+        Component(gatewayController, "Communication Gateway Controller", "Component: Spring MVC Rest Controller")
+        Component(gatewayComponent, "Gateway Component", "Component: Spring Bean", "Provides functionality related to adding, removing and updating communication gateways")
+    }
 
-    Component(gatewayComponent, "Gateway Component", "Component: Spring Bean", "Provides functionality related to adding, removing and updating communication gateways")
-    Component(scheduleComponent, "Schedule Component", "Component: Spring Bean", "Provides functionality related to creating, updating and removing scheduled workflows")
-    Component(preferencesComponent, "Preferences Component", "Component: Spring Bean", "Configures platform preferences such as workflow and activity retry schedules")
-    Component(historyComponent, "History Component", "Component: Spring Bean", "Provides functionality related to querying the status of previous workflows, monthly statistics and reports")
-    Component(monitoringComponent, "Monitoring Component", "Component: Spring Bean", "Provides functionality related to querying performance metrics from temporal and the workers.")
+    Container_Boundary(preferencesAPI, "Preferences API") {
+        Component(preferencesController, "Preferences Controller", "Component: Spring MVC Rest Controller")
+        Component(preferencesComponent, "Preferences Component", "Component: Spring Bean", "Configures platform preferences such as workflow and activity retry schedules")
+    }
+
+
+    Container_Boundary(scheduleAPI, "Schedule API") {
+        Component(scheduleController, "Communication Schedule Controller", "Component: Spring MVC Rest Controller")
+        Component(scheduleComponent, "Schedule Component", "Component: Spring Bean", "Provides functionality related to creating, updating and removing scheduled workflows")
+    }
+
+    Container_Boundary(historyAPI, "History API") {
+        Component(historyController, "History Controller", "Component: Spring MVC Rest Controller")
+        Component(historyComponent, "History Component", "Component: Spring Bean", "Provides functionality related to querying the status of previous workflows, monthly statistics and reports")
+
+    }
+
+    Container_Boundary(authApi, "Auth API") {
+        Component(authController, "Auth Controller", "Component: Spring MVC Rest Controller")
+        Component(authComponent, "Auth Component", "Component: Spring Bean", "Provides functionality related to generating JWT tokens from the given scope.")
+    }
 }
 
 Rel(webBFF, gatewayController, "Makes API Calls to", "JSON/HTTPS")
 Rel(webBFF, scheduleController, "Makes API Calls to", "JSON/HTTPS")
 Rel(webBFF, preferencesController, "Makes API Calls to", "JSON/HTTPS")
 Rel(webBFF, historyController, "Makes API Calls to", "JSON/HTTPS")
-Rel(webBFF, platformController, "Makes API Calls to", "JSON/HTTPS")
+Rel(webBFF, authController, "Makes API Calls to", "JSON/HTTPS")
 
 Rel(gatewayController, gatewayComponent, "Uses")
 Rel(gatewayComponent, gatewayDB, "Reads from and writes to", "SQL/TCP")
@@ -45,8 +60,6 @@ Rel(preferencesComponent, settings, "Reads from and writes to", "Kubernetes Java
 Rel(historyController, historyComponent, "Uses")
 Rel(historyComponent, temporal, "Queries previous workflows", "Temporal SDK")
 
-Rel(platformController, monitoringComponent, "Uses")
-Rel(monitoringComponent, temporal, "Queries metrics", "Prometheus Endpoint")
-Rel(monitoringComponent, workers, "Queries worker metrics", "Micrometer Prometheus Endpoint")
+Rel(authController, authComponent, "Uses")
 
 @enduml
