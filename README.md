@@ -7,6 +7,8 @@
 * [Activity Diagrams](#activity-diagrams)
 * [Sequence Diagrams](#sequence-diagrams)
 * [Database Schema](#database-schema)
+* [Interface Diagrams](#interface-diagrams)
+* [Deployment Diagram](Designs/Deployment/README.md)
 
 ### System Context (C1):
 1. [System Context Diagram:](Designs/System%20Context/SystemContextDiagram.puml)  
@@ -55,3 +57,10 @@ This diagram demonstrates how temporal can retry an activity if one of the activ
 ### Database Schema:
 13. [GatewayDatabase](Designs/Database/gatewayDbSchema.puml)  
     ![GatewayDatabase](Designs/Images/Database/Gateway%20Database%20Schema.png)
+
+### Interface Diagrams:
+14. [Communication APIs](Designs/System%20Context/Components/ApiInterfaces.puml)  
+    ![CommunicationAPIs](Designs/Images/System%20Context/Components/ApiInterfaces.png)
+
+15. [Worker Interfaces](Designs/System%20Context/Components/WorkerInterfaces.puml)  
+    ![WorkerInterfaces](Designs/Images/System%20Context/Components/WorkerInterfaces.png)

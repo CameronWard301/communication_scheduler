@@ -1,0 +1,48 @@
+@startuml Component Interfaces
+
+component temporal {
+}
+
+() workflowClient
+() scheduleClient
+() workflowServiceStubs
+
+
+workflowServiceStubs <|-u- temporal
+workflowClient <|-u- temporal
+scheduleClient <|-u- temporal
+
+
+package "worker" as workerGroup {
+    component worker{
+    }
+
+    interface CommunicationWorkflow {
+        + String sendCommunication(Map<String, String> payload)
+
+    }
+
+    interface GetSettingsActivity {
+        + Map<String, String> getSettings()
+
+    }
+
+    interface GetGatewayByIdActivity {
+        + String getGatewayEndpointURL(String gatewayId)
+
+    }
+
+    interface SendMessageToGateway {
+        + Map<String, String> invokeGateway(String gatewayUrl)
+
+    }
+
+    worker --|> CommunicationWorkflow
+    CommunicationWorkflow --> GetSettingsActivity
+    CommunicationWorkflow --> SendMessageToGateway
+    CommunicationWorkflow --> GetGatewayByIdActivity
+}
+
+temporal --> CommunicationWorkflow: uses
+
+@enduml
