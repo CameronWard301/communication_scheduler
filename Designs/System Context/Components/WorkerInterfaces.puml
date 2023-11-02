@@ -33,8 +33,7 @@ package "worker" as workerGroup {
     }
 
     interface SendMessageToGateway {
-        + Map<String, String> invokeGateway(String gatewayUrl)
-
+        + Map<String, String> invokeGateway(String userId, String messageId, String gatewayUrl)
     }
 
     worker --|> CommunicationWorkflow

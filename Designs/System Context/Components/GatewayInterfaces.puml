@@ -1,0 +1,61 @@
+@startuml Gateway Interfaces
+
+component Worker {
+}
+
+interface SendMessageToGateway {
+    + Map<String, String> invokeGateway(String userId, String messageId, String gatewayUrl)
+}
+
+package "Communication Gateway" as communicationGateway {
+    component gateway {
+
+    }
+
+    interface defaultGateway {
+        + Communication getPreviousCommunicationById(String messageId)
+        + void storeCommunication(String messageId, String userId, String content)
+    }
+
+    interface gatewayController {
+        + void sendCommunication(userId, messageId)
+    }
+
+    interface getUserWithContent {
+        + Object getUserWithContent(userId)
+    }
+    note right of getUserWithContent
+            This interface is for when using a JOIN when
+            accessing the database to retrieve the results
+            with one query.
+        end note
+
+    interface getUserAndContent {
+        + Object getUser(userId)
+        + Object getContent(userId)
+    }
+
+
+    interface exampleEmailGatewayService extends getUserWithContent, getUserAndContent {
+        + void sendCommunication(Object user, Object content)
+    }
+
+   note bottom of exampleEmailGatewayService
+        This interface extends either
+        getUserWithContent or getUserAndContent
+   end note
+
+   class BaseCommunicationGateway implements defaultGateway{
+        + Communication getPreviousCommunicationById(String messageId)
+        + void storeCommunication(String messageId, String userId, String content)
+   }
+
+
+    gatewayController --> exampleEmailGatewayService: uses
+    gatewayController --> BaseCommunicationGateway: uses
+    Worker --|> SendMessageToGateway
+    SendMessageToGateway --> gatewayController: uses
+}
+
+
+@enduml
