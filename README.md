@@ -53,14 +53,20 @@ This describes a business user using the web portal to manually create a new com
 12. [Handle Send Communication Activity Error:](Designs/Sequence%20Diagrams/SendCommunicationHandleError.puml)  
 This diagram demonstrates how temporal can retry an activity if one of the activities are not executing correctly 
     ![HandleActivityErrorSendCommunication](Designs/Images/Sequence%20Diagrams/SendCommunicationHandleError.png)
+13. [Invoke Gateway:](Designs/Sequence%20Diagrams/InvokeGateway.puml)
+The worker invokes the gateway to send a message to a user.
+    [Invoke Gateway:](Designs/Images/Sequence%20Diagrams/InvokeGateway.png)
 
 ### Database Schema:
-13. [GatewayDatabase](Designs/Database/gatewayDbSchema.puml)  
+14. [GatewayDatabase](Designs/Database/gatewayDbSchema.puml)  
     ![GatewayDatabase](Designs/Images/Database/Gateway%20Database%20Schema.png)
 
 ### Interface Diagrams:
-14. [Communication APIs](Designs/System%20Context/Components/ApiInterfaces.puml)  
+15. [Communication APIs](Designs/System%20Context/Components/ApiInterfaces.puml)  
     ![CommunicationAPIs](Designs/Images/System%20Context/Components/ApiInterfaces.png)
 
-15. [Worker Interfaces](Designs/System%20Context/Components/WorkerInterfaces.puml)  
+16. [Gateway References](Designs/System%20Context/Components/GatewayInterfaces.puml)  
+    ![GatewayReferences](Designs/Images/System%20Context/Components/GatewayInterfaces.png)
+
+17. [Worker Interfaces](Designs/System%20Context/Components/WorkerInterfaces.puml)  
     ![WorkerInterfaces](Designs/Images/System%20Context/Components/WorkerInterfaces.png)
