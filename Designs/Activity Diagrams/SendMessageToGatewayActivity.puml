@@ -3,26 +3,39 @@
 
 start
 
-:Send UserID to Gateway URL;
+:Send UserID, MessageId to Gateway URL with API key;
 
 |Gateway|
 
-:Check if message is in the SQS queue;
-if (message in SQS queue) is (yes) then
-:return delivered status;
+:Check if API key is valid;
+if (API key is valid) is (no) then
+:return invalid status 401/403;
+|Worker|
+:Retry Activity;
+stop
+else (yes)
+
+endif
+
+|Gateway|
+
+:Check if messageId exists in communication DB;
+if (message already exists) is (yes) then
+:return delivered status 200;
 else (no)
 
 :Sends Communication To User;
 
     if (message delivered?) is (yes) then
-    :Stores completed status in SQS Queue;
-    :return delivered status;
+    :Stores messageId, userId, content
+    and status in communication DB;
+    :return delivered status 200;
     else (error)
-    :return error;
+    :return error 500;
     endif
 
 endif
 |Worker|
-:return gateway response;
+:Complete activity;
 stop
 @enduml

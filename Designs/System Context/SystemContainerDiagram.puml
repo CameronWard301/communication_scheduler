@@ -17,7 +17,7 @@ System_Boundary(system, "Communication Scheduling Platform") {
     Container(webPortal, "Web Management Portal", "Container: Javascript React")
     ContainerDb(settings, "Settings Config Map", "Kubernetes Config Map")
     Container(workers, "Workers", "Container: Worker", "Runs the workflow to send the communication to the specific gateway")
-    ContainerQueue(queue, "SQS Persistence Queue", "AWS SQS Queue", "Stores previously sent communications to prevent duplicates")
+    ContainerDb(queue, "Communication History DB", "MongoDb/NOSQL database", "Stores previously sent communications to prevent duplicates")
 }
 
 
