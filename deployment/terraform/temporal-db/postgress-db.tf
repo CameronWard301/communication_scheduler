@@ -1,7 +1,7 @@
 # Adapted from example: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster#rds-serverless-v2-cluster
 resource "aws_rds_cluster" "default" {
   cluster_identifier      = "temporal-${var.region}-${var.account_name}"
-  availability_zones      = [var.availability_zones]
+  availability_zones      = var.availability_zones
   backup_retention_period = var.backup_retention_period
   engine                  = "aurora-postgresql"
   engine_mode             = "serverless"
