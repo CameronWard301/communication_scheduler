@@ -23,7 +23,9 @@ variable "sg_eks_db_cidr" {
   type = string
 }
 
-variable "vpc_id" {}
+variable "vpc_id" {
+  type = string
+}
 
 variable "temporal_db_username" {
   type      = string
@@ -58,7 +60,7 @@ variable "auto_pause" {
 
 variable "auto_pause_delay" {
   type    = number
-  default = 60
+  default = 300 //min = 300, max = 86400
 }
 
 variable "backup_window" {
@@ -73,6 +75,6 @@ variable "backup_retention_period" {
 
 variable "availability_zones" {
   type    = list(string)
-  default = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  default = ["eu-west-1a", "eu-west-1b"]
 }
 

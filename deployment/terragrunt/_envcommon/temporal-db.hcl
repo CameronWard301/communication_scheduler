@@ -39,6 +39,12 @@ locals {
 
 dependency "networking" {
   config_path = "${get_terragrunt_dir()}/../networking"
+  skip_outputs = true
+  mock_outputs = {
+    vpc_id = "vpc-07711fc9481557c6e"
+    private_subnet_id_1 = "subnet-12345678"
+    private_subnet_id_2 = "subnet-12345678"
+  }
 }
 
 
@@ -51,6 +57,7 @@ inputs = {
   account_name        = local.env
   region              = local.region_vars.locals.aws_region
   default_tags        = local.env_tags
+  vpc_id              = dependency.networking.outputs.vpc_id
   private_subnet_id_1 = dependency.networking.outputs.private_subnet_id_1
   private_subnet_id_2 = dependency.networking.outputs.private_subnet_id_2
 
