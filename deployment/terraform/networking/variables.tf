@@ -13,3 +13,11 @@ variable "account_name" {
 variable "cidr_block" {
   type = string
 }
+
+variable "private_subnet_cidr_block_1a" {
+  type = string
+}
+
+variable "private_subnet_cidr_block_1b" {
+  type = string
+}

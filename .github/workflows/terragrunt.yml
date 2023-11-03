@@ -44,6 +44,8 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          temporal_db_username: ${{ secrets.TEMPORAL_DB_USERNAME }}
+          temporal_db_password: ${{ secrets.TEMPORAL_DB_PASSWORD }}
 
   deploy:
     runs-on: ubuntu-latest

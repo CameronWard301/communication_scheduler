@@ -8,5 +8,7 @@ include "envcommon" {
 }
 
 inputs = {
-  cidr_block = "172.32.0.0/16"
+  cidr_block                   = "172.32.0.0/16"
+  private_subnet_cidr_block_1a = "172.32.1.0/24"
+  private_subnet_cidr_block_1b = "172.32.2.0/24"
 }
