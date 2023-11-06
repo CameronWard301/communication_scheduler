@@ -12,6 +12,7 @@ resource "aws_rds_cluster" "default" {
   preferred_backup_window = var.backup_window
   db_subnet_group_name    = aws_db_subnet_group.default.name
   vpc_security_group_ids  = [aws_security_group.db_sg.id]
+  final_snapshot_identifier = "temporal-backup"
 
   scaling_configuration {
     auto_pause               = var.auto_pause
@@ -22,18 +23,5 @@ resource "aws_rds_cluster" "default" {
   tags = merge(
     var.default_tags,
     { "Name" = "temporal-db-${var.account_name}-${data.aws_caller_identity.current.account_id}-${var.region}" },
-  )
-}
-
-resource "aws_rds_cluster_instance" "default" {
-  cluster_identifier = aws_rds_cluster.default.id
-  instance_class     = "db.serverless"
-  engine             = aws_rds_cluster.default.engine
-  engine_version     = aws_rds_cluster.default.engine_version
-  tags               = merge(
-    var.default_tags,
-    {
-      "Name" = "temporal-cluster-instance-${var.account_name}-${data.aws_caller_identity.current.account_id}-${var.region}"
-    },
   )
 }
