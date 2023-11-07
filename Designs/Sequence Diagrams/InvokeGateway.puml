@@ -9,26 +9,27 @@ participant "SMS Integration" as sms
 
 autonumber
 
-worker -> gateway: Sends userId, messageId with API Key to
+worker -> gateway: Sends userId, workflowRunId with API Key to
 gateway -> gateway: Validates API key
-gateway -> historyDB: Check for previous message by messageIdHash
-note left of gateway
-messageId is a hash of the userId and gatewayId
-end note
-historyDB --> gateway: Returns result
-gateway -> gateway: Check that message does not exist in result
 gateway -> userDB: Get user By id and left join to user product metrics
 userDB -> metricsDB: Get metrics for user
 metricsDB --> userDB: Returns metrics
 userDB --> gateway: Resolves user object with metrics
-gateway -> gateway: Gets user's phone number
 
 gateway -> gateway: Generates SMS contents
+gateway -> gateway: Hash the message contents with the workflowRunId
+
+gateway -> historyDB: Check for previous message by messageHash
+
+historyDB --> gateway: Returns result
+gateway -> gateway: Check that message does not exist in result
+
+gateway -> gateway: Gets user's phone number
 gateway -> sms: Send message to phone number
 sms --> gateway: Returns result
 gateway -> gateway: Check result
-gateway -> historyDB: Write messageId, userId and messageContents to DB
+gateway -> historyDB: Write workflowRunId, userId and messageHash to
 historyDB --> gateway: Successful write
-gateway --> worker: Return success
+gateway --> worker: Return success and messageHash
 
 @enduml

@@ -19,8 +19,8 @@ worker -> gwdb: Get gateway by id
 gwdb --> worker: Returns gateway object
 worker --> temporal: Activity completed
 temporal -> worker: Schedules SendCommunicationActivity
-worker -> cgw: Send user id
-cgw --> worker: Returns delivery response
+worker -> cgw: Send user id and workflow run id
+cgw --> worker: Returns delivery response with message hash
 worker --> temporal: Activity completed
 temporal -> worker: Complete workflow
 worker --> temporal: Workflow complete

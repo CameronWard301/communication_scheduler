@@ -4,7 +4,7 @@ component Worker {
 }
 
 interface SendMessageToGateway {
-    + Map<String, String> invokeGateway(String userId, String messageId, String gatewayUrl)
+    + Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl)
 }
 
 package "Communication Gateway" as communicationGateway {
@@ -13,12 +13,12 @@ package "Communication Gateway" as communicationGateway {
     }
 
     interface defaultGateway {
-        + Communication getPreviousCommunicationById(String messageId)
-        + void storeCommunication(String messageId, String userId, String content)
+        + Communication getPreviousCommunicationMessageHash(String messageHash)
+        + void storeCommunication(String workflowRunId, String userId, String messageHash)
     }
 
     interface gatewayController {
-        + void sendCommunication(userId, messageId)
+        + String sendCommunication(userId, workflowRunId)
     }
 
     interface getUserWithContent {
@@ -46,8 +46,8 @@ package "Communication Gateway" as communicationGateway {
    end note
 
    class BaseCommunicationGateway implements defaultGateway{
-        + Communication getPreviousCommunicationById(String messageId)
-        + void storeCommunication(String messageId, String userId, String content)
+        + Communication getPreviousCommunicationByMessageHash(String messageHash)
+        + void storeCommunication(String workflowRunId, String userId, String messageHash)
    }
 
 
