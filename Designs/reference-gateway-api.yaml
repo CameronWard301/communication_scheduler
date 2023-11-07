@@ -20,12 +20,12 @@ paths:
       summary: Send monthly newsletter to customer via email
       operationId: sendMonthlyNewsletterByEmail
       requestBody:
-          description: The customer ID and message ID
-          required: true
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GatewayBody'
+        description: The customer ID and message ID
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GatewayBody'
       responses:
         '200':
           description: OK

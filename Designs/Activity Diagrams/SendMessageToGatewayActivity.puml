@@ -3,7 +3,8 @@
 
 start
 
-:Send UserID, MessageId to Gateway URL with API key;
+:Send UserID, workflowRunId to
+Gateway URL with API key;
 
 |Gateway|
 
@@ -18,8 +19,10 @@ else (yes)
 endif
 
 |Gateway|
+:Generate Message Contents;
+:Hash message contents with workflowRunId;
 
-:Check if messageId exists in communication DB;
+:Check if messageHash exists in communication DB;
 if (message already exists) is (yes) then
 :return delivered status 200;
 else (no)
@@ -27,8 +30,8 @@ else (no)
 :Sends Communication To User;
 
     if (message delivered?) is (yes) then
-    :Stores messageId, userId, content
-    and status in communication DB;
+    :Stores workflowRunId, userId,
+    messageHash in communication DB;
     :return delivered status 200;
     else (error)
     :return error 500;
