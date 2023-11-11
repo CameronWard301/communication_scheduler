@@ -8,6 +8,10 @@ resource "aws_vpc" "main" {
 
 resource "aws_route_table" "main" {
   vpc_id = aws_vpc.main.id
+  tags       = merge(
+    var.default_tags,
+    { "Name" = "main-route-table-${var.account_name}-${data.aws_caller_identity.current.account_id}-${var.region}" },
+  )
 }
 
 resource "aws_main_route_table_association" "main" {

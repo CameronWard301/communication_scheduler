@@ -1,4 +1,5 @@
 /.idea*
 .terraform
 .terragrunt-cache
-/deployment/terraform/temporal-db/terraform.tfvars
+terraform.tfvars
+.terraform.lock.hcl
