@@ -1,0 +1,207 @@
+# Default values for helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+temporal:
+  server:
+    worker:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nodegroup
+                operator: In
+                values:
+                - "on_demand_nodes"
+                - "spot_nodes"
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: nodegroup
+                    operator: In
+                    values:
+                      - "on_demand_nodes"
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: nodegroup
+                    operator: In
+                    values:
+                      - "spot_nodes"
+
+    history:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nodegroup
+                operator: In
+                values:
+                - "on_demand_nodes"
+                - "spot_nodes"
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: nodegroup
+                    operator: In
+                    values:
+                      - "on_demand_nodes"
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: nodegroup
+                    operator: In
+                    values:
+                      - "spot_nodes"
+
+    frontend:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: nodegroup
+                    operator: In
+                    values:
+                      - "on_demand_nodes"
+                      - "spot_nodes"
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: nodegroup
+                    operator: In
+                    values:
+                      - "on_demand_nodes"
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: nodegroup
+                    operator: In
+                    values:
+                      - "spot_nodes"
+
+    matching:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nodegroup
+                operator: In
+                values:
+                - "on_demand_nodes"
+                - "spot_nodes"
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: nodegroup
+                    operator: In
+                    values:
+                      - "on_demand_nodes"
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: nodegroup
+                    operator: In
+                    values:
+                      - "spot_nodes"
+
+
+    config:
+      persistence:
+        default:
+          driver: "sql"
+
+          sql:
+            driver: "postgres"
+            host: temporal-eu-west-1-dev.cluster-cq6ujr7evasm.eu-west-1.rds.amazonaws.com
+            port: 5432
+            database: temporal
+            user: "{{ .Values.temporal.server.worker.config.persistence.default.sql.user | default (lookup_env `TEMPORAL_DB_USERNAME`) }}"
+            password: "{{ .Values.temporal.server.worker.config.persistence.default.sql.password | default (lookup_env `TEMPORAL_DB_PASSWORD`) }}"
+            # for a production deployment use this instead of `password` and provision the secret beforehand e.g. with a sealed secret
+            # it has a single key called `password`
+            # existingSecret: temporal-default-store
+            maxConns: 20
+            maxConnLifetime: "1h"
+            # tls:
+            #  enabled: true
+            #  enableHostVerification: true
+            #  serverName: _HOST_ # this is strictly required when using serverless CRDB offerings
+
+        visibility:
+          driver: "sql"
+
+          sql:
+            driver: "postgres"
+            host: temporal-eu-west-1-dev.cluster-cq6ujr7evasm.eu-west-1.rds.amazonaws.com
+            port: 5432
+            database: temporal_visibility
+            user: "{{ .Values.temporal.server.worker.config.persistence.visibility.sql.user | default (lookup_env `TEMPORAL_DB_USERNAME`) }}"
+            password: "{{ .Values.temporal.server.worker.config.persistence.visibility.sql.password | default (lookup_env `TEMPORAL_DB_PASSWORD`) }}"
+
+            # for a production deployment use this instead of `password` and provision the secret beforehand e.g. with a sealed secret
+            # it has a single key called `password`
+            # existingSecret: temporal-visibility-store
+            maxConns: 20
+            maxConnLifetime: "1h"
+            # tls:
+            #  enabled: true
+            #  enableHostVerification: true
+            #  serverName: _HOST_ # this is strictly required when using serverless CRDB offerings
+
+  admintools:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: nodegroup
+              operator: In
+              values:
+              - "spot_nodes"
+
+
+  web:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: nodegroup
+              operator: In
+              values:
+              - "spot_nodes"
+
+  cassandra:
+    enabled: false
+
+  mysql:
+    enabled: false
+
+  postgresql:
+    enabled: true
+
+
+  prometheus:
+    enabled: false
+
+  grafana:
+    enabled: false
+
+  elasticsearch:
+    enabled: false
+
+  schema:
+    setup:
+      enabled: false
+    update:
+      enabled: false

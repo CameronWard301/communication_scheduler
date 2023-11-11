@@ -1,0 +1,48 @@
+# Using helm 3 action from: https://github.com/WyriHaximus/github-action-helm3
+name: 'Helm Deployments'
+on:
+  push:
+    paths:
+      - deployment/helm/**
+      - .github/workflows/helm.yml
+
+jobs:
+  helm-deploy:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@main
+      - name: Add dependencies
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: helm repo add temporal https://charts.lemontech.engineering
+      - name: Build dependencies
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: helm dependency build ./deployment/helm/
+      - name: AWS configure
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set default.region eu-west-1
+          aws eks update-kubeconfig --region eu-west-1 --name communication-eks
+      - name: Helm Plan
+        uses: WyriHaximus/github-action-helm3@v3.1.0
+        with:
+          exec: helm upgrade cs ./deployment/helm/ --install --dry-run --namespace=default
+          overrule_existing_kubeconfig: "false"
+        env:
+          TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
+          TEMPORAL_DB_PASSWORD: ${{ secrets.TEMPORAL_DB_PASSWORD }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Helm Deploy
+        if: github.ref == 'refs/heads/main'
+        uses: WyriHaximus/github-action-helm3@v3.1.0
+        with:
+          exec: helm upgrade cs ./deployment/helm/ --install --namespace=default
+          overrule_existing_kubeconfig: "false"
+        env:
+          TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
+          TEMPORAL_DB_PASSWORD: ${{ secrets.TEMPORAL_DB_PASSWORD }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
