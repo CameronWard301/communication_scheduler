@@ -3,7 +3,9 @@ name: 'Terragrunt GitHub Actions'
 on:
   push:
     paths:
-      - deployment/**
+      - deployment/terraform/**
+      - deployment/terragrunt/**
+      - .github/workflows/terragrunt.yml
 
 env:
   tf_version: '1.6.3'

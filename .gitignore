@@ -3,3 +3,8 @@
 .terragrunt-cache
 terraform.tfvars
 .terraform.lock.hcl
+
+### Helm ###
+# Chart dependencies
+**/charts/*.tgz
+/deployment/helm/secrets.yaml
