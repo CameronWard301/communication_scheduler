@@ -21,3 +21,11 @@ variable "private_subnet_cidr_block_1a" {
 variable "private_subnet_cidr_block_1b" {
   type = string
 }
+
+variable "public_subnet_cidr_block_1a" {
+  type = string
+}
+
+variable "public_subnet_cidr_block_1b" {
+  type = string
+}
