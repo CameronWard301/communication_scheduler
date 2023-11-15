@@ -12,49 +12,100 @@ package "Communication Gateway" as communicationGateway {
 
     }
 
-    interface defaultGateway {
+
+    class GatewayHelper {
+        + String messageHash(String workflowRunId, String messageContents)
+    }
+
+    interface CommunicationHistoryAccessProvider {
         + Communication getPreviousCommunicationMessageHash(String messageHash)
         + void storeCommunication(String workflowRunId, String userId, String messageHash)
     }
 
-    interface gatewayController {
-        + String sendCommunication(userId, workflowRunId)
+    class DefaultCommunicationHistoryAccessProvider implements CommunicationHistoryAccessProvider {
+        + Communication getPreviousCommunicationMessageHash(String messageHash)
+        + void storeCommunication(String workflowRunId, String userId, String messageHash)
     }
 
-    interface getUserWithContent {
-        + Object getUserWithContent(userId)
+    interface GatewayController {
+        + ResponseEntity sendCommunication(userId, workflowRunId)
     }
-    note right of getUserWithContent
+
+    class EmailGatewayController implements GatewayController {
+        + ResponseEntity sendCommunication(userId, workflowRunId)
+    }
+
+    class GatewayProperties {
+        - String userId
+        - String workflowRunId
+        - ContentDeliveryService contentDeliveryService
+        - UserContentService<?, ?> userContentService
+        - CommunicationHistoryAccessProvider communicationHistoryAccessProvider
+        + Standard Getters() & Setters()
+    }
+
+    interface GatewayService {
+        + ResponseEntity sendCommunication(GatewayProperties gatewayProperties)
+    }
+
+    class CommunicationGatewayService implements GatewayService{
+        + ResponseEntity sendCommunication(GatewayProperties gatewayProperties))
+    }
+    note right of CommunicationGatewayService
+        GatewayProperties object can be created by a
+        builder and passed to this method.
+    end note
+
+    interface GetUserWithContent <TUser, TContent> {
+        + UserAndContent<TUser, TContent> getUserWithContent(userId)
+    }
+    note top of GetUserWithContent
             This interface is for when using a JOIN when
             accessing the database to retrieve the results
             with one query.
         end note
 
-    interface getUserAndContent {
-        + Object getUser(userId)
-        + Object getContent(userId)
+    interface GetUserAndContent <TUser, TContent> {
+        + TUser getUser(userId)
+        + TContent getContent(userId)
     }
 
-
-    interface exampleEmailGatewayService extends getUserWithContent, getUserAndContent {
-        + void sendCommunication(Object user, Object content)
+    class UserAndContent <TUser, TContent> {
+        - TUser user
+        - TContent content
     }
 
-   note bottom of exampleEmailGatewayService
+    interface UserContentService <TUser, TContent> {
+        + UserAndContent<TUser, TContent> getUserAndContent(userId)
+    }
+
+    class EmailUserContentService <TUser, TContent> implements UserContentService, GetUserWithContent, GetUserAndContent {
+        + UserAndContent<TUser, TContent> getUserAndContent(userId)
+    }
+
+    interface ContentDeliveryService <TUser, TContent> {
+        + void sendContent(TUser user, TContent content)
+    }
+
+    class EmailContentDeliveryService <TUser, TContent> implements ContentDeliveryService {
+        + void sendContent(TUser user, TContent content)
+    }
+
+   note left of EmailUserContentService
         This interface extends either
-        getUserWithContent or getUserAndContent
+        GetUserWithContent or GetUserAndContent
    end note
 
-   class BaseCommunicationGateway implements defaultGateway{
-        + Communication getPreviousCommunicationByMessageHash(String messageHash)
-        + void storeCommunication(String workflowRunId, String userId, String messageHash)
-   }
 
-
-    gatewayController --> exampleEmailGatewayService: uses
-    gatewayController --> BaseCommunicationGateway: uses
+    CommunicationGatewayService --> EmailContentDeliveryService: uses
+    CommunicationGatewayService --> EmailUserContentService: uses
+    CommunicationGatewayService --> DefaultCommunicationHistoryAccessProvider: uses
+    CommunicationGatewayService --> GatewayHelper: uses
+    EmailGatewayController --> CommunicationGatewayService: uses
+    EmailGatewayController -> GatewayProperties: uses
     Worker --|> SendMessageToGateway
-    SendMessageToGateway --> gatewayController: uses
+    SendMessageToGateway --> GatewayController: uses
+    EmailUserContentService --> UserAndContent: returns
 }
 
 
