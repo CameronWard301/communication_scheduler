@@ -48,7 +48,7 @@ class GetGatewayFromDbActivityImpl implements GetGatewayFromDbActivity{
 }
 
 interface SendMessageToGatewayActivity extends ActivityInterface {
-    + Map<String, String> invokeGateway(String gatewayUrl)
+    + Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl)
 }
 
 class SendMessageToGatewayActivityImpl implements SendMessageToGatewayActivity {
