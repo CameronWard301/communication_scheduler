@@ -32,13 +32,13 @@ package "worker" as workerGroup {
 
     }
 
-    interface SendMessageToGateway {
-        + Map<String, String> invokeGateway(String userId, String messageId, String gatewayUrl)
+    interface SendMessageToGatewayActivity {
+        + Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl)
     }
 
     worker --|> CommunicationWorkflow
     CommunicationWorkflow --> GetSettingsActivity
-    CommunicationWorkflow --> SendMessageToGateway
+    CommunicationWorkflow --> SendMessageToGatewayActivity
     CommunicationWorkflow --> GetGatewayByIdActivity
 }
 
