@@ -92,6 +92,18 @@ paths:
               - integer
             default:
               25
+        - name: friendlyName
+          in: query
+          description: The friendly name to search for
+          schema:
+            type:
+              - string
+        - name: endpointUrl
+          in: query
+          description: The endpointUrl to search for
+          schema:
+              type:
+              - string
       responses:
         '200':
           description: OK
