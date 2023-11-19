@@ -1,6 +1,7 @@
 package com.github.cameronward301.communication_scheduler.workflows.communication_workflow;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetGatewayFromDbActivity;
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetPreferencesActivity;
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences;
 import io.temporal.activity.ActivityOptions;
@@ -29,15 +30,27 @@ public class CommunicationWorkflowImpl implements CommunicationWorkflow{
     public String sendCommunication(Map<String, String> payload) throws JsonProcessingException {
         Preferences preferences = getSettingsActivity.getPreferences();
 
-        /*GetGatewayFromDbActivity getGatewayFromDbActivity = Workflow.newActivityStub(GetGatewayFromDbActivity.class,
-                preferences.getActivityOptions());
+        GetGatewayFromDbActivity getGatewayFromDbActivity = Workflow.newActivityStub(GetGatewayFromDbActivity.class,
+                ActivityOptions.newBuilder()
+                        .setStartToCloseTimeout(preferences.getStartToCloseTimeout())
+                        .setRetryOptions(RetryOptions.newBuilder()
+                                .setMaximumInterval(preferences.getMaximumInterval())
+                                .setInitialInterval(preferences.getInitialInterval())
+                                .setBackoffCoefficient(preferences.getBackoffCoefficient())
+                                .setMaximumAttempts(preferences.getMaximumAttempts())
+                                .build())
+                        .build()
+        );
 
-        SendMessageToGatewayActivity sendMessageToGatewayActivity = Workflow.newActivityStub(SendMessageToGatewayActivity.class,
+        String gatewayURL = getGatewayFromDbActivity.getGatewayEndpointUrl(payload.get("gatewayId"));
+
+
+        /*SendMessageToGatewayActivity sendMessageToGatewayActivity = Workflow.newActivityStub(SendMessageToGatewayActivity.class,
                 preferences.getActivityOptions());
 
         String gatewayURL = getGatewayFromDbActivity.getGatewayEndpointUrl(payload.get("gatewayId"));
 
         return sendMessageToGatewayActivity.invokeGateway(payload.get("userId"), Workflow.getInfo().getRunId(), gatewayURL).toString();*/
-        return "workflow-complete";
+        return gatewayURL;
     }
 }
