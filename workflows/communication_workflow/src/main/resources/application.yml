@@ -1,0 +1,3 @@
+temporal-properties:
+  namespace: default
+  task-queue: communication

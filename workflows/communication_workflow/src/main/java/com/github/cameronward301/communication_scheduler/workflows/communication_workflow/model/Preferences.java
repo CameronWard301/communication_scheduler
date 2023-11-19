@@ -1,0 +1,19 @@
+package com.github.cameronward301.communication_scheduler.workflows.communication_workflow.model;
+
+import io.temporal.activity.ActivityOptions;
+import lombok.*;
+
+import java.time.Duration;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Preferences {
+    Duration startToCloseTimeout;
+    Integer maximumAttempts;
+    Double backoffCoefficient;
+    Duration initialInterval;
+    Duration maximumInterval;
+}
