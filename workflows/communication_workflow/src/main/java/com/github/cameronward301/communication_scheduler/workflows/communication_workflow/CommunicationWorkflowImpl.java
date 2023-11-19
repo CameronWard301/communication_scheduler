@@ -1,11 +1,14 @@
 package com.github.cameronward301.communication_scheduler.workflows.communication_workflow;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetGatewayFromDbActivity;
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetPreferencesActivity;
+import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.SendMessageToGatewayActivity;
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.common.RetryOptions;
+import io.temporal.failure.ApplicationFailure;
 import io.temporal.workflow.Workflow;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -18,6 +21,8 @@ public class CommunicationWorkflowImpl implements CommunicationWorkflow{
     @Value("${temporal-properties.task-queue}")
     private String taskQueue;
 
+    ObjectMapper objectMapper = new ObjectMapper();
+
     private final GetPreferencesActivity getSettingsActivity = Workflow.newActivityStub(GetPreferencesActivity.class,
             ActivityOptions.newBuilder()
                     .setStartToCloseTimeout(Duration.ofSeconds(5))
@@ -27,7 +32,7 @@ public class CommunicationWorkflowImpl implements CommunicationWorkflow{
                     .build());
 
     @Override
-    public String sendCommunication(Map<String, String> payload) throws JsonProcessingException {
+    public String sendCommunication(Map<String, String> payload) {
         Preferences preferences = getSettingsActivity.getPreferences();
 
         GetGatewayFromDbActivity getGatewayFromDbActivity = Workflow.newActivityStub(GetGatewayFromDbActivity.class,
@@ -42,15 +47,25 @@ public class CommunicationWorkflowImpl implements CommunicationWorkflow{
                         .build()
         );
 
+        SendMessageToGatewayActivity sendMessageToGatewayActivity = Workflow.newActivityStub(SendMessageToGatewayActivity.class,
+                ActivityOptions.newBuilder()
+                        .setStartToCloseTimeout(preferences.getStartToCloseTimeout())
+                        .setRetryOptions(RetryOptions.newBuilder()
+                                .setMaximumInterval(preferences.getMaximumInterval())
+                                .setInitialInterval(preferences.getInitialInterval())
+                                .setBackoffCoefficient(preferences.getBackoffCoefficient())
+                                .setMaximumAttempts(preferences.getMaximumAttempts())
+                                .build())
+                        .build()
+        );
+
         String gatewayURL = getGatewayFromDbActivity.getGatewayEndpointUrl(payload.get("gatewayId"));
 
+        try {
+            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(sendMessageToGatewayActivity.invokeGateway(payload.get("userId"), Workflow.getInfo().getRunId(), gatewayURL));
+        } catch (JsonProcessingException e) {
+            throw ApplicationFailure.newFailure("Could not process gateway response", "GatewayWorkflowError");
+        }
 
-        /*SendMessageToGatewayActivity sendMessageToGatewayActivity = Workflow.newActivityStub(SendMessageToGatewayActivity.class,
-                preferences.getActivityOptions());
-
-        String gatewayURL = getGatewayFromDbActivity.getGatewayEndpointUrl(payload.get("gatewayId"));
-
-        return sendMessageToGatewayActivity.invokeGateway(payload.get("userId"), Workflow.getInfo().getRunId(), gatewayURL).toString();*/
-        return gatewayURL;
     }
 }

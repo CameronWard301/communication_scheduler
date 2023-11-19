@@ -5,27 +5,10 @@ resource "aws_dynamodb_table" "gateway_table" {
   deletion_protection_enabled = var.deletion_protection_enabled
   read_capacity = var.billing_mode == "PROVISIONED" ? var.read_capacity : null
   write_capacity = var.billing_mode == "PROVISIONED" ? var.write_capacity : null
-  range_key = "endpoint_url"
   hash_key = "id"
-
-  local_secondary_index {
-    name            = "FriendlyNameIndex"
-    projection_type = "ALL"
-    range_key       = "friendly_name"
-  }
 
   attribute {
     name = "id"
-    type = "S"
-  }
-
-  attribute {
-    name = "endpoint_url"
-    type = "S"
-  }
-
-  attribute {
-    name = "friendly_name"
     type = "S"
   }
 
