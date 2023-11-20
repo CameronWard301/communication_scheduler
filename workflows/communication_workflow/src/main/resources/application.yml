@@ -1,9 +1,7 @@
 temporal-properties:
   namespace: default
-  task-queue: communication
 aws-properties:
-  region: eu-west-1
   table-name: gateway-db-dev-326610803524-eu-west-1
   key-name: id
 activity-properties:
-  gateway-timeout-seconds: 60
+  gateway-timeout-seconds: 10

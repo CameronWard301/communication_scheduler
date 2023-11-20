@@ -16,13 +16,11 @@ import java.time.Duration;
 import java.util.Map;
 
 
-public class CommunicationWorkflowImpl implements CommunicationWorkflow{
-
-    @Value("${temporal-properties.task-queue}")
-    private String taskQueue;
+public class CommunicationWorkflowImpl implements CommunicationWorkflow {
 
     ObjectMapper objectMapper = new ObjectMapper();
-
+    @Value("${temporal-properties.task-queue}")
+    private String taskQueue;
     private final GetPreferencesActivity getSettingsActivity = Workflow.newActivityStub(GetPreferencesActivity.class,
             ActivityOptions.newBuilder()
                     .setStartToCloseTimeout(Duration.ofSeconds(5))

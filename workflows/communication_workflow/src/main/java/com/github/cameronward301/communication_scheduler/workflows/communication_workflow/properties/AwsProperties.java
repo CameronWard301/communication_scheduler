@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "aws-properties")
 public class AwsProperties {
-    private String region;
     private String table_name;
     private String key_name;
 }

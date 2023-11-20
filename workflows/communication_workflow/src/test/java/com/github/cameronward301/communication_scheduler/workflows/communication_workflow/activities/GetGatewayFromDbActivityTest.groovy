@@ -1,24 +1,16 @@
 package com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities
 
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.AwsProperties
-import io.netty.util.concurrent.CompleteFuture
 import io.temporal.testing.TestActivityEnvironment
 import io.temporal.testing.TestEnvironmentOptions
-import org.mockito.internal.matchers.Any
-import org.mockito.invocation.InvocationOnMock
-import org.mockito.stubbing.Answer
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
-import software.amazon.awssdk.services.dynamodb.model.DynamoDbRequest
 import software.amazon.awssdk.services.dynamodb.model.DynamoDbResponse
 import software.amazon.awssdk.services.dynamodb.model.GetItemRequest
 import software.amazon.awssdk.services.dynamodb.model.GetItemResponse
 import spock.lang.Specification
 
 import java.util.concurrent.CompletableFuture
-
-import static org.mockito.ArgumentMatchers.isA
-import static org.mockito.Mockito.when
 
 class GetGatewayFromDbActivityTest extends Specification {
     TestActivityEnvironment testActivityEnvironment
@@ -36,7 +28,6 @@ class GetGatewayFromDbActivityTest extends Specification {
 
         awsProperties = new AwsProperties()
         awsProperties.setTable_name("test_table")
-        awsProperties.setRegion("eu-west-1")
         awsProperties.setKey_name("id")
 
         testActivityEnvironment.registerActivitiesImplementations(new GetGatewayFromDbActivityImpl(awsProperties, dynamoDbAsyncClient))

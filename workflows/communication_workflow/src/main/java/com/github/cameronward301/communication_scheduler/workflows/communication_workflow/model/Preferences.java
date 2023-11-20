@@ -1,6 +1,5 @@
 package com.github.cameronward301.communication_scheduler.workflows.communication_workflow.model;
 
-import io.temporal.activity.ActivityOptions;
 import lombok.*;
 
 import java.time.Duration;

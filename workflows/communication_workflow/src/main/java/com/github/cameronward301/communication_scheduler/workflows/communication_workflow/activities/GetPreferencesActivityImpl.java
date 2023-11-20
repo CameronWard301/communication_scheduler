@@ -13,7 +13,7 @@ import java.time.Duration;
 import java.util.Map;
 
 @Slf4j
-public class GetPreferencesActivityImpl implements GetPreferencesActivity{
+public class GetPreferencesActivityImpl implements GetPreferencesActivity {
     private final KubernetesClient client;
     private final TemporalProperties temporalProperties;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -31,7 +31,8 @@ public class GetPreferencesActivityImpl implements GetPreferencesActivity{
                 .get().getData();
 
         try {
-            Map<String, String> retryConfigMap = objectMapper.readValue(preferences.get("RetryPolicy"), new TypeReference<>() {});
+            Map<String, String> retryConfigMap = objectMapper.readValue(preferences.get("RetryPolicy"), new TypeReference<>() {
+            });
 
             return Preferences.builder()
                     .startToCloseTimeout(Duration.parse(retryConfigMap.get("startToCloseTimeout")))
@@ -41,7 +42,7 @@ public class GetPreferencesActivityImpl implements GetPreferencesActivity{
                     .maximumInterval(Duration.parse(retryConfigMap.get("maximumInterval")))
                     .build();
 
-        } catch (JsonProcessingException e){
+        } catch (JsonProcessingException e) {
             log.error("Could not convert config map to retry policy");
             throw ApplicationFailure.newFailure("Could not convert string to config map", "InvalidConfigMap", preferences.get("RetryPolicy"));
         }

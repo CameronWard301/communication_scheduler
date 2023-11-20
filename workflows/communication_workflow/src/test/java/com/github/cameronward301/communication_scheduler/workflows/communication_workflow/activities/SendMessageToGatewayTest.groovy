@@ -97,8 +97,8 @@ class SendMessageToGatewayTest extends Specification {
         exception.originalMessage == "Gateway unsuccessful, status: " + responseCode + " from: " + gatewayUrl
     }
 
-    def "invalid gateway url should throw ActivityFailure"() {
-        given: "Mocked webClient returns invalid response code 401"
+    def "gateway timeout should throw ActivityFailure"() {
+        given: "Mocked webClient responds after 10 seconds"
         mockWebServer.enqueue(new MockResponse().setHeadersDelay(10, TimeUnit.SECONDS))
 
         when: "sendMessageToGatewayActivity is invoked"

@@ -8,6 +8,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "temporal-properties")
 @Data
 public class TemporalProperties {
-    private String task_queue;
     private String namespace;
 }
