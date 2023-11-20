@@ -30,7 +30,7 @@ public class CommunicationWorkflowImpl implements CommunicationWorkflow {
                     .build());
 
     @Override
-    public String sendCommunication(Map<String, String> payload) {
+    public String sendCommunication(Map<String, String> payload) throws JsonProcessingException {
         Preferences preferences = getSettingsActivity.getPreferences();
 
         GetGatewayFromDbActivity getGatewayFromDbActivity = Workflow.newActivityStub(GetGatewayFromDbActivity.class,
@@ -59,11 +59,9 @@ public class CommunicationWorkflowImpl implements CommunicationWorkflow {
 
         String gatewayURL = getGatewayFromDbActivity.getGatewayEndpointUrl(payload.get("gatewayId"));
 
-        try {
-            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(sendMessageToGatewayActivity.invokeGateway(payload.get("userId"), Workflow.getInfo().getRunId(), gatewayURL));
-        } catch (JsonProcessingException e) {
-            throw ApplicationFailure.newFailure("Could not process gateway response", "GatewayWorkflowError");
-        }
+
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(sendMessageToGatewayActivity.invokeGateway(payload.get("userId"), Workflow.getInfo().getRunId(), gatewayURL));
+
 
     }
 }
