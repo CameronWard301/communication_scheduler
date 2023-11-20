@@ -4,28 +4,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences;
-
-import java.time.Duration;
-
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.TemporalProperties;
 import io.fabric8.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.KubernetesClientBuilder;
-import io.temporal.activity.ActivityOptions;
-import io.temporal.common.RetryOptions;
-import io.temporal.failure.ActivityFailure;
 import io.temporal.failure.ApplicationFailure;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Duration;
 import java.util.Map;
 
 @Slf4j
 public class GetPreferencesActivityImpl implements GetPreferencesActivity{
-    private final KubernetesClient client = new KubernetesClientBuilder().build();
+    private final KubernetesClient client;
     private final TemporalProperties temporalProperties;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public GetPreferencesActivityImpl(TemporalProperties temporalProperties) {
+    public GetPreferencesActivityImpl(TemporalProperties temporalProperties, KubernetesClient client) {
         this.temporalProperties = temporalProperties;
+        this.client = client;
     }
 
     @Override
