@@ -3,13 +3,9 @@ package com.github.cameronward301.communication_scheduler.workflows.communicatio
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.CommunicationWorkflow
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.CommunicationWorkflowImpl
-import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetGatewayFromDbActivity
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetGatewayFromDbActivityImpl
-import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetPreferencesActivity
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetPreferencesActivityImpl
-import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.SendMessageToGatewayActivity
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.SendMessageToGatewayActivityImpl
-import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.ActivityProperties
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.AwsProperties
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.TemporalProperties
@@ -31,10 +27,7 @@ import software.amazon.awssdk.services.dynamodb.model.GetItemRequest
 import software.amazon.awssdk.services.dynamodb.model.GetItemResponse
 import spock.lang.Specification
 
-import java.time.Duration
 import java.util.concurrent.CompletableFuture
-
-import static org.mockito.Mockito.when
 
 class CommunicationWorkflowTest extends Specification {
 

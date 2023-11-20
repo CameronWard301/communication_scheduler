@@ -8,7 +8,6 @@ import com.github.cameronward301.communication_scheduler.workflows.communication
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.common.RetryOptions;
-import io.temporal.failure.ApplicationFailure;
 import io.temporal.workflow.Workflow;
 import org.springframework.beans.factory.annotation.Value;
 

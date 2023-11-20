@@ -1,7 +1,6 @@
 package com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities
 
-import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetPreferencesActivity
-import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetPreferencesActivityImpl
+
 import com.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.TemporalProperties
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder
 import io.fabric8.kubernetes.client.KubernetesClient
