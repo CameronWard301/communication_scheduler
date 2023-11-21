@@ -4,6 +4,10 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+
+/**
+ * This class is used to store the properties for Temporal activities
+ */
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "activity-properties")

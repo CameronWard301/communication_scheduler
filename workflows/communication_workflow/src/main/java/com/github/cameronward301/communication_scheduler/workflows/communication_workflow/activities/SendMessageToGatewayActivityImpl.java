@@ -8,6 +8,9 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import java.util.Map;
 
+/**
+ * Send Message To Gateway Activity Implementation
+ */
 @Slf4j
 public class SendMessageToGatewayActivityImpl implements SendMessageToGatewayActivity {
 
@@ -21,9 +24,8 @@ public class SendMessageToGatewayActivityImpl implements SendMessageToGatewayAct
 
     @Override
     public Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl) {
-
-
         try {
+            log.debug("Invoking gateway, userId: {}, workflowRunId: {}", userId, workflowRunId);
             webClient.post()
                     .uri(gatewayUrl)
                     .bodyValue(Map.of("userId", userId, "workflowRunId", workflowRunId))
@@ -31,6 +33,7 @@ public class SendMessageToGatewayActivityImpl implements SendMessageToGatewayAct
                     .toEntity(String.class)
                     .timeout(java.time.Duration.ofSeconds(activityProperties.getGateway_timeout_seconds()))
                     .block();
+            log.debug("Gateway send back 2xx response");
 
         } catch (WebClientResponseException e) {
             log.error("Invalid Gateway response", e);

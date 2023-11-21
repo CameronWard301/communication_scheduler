@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.Duration;
 import java.util.Map;
 
+/**
+ * Get Preferences Activity Implementation
+ */
 @Slf4j
 public class GetPreferencesActivityImpl implements GetPreferencesActivity {
     private final KubernetesClient client;
@@ -25,15 +28,20 @@ public class GetPreferencesActivityImpl implements GetPreferencesActivity {
 
     @Override
     public Preferences getPreferences() {
+        log.debug("Retrieving config map from kubernetes client with name: {} in namespace {}", "preferences", temporalProperties.getNamespace());
         Map<String, String> preferences = client.configMaps()
                 .inNamespace(temporalProperties.getNamespace())
                 .withName("preferences")
                 .get().getData();
+        log.debug("Got config map from kubernetes cluster: {}", preferences);
 
         try {
+            log.debug("Parsing retry policy");
             Map<String, String> retryConfigMap = objectMapper.readValue(preferences.get("RetryPolicy"), new TypeReference<>() {
             });
+            log.debug("Parsed retry policy: {}", retryConfigMap);
 
+            log.debug("Building preferences");
             return Preferences.builder()
                     .startToCloseTimeout(Duration.parse(retryConfigMap.get("startToCloseTimeout")))
                     .maximumAttempts(Integer.parseInt(retryConfigMap.get("maximumAttempts")))

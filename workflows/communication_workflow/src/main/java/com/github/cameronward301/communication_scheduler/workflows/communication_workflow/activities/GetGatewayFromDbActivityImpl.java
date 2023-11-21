@@ -9,6 +9,9 @@ import software.amazon.awssdk.services.dynamodb.model.GetItemResponse;
 
 import java.util.Map;
 
+/**
+ * Get Gateway From DynamoDb Implementation
+ */
 @Slf4j
 public class GetGatewayFromDbActivityImpl implements GetGatewayFromDbActivity {
 
@@ -27,7 +30,9 @@ public class GetGatewayFromDbActivityImpl implements GetGatewayFromDbActivity {
                 .key(Map.of(awsProperties.getKey_name(), AttributeValue.builder().s(gatewayId).build()))
                 .build();
 
+        log.debug("Sending dynamoDb request: {}", getItemRequest);
         GetItemResponse getItemResponse = dynamoDbClient.getItem(getItemRequest).join();
+        log.debug("Retrieved dynamoDb response: {}", getItemResponse);
 
         return getItemResponse.item().get("endpoint_url").s();
     }

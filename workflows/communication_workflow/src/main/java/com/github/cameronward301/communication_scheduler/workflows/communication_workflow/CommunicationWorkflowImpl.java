@@ -9,12 +9,16 @@ import com.github.cameronward301.communication_scheduler.workflows.communication
 import io.temporal.activity.ActivityOptions;
 import io.temporal.common.RetryOptions;
 import io.temporal.workflow.Workflow;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Duration;
 import java.util.Map;
 
-
+/**
+ * Communication Workflow Implementation
+ */
+@Slf4j
 public class CommunicationWorkflowImpl implements CommunicationWorkflow {
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -30,8 +34,12 @@ public class CommunicationWorkflowImpl implements CommunicationWorkflow {
 
     @Override
     public String sendCommunication(Map<String, String> payload) throws JsonProcessingException {
+        log.info("Started workflow with payload: {}", payload.toString());
+        log.info("Getting preferences");
         Preferences preferences = getSettingsActivity.getPreferences();
+        log.info("Got preferences");
 
+        log.info("Setting up activity retry policies and timeouts");
         GetGatewayFromDbActivity getGatewayFromDbActivity = Workflow.newActivityStub(GetGatewayFromDbActivity.class,
                 ActivityOptions.newBuilder()
                         .setStartToCloseTimeout(preferences.getStartToCloseTimeout())
@@ -55,12 +63,18 @@ public class CommunicationWorkflowImpl implements CommunicationWorkflow {
                                 .build())
                         .build()
         );
+        log.info("Completed set up of activity retry policies and timeouts");
 
+
+        log.info("Getting gateway URL");
         String gatewayURL = getGatewayFromDbActivity.getGatewayEndpointUrl(payload.get("gatewayId"));
+        log.info("Got gateway URL: {}", gatewayURL);
 
-
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(sendMessageToGatewayActivity.invokeGateway(payload.get("userId"), Workflow.getInfo().getRunId(), gatewayURL));
-
+        log.info("Sending message to gateway");
+        String response = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(sendMessageToGatewayActivity.invokeGateway(payload.get("userId"), Workflow.getInfo().getRunId(), gatewayURL));
+        log.info("Got response from gateway: {}", response);
+        
+        return response;
 
     }
 }

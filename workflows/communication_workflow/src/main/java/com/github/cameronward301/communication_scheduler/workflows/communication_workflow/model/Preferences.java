@@ -4,6 +4,10 @@ import lombok.*;
 
 import java.time.Duration;
 
+/**
+ * Stores the preferences for the workflow and activities
+ * Retrieved from the kubernetes cluster and used to build a Temporal RetryPolicy for the activities
+ */
 @Getter
 @Setter
 @Builder
