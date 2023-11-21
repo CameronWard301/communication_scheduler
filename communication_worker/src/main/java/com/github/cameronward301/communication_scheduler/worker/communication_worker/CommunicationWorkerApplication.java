@@ -1,0 +1,13 @@
+package com.github.cameronward301.communication_scheduler.worker.communication_worker;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class CommunicationWorkerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(CommunicationWorkerApplication.class, args);
+    }
+
+}
