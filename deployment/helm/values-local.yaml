@@ -1,0 +1,35 @@
+# Default values for helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+temporal:
+
+
+  cassandra:
+    enabled: true
+    config:
+      cluster_size: 1
+
+  mysql:
+    enabled: false
+
+  postgresql:
+    enabled: false
+
+
+  prometheus:
+    enabled: true
+
+  grafana:
+    enabled: true
+
+  elasticsearch:
+    enabled: false
+
+  schema:
+    setup:
+      enabled: true
+    update:
+      enabled: true

@@ -1,0 +1,11 @@
+temporal-properties:
+  namespace: default
+aws-properties:
+  table-name: gateway-db-dev-326610803524-eu-west-1
+  key-name: id
+activity-properties:
+  gateway-timeout-seconds: 60
+
+logging:
+  level:
+    com.github.cameronward301.communication_scheduler.workflows.communication_workflow: info
