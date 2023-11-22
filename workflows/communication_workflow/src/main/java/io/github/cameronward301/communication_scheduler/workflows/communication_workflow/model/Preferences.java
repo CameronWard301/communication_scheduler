@@ -19,4 +19,5 @@ public class Preferences {
     Double backoffCoefficient;
     Duration initialInterval;
     Duration maximumInterval;
+    int gatewayTimeoutSeconds;
 }

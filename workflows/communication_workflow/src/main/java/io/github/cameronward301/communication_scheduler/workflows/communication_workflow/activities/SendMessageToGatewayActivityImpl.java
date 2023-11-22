@@ -1,6 +1,6 @@
 package io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities;
 
-import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.ActivityProperties;
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences;
 import io.temporal.failure.ApplicationFailure;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,11 +15,11 @@ import java.util.Map;
 public class SendMessageToGatewayActivityImpl implements SendMessageToGatewayActivity {
 
     private final WebClient webClient;
-    private final ActivityProperties activityProperties;
+    private final Preferences preferences;
 
-    public SendMessageToGatewayActivityImpl(WebClient webClient, ActivityProperties activityProperties) {
+    public SendMessageToGatewayActivityImpl(WebClient webClient, Preferences preferences) {
         this.webClient = webClient;
-        this.activityProperties = activityProperties;
+        this.preferences = preferences;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class SendMessageToGatewayActivityImpl implements SendMessageToGatewayAct
                     .bodyValue(Map.of("userId", userId, "workflowRunId", workflowRunId))
                     .retrieve()
                     .toEntity(String.class)
-                    .timeout(java.time.Duration.ofSeconds(activityProperties.getGateway_timeout_seconds()))
+                    .timeout(java.time.Duration.ofSeconds(preferences.getGatewayTimeoutSeconds()))
                     .block();
             log.debug("Gateway send back 2xx response");
 

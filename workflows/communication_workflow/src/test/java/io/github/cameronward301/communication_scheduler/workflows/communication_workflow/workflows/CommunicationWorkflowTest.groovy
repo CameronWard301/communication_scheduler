@@ -3,6 +3,7 @@ package io.github.cameronward301.communication_scheduler.workflows.communication
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.CommunicationWorkflow
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetPreferencesActivityImpl
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.AwsProperties
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.TemporalProperties
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder
@@ -12,7 +13,7 @@ import io.fabric8.kubernetes.client.dsl.Resource
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.CommunicationWorkflowImpl
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetGatewayFromDbActivityImpl
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.SendMessageToGatewayActivityImpl
-import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.ActivityProperties
+
 import io.temporal.client.WorkflowClient
 import io.temporal.client.WorkflowOptions
 import io.temporal.testing.TestWorkflowEnvironment
@@ -46,7 +47,7 @@ class CommunicationWorkflowTest extends Specification {
     def mockConfigMap = Mock(Resource)
 
     private WebClient webClient
-    private ActivityProperties activityProperties = new ActivityProperties()
+    private Preferences preferences = new Preferences()
     String gatewayUrl
     final String NAMESPACE = "default"
     final String TASK_QUEUE = "test-task-queue"
@@ -78,7 +79,7 @@ class CommunicationWorkflowTest extends Specification {
 
         webClient = WebClient.create()
 
-        activityProperties.setGateway_timeout_seconds(3)
+        preferences.setGatewayTimeoutSeconds(3)
     }
 
     def cleanup() {
@@ -90,6 +91,7 @@ class CommunicationWorkflowTest extends Specification {
         def configMapData = '{"startToCloseTimeout":"PT10S","maximumAttempts":100,"backoffCoefficient":2.0,"initialInterval":"PT1S","maximumInterval":"PT100S"}'
         def configMap = new ConfigMapBuilder()
                 .withNewMetadata().withName("preferences").withNamespace(NAMESPACE).endMetadata()
+                .addToData("GatewayTimeoutSeconds", "60")
                 .addToData("RetryPolicy", configMapData).build()
         (kubernetesClient.configMaps()) >> mockConfigMapOperations
         (mockConfigMapOperations.inNamespace(NAMESPACE)) >> mockConfigMapOperations
@@ -111,7 +113,7 @@ class CommunicationWorkflowTest extends Specification {
 
         worker.registerActivitiesImplementations(new GetPreferencesActivityImpl(temporalProperties, kubernetesClient))
         worker.registerActivitiesImplementations(new GetGatewayFromDbActivityImpl(awsProperties, dynamoDbAsyncClient))
-        worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient, activityProperties))
+        worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient, preferences))
 
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json"))
         testWorkflowEnvironment.start()

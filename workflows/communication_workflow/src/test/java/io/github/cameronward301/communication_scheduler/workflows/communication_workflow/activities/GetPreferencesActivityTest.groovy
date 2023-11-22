@@ -52,6 +52,7 @@ class GetPreferencesActivityTest extends Specification {
         def configMapData = '{"startToCloseTimeout":"PT10S","maximumAttempts":100,"backoffCoefficient":2.0,"initialInterval":"PT1S","maximumInterval":"PT100S"}'
         def configMap = new ConfigMapBuilder()
                 .withNewMetadata().withName("preferences").withNamespace(NAMESPACE).endMetadata()
+                .addToData("GatewayTimeoutSeconds", "60")
                 .addToData("RetryPolicy", configMapData).build()
         (kubernetesClient.configMaps()) >> mockConfigMapOperations
         (mockConfigMapOperations.inNamespace(NAMESPACE)) >> mockConfigMapOperations
@@ -67,6 +68,7 @@ class GetPreferencesActivityTest extends Specification {
         preferences.startToCloseTimeout == Duration.parse("PT10S")
         preferences.initialInterval == Duration.parse("PT1S")
         preferences.maximumInterval == Duration.parse("PT100S")
+        preferences.gatewayTimeoutSeconds == 60
     }
 
     def "getPreferences should throw ApplicationFailure for invalid configMap"() {
@@ -74,6 +76,7 @@ class GetPreferencesActivityTest extends Specification {
         def configMapData = "Invalid CONFIG_MAP"
         def configMap = new ConfigMapBuilder()
                 .withNewMetadata().withName("preferences").endMetadata()
+                .addToData("GatewayTimeoutSeconds", "60")
                 .addToData("RetryPolicy", configMapData).build()
         (kubernetesClient.configMaps()) >> mockConfigMapOperations
         (mockConfigMapOperations.inNamespace(NAMESPACE)) >> mockConfigMapOperations

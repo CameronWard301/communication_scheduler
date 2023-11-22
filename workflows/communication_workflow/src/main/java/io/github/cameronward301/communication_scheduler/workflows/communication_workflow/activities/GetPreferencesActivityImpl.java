@@ -41,6 +41,10 @@ public class GetPreferencesActivityImpl implements GetPreferencesActivity {
             });
             log.debug("Parsed retry policy: {}", retryConfigMap);
 
+            log.debug("Parsing gateway timeout");
+            int gatewayTimeout = Integer.parseInt(preferences.get("GatewayTimeoutSeconds"));
+            log.debug("Parsed gateway timeout: {}", gatewayTimeout);
+
             log.debug("Building preferences");
             return Preferences.builder()
                     .startToCloseTimeout(Duration.parse(retryConfigMap.get("startToCloseTimeout")))
@@ -48,6 +52,7 @@ public class GetPreferencesActivityImpl implements GetPreferencesActivity {
                     .backoffCoefficient(Double.parseDouble(retryConfigMap.get("backoffCoefficient")))
                     .initialInterval(Duration.parse(retryConfigMap.get("initialInterval")))
                     .maximumInterval(Duration.parse(retryConfigMap.get("maximumInterval")))
+                    .gatewayTimeoutSeconds(gatewayTimeout)
                     .build();
 
         } catch (JsonProcessingException e) {
