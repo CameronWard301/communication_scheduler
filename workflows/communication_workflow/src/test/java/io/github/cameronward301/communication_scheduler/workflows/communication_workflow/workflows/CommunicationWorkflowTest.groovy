@@ -115,18 +115,21 @@ class CommunicationWorkflowTest extends Specification {
         worker.registerActivitiesImplementations(new GetGatewayFromDbActivityImpl(awsProperties, dynamoDbAsyncClient))
         worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient, preferences))
 
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json"))
+        final String messageHash = "test-hash"
+        final String USER_ID = "test-user"
+        String responseJSON = "{\"userId\":\"" + USER_ID + "\",\"messageHash\":\""+ messageHash + "\"}"
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json").setBody(responseJSON))
         testWorkflowEnvironment.start()
 
         CommunicationWorkflow communicationWorkflow = workflowClient.newWorkflowStub(CommunicationWorkflow.class, WorkflowOptions.newBuilder().setTaskQueue(TASK_QUEUE).build())
 
         when: "communication workflow is started"
-        String workflowResult = communicationWorkflow.sendCommunication(Map.of("gatewayId", GATEWAY_ID, "userId", "test-user"))
+        String workflowResult = communicationWorkflow.sendCommunication(Map.of("gatewayId", GATEWAY_ID, "userId", USER_ID))
 
         then: "workflow completes successfully"
         Map<String, String> resultObject = objectMapper.readValue(workflowResult, Map.class)
         resultObject.get("status") == "complete"
-        resultObject.get("userId") == "test-user"
-        resultObject.get("gateway_url") == gatewayUrl
+        resultObject.get("userId") == USER_ID
+        resultObject.get("messageHash") == messageHash
     }
 }

@@ -1,6 +1,6 @@
 package io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities
 
-import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.ActivityProperties
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences
 import io.temporal.failure.ActivityFailure
 import io.temporal.testing.TestActivityEnvironment
 import io.temporal.testing.TestEnvironmentOptions
@@ -19,7 +19,7 @@ class SendMessageToGatewayTest extends Specification {
     final String WORKFLOW_RUN_ID = "test-run-id"
     String baseUrl
     String gatewayUrl
-    ActivityProperties activityProperties = new ActivityProperties()
+    Preferences preferences = new Preferences()
 
     public static MockWebServer mockWebServer;
 
@@ -35,9 +35,9 @@ class SendMessageToGatewayTest extends Specification {
 
         WebClient webClient = WebClient.create()
 
-        activityProperties.setGateway_timeout_seconds(1)
+        preferences.setGatewayTimeoutSeconds(1)
 
-        testActivityEnvironment.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient, activityProperties))
+        testActivityEnvironment.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient, preferences))
         sendMessageToGatewayActivity = testActivityEnvironment.newActivityStub(SendMessageToGatewayActivity.class)
         baseUrl = String.format("http://localhost:%s", mockWebServer.getPort())
         gatewayUrl = baseUrl + "/test-gateway"
@@ -48,14 +48,16 @@ class SendMessageToGatewayTest extends Specification {
     }
 
     def "invoking gateway should return success"() {
-        given: "Mocked webClient returns success"
-        mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json"))
+        given: "Mocked webClient returns success response"
+        String messageHash = "test-hash"
+        String responseJSON = "{\"userId\":\"" + USER_ID + "\",\"messageHash\":\""+ messageHash + "\"}"
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json").setBody(responseJSON))
 
         when: "sendMessageToGatewayActivity is invoked"
         Map<String, String> response = sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl)
 
         then: "response is success"
-        response == Map.of("status", "complete", "userId", USER_ID, "gateway_url", gatewayUrl);
+        response == Map.of("status", "complete", "userId", USER_ID, "messageHash", messageHash)
     }
 
     def "internal gateway error 500 should throw ActivityFailure"() {
