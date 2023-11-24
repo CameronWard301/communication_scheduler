@@ -23,7 +23,7 @@ cgw --> worker: Returns error response
 worker --> temporal: Activity failed
 temporal -> worker: Retry SendCommunicationActivity
 worker -> cgw: Send user id with workflow run id
-cgw --> worker: Returns delivery response with message hash
+cgw --> worker: Returns delivery response 200 with message hash and user id
 worker --> temporal: Activity completed
 temporal -> worker: Complete workflow
 worker --> temporal: Workflow complete
