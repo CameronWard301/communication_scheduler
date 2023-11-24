@@ -1,9 +1,11 @@
 package io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities;
 
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.exception.InvalidGatewayResponseException;
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences;
 import io.temporal.failure.ApplicationFailure;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.codec.DecodingException;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
@@ -32,23 +34,26 @@ public class SendMessageToGatewayActivityImpl implements SendMessageToGatewayAct
                     .uri(gatewayUrl)
                     .bodyValue(Map.of("userId", userId, "workflowRunId", workflowRunId))
                     .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<Map<String, String>>(){})
+                    .bodyToFlux(new ParameterizedTypeReference<Map<String, String>>() {
+                    })
                     .timeout(Duration.ofSeconds(preferences.getGatewayTimeoutSeconds()))
-                    .block();
+                    .blockFirst();
 
             log.debug("Gateway send back 2xx response");
             if (response == null || response.isEmpty() || !response.containsKey("userId") || !response.containsKey("messageHash")) {
                 log.error("Gateway did not return a valid response: {}", response);
-                throw ApplicationFailure.newFailure("Gateway did not return a response", "GatewayError");
+                throw new InvalidGatewayResponseException();
+                //throw ApplicationFailure.newFailure("Gateway did not return a valid response", "GatewayError");
             }
 
             return Map.of("status", "complete", "userId", response.get("userId"), "messageHash", response.get("messageHash"));
 
 
-
         } catch (WebClientResponseException e) {
-            log.error("Invalid Gateway response", e);
+            log.error("Invalid Gateway response code", e);
             throw ApplicationFailure.newFailure("Gateway unsuccessful, status: " + e.getStatusCode().value() + " from: " + gatewayUrl, "GatewayError");
+        } catch (InvalidGatewayResponseException | DecodingException e) {
+            throw ApplicationFailure.newFailure("Gateway did not return a valid response", "GatewayError");
         } catch (Exception e) {
             if (e.getCause() instanceof java.util.concurrent.TimeoutException) {
                 log.error("Gateway timed out", e);

@@ -12,6 +12,7 @@ public interface GetPreferencesActivity {
 
     /**
      * Gets the preferences from the kubernetes cluster
+     *
      * @return The preferences object for building activities retry policy
      */
     @ActivityMethod

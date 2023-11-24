@@ -11,6 +11,7 @@ public interface GetGatewayFromDbActivity {
 
     /**
      * Gets the gateway endpoint url from the database
+     *
      * @param gatewayId The id of the gateway to retrieve from DynamoDB
      * @return The gateway endpoint url e.g. <a href="https://example.com/monthly-email">https://example.com/monthly-email</a>
      */

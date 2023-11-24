@@ -3,9 +3,9 @@ package io.github.cameronward301.communication_scheduler.workflows.communication
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences;
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.TemporalProperties;
-import io.fabric8.kubernetes.client.KubernetesClient;
 import io.temporal.failure.ApplicationFailure;
 import lombok.extern.slf4j.Slf4j;
 

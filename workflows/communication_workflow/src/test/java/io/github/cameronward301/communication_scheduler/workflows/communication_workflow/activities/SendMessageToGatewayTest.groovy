@@ -21,7 +21,7 @@ class SendMessageToGatewayTest extends Specification {
     String gatewayUrl
     Preferences preferences = new Preferences()
 
-    public static MockWebServer mockWebServer;
+    public static MockWebServer mockWebServer
 
     def setup() {
         testActivityEnvironment = TestActivityEnvironment.newInstance(
@@ -47,10 +47,10 @@ class SendMessageToGatewayTest extends Specification {
         testActivityEnvironment.close()
     }
 
-    def "invoking gateway should return success"() {
+    def "invoking gateway should return success, with userId and messageHash"() {
         given: "Mocked webClient returns success response"
         String messageHash = "test-hash"
-        String responseJSON = "{\"userId\":\"" + USER_ID + "\",\"messageHash\":\""+ messageHash + "\"}"
+        String responseJSON = "{\"userId\":\"" + USER_ID + "\",\"messageHash\":\"" + messageHash + "\"}"
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json").setBody(responseJSON))
 
         when: "sendMessageToGatewayActivity is invoked"
@@ -58,6 +58,30 @@ class SendMessageToGatewayTest extends Specification {
 
         then: "response is success"
         response == Map.of("status", "complete", "userId", USER_ID, "messageHash", messageHash)
+    }
+
+    def "gateway returning an invalid response should throw ActivityFailure"() {
+        given: "Mocked webClient returns invalid response"
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json").setBody("{\"invalid-response\": \"true\"}"))
+
+        when: "sendMessageToGatewayActivity is invoked"
+        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl)
+
+        then: "exception is thrown"
+        def exception = thrown(ActivityFailure)
+        exception.originalMessage == "Gateway did not return a valid response"
+    }
+
+    def "gateway returns invalid JSON should throw ActivityFailure"() {
+        given: "Mocked webClient returns invalid JSON"
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json").setBody("invalid-json"))
+
+        when: "sendMessageToGatewayActivity is invoked"
+        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl)
+
+        then: "exception is thrown"
+        def exception = thrown(ActivityFailure)
+        exception.originalMessage == "Gateway did not return a valid response"
     }
 
     def "internal gateway error 500 should throw ActivityFailure"() {
