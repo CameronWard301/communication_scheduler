@@ -1,0 +1,45 @@
+@startuml Gateway Interfaces
+
+
+
+package "Communication Gateway" as communicationGateway {
+    component gateway {
+
+    }
+
+
+    class GatewayHelper {
+        + String messageHash(String workflowRunId, String messageContents)
+    }
+
+    interface CommunicationHistoryAccessProvider {
+        + Communication getPreviousCommunicationMessageHash(String messageHash)
+        + void storeCommunication(String workflowRunId, String userId, String messageHash)
+    }
+
+    class DefaultCommunicationHistoryAccessProvider implements CommunicationHistoryAccessProvider {
+        + Communication getPreviousCommunicationMessageHash(String messageHash)
+        + void storeCommunication(String workflowRunId, String userId, String messageHash)
+    }
+
+
+
+
+
+    interface GatewayService {
+        + ResponseEntity sendCommunication(GatewayProperties gatewayProperties)
+    }
+
+    class CommunicationGatewayService implements GatewayService{
+        + ResponseEntity sendCommunication(GatewayProperties gatewayProperties))
+    }
+
+
+
+
+    CommunicationGatewayService --> DefaultCommunicationHistoryAccessProvider: uses
+    CommunicationGatewayService --> GatewayHelper: uses
+}
+
+
+@enduml
