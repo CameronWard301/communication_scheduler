@@ -1,0 +1,93 @@
+@startuml Component Interfaces
+
+component webportalBFFApi {
+
+}
+
+
+package "Communication APIs" as communicationApis {
+    component gatewayApi {
+
+    }
+
+    interface gatewayController {
+        + List<Gateways> getGateways(Optional<int> pageNumber, Optional<int> pageSize)
+        + Gateway createGateway(String endpointUrl, String friendlyName, Optional<String> description)
+        + Gateway updateGateway(Gateway gateway)
+        + Gateway getGatewayById(String id)
+        + void deleteGatewayById(String id)
+    }
+
+    interface gatewayService {
+        + List<Gateways> getGateways(int pageNumber, int pageSize)
+        + Gateway createGateway(String endpointUrl, String friendlyName, Optional<String> description)
+        + Gateway updateGateway(Gateway gateway)
+        + Gateway getGatewayById(String id)
+        + void deleteGatewayById(String id)
+    }
+
+    interface PagingAndSortingRepository {
+        Page<T> findAll(Pageable pageable)
+        Iterable<T> findAll(Sort sort)
+    }
+
+
+    interface gatewayRepository extends PagingAndSortingRepository {
+        + Gateway save(Gateway)
+        + List<Gateway> getAll(pageNumber, pageSize)
+        + Gateway findById(String gatewayId)
+        + void deleteById(String gatewayId)
+    }
+
+    gatewayApi --|> gatewayService
+    gatewayApi --|> gatewayRepository
+    gatewayApi --|> gatewayController
+    gatewayController --> gatewayService
+    gatewayService --> gatewayRepository
+
+    component preferencesApi {
+
+    }
+
+    interface preferencesController {
+        + RetryPolicy getRetryPolicy()
+        + RetryPolicy setRetryPolicy(RetryPolicy retryPolicy)
+    }
+
+    interface preferencesService {
+        + RetryPolicy getRetryPolicy()
+        + RetryPolicy setRetryPolicy(RetryPolicy retryPolicy)
+    }
+
+    preferencesApi --|> preferencesService
+    preferencesApi --|> preferencesController
+    preferencesController --> preferencesService
+
+    component authApi {
+
+    }
+
+    interface authController {
+        + String generateJWT(List<String> scopes)
+    }
+
+    interface authService {
+        + String generateJWT(List<String> scopes)
+    }
+
+    authApi --|> authService
+    authApi --|> authController
+    authController --> authService
+
+    
+}
+
+
+webportalBFFApi -d--> gatewayController
+'webportalBFFApi ---> historyController
+webportalBFFApi -d---> preferencesController
+'webportalBFFApi ---> scheduleController
+webportalBFFApi -d---> authController
+'scheduleClient <-- scheduleApi
+'workflowClient <-- historyApi
+@enduml
