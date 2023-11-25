@@ -1,13 +1,12 @@
-temporal-properties:
-  namespace: default
-  task-queue: communication-workflow
-aws-properties:
-  table-name: gateway-db-dev-326610803524-eu-west-1
-  key-name: id
-  region: eu-west-1
-activity-properties:
-  gateway-timeout-seconds: 60
-
 logging:
   level:
-    com.github.cameronward301.communication_scheduler.workflows.communication_workflow: info
+    com.github.cameronward301.communication_scheduler.workflows.communication_workflow: ${WORKER_DEBUG:debug}
+    root: ${SPRING_DEBUG:info}
+
+temporal-properties:
+  namespace: ${NAMESPACE:default}
+  task-queue: ${TASK_QUEUE:communication-workflow}
+aws-properties:
+  table-name: ${GATEWAY_DB_TABLE_NAME:gateway-db-dev-326610803524-eu-west-1}
+  key-name: ${GATEWAY_KEY_NAME:id}
+  region: ${AWS_REGION:eu-west-1}
