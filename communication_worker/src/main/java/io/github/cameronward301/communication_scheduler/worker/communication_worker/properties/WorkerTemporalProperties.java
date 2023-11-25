@@ -12,4 +12,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("temporal-properties")
 public class WorkerTemporalProperties extends TemporalProperties {
     private String taskQueue;
+    private String endpoint;
 }

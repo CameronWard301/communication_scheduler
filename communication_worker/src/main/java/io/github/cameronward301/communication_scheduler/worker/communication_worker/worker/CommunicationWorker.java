@@ -11,6 +11,7 @@ import io.github.cameronward301.communication_scheduler.workflows.communication_
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowClientOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;
+import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,8 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 @Slf4j
 public class CommunicationWorker {
     public CommunicationWorker(WorkerTemporalProperties temporalProperties, WorkerAwsProperties awsProperties) {
-        WorkflowServiceStubs service = WorkflowServiceStubs.newLocalServiceStubs();
+        WorkflowServiceStubs service = WorkflowServiceStubs.newServiceStubs(WorkflowServiceStubsOptions.newBuilder()
+                .setTarget(temporalProperties.getEndpoint()).build());
         WorkflowClient client = WorkflowClient.newInstance(service, WorkflowClientOptions.newBuilder()
                 .setNamespace(temporalProperties.getNamespace())
                 .build());
