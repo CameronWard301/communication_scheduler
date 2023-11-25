@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-communication-worker
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-communication-worker
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-communication-worker
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-communication-worker
+          image: "{{ .Values.communication_worker.repository }}:{{ .Values.communication_worker.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "TEMPORAL_ENDPOINT"
+              value: "{{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local:7233"

@@ -3,10 +3,10 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 2
+image:
+  pullPolicy: Always
 
 temporal:
-
-
   cassandra:
     enabled: true
     config:
@@ -33,3 +33,7 @@ temporal:
       enabled: true
     update:
       enabled: true
+
+communication_worker:
+  repository: cameronward/communication-worker
+  tag: latest
