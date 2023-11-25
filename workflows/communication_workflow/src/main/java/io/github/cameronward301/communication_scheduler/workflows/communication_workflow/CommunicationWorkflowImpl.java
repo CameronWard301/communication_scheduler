@@ -71,7 +71,7 @@ public class CommunicationWorkflowImpl implements CommunicationWorkflow {
         log.info("Got gateway URL: {}", gatewayURL);
 
         log.info("Sending message to gateway");
-        String response = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(sendMessageToGatewayActivity.invokeGateway(payload.get("userId"), Workflow.getInfo().getRunId(), gatewayURL));
+        String response = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(sendMessageToGatewayActivity.invokeGateway(payload.get("userId"), Workflow.getInfo().getRunId(), gatewayURL, preferences));
         log.info("Got response from gateway: {}", response);
 
         return response;

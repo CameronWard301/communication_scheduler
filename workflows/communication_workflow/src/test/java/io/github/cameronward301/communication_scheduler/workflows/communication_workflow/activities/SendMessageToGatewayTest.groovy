@@ -37,7 +37,7 @@ class SendMessageToGatewayTest extends Specification {
 
         preferences.setGatewayTimeoutSeconds(1)
 
-        testActivityEnvironment.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient, preferences))
+        testActivityEnvironment.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient))
         sendMessageToGatewayActivity = testActivityEnvironment.newActivityStub(SendMessageToGatewayActivity.class)
         baseUrl = String.format("http://localhost:%s", mockWebServer.getPort())
         gatewayUrl = baseUrl + "/test-gateway"
@@ -54,10 +54,22 @@ class SendMessageToGatewayTest extends Specification {
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json").setBody(responseJSON))
 
         when: "sendMessageToGatewayActivity is invoked"
-        Map<String, String> response = sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl)
+        Map<String, String> response = sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl, preferences)
 
         then: "response is success"
         response == Map.of("status", "complete", "userId", USER_ID, "messageHash", messageHash)
+    }
+
+    def "gateway responding with invalid content type should throw Activity Failure"() {
+        given: "Mocked webClient returns invalid content type"
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "text/html;charset=UTF-8").setBody("{\"invalid-response\": \"true\"}"))
+
+        when: "sendMessageToGatewayActivity is invoked"
+        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl, preferences)
+
+        then: "exception is thrown"
+        def exception = thrown(ActivityFailure)
+        exception.originalMessage == "Gateway did not return content type of application/json"
     }
 
     def "gateway returning an invalid response should throw ActivityFailure"() {
@@ -65,7 +77,19 @@ class SendMessageToGatewayTest extends Specification {
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json").setBody("{\"invalid-response\": \"true\"}"))
 
         when: "sendMessageToGatewayActivity is invoked"
-        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl)
+        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl, preferences)
+
+        then: "exception is thrown"
+        def exception = thrown(ActivityFailure)
+        exception.originalMessage == "Gateway did not return a valid response"
+    }
+
+    def "invokeGateway should throw ActivityFailure when no response body is sent"() {
+        given: "no body is returned from the gateway"
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json"))
+
+        when: "sendMessageToGatewayActivity is invoked"
+        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl, preferences)
 
         then: "exception is thrown"
         def exception = thrown(ActivityFailure)
@@ -77,7 +101,7 @@ class SendMessageToGatewayTest extends Specification {
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json").setBody("invalid-json"))
 
         when: "sendMessageToGatewayActivity is invoked"
-        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl)
+        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl, preferences)
 
         then: "exception is thrown"
         def exception = thrown(ActivityFailure)
@@ -90,7 +114,7 @@ class SendMessageToGatewayTest extends Specification {
         mockWebServer.enqueue(new MockResponse().setResponseCode(responseCode).addHeader("Content-Type", "application/json"))
 
         when: "sendMessageToGatewayActivity is invoked"
-        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl)
+        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl, preferences)
 
         then: "exception is thrown"
         def exception = thrown(ActivityFailure)
@@ -103,7 +127,7 @@ class SendMessageToGatewayTest extends Specification {
         mockWebServer.enqueue(new MockResponse().setResponseCode(responseCode).addHeader("Content-Type", "application/json"))
 
         when: "sendMessageToGatewayActivity is invoked"
-        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl)
+        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl, preferences)
 
         then: "exception is thrown"
         def exception = thrown(ActivityFailure)
@@ -116,7 +140,7 @@ class SendMessageToGatewayTest extends Specification {
         mockWebServer.enqueue(new MockResponse().setResponseCode(responseCode).addHeader("Content-Type", "application/json"))
 
         when: "sendMessageToGatewayActivity is invoked"
-        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl)
+        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl, preferences)
 
         then: "exception is thrown"
         def exception = thrown(ActivityFailure)
@@ -128,7 +152,7 @@ class SendMessageToGatewayTest extends Specification {
         mockWebServer.enqueue(new MockResponse().setHeadersDelay(10, TimeUnit.SECONDS))
 
         when: "sendMessageToGatewayActivity is invoked"
-        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl)
+        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl, preferences)
 
         then: "exception is thrown"
         def exception = thrown(ActivityFailure)
@@ -138,12 +162,15 @@ class SendMessageToGatewayTest extends Specification {
     def "invokeGateway should throw ActivityFailure when calling an invalid url"() {
         given: "url is invalid"
         String invalidUrl = "invalid-url"
+        preferences.gatewayTimeoutSeconds = 10
 
         when: "sendMessageToGatewayActivity is invoked"
-        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, invalidUrl)
+        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, invalidUrl, preferences)
 
         then: "exception is thrown"
         def exception = thrown(ActivityFailure)
         exception.originalMessage == "Could not invoke gateway: " + invalidUrl
     }
+
+
 }

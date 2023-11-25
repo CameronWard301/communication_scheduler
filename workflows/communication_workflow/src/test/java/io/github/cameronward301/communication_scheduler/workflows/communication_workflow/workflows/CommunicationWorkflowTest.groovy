@@ -113,7 +113,7 @@ class CommunicationWorkflowTest extends Specification {
 
         worker.registerActivitiesImplementations(new GetPreferencesActivityImpl(temporalProperties, kubernetesClient))
         worker.registerActivitiesImplementations(new GetGatewayFromDbActivityImpl(awsProperties, dynamoDbAsyncClient))
-        worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient, preferences))
+        worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient))
 
         final String messageHash = "test-hash"
         final String USER_ID = "test-user"

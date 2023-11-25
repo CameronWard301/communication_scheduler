@@ -6,6 +6,7 @@ import io.temporal.failure.ApplicationFailure;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.codec.DecodingException;
+import org.springframework.web.reactive.function.UnsupportedMediaTypeException;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
@@ -19,15 +20,13 @@ import java.util.Map;
 public class SendMessageToGatewayActivityImpl implements SendMessageToGatewayActivity {
 
     private final WebClient webClient;
-    private final Preferences preferences;
 
-    public SendMessageToGatewayActivityImpl(WebClient webClient, Preferences preferences) {
+    public SendMessageToGatewayActivityImpl(WebClient webClient) {
         this.webClient = webClient;
-        this.preferences = preferences;
     }
 
     @Override
-    public Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl) {
+    public Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl, Preferences preferences) {
         try {
             log.debug("Invoking gateway, userId: {}, workflowRunId: {}", userId, workflowRunId);
             Map<String, String> response = webClient.post()
@@ -43,13 +42,17 @@ public class SendMessageToGatewayActivityImpl implements SendMessageToGatewayAct
             if (response == null || response.isEmpty() || !response.containsKey("userId") || !response.containsKey("messageHash")) {
                 log.error("Gateway did not return a valid response: {}", response);
                 throw new InvalidGatewayResponseException();
-                //throw ApplicationFailure.newFailure("Gateway did not return a valid response", "GatewayError");
             }
 
             return Map.of("status", "complete", "userId", response.get("userId"), "messageHash", response.get("messageHash"));
 
 
-        } catch (WebClientResponseException e) {
+        }
+        catch (WebClientResponseException e) {
+            if (e.getCause() instanceof UnsupportedMediaTypeException) {
+                log.error("Gateway did not return content type of application/json", e);
+                throw ApplicationFailure.newFailure("Gateway did not return content type of application/json", "GatewayError");
+            }
             log.error("Invalid Gateway response code", e);
             throw ApplicationFailure.newFailure("Gateway unsuccessful, status: " + e.getStatusCode().value() + " from: " + gatewayUrl, "GatewayError");
         } catch (InvalidGatewayResponseException | DecodingException e) {
