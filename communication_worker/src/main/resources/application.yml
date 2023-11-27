@@ -1,6 +1,6 @@
 logging:
   level:
-    com.github.cameronward301.communication_scheduler.workflows.communication_workflow: ${WORKER_DEBUG:debug}
+    io.github.cameronward301.communication_scheduler.worker.communication_worker: ${WORKER_DEBUG:debug}
     root: ${SPRING_DEBUG:info}
 
 temporal-properties:

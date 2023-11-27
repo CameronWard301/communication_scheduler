@@ -24,27 +24,37 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 @Slf4j
 public class CommunicationWorker {
     public CommunicationWorker(WorkerTemporalProperties temporalProperties, WorkerAwsProperties awsProperties) {
+        log.debug("Connecting to temporal at {}", temporalProperties.getEndpoint());
         WorkflowServiceStubs service = WorkflowServiceStubs.newServiceStubs(WorkflowServiceStubsOptions.newBuilder()
                 .setTarget(temporalProperties.getEndpoint()).build());
         WorkflowClient client = WorkflowClient.newInstance(service, WorkflowClientOptions.newBuilder()
                 .setNamespace(temporalProperties.getNamespace())
                 .build());
 
+        log.debug("Connected to temporal");
+
         WorkerFactory factory = WorkerFactory.newInstance(client);
         Worker worker = factory.newWorker(temporalProperties.getTaskQueue());
 
+        log.debug("Connecting to dynamoDb at {}", awsProperties.getRegion());
         DynamoDbAsyncClient dynamoDbAsyncClient = DynamoDbAsyncClient.builder()
                 .region(Region.of(awsProperties.getRegion()))
                 .build();
+        log.debug("Connected to dynamoDb");
 
         WebClient webClient = WebClient.create();
+
+        log.debug("Connecting to kubernetes");
         KubernetesClient kubernetesClient = new KubernetesClientBuilder().build();
+        log.debug("Connected to kubernetes");
 
 
+        log.debug("Registering workflow and activities");
         worker.registerWorkflowImplementationTypes(CommunicationWorkflowImpl.class);
         worker.registerActivitiesImplementations(new GetPreferencesActivityImpl(temporalProperties, kubernetesClient));
         worker.registerActivitiesImplementations(new GetGatewayFromDbActivityImpl(awsProperties, dynamoDbAsyncClient));
         worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient));
+        log.debug("Registered workflow and activities");
 
         log.info("Worker started");
         factory.start();
