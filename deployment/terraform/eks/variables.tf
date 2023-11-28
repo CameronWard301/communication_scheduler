@@ -32,12 +32,12 @@ variable "kms_key_administrators" {
 
 variable "ebs_csi_driver_version" {
   type    = string
-  default = "v1.24.1-eksbuild.1"
+  default = "v1.25.0-eksbuild.1"
 }
 
 variable "vpc_cni_version" {
   type    = string
-  default = "v1.14.1-eksbuild.1"
+  default = "v1.15.4-eksbuild.1"
 }
 
 variable "on_demand_nodes" {

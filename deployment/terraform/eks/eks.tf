@@ -71,7 +71,8 @@ module "eks" {
     spot = {
       ami_type                     = var.spot_nodes.ami_type
       iam_role_additional_policies = {
-        AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+        AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",
+        DynamoDBPolicy           = aws_iam_policy.DynamoDBPolicy.arn
       }
       min_size     = var.spot_nodes.min_size
       max_size     = var.spot_nodes.max_size
@@ -102,4 +103,20 @@ module "eks" {
     var.default_tags,
     {}
   )
+}
+
+resource "aws_iam_policy" "DynamoDBPolicy" {
+  policy = data.aws_iam_policy_document.DynamoDBPolicy.json
+}
+
+data "aws_iam_policy_document" "DynamoDBPolicy" {
+  version = "2012-10-17"
+  statement {
+    actions = [
+      "dynamodb:GetItem",
+    ]
+    resources = [
+      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/gateway-db-${var.account_name}-${data.aws_caller_identity.current.account_id}-${var.region}"
+    ]
+  }
 }
