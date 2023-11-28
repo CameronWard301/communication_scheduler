@@ -42,7 +42,8 @@ module "eks" {
     on_demand = {
       ami_type                     = var.on_demand_nodes.ami_type
       iam_role_additional_policies = {
-        AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+        AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",
+        DynamoDBPolicy           = aws_iam_policy.DynamoDBPolicy.arn
       }
       min_size     = var.on_demand_nodes.min_size
       max_size     = var.on_demand_nodes.max_size
