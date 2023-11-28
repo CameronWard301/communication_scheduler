@@ -1,6 +1,7 @@
 # Using helm 3 action from: https://github.com/WyriHaximus/github-action-helm3
 name: 'Helm Deployments'
 on:
+  workflow_dispatch:
   push:
     paths:
       - deployment/helm/**
