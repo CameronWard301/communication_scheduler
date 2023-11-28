@@ -127,12 +127,9 @@ temporal:
             driver: "postgres"
             host: temporal-eu-west-1-dev.cluster-cq6ujr7evasm.eu-west-1.rds.amazonaws.com
             port: 5432
-            database: temporal
-            user: "{{ .Values.temporal.server.config.persistence.default.sql.user | default (lookup_env `TEMPORAL_DB_USERNAME`) }}"
-            password: "{{ .Values.temporal.server.config.persistence.default.sql.password | default (lookup_env `TEMPORAL_DB_PASSWORD`) }}"
             # for a production deployment use this instead of `password` and provision the secret beforehand e.g. with a sealed secret
             # it has a single key called `password`
-            # existingSecret: temporal-default-store
+            existingSecret: temporal-db-password
             maxConns: 20
             maxConnLifetime: "1h"
             # tls:
@@ -148,12 +145,10 @@ temporal:
             host: temporal-eu-west-1-dev.cluster-cq6ujr7evasm.eu-west-1.rds.amazonaws.com
             port: 5432
             database: temporal_visibility
-            user: "{{ .Values.temporal.server.config.persistence.visibility.sql.user | default (lookup_env `TEMPORAL_DB_USERNAME`) }}"
-            password: "{{ .Values.temporal.server.config.persistence.visibility.sql.password | default (lookup_env `TEMPORAL_DB_PASSWORD`) }}"
 
             # for a production deployment use this instead of `password` and provision the secret beforehand e.g. with a sealed secret
             # it has a single key called `password`
-            # existingSecret: temporal-visibility-store
+            existingSecret: temporal-db-password
             maxConns: 20
             maxConnLifetime: "1h"
             # tls:

@@ -34,4 +34,4 @@ terraform.tfvars
 ### Helm ###
 # Chart dependencies
 **/charts/*.tgz
-/deployment/helm/secrets.yaml
+/deployment/helm/values-secrets.yaml
