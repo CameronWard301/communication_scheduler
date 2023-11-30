@@ -68,9 +68,14 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set default.region eu-west-1
           aws eks update-kubeconfig --region eu-west-1 --name communication-eks
+      - name: Encode Kubeconfig file
+        run: |
+          KUBE_CONFIG_BASE64=$(base64 -w 0 ${{ runner.workspace }}/.kube/config)
+          echo "KUBE_CONFIG_BASE64=${KUBE_CONFIG_BASE64}" >> $GITHUB_ENV
+        shell: bash
       - name: Restart Communication Workers
         uses: actions-hub/kubectl@master
         env:
-          KUBE_CONFIG: ${{ runner.workspace }}/.kube/config }}
+          KUBE_CONFIG: ${{ env.KUBE_CONFIG_BASE64 }}
         with:
           args: rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-communication-worker
