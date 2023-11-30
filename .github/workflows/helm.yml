@@ -33,8 +33,7 @@ jobs:
             helm upgrade cs ./deployment/helm/ --install --dry-run --namespace=default
             --values=./deployment/helm/values-eks.yaml
             --set env.temporal.password=${{ secrets.TEMPORAL_DB_PASSWORD }}
-            --set temporal.server.config.persistence.default.sql.user=${{ secrets.TEMPORAL_DB_USERNAME }}
-            --set temporal.server.config.persistence.visibility.sql.user=${{ secrets.TEMPORAL_DB_USERNAME }}
+            --set env.temporal.user=${{ secrets.TEMPORAL_DB_USERNAME }}
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
@@ -49,8 +48,7 @@ jobs:
             helm upgrade cs ./deployment/helm/ --install --namespace=default
             --values=./deployment/helm/values-eks.yaml
             --set env.temporal.password=${{ secrets.TEMPORAL_DB_PASSWORD }}
-            --set temporal.server.config.persistence.default.sql.user=${{ secrets.TEMPORAL_DB_USERNAME }}
-            --set temporal.server.config.persistence.visibility.sql.user=${{ secrets.TEMPORAL_DB_USERNAME }}
+            --set env.temporal.user=${{ secrets.TEMPORAL_DB_USERNAME }}
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
