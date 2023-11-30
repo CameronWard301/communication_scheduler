@@ -206,7 +206,7 @@ temporal:
 
 communication_worker:
   repository: cameronward/communication-worker
-  tag: latest
+  tag: 0.1.0
 
 PreferencesDefaults:
   GatewayTimeoutSeconds: "60"
