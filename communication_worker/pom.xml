@@ -8,7 +8,7 @@
         <version>3.1.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.github.CameronWard301.communication_scheduler.worker</groupId>
+    <groupId>io.github.CameronWard301.communication_scheduler.worker</groupId>
     <artifactId>communication_worker</artifactId>
     <version>0.1.0</version>
     <name>communication_worker</name>
