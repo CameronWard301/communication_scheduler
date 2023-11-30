@@ -52,7 +52,7 @@ jobs:
           echo "CONTAINER_VERSION=${CONTAINER_VERSION}" >> $GITHUB_ENV
       - name: add tag to list
         run: |
-          tags=${{ steps.meta.outputs.tags }},${{ CONTAINER_VERSION }}
+          tags=${{ steps.meta.outputs.tags }},${{ env.CONTAINER_VERSION }}
           echo "tags=${tags}" >> $GITHUB_ENV
       - name: Build and push
         uses: docker/build-push-action@v5
