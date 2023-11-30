@@ -70,7 +70,7 @@ jobs:
           aws eks update-kubeconfig --region eu-west-1 --name communication-eks
       - name: Encode Kubeconfig file
         run: |
-          KUBE_CONFIG_BASE64=$(base64 -w 0 ${{ runner.workspace }}/.kube/config)
+          KUBE_CONFIG_BASE64=$(base64 -w 0 /home/runner/.kube/config)
           echo "KUBE_CONFIG_BASE64=${KUBE_CONFIG_BASE64}" >> $GITHUB_ENV
         shell: bash
       - name: Restart Communication Workers
