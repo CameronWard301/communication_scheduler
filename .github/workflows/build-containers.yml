@@ -71,6 +71,6 @@ jobs:
       - name: Restart Communication Workers
         uses: actions-hub/kubectl@1.28.4
         env:
-          KUBE_CONFIG: ${{ cat $HOME/.kube/config }}
+          KUBE_CONFIG: ${{ runner.workspace }}/.kube/config }}
         with:
           args: rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-communication-worker
