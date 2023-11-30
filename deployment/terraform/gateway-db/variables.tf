@@ -31,3 +31,18 @@ variable "write_capacity" {
   type = number
   default = 5
 }
+
+variable "deploy_mock_gateway_api" {
+  type = bool
+  default = false
+}
+
+variable "enable_mock_gateway_logs" {
+  type = bool
+  default = false
+}
+
+variable "configure_global_api_gateway_log_role" {
+  type = bool
+  default = false
+}
