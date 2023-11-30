@@ -51,14 +51,14 @@ jobs:
           echo "CONTAINER_VERSION=$(mvn help:evaluate -Dexpression="project.version" -q -DforceStdout)" >> $GITHUB_ENV
       - name: add tag to list
         run: |
-          echo "tags: ${{ steps.meta.outputs.tags }},${env.CONTAINER_VERSION}" >> $GITHUB_ENV
+          echo "tags=${{ steps.meta.outputs.tags }},${{ CONTAINER_VERSION }}" >> $GITHUB_ENV
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: ./communication_worker
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
   restart-deployments:
