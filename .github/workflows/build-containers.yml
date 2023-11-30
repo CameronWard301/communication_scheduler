@@ -69,6 +69,8 @@ jobs:
           aws configure set default.region eu-west-1
           aws eks update-kubeconfig --region eu-west-1 --name communication-eks
       - name: Restart Communication Workers
-        uses: actions-hub/kubectl@master
+        uses: actions-hub/kubectl@1.28.4
+        env:
+          KUBE_CONFIG: ${{ cat $HOME/.kube/config }}
         with:
           args: rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-communication-worker
