@@ -25,6 +25,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Get version
         run: |
+          mvn help:evaluate -Dexpression="project.version"
           CONTAINER_VERSION=$(mvn help:evaluate -Dexpression="project.version" -q -DforceStdout)
           echo ${CONTAINER_VERSION}
           echo "CONTAINER_VERSION=${CONTAINER_VERSION}" >> $GITHUB_ENV
