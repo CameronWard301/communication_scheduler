@@ -23,6 +23,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Get version
+        run: |
+          CONTAINER_VERSION=$(mvn help:evaluate -Dexpression="project.version" -q -DforceStdout)
+          echo ${CONTAINER_VERSION}
+          echo "CONTAINER_VERSION=${CONTAINER_VERSION}" >> $GITHUB_ENV
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -33,7 +38,7 @@ jobs:
             type=schedule
             type=ref,event=branch
             type=ref,event=pr
-            type=semver,pattern={{version}}
+            type=semver,pattern={{version}},value=v${{ env.CONTAINER_VERSION }}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
@@ -46,22 +51,18 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Get version
-        run: |
-          CONTAINER_VERSION=$(mvn help:evaluate -Dexpression="project.version" -q -DforceStdout)
-          echo ${CONTAINER_VERSION}
-          echo "CONTAINER_VERSION=${CONTAINER_VERSION}" >> $GITHUB_ENV
-      - name: add tag to list
-        run: |
-          tags=${{ steps.meta.outputs.tags }},${{ env.CONTAINER_VERSION }}
-          echo "tags=${tags}" >> $GITHUB_ENV
+
+#      - name: add tag to list
+#        run: |
+#          tags=${{ steps.meta.outputs.tags }},${{ env.CONTAINER_VERSION }}
+#          echo "tags=${tags}" >> $GITHUB_ENV
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: ./communication_worker
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.tags }}
+          tags: ${{ env.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
   restart-deployments:
