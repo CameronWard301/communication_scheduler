@@ -24,8 +24,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Get version
+        working-directory: ./communication_worker
         run: |
-          mvn help:evaluate -Dexpression="project.version"
           CONTAINER_VERSION=$(mvn help:evaluate -Dexpression="project.version" -q -DforceStdout)
           echo ${CONTAINER_VERSION}
           echo "CONTAINER_VERSION=${CONTAINER_VERSION}" >> $GITHUB_ENV
@@ -63,7 +63,7 @@ jobs:
           context: ./communication_worker
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
   restart-deployments:
