@@ -49,6 +49,7 @@ jobs:
       - name: Get version
         run: |
           CONTAINER_VERSION=$(mvn help:evaluate -Dexpression="project.version" -q -DforceStdout)
+          echo ${CONTAINER_VERSION}
           echo "CONTAINER_VERSION=${CONTAINER_VERSION}" >> $GITHUB_ENV
       - name: add tag to list
         run: |
