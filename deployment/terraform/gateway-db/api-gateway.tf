@@ -6,6 +6,10 @@ resource "aws_api_gateway_rest_api" "mock-gateway" {
   endpoint_configuration {
     types = ["REGIONAL"]
   }
+  tags = merge(
+    var.default_tags,
+    { Name = "mock-gateway-api-${var.account_name}-${data.aws_caller_identity.current.account_id}-${var.region}" }
+  )
 }
 
 resource "aws_api_gateway_resource" "mock-gateway-resource" {
@@ -16,11 +20,11 @@ resource "aws_api_gateway_resource" "mock-gateway-resource" {
 }
 
 resource "aws_api_gateway_method" "mock-gateway-method" {
-  count         = var.deploy_mock_gateway_api ? 1 : 0
-  authorization = "NONE"
-  http_method   = "POST"
-  resource_id   = aws_api_gateway_resource.mock-gateway-resource[count.index].id
-  rest_api_id   = aws_api_gateway_rest_api.mock-gateway[count.index].id
+  count          = var.deploy_mock_gateway_api ? 1 : 0
+  authorization  = "NONE"
+  http_method    = "POST"
+  resource_id    = aws_api_gateway_resource.mock-gateway-resource[count.index].id
+  rest_api_id    = aws_api_gateway_rest_api.mock-gateway[count.index].id
   request_models = {
     "application/json" = aws_api_gateway_model.request-model[count.index].name
   }
@@ -75,12 +79,12 @@ resource "aws_api_gateway_model" "response-model" {
 }
 
 resource "aws_api_gateway_integration" "mock-gateway-integration" {
-  count                   = var.deploy_mock_gateway_api ? 1 : 0
-  http_method             = aws_api_gateway_method.mock-gateway-method[count.index].http_method
-  resource_id             = aws_api_gateway_resource.mock-gateway-resource[count.index].id
-  rest_api_id             = aws_api_gateway_rest_api.mock-gateway[count.index].id
-  type                    = "MOCK"
-  request_templates       = {
+  count             = var.deploy_mock_gateway_api ? 1 : 0
+  http_method       = aws_api_gateway_method.mock-gateway-method[count.index].http_method
+  resource_id       = aws_api_gateway_resource.mock-gateway-resource[count.index].id
+  rest_api_id       = aws_api_gateway_rest_api.mock-gateway[count.index].id
+  type              = "MOCK"
+  request_templates = {
     "application/json" = "#set($context.requestOverride.path.body = $input.body){\"statusCode\": 200}"
   }
 }
@@ -123,10 +127,16 @@ resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id = aws_api_gateway_rest_api.mock-gateway[count.index].id
 
   triggers = {
-    redeployment = sha1(jsonencode({
-      rest_api_id = aws_api_gateway_rest_api.mock-gateway[count.index].id
-    }))
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_rest_api.mock-gateway[count.index],
+      aws_api_gateway_resource.mock-gateway-resource[count.index],
+      aws_api_gateway_method.mock-gateway-method[count.index],
+      aws_api_gateway_integration.mock-gateway-integration[count.index],
+    ]))
 
+  }
+  variables = {
+    deployed_at = timestamp()
   }
 
   lifecycle {
@@ -142,7 +152,13 @@ resource "aws_api_gateway_stage" "live-stage" {
   rest_api_id   = aws_api_gateway_rest_api.mock-gateway[count.index].id
   stage_name    = "live"
 
-  depends_on = [aws_api_gateway_rest_api.mock-gateway, aws_api_gateway_deployment.deployment, aws_api_gateway_account.global_logs]
+  depends_on = [
+    aws_api_gateway_rest_api.mock-gateway, aws_api_gateway_deployment.deployment, aws_api_gateway_account.global_logs
+  ]
+  tags = merge(
+    var.default_tags,
+    { Name = "mock-gateway-api-stage-${var.account_name}-${data.aws_caller_identity.current.account_id}-${var.region}" }
+  )
 }
 
 
@@ -165,12 +181,6 @@ resource "aws_api_gateway_method_settings" "mock-gateway-method-settings" {
   ]
 }
 
-#resource "aws_cloudwatch_log_group" "api_gateway_logs" {
-#  count             = var.deploy_mock_gateway_api ? 1 : 0
-#  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.mock-gateway[count.index].id}/${aws_api_gateway_stage.live-stage[count.index].stage_name}"
-#  retention_in_days = 7
-#}
-
 resource "aws_api_gateway_account" "global_logs" {
   count               = var.configure_global_api_gateway_log_role ? 1 : 0
   cloudwatch_role_arn = aws_iam_role.global-cloudwatch-logs-api-gw[count.index].arn
@@ -179,19 +189,23 @@ resource "aws_api_gateway_account" "global_logs" {
 }
 
 resource "aws_iam_role" "global-cloudwatch-logs-api-gw" {
-  count = var.configure_global_api_gateway_log_role ? 1 : 0
-  name = "global-cloudwatch-logs-api-gw"
+  count              = var.configure_global_api_gateway_log_role ? 1 : 0
+  name               = "global-cloudwatch-logs-api-gw"
   assume_role_policy = data.aws_iam_policy_document.assume_role_cloudwatch[count.index].json
+  tags = merge(
+    var.default_tags,
+    { Name = "global-cloudwatch-logs-api-gw" }
+  )
 }
 
 resource "aws_iam_role_policy_attachment" "allow_cloudwatch_logs_api_gw" {
-  count = var.configure_global_api_gateway_log_role ? 1 : 0
+  count      = var.configure_global_api_gateway_log_role ? 1 : 0
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
   role       = aws_iam_role.global-cloudwatch-logs-api-gw[count.index].name
 }
 
 data "aws_iam_policy_document" "assume_role_cloudwatch" {
-  count = var.configure_global_api_gateway_log_role ? 1 : 0
+  count   = var.configure_global_api_gateway_log_role ? 1 : 0
   version = "2012-10-17"
   statement {
     actions = ["sts:AssumeRole"]
