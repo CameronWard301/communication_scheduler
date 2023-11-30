@@ -1,0 +1,69 @@
+@startuml Gateway Interfaces
+
+package "Communication Gateway" as communicationGateway {
+    component gateway {
+
+    }
+
+
+    class GatewayHelper {
+        + String messageHash(String workflowRunId, String messageContents)
+    }
+
+
+    interface GatewayService {
+        + ResponseEntity sendCommunication(GatewayProperties gatewayProperties)
+    }
+
+    class CommunicationGatewayService implements GatewayService{
+        + ResponseEntity sendCommunication(GatewayProperties gatewayProperties))
+    }
+    interface GetUserWithContent <TUser, TContent> {
+        + UserAndContent<TUser, TContent> getUserWithContent(userId)
+    }
+    note top of GetUserWithContent
+            This interface is for when using a JOIN when
+            accessing the database to retrieve the results
+            with one query.
+        end note
+
+    interface GetUserAndContent <TUser, TContent> {
+        + TUser getUser(userId)
+        + TContent getContent(userId)
+    }
+
+    class UserAndContent <TUser, TContent> {
+        - TUser user
+        - TContent content
+    }
+
+    interface UserContentService <TUser, TContent> {
+        + UserAndContent<TUser, TContent> getUserAndContent(userId)
+    }
+
+    class EmailUserContentService <TUser, TContent> implements UserContentService, GetUserWithContent, GetUserAndContent {
+        + UserAndContent<TUser, TContent> getUserAndContent(userId)
+    }
+
+    interface ContentDeliveryService <TUser, TContent> {
+        + void sendContent(TUser user, TContent content)
+    }
+
+    class EmailContentDeliveryService <TUser, TContent> implements ContentDeliveryService {
+        + void sendContent(TUser user, TContent content)
+    }
+
+   note left of EmailUserContentService
+        This interface extends either
+        GetUserWithContent or GetUserAndContent
+   end note
+
+
+    CommunicationGatewayService -u-> EmailContentDeliveryService: uses
+    CommunicationGatewayService -u---> EmailUserContentService: uses
+    CommunicationGatewayService --> GatewayHelper: uses
+    EmailUserContentService --> UserAndContent: returns
+}
+
+
+@enduml

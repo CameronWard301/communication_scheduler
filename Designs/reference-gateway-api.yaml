@@ -1,8 +1,8 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: Reference Gateway API
   description: Reference Gateway API for invoking a communication gateway
-  version: 1.0.0
+  version: 1.1.1
 servers:
   - url: 'https://localhost:8080/api/v1'
     description: Local development server
@@ -29,6 +29,23 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type:
+                  - object
+                properties:
+                  userId:
+                    type:
+                      - string
+                    format: uuid
+                    examples:
+                      - 123456789
+                  messageHash:
+                    type:
+                      - string
+                    examples:
+                      - a95582bcff5be7bd1613350681160406673498ca9ddad51aa97d16cd7b3ca221
         '400':
           description: Bad Request
         '401':
@@ -49,10 +66,13 @@ components:
     GatewayBody:
       properties:
         userId:
-          type: string
+          type:
+            - string
           description: The user ID of the customer
-          example: 123456789
-        messageId:
-          type: string
-          description: The message ID of the message to be sent
-          example: 123456789
+          examples:
+            - 123456789
+        workflowRunId:
+          type:
+            - string
+          format: uuid
+          description: The workflowRunId of the message being sent

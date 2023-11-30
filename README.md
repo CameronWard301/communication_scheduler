@@ -55,7 +55,7 @@ This diagram demonstrates how temporal can retry an activity if one of the activ
     ![HandleActivityErrorSendCommunication](Designs/Images/Sequence%20Diagrams/SendCommunicationHandleError.svg)
 13. [Invoke Gateway:](Designs/Sequence%20Diagrams/InvokeGateway.puml)
 The worker invokes the gateway to send a message to a user.
-    [Invoke Gateway:](Designs/Images/Sequence%20Diagrams/InvokeGateway.svg)
+    ![Invoke Gateway](Designs/Images/Sequence%20Diagrams/InvokeGateway.svg)
 
 ### Database Schema:
 14. [GatewayDatabase](Designs/Database/gatewayDbSchema.puml)  

@@ -9,7 +9,7 @@ participant "SMS Integration" as sms
 
 autonumber
 
-worker -> gateway: Sends userId, workflowRunId with API Key to
+worker -> gateway: Sends userId, workflowRunId \nwith API Key to
 gateway -> gateway: Validates API key
 gateway -> userDB: Get user By id and left join to user product metrics
 userDB -> metricsDB: Get metrics for user
@@ -30,6 +30,7 @@ sms --> gateway: Returns result
 gateway -> gateway: Check result
 gateway -> historyDB: Write workflowRunId, userId and messageHash to
 historyDB --> gateway: Successful write
-gateway --> worker: Return success and messageHash
+gateway --> worker: Return 200 success,\nmessageHash and userId
+
 
 @enduml
