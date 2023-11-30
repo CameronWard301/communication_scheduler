@@ -1,0 +1,13 @@
+## Only create config map if it doesn't exist, otherwise write the existing values during a helm deployment.
+{{- $configMap := lookup "v1" "ConfigMap" .Release.Namespace "preferences" }}
+{{- $ConfigMapData := toYaml .Values.PreferencesDefaults | nindent 2 }}
+{{- if $configMap }}
+{{- $ConfigMapData = toYaml $configMap.data | nindent 2 }}
+{{- end }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: preferences
+  namespace: {{ .Release.Namespace }}
+data:
+  {{ $ConfigMapData }}

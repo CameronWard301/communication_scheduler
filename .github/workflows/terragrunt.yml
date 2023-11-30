@@ -1,6 +1,7 @@
 # Source taken from: https://github.com/marketplace/actions/gruntwork-terragrunt
 name: 'Terragrunt GitHub Actions'
 on:
+  workflow_dispatch:
   push:
     paths:
       - deployment/terraform/**

@@ -2,7 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 1
+image:
+  pullPolicy: Always
+useAwsKubernetesSecret: false # Set to true for local kubernetes testing, false for EKS - this is managed through IAM roles.
 
 temporal:
   server:
@@ -124,12 +127,9 @@ temporal:
             driver: "postgres"
             host: temporal-eu-west-1-dev.cluster-cq6ujr7evasm.eu-west-1.rds.amazonaws.com
             port: 5432
-            database: temporal
-            user: "{{ .Values.temporal.server.worker.config.persistence.default.sql.user | default (lookup_env `TEMPORAL_DB_USERNAME`) }}"
-            password: "{{ .Values.temporal.server.worker.config.persistence.default.sql.password | default (lookup_env `TEMPORAL_DB_PASSWORD`) }}"
             # for a production deployment use this instead of `password` and provision the secret beforehand e.g. with a sealed secret
             # it has a single key called `password`
-            # existingSecret: temporal-default-store
+            existingSecret: temporal-db-password
             maxConns: 20
             maxConnLifetime: "1h"
             # tls:
@@ -145,12 +145,10 @@ temporal:
             host: temporal-eu-west-1-dev.cluster-cq6ujr7evasm.eu-west-1.rds.amazonaws.com
             port: 5432
             database: temporal_visibility
-            user: "{{ .Values.temporal.server.worker.config.persistence.visibility.sql.user | default (lookup_env `TEMPORAL_DB_USERNAME`) }}"
-            password: "{{ .Values.temporal.server.worker.config.persistence.visibility.sql.password | default (lookup_env `TEMPORAL_DB_PASSWORD`) }}"
 
             # for a production deployment use this instead of `password` and provision the secret beforehand e.g. with a sealed secret
             # it has a single key called `password`
-            # existingSecret: temporal-visibility-store
+            existingSecret: temporal-db-password
             maxConns: 20
             maxConnLifetime: "1h"
             # tls:
@@ -202,6 +200,16 @@ temporal:
 
   schema:
     setup:
-      enabled: false
+      enabled: true
     update:
-      enabled: false
+      enabled: true
+
+communication_worker:
+  repository: cameronward/communication-worker
+  tag: 0.1.0
+
+PreferencesDefaults:
+  GatewayTimeoutSeconds: "60"
+  RetryPolicy: >-
+    { "maximumAttempts": "100", "backoffCoefficient": 2, "initialInterval":
+    "PT1S", "maximumInterval": "PT100S", "startToCloseTimeout": "PT10S" }

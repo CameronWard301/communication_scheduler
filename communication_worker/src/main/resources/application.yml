@@ -1,0 +1,13 @@
+logging:
+  level:
+    io.github.cameronward301.communication_scheduler.worker.communication_worker: ${WORKER_DEBUG:debug}
+    root: ${SPRING_DEBUG:info}
+
+temporal-properties:
+  namespace: ${NAMESPACE:default}
+  task-queue: ${TASK_QUEUE:communication-workflow}
+  endpoint: ${TEMPORAL_ENDPOINT:localhost:7233}
+aws-properties:
+  table-name: ${GATEWAY_DB_TABLE_NAME:gateway-db-dev-326610803524-eu-west-1}
+  key-name: ${GATEWAY_KEY_NAME:id}
+  region: ${AWS_REGION:eu-west-1}
