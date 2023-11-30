@@ -2,11 +2,12 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 1
+useAwsKubernetesSecret: true # Set to true for local kubernetes testing, false for EKS - this is managed through IAM roles.
+image:
+  pullPolicy: Always
 
 temporal:
-
-
   cassandra:
     enabled: true
     config:
@@ -33,3 +34,13 @@ temporal:
       enabled: true
     update:
       enabled: true
+
+communication_worker:
+  repository: cameronward/communication-worker
+  tag: 0.1.0
+
+PreferencesDefaults:
+  GatewayTimeoutSeconds: "60"
+  RetryPolicy: >-
+    { "maximumAttempts": "100", "backoffCoefficient": 2, "initialInterval":
+    "PT1S", "maximumInterval": "PT100S", "startToCloseTimeout": "PT10S" }

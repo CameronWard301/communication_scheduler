@@ -8,5 +8,8 @@ include "envcommon" {
 }
 
 inputs = {
-  billing_mode = "PAY_PER_REQUEST"
+  billing_mode                          = "PAY_PER_REQUEST",
+  deploy_mock_gateway_api               = true
+  configure_global_api_gateway_log_role = true
+  enable_mock_gateway_logs              = true
 }

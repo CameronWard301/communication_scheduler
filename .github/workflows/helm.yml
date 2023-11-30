@@ -1,6 +1,7 @@
 # Using helm 3 action from: https://github.com/WyriHaximus/github-action-helm3
 name: 'Helm Deployments'
 on:
+  workflow_dispatch:
   push:
     paths:
       - deployment/helm/**
@@ -28,7 +29,12 @@ jobs:
       - name: Helm Plan
         uses: WyriHaximus/github-action-helm3@v3.1.0
         with:
-          exec: helm upgrade cs ./deployment/helm/ --install --dry-run --namespace=default --values=./deployment/helm/values-eks.yaml
+          exec: >
+            helm upgrade cs ./deployment/helm/ --install --dry-run --namespace=default
+            --values=./deployment/helm/values-eks.yaml
+            --set env.temporal.password=${{ secrets.TEMPORAL_DB_PASSWORD }}
+            --set temporal.server.config.persistence.default.sql.user=${{ secrets.TEMPORAL_DB_USERNAME }}
+            --set temporal.server.config.persistence.visibility.sql.user=${{ secrets.TEMPORAL_DB_USERNAME }}
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
@@ -39,7 +45,12 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: WyriHaximus/github-action-helm3@v3.1.0
         with:
-          exec: helm upgrade cs ./deployment/helm/ --install --namespace=default --values=./deployment/helm/values-eks.yaml
+          exec: >
+            helm upgrade cs ./deployment/helm/ --install --namespace=default
+            --values=./deployment/helm/values-eks.yaml
+            --set env.temporal.password=${{ secrets.TEMPORAL_DB_PASSWORD }}
+            --set temporal.server.config.persistence.default.sql.user=${{ secrets.TEMPORAL_DB_USERNAME }}
+            --set temporal.server.config.persistence.visibility.sql.user=${{ secrets.TEMPORAL_DB_USERNAME }}
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
