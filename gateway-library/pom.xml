@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <distributionManagement>
@@ -11,15 +11,15 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.5</version>
+        <version>3.2.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>io.github.cameronward301.communication_scheduler.workflows</groupId>
-    <artifactId>communication_workflow</artifactId>
-    <version>0.9.0</version>
-    <name>communication_workflow</name>
-    <description>communication_workflow library for use in a worker or cucumber project</description>
-    <url>https://github.com/CameronWard301/communication_scheduler/tree/main/workflows/communication_workflow</url>
+    <groupId>io.github.cameronward301.communication_scheduler</groupId>
+    <artifactId>gateway-library</artifactId>
+    <version>0.1.0</version>
+    <name>gateway-library</name>
+    <description>Gateway library for developing custom communication gateways</description>
+    <url>https://github.com/CameronWard301/communication_scheduler/tree/main/gateway-library</url>
     <licenses>
         <license>
             <name>GNU GENERAL PUBLIC LICENSE</name>
@@ -28,7 +28,6 @@
     </licenses>
     <properties>
         <java.version>21</java.version>
-        <temporal.version>1.22.3</temporal.version>
     </properties>
     <developers>
         <developer>
@@ -41,41 +40,13 @@
     <scm>
         <connection>scm:git:git://github.com/CameronWard301/communication_scheduler.git</connection>
         <developerConnection>scm:git:git://github.com/CameronWard301/communication_scheduler.git</developerConnection>
-        <url>https://github.com/CameronWard301/communication_scheduler/tree/main/workflows/communication_workflow</url>
+        <url>https://github.com/CameronWard301/communication_scheduler/tree/main/gateway-library</url>
     </scm>
     <dependencies>
-
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.yaml</groupId>
-                    <artifactId>snakeyaml</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>2.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>kubernetes-client</artifactId>
-            <version>6.9.2</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>6.0.13</version>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
@@ -83,14 +54,24 @@
             <version>2.20.109</version>
         </dependency>
         <dependency>
-            <groupId>io.temporal</groupId>
-            <artifactId>temporal-sdk</artifactId>
-            <version>${temporal.version}</version>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.16.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>io.temporal</groupId>
-            <artifactId>temporal-testing</artifactId>
-            <version>${temporal.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -107,21 +88,21 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.10.0</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.16.0</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>mockwebserver</artifactId>
-            <version>4.10.0</version>
-            <scope>test</scope>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>6.0.9</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot</artifactId>
+            <version>3.2.0</version>
         </dependency>
     </dependencies>
 
@@ -149,6 +130,7 @@
                 <executions>
                     <execution>
                         <goals>
+                            <goal>compile</goal>
                             <goal>compileTests</goal>
                         </goals>
                     </execution>
@@ -216,9 +198,7 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
-
     </build>
 
 </project>
