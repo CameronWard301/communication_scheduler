@@ -24,6 +24,7 @@ public class EmailController implements GatewayController {
 
     private final EmailGatewayProperties emailGatewayProperties;
     private final CommunicationGatewayService<EmailUser, EmailContent> communicationGatewayService;
+
     public EmailController(EmailMonthlyReportContentDeliveryService contentDeliveryService, EmailUserContentService userContentService, DefaultCommunicationHistoryAccessProvider defaultCommunicationHistoryAccessProvider, CommunicationGatewayService<EmailUser, EmailContent> communicationGatewayService) {
         this.emailGatewayProperties = EmailGatewayProperties.builder()
                 .contentDeliveryService(contentDeliveryService)
