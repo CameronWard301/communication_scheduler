@@ -4,6 +4,7 @@ import io.github.cameronward301.communication_scheduler.gateway_library.model.Co
 import io.github.cameronward301.communication_scheduler.gateway_library.properties.DefaultCommunicationHistoryAccessProviderProperties;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
 
@@ -15,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
  * Example implementation of CommunicationHistoryAccessProvider using DynamoDb as the data store
  */
 @Builder
+@Component
 @Slf4j
 public class DefaultCommunicationHistoryAccessProvider implements CommunicationHistoryAccessProvider {
     private final DynamoDbAsyncClient dynamoDbAsyncClient;
@@ -46,7 +48,7 @@ public class DefaultCommunicationHistoryAccessProvider implements CommunicationH
             log.debug("Previous communication found for message hash: {}", messageHash);
             return CommunicationHistory.builder()
                     .previousMessageSent(true)
-                    .previousCommunicationMessageHash(getItemResponse.item().get("previous_communication_message_hash").s())
+                    .previousCommunicationMessageHash(getItemResponse.item().get("message_hash").s())
                     .build();
         }
         log.debug("No previous communication found for message hash: {}", messageHash);
