@@ -8,6 +8,7 @@ import io.github.cameronward301.communication_scheduler.gateway_library.model.Ga
 import io.github.cameronward301.communication_scheduler.gateway_library.model.TestContent
 import io.github.cameronward301.communication_scheduler.gateway_library.model.User
 import io.github.cameronward301.communication_scheduler.gateway_library.properties.GatewayProperties
+import io.github.cameronward301.communication_scheduler.gateway_library.properties.GatewayPropertiesImpl
 import io.github.cameronward301.communication_scheduler.gateway_library.user.content.UserAndContent
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -50,7 +51,7 @@ class CommunicationGatewayServiceTest extends Specification {
 
 
         and: "GatewayProperties are set correctly"
-        GatewayProperties gatewayProperties = GatewayProperties.builder()
+        GatewayProperties gatewayProperties = GatewayPropertiesImpl.builder()
                 .userId("test-user")
                 .workflowRunId("test-workflow-run-id")
                 .contentDeliveryService(contentDeliveryService)
@@ -91,7 +92,7 @@ class CommunicationGatewayServiceTest extends Specification {
 
 
         and: "GatewayProperties are set correctly"
-        GatewayProperties gatewayProperties = GatewayProperties.builder()
+        GatewayProperties gatewayProperties = GatewayPropertiesImpl.builder()
                 .userId("test-user")
                 .workflowRunId("test-workflow-run-id")
                 .contentDeliveryService(contentDeliveryService)
@@ -134,7 +135,7 @@ class CommunicationGatewayServiceTest extends Specification {
                 .build()
 
         and: "GatewayProperties are set correctly"
-        GatewayProperties gatewayProperties = GatewayProperties.builder()
+        GatewayProperties gatewayProperties = GatewayPropertiesImpl.builder()
                 .userId("test-user")
                 .workflowRunId("test-workflow-run-id")
                 .contentDeliveryService(contentDeliveryService)

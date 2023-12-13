@@ -4,9 +4,9 @@ import io.github.cameronward301.communication_scheduler.gateway_library.history.
 import io.github.cameronward301.communication_scheduler.gateway_library.model.Content;
 import io.github.cameronward301.communication_scheduler.gateway_library.service.ContentDeliveryService;
 import io.github.cameronward301.communication_scheduler.gateway_library.service.UserContentService;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Properties for the gateway
@@ -14,10 +14,10 @@ import lombok.Setter;
  * @param <TUser>    the type for the user object
  * @param <TContent> the type for the content object
  */
+@SuperBuilder
 @Getter
 @Setter
-@Builder
-public class GatewayProperties<TUser, TContent extends Content> {
+public abstract class GatewayProperties<TUser, TContent extends Content> {
     /**
      * The userId of the user that the message is being sent to
      */
