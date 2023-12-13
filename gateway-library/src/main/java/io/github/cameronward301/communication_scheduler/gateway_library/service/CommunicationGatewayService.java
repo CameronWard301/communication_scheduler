@@ -10,6 +10,7 @@ import io.github.cameronward301.communication_scheduler.gateway_library.user.con
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 /**
  * Service for sending communications. Should be instantiated as a bean in the gateway application
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
  * @param <TContent> the type for the content object
  */
 @Slf4j
+@Service
 public class CommunicationGatewayService<TUser, TContent extends Content> implements GatewayService<TUser, TContent> {
     @Override
     public ResponseEntity<GatewayResponse> sendCommunication(GatewayProperties<TUser, TContent> gatewayProperties) {
