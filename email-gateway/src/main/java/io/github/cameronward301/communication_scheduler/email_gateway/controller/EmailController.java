@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @ComponentScan("io.github.cameronward301.communication_scheduler.email_gateway")
 @RequestMapping("/email/monthly-report")
-public class EmailController implements GatewayController {
+public class EmailController implements GatewayController<EmailUser, EmailContent> {
 
     private final EmailGatewayProperties emailGatewayProperties;
     private final CommunicationGatewayService<EmailUser, EmailContent> communicationGatewayService;
@@ -34,15 +34,9 @@ public class EmailController implements GatewayController {
         this.communicationGatewayService = communicationGatewayService;
     }
 
-    @PostMapping("/")
-    public ResponseEntity<GatewayResponse> sendCommunication(@RequestBody GatewayRequest gatewayRequest) {
-        return sendCommunication(gatewayRequest.userId(), gatewayRequest.workflowRunId());
-    }
-
     @Override
-    public ResponseEntity<GatewayResponse> sendCommunication(String userId, String workflowRunId) {
-        emailGatewayProperties.setUserId(userId);
-        emailGatewayProperties.setWorkflowRunId(workflowRunId);
-        return communicationGatewayService.sendCommunication(emailGatewayProperties);
+    @PostMapping("/")
+    public ResponseEntity<GatewayResponse> processGatewayRequest(@RequestBody GatewayRequest gatewayRequest) {
+        return GatewayController.sendCommunication(gatewayRequest, emailGatewayProperties, communicationGatewayService);
     }
 }
