@@ -5,5 +5,5 @@ import io.github.cameronward301.communication_scheduler.gateway_library.model.Us
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
-public class GatewayPropertiesImpl extends GatewayProperties<User, TestContent>{
+public class GatewayPropertiesImpl extends GatewayProperties<User, TestContent> {
 }

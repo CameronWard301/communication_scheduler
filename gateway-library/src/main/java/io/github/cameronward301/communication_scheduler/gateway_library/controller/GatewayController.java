@@ -1,7 +1,10 @@
 package io.github.cameronward301.communication_scheduler.gateway_library.controller;
 
+import io.github.cameronward301.communication_scheduler.gateway_library.model.GatewayRequest;
 import io.github.cameronward301.communication_scheduler.gateway_library.model.GatewayResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * Interface for the gateway controller
@@ -15,9 +18,9 @@ public interface GatewayController {
     /**
      * Sends a communication to a user
      *
-     * @param userId        the id of the user to send the communication to
-     * @param workflowRunId the id of the workflow run that triggered the communication, used to generate the message hash
+     * @param gatewayRequest a GatewayRequest JSON object containing the userId and workflowRunId
      * @return a GatewayResponse JSON object containing the userId and messageHash
      */
-    ResponseEntity<GatewayResponse> sendCommunication(String userId, String workflowRunId);
+    @PostMapping
+    ResponseEntity<GatewayResponse> sendCommunication(@RequestBody GatewayRequest gatewayRequest);
 }
