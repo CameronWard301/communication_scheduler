@@ -25,8 +25,8 @@ public class EmailMonthlyReportContentDeliveryService implements ContentDelivery
     private final Request request = new Request();
 
 
-    public EmailMonthlyReportContentDeliveryService(SendgridProperties sendgridProperties) {
-        this.sendGrid = new SendGrid(sendgridProperties.getEmailNewsletterApiKey());
+    public EmailMonthlyReportContentDeliveryService(SendGrid sendGrid, SendgridProperties sendgridProperties) {
+        this.sendGrid = sendGrid;
         request.setMethod(Method.POST);
         request.setEndpoint("mail/send");
         Email fromEmail = new Email();
