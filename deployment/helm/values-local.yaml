@@ -39,6 +39,12 @@ communication_worker:
   repository: cameronward/communication-worker
   tag: 0.1.0
 
+email_gateway:
+  repository: cameronward/email-gateway
+  tag: latest
+  region: eu-west-1
+  loggingLevel: DEBUG
+
 PreferencesDefaults:
   GatewayTimeoutSeconds: "60"
   RetryPolicy: >-
