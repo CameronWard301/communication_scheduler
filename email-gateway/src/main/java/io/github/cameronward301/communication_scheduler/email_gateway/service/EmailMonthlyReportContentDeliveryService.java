@@ -55,7 +55,8 @@ public class EmailMonthlyReportContentDeliveryService implements ContentDelivery
                 throw new ContentDeliveryException("Could not send email to Sendgrid");
             }
         } catch (IOException e) {
-            throw new ContentDeliveryException("Could not build request body");
+            log.error("Could not send the email: {}", e.getMessage());
+            throw new ContentDeliveryException("Could complete API request to Sendgrid");
         }
     }
 }
