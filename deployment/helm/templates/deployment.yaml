@@ -35,3 +35,59 @@ spec:
                   name: aws-credentials
                   key: AWS_SECRET_ACCESS_KEY
             {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-email-gateway
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+      matchLabels:
+        app: {{ .Release.Name }}-email-gateway
+        release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-email-gateway
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-email-gateway
+          image: "{{ .Values.email_gateway.repository }}:{{ .Values.email_gateway.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            {{- if .Values.useAwsKubernetesSecret }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_SECRET_ACCESS_KEY
+                        {{- end }}
+            - name: "EMAIL_NEWSLETTER_API"
+              value: "{{ .Values.env.email_gateway.sendgridApiKey}}"
+            - name: "FROM_EMAIL"
+              value: "{{ .Values.env.email_gateway.fromEmail }}"
+            - name: "FROM_NAME"
+              value: "{{ .Values.env.email_gateway.fromName }}"
+            - name: "MONTHLY_NEWSLETTER_TEMPLATE_ID"
+              value: "{{ .Values.env.email_gateway.monthlyNewsletterTemplateId }}"
+            - name: "USER1_EMAIL"
+              value: "{{ .Values.env.email_gateway.user1Email }}"
+            - name: "USER2_EMAIL"
+              value: "{{ .Values.env.email_gateway.user2Email }}"
+            - name: "COMMUNICATION_HISTORY_TABLE_NAME"
+              value: "{{ .Values.env.email_gateway.tableName }}"
+            - name: "REGION"
+              value: "{{ .Values.email_gateway.region }}"
+            - name: "GATEWAY_LOGGING_LEVEL"
+              value: "{{ .Values.email_gateway.loggingLevel }}"
+
+

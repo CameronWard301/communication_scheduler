@@ -5,10 +5,10 @@ resource "aws_dynamodb_table" "history_table" {
   deletion_protection_enabled = var.deletion_protection_enabled
   read_capacity               = var.billing_mode == "PROVISIONED" ? var.read_capacity : null
   write_capacity              = var.billing_mode == "PROVISIONED" ? var.write_capacity : null
-  hash_key                    = "messageHash"
+  hash_key                    = "message_hash"
 
   attribute {
-    name = "messageHash"
+    name = "message_hash"
     type = "S"
   }
 

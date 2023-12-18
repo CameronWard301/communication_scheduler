@@ -9,10 +9,12 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "communication-history-access-provider")
+@ConfigurationProperties(prefix = "default-communication-history-access-provider")
 public class DefaultCommunicationHistoryAccessProviderProperties {
+
     /**
      * The name of the database table to use for the communication history
      */
     private String table_name;
+    private String region;
 }

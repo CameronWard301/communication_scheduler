@@ -54,7 +54,7 @@ class DefaultCommunicationHistoryAccessProviderTest extends Specification {
                 .build() as GetItemRequest
 
         GetItemResponse getItemResponse = GetItemResponse.builder()
-                .item(Collections.singletonMap("previous_communication_message_hash", AttributeValue.builder()
+                .item(Collections.singletonMap("message_hash", AttributeValue.builder()
                         .s(messageHash)
                         .build()
                 ))

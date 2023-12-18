@@ -1,0 +1,29 @@
+sendgrid:
+  email-newsletter-api-key: ${EMAIL_NEWSLETTER_API:SG.1234}
+  from-email: ${FROM_EMAIL:test@example.com}
+  from-name: ${FROM_NAME:test}
+  monthly-newsletter-template-id: ${MONTHLY_NEWSLETTER_TEMPLATE_ID:1234}
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:email-gateway-db
+    username: {DB_USERNAME:sa}
+    password: {DB_PASSWORD:password}
+  h2:
+    console:
+      enabled: false
+  jpa:
+    open-in-view: false
+
+user1:
+  email: ${USER1_EMAIL:test@example.com}
+
+user2:
+  email: ${USER2_EMAIL:test+1@example.com}
+default-communication-history-access-provider:
+  region: ${REGION:eu-west-1}
+  table-name: ${COMMUNICATION_HISTORY_TABLE_NAME:communication-history}
+logging:
+  level:
+    io.github.cameronward301.communication_scheduler.gateway_library: ${GATEWAY_LOGGING:DEBUG}
