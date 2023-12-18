@@ -41,7 +41,7 @@
         <dependency>
             <groupId>io.github.cameronward301.communication_scheduler</groupId>
             <artifactId>gateway-library</artifactId>
-            <version>0.2.11</version>
+            <version>0.2.13</version>
         </dependency>
 
         <dependency>
