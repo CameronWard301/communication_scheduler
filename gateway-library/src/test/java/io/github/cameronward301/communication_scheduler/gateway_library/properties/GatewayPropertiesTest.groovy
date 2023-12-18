@@ -13,7 +13,7 @@ class GatewayPropertiesTest extends Specification {
         UserContentService userContentService = Mock(UserContentService)
         String userId = "test-user-id"
         String workflowRunId = "test-workflow-run-id"
-        def gatewayProperties = GatewayProperties.builder().build()
+        def gatewayProperties = GatewayPropertiesImpl.builder().build()
 
         when: "using setters"
         gatewayProperties.setCommunicationHistoryAccessProvider(accessProvider)
