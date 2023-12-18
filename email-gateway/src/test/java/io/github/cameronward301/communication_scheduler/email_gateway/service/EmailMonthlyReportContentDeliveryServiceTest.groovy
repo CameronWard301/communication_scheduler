@@ -35,10 +35,10 @@ class EmailMonthlyReportContentDeliveryServiceTest extends Specification {
 
         EmailContent emailContent = EmailContent.builder()
                 .id("test-content-id")
-                .minutesListenedLastMonth(1234)
+                .malware(1234)
                 .userId("test-user-id")
-                .topGenreLastMonth("test-genre")
-                .topSongLastMonth("test-song")
+                .adverts(1111)
+                .sites(2222)
                 .build()
 
         and: "Response"
@@ -67,10 +67,10 @@ class EmailMonthlyReportContentDeliveryServiceTest extends Specification {
 
         EmailContent emailContent = EmailContent.builder()
                 .id("test-content-id")
-                .minutesListenedLastMonth(1234)
+                .malware(1234)
                 .userId("test-user-id")
-                .topGenreLastMonth("test-genre")
-                .topSongLastMonth("test-song")
+                .adverts(1111)
+                .sites(2222)
                 .build()
 
         and: "Response"
@@ -100,10 +100,10 @@ class EmailMonthlyReportContentDeliveryServiceTest extends Specification {
 
         EmailContent emailContent = EmailContent.builder()
                 .id("test-content-id")
-                .minutesListenedLastMonth(1234)
+                .malware(1234)
                 .userId("test-user-id")
-                .topGenreLastMonth("test-genre")
-                .topSongLastMonth("test-song")
+                .adverts(1111)
+                .sites(2222)
                 .build()
 
 

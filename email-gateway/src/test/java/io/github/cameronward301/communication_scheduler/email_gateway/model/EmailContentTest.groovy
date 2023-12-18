@@ -8,33 +8,33 @@ class EmailContentTest extends Specification {
         EmailContent emailContent = new EmailContent()
 
         when: "setters are called"
-        emailContent.setMinutesListenedLastMonth(1234)
-        emailContent.setUserId("test-user-id")
-        emailContent.setTopGenreLastMonth("test-genre")
-        emailContent.setTopSongLastMonth("test-song")
         emailContent.setId("test-content-id")
+        emailContent.setUserId("test-user-id")
+        emailContent.setMalware(1234)
+        emailContent.setAdverts(1111)
+        emailContent.setSites(2222)
 
         then: "values are set"
-        emailContent.getMinutesListenedLastMonth() == 1234
+        emailContent.getMalware() == 1234
         emailContent.getUserId() == "test-user-id"
-        emailContent.getTopGenreLastMonth() == "test-genre"
-        emailContent.getTopSongLastMonth() == "test-song"
+        emailContent.getAdverts() == 1111
+        emailContent.getSites() == 2222
         emailContent.getId() == "test-content-id"
     }
 
     def "content string should be correct"() {
         given: "EmailContent"
         EmailContent emailContent = new EmailContent()
-        emailContent.setMinutesListenedLastMonth(1234)
+        emailContent.setMalware(1234)
         emailContent.setUserId("test-user-id")
-        emailContent.setTopGenreLastMonth("test-genre")
-        emailContent.setTopSongLastMonth("test-song")
+        emailContent.setAdverts(1111)
+        emailContent.setSites(2222)
         emailContent.setId("test-content-id")
 
         when: "toString is called"
         String contentString = emailContent.getContentString()
 
         then: "string is correct"
-        contentString == "1234 test-genre test-song"
+        contentString == "1234 1111 2222"
     }
 }

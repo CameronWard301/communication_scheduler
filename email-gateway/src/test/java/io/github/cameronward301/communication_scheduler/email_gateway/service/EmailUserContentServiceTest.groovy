@@ -19,10 +19,10 @@ class EmailUserContentServiceTest extends Specification {
 
     private EmailContent emailContent = EmailContent.builder()
             .id("test-content-id")
-            .minutesListenedLastMonth(1234)
+            .malware(1234)
             .userId("test-user-id")
-            .topGenreLastMonth("test-genre")
-            .topSongLastMonth("test-song")
+            .adverts(1111)
+            .sites(2222)
             .build()
 
     private EmailUserContentService emailUserContentService
@@ -41,9 +41,9 @@ class EmailUserContentServiceTest extends Specification {
 
         then:
         response.getContent().getUserId() == emailUser.getId()
-        response.getContent().getMinutesListenedLastMonth() == emailContent.getMinutesListenedLastMonth()
-        response.getContent().getTopGenreLastMonth() == emailContent.getTopGenreLastMonth()
-        response.getContent().getTopSongLastMonth() == emailContent.getTopSongLastMonth()
+        response.getContent().getMalware() == emailContent.getMalware()
+        response.getContent().getAdverts() == emailContent.getAdverts()
+        response.getContent().getSites() == emailContent.getSites()
         response.getContent().getId() == emailContent.getId()
         response.getContent() == emailContent
 

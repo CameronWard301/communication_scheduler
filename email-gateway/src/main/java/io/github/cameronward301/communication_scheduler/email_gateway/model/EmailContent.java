@@ -18,12 +18,12 @@ public class EmailContent implements Content {
     @Id
     private String id;
     private String userId;
-    private int minutesListenedLastMonth;
-    private String topGenreLastMonth;
-    private String topSongLastMonth;
+    private int malware;
+    private int adverts;
+    private int sites;
 
     @Override
     public String getContentString() {
-        return format("%s %s %s", minutesListenedLastMonth, topGenreLastMonth, topSongLastMonth);
+        return format("%s %s %s", malware, adverts, sites);
     }
 }

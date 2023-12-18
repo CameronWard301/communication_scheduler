@@ -40,9 +40,9 @@ public class EmailMonthlyReportContentDeliveryService implements ContentDelivery
     public void sendContent(EmailUser emailUser, EmailContent emailContent) throws ContentDeliveryException {
         Personalization personalization = new Personalization();
         personalization.addDynamicTemplateData("name", emailUser.getFirstName());
-        personalization.addDynamicTemplateData("minutesListened", emailContent.getMinutesListenedLastMonth());
-        personalization.addDynamicTemplateData("SOTM", emailContent.getTopSongLastMonth());
-        personalization.addDynamicTemplateData("topGenre", emailContent.getTopGenreLastMonth());
+        personalization.addDynamicTemplateData("malware", emailContent.getMalware());
+        personalization.addDynamicTemplateData("adverts", emailContent.getSites());
+        personalization.addDynamicTemplateData("sites", emailContent.getAdverts());
         personalization.addTo(new Email(emailUser.getEmail()));
         personalization.addDynamicTemplateData("subject", "Your Monthly Report Is Here!");
         mail.addPersonalization(personalization);
