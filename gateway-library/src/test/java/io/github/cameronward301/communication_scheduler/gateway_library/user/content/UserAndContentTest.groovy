@@ -47,7 +47,7 @@ class UserAndContentTest extends Specification {
         String content = "test-content"
 
         when: "Get User and Content is called"
-        UserAndContent userAndContent = getUserWithContent.getUserWithContent(userId)
+        UserAndContent userAndContent = getUserWithContent.getUserAndContent(userId)
 
         then: "User and Content are returned"
         userId == userAndContent.getUser().getUserId()
