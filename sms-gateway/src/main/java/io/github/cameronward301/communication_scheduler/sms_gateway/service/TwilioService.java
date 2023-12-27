@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class TwilioService {
 
     private final TwilioProperties twilioProperties;
+
     public TwilioService(TwilioProperties twilioProperties) {
         Twilio.init(twilioProperties.getAccountSid(), twilioProperties.getAuthToken());
         this.twilioProperties = twilioProperties;
@@ -18,10 +19,10 @@ public class TwilioService {
 
     public Message sendSms(String toNumber, String body) {
         return Message.creator(
-                new com.twilio.type.PhoneNumber(toNumber),
-                new com.twilio.type.PhoneNumber(twilioProperties.getFromPhoneNumber()),
-                body)
-            .create();
+                        new com.twilio.type.PhoneNumber(toNumber),
+                        new com.twilio.type.PhoneNumber(twilioProperties.getFromPhoneNumber()),
+                        body)
+                .create();
     }
 
     public Message getMessageBySid(String sid) {

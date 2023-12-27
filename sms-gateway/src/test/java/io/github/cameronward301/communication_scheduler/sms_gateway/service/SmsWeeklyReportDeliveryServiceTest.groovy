@@ -183,7 +183,7 @@ class SmsWeeklyReportDeliveryServiceTest extends Specification {
 
     }
 
-    def "should throw exception if thread is interrupted"(){
+    def "should throw exception if thread is interrupted"() {
         given: "delivery service"
         smsWeeklyReportDeliveryService = new SmsWeeklyReportDeliveryService(twilioProperties, twilioService)
 
@@ -220,11 +220,11 @@ class SmsWeeklyReportDeliveryServiceTest extends Specification {
         e.getMessage() == "Interrupted while waiting for message status"
     }
 
-    def createMessageFromJson(String from, String to, String status, ObjectMapper objectMapper){
+    def createMessageFromJson(String from, String to, String status, ObjectMapper objectMapper) {
         createMessageFromJson(from, to, status, "null", objectMapper)
     }
 
-    def createMessageFromJson(String from, String to, String status, String errorMessage, ObjectMapper objectMapper){
+    def createMessageFromJson(String from, String to, String status, String errorMessage, ObjectMapper objectMapper) {
         String json = String.format("""
             {
               "account_sid": "test-account-sid",

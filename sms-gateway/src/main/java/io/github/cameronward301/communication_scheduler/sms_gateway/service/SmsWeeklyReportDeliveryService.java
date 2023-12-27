@@ -3,8 +3,8 @@ package io.github.cameronward301.communication_scheduler.sms_gateway.service;
 import com.twilio.rest.api.v2010.account.Message;
 import io.github.cameronward301.communication_scheduler.gateway_library.exception.ContentDeliveryException;
 import io.github.cameronward301.communication_scheduler.gateway_library.service.ContentDeliveryService;
-import io.github.cameronward301.communication_scheduler.sms_gateway.model.UserUsage;
 import io.github.cameronward301.communication_scheduler.sms_gateway.model.SmsUser;
+import io.github.cameronward301.communication_scheduler.sms_gateway.model.UserUsage;
 import io.github.cameronward301.communication_scheduler.sms_gateway.properties.TwilioProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class SmsWeeklyReportDeliveryService implements ContentDeliveryService<Sm
                 Malware blocked: %s,
                 Adverts blocked: %s,
                 Sites visited: %s
-                
+                                
                 Thanks for using our service!
                 """, smsUser.getFirstName(), userUsage.getMalwareBlocked(), userUsage.getAdvertsBlocked(), userUsage.getSitesVisited());
         Message message = twilioService.sendSms(smsUser.getPhoneNumber(), content);

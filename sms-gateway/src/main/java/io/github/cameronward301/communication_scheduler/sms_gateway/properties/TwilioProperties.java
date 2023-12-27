@@ -1,7 +1,6 @@
 package io.github.cameronward301.communication_scheduler.sms_gateway.properties;
 
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

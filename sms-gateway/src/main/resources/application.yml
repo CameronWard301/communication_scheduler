@@ -21,8 +21,8 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:sms-gateway-db
-    username: {DB_USERNAME:sa}
-    password: {DB_PASSWORD:password}
+    username: { DB_USERNAME:sa }
+    password: { DB_PASSWORD:password }
   h2:
     console:
       enabled: false

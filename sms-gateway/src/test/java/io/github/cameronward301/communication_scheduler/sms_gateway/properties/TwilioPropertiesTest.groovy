@@ -4,7 +4,7 @@ import spock.lang.Specification
 
 class TwilioPropertiesTest extends Specification {
 
-    def "Should create properties without exception"(){
+    def "Should create properties without exception"() {
         when:
         def twilioProperties = new TwilioProperties()
         twilioProperties.setMaximumPollingAttempts(1)

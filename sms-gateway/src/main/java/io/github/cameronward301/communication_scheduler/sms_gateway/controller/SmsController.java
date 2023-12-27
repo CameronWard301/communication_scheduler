@@ -5,8 +5,8 @@ import io.github.cameronward301.communication_scheduler.gateway_library.history.
 import io.github.cameronward301.communication_scheduler.gateway_library.model.GatewayRequest;
 import io.github.cameronward301.communication_scheduler.gateway_library.model.GatewayResponse;
 import io.github.cameronward301.communication_scheduler.gateway_library.service.CommunicationGatewayService;
-import io.github.cameronward301.communication_scheduler.sms_gateway.model.UserUsage;
 import io.github.cameronward301.communication_scheduler.sms_gateway.model.SmsUser;
+import io.github.cameronward301.communication_scheduler.sms_gateway.model.UserUsage;
 import io.github.cameronward301.communication_scheduler.sms_gateway.properties.SmsGatewayProperties;
 import io.github.cameronward301.communication_scheduler.sms_gateway.service.SmsUserContentService;
 import io.github.cameronward301.communication_scheduler.sms_gateway.service.SmsWeeklyReportDeliveryService;

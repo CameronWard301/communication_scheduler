@@ -18,7 +18,7 @@ class SmsControllerTest extends Specification {
     private DefaultCommunicationHistoryAccessProvider communicationHistoryAccessProvider = Mock(DefaultCommunicationHistoryAccessProvider)
     private CommunicationGatewayService gatewayService = Mock(CommunicationGatewayService)
 
-    def setup(){
+    def setup() {
         smsController = new SmsController(gatewayService, communicationHistoryAccessProvider, contentDeliveryService, userContentService)
     }
 

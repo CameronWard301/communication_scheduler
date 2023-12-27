@@ -5,11 +5,11 @@ import spock.lang.Specification
 
 class TwilioServiceTest extends Specification {
 
-    def "Should create service without exception"(){
+    def "Should create service without exception"() {
         given:
         TwilioProperties twilioProperties = new TwilioProperties()
-        twilioProperties.authToken="test-auth-token"
-        twilioProperties.accountSid="test-account-sid"
+        twilioProperties.authToken = "test-auth-token"
+        twilioProperties.accountSid = "test-account-sid"
 
         when:
         new TwilioService(twilioProperties)
