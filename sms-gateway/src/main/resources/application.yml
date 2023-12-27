@@ -3,13 +3,14 @@ twilio:
   auth-token: ${TWILIO_AUTH_TOKEN}
   from-phone-number: ${TWILIO_FROM_PHONE_NUMBER}
   polling-interval: ${TWILIO_POLLING_INTERVAL:5} # in seconds
+  maximum-polling-attempts: ${TWILIO_MAXIMUM_POLLING_ATTEMPTS:10}
 
 user1:
-  phoneNumber: ${USER1_PHONE_NUMBER}
+  phoneNumber: ${USER1_PHONE_NUMBER:+441234567890}
 
 
 user2:
-  phoneNumber: ${USER2_PHONE_NUMBER}
+  phoneNumber: ${USER2_PHONE_NUMBER:+441234567890}
 
 
 default-communication-history-access-provider:

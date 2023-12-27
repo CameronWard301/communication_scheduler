@@ -7,7 +7,6 @@ import jakarta.persistence.OneToOne;
 import lombok.*;
 
 @Getter
-@Setter
 @Builder
 @Entity
 @NoArgsConstructor
@@ -24,6 +23,6 @@ public class UserUsage implements Content {
 
     @Override
     public String getContentString() {
-        return malwareBlocked + " " + advertsBlocked + " " + sitesVisited;
+        return user.getFirstName() + " " + malwareBlocked + " " + advertsBlocked + " " + sitesVisited;
     }
 }
