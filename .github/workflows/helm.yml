@@ -32,14 +32,32 @@ jobs:
           exec: >
             helm upgrade cs ./deployment/helm/ --install --dry-run --namespace=default
             --values=./deployment/helm/values-eks.yaml
-            --set env.temporal.password=${{ secrets.TEMPORAL_DB_PASSWORD }}
-            --set env.temporal.user=${{ secrets.TEMPORAL_DB_USERNAME }}
+            --set "env.temporal.password=${{ secrets.TEMPORAL_DB_PASSWORD }}"
+            --set "env.temporal.user=${{ secrets.TEMPORAL_DB_USERNAME }}"
+            --set "env.email_gateway.sendgridApiKey=${{ secrets.SENDGRID_API_KEY }}"
+            --set "env.email_gateway.fromEmail=${{ secrets.FROM_EMAIL }}"
+            --set "env.email_gateway.fromName=${{ secrets.FROM_NAME }}"
+            --set "env.email_gateway.monthlyNewsletterTemplateId=${{ secrets.MONTHLY_NEWSLETTER_TEMPLATE_ID }}"
+            --set "env.email_gateway.user1Email=${{ secrets.USER_1_EMAIL }}"
+            --set "env.email_gateway.user2Email=${{ secrets.USER_2_EMAIL }}"
+            --set "env.email_gateway.tableName=${{ secrets.HISTORY_DB_TABLE_NAME }}"
+            --set "env.sms_gateway.tableName=${{ secrets.HISTORY_DB_TABLE_NAME }}"
+            --set "env.sms_gateway.twilioAccountSid=${{ secrets.TWILIO_ACCOUNT_SID }}"
+            --set "env.sms_gateway.twilioAuthToken=${{ secrets.TWILIO_AUTH_TOKEN }}"
+            --set "env.sms_gateway.fromPhoneNumber=${FROM_PHONE_NUMBER}"
+            --set "env.sms_gateway.user1.phoneNumber=${USER_1_PHONE_NUMBER}"
+            --set "env.sms_gateway.user1.name=${{ secrets.USER_1_NAME }}"
+            --set "env.sms_gateway.user2.phoneNumber=${USER_2_PHONE_NUMBER}"
+            --set "env.sms_gateway.user2.name=${{ secrets.USER_2_NAME }}"
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
           TEMPORAL_DB_PASSWORD: ${{ secrets.TEMPORAL_DB_PASSWORD }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          FROM_PHONE_NUMBER: ${{ secrets.FROM_PHONE_NUMBER }}
+          USER_1_PHONE_NUMBER: ${{ secrets.USER_1_PHONE_NUMBER }}
+          USER_2_PHONE_NUMBER: ${{ secrets.USER_2_PHONE_NUMBER }}
       - name: Helm Deploy
         if: github.ref == 'refs/heads/main'
         uses: WyriHaximus/github-action-helm3@v3.1.0
@@ -47,11 +65,29 @@ jobs:
           exec: >
             helm upgrade cs ./deployment/helm/ --install --namespace=default
             --values=./deployment/helm/values-eks.yaml
-            --set env.temporal.password=${{ secrets.TEMPORAL_DB_PASSWORD }}
-            --set env.temporal.user=${{ secrets.TEMPORAL_DB_USERNAME }}
+            --set "env.temporal.password=${{ secrets.TEMPORAL_DB_PASSWORD }}"
+            --set "env.temporal.user=${{ secrets.TEMPORAL_DB_USERNAME }}"
+            --set "env.email_gateway.sendgridApiKey=${{ secrets.SENDGRID_API_KEY }}"
+            --set "env.email_gateway.fromEmail=${{ secrets.FROM_EMAIL }}"
+            --set "env.email_gateway.fromName=${{ secrets.FROM_NAME }}"
+            --set "env.email_gateway.monthlyNewsletterTemplateId=${{ secrets.MONTHLY_NEWSLETTER_TEMPLATE_ID }}"
+            --set "env.email_gateway.user1Email=${{ secrets.USER_1_EMAIL }}"
+            --set "env.email_gateway.user2Email=${{ secrets.USER_2_EMAIL }}"
+            --set "env.email_gateway.tableName=${{ secrets.HISTORY_DB_TABLE_NAME }}"
+            --set "env.sms_gateway.tableName=${{ secrets.HISTORY_DB_TABLE_NAME }}"
+            --set "env.sms_gateway.twilioAccountSid=${{ secrets.TWILIO_ACCOUNT_SID }}"
+            --set "env.sms_gateway.twilioAuthToken=${{ secrets.TWILIO_AUTH_TOKEN }}"
+            --set "env.sms_gateway.fromPhoneNumber=${FROM_PHONE_NUMBER}"
+            --set "env.sms_gateway.user1.phoneNumber=${USER_1_PHONE_NUMBER}"
+            --set "env.sms_gateway.user1.name=${{ secrets.USER_1_NAME }}"
+            --set "env.sms_gateway.user2.phoneNumber=${USER_2_PHONE_NUMBER}"
+            --set "env.sms_gateway.user2.name=${{ secrets.USER_2_NAME }}"
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
           TEMPORAL_DB_PASSWORD: ${{ secrets.TEMPORAL_DB_PASSWORD }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          FROM_PHONE_NUMBER: ${{ secrets.FROM_PHONE_NUMBER }}
+          USER_1_PHONE_NUMBER: ${{ secrets.USER_1_PHONE_NUMBER }}
+          USER_2_PHONE_NUMBER: ${{ secrets.USER_2_PHONE_NUMBER }}

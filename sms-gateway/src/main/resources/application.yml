@@ -1,0 +1,36 @@
+twilio:
+  account-sid: ${TWILIO_ACCOUNT_SID}
+  auth-token: ${TWILIO_AUTH_TOKEN}
+  from-phone-number: ${TWILIO_FROM_PHONE_NUMBER}
+  polling-interval: ${TWILIO_POLLING_INTERVAL:5} # in seconds
+  maximum-polling-attempts: ${TWILIO_MAXIMUM_POLLING_ATTEMPTS:10}
+
+user1:
+  name: ${USER1_NAME:Cameron}
+  phoneNumber: ${USER1_PHONE_NUMBER:+441234567890}
+
+
+user2:
+  name: ${USER2_NAME:Cameron}
+  phoneNumber: ${USER2_PHONE_NUMBER:+441234567890}
+
+
+default-communication-history-access-provider:
+  region: ${REGION:eu-west-1}
+  table-name: ${COMMUNICATION_HISTORY_TABLE_NAME:communication-history}
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:sms-gateway-db
+    username: { DB_USERNAME:sa }
+    password: { DB_PASSWORD:password }
+  h2:
+    console:
+      enabled: false
+  jpa:
+    open-in-view: false
+
+logging:
+  level:
+    io.github.cameronward301.communication_scheduler.gateway_library: ${GATEWAY_LOGGING:DEBUG}

@@ -20,4 +20,37 @@ class UserAndContentTest extends Specification {
         userAndContent.getContent() == content
         userAndContent.getUser() == user
     }
+
+    def "Should Get User And Content"(){
+        given: "User and Content"
+        GetUserAndContentImpl getUserAndContent = new GetUserAndContentImpl()
+
+        and: "userId and content"
+        String userId = "test-user-id"
+        String content = "test-content"
+
+        when: "Get User and Content is called"
+        User user = getUserAndContent.getUser(userId)
+        TestContent testContent = getUserAndContent.getContent(content)
+
+        then: "User and Content are returned"
+        userId == user.getUserId()
+        content == testContent.getContent()
+    }
+
+    def "Should get user with content"() {
+        given: "User With Content"
+        GetUserWithContentImpl getUserWithContent = new GetUserWithContentImpl()
+
+        and: "userId and content"
+        String userId = "test-user-id"
+        String content = "test-content"
+
+        when: "Get User and Content is called"
+        UserAndContent userAndContent = getUserWithContent.getUserAndContent(userId)
+
+        then: "User and Content are returned"
+        userId == userAndContent.getUser().getUserId()
+        content == userAndContent.getContent().getContent()
+    }
 }
