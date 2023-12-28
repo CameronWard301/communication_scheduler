@@ -37,13 +37,13 @@ public class UserAndUsageLoader implements CommandLineRunner {
         SmsUser smsUser1 = SmsUser.builder()
                 .id("c96f0fdd-0029-4b3a-91e0-b93f2d93713d")
                 .firstName(user1_name)
-                .phoneNumber(user1_phoneNumber)
+                .phoneNumber("+" + user1_phoneNumber)
                 .build();
 
         SmsUser smsUser2 = SmsUser.builder()
                 .id("d1bb525d-5732-4396-b4de-c64baec8e3b4")
                 .firstName(user2_name)
-                .phoneNumber(user2_phoneNumber)
+                .phoneNumber("+" + user2_phoneNumber)
                 .build();
 
         smsUser1 = userRepository.save(smsUser1);

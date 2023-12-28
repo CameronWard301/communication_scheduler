@@ -7,12 +7,12 @@ twilio:
 
 user1:
   name: ${USER1_NAME:Cameron}
-  phoneNumber: ${USER1_PHONE_NUMBER:+441234567890}
+  phoneNumber: ${USER1_PHONE_NUMBER:441234567890}
 
 
 user2:
   name: ${USER2_NAME:Cameron}
-  phoneNumber: ${USER2_PHONE_NUMBER:+441234567890}
+  phoneNumber: ${USER2_PHONE_NUMBER:441234567890}
 
 
 default-communication-history-access-provider:
