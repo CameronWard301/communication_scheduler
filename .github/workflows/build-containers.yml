@@ -173,3 +173,7 @@ jobs:
           base64-kube-config: ${{ env.KUBE_CONFIG_BASE64 }}
       - name: Restart Communication Workers
         run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-communication-worker
+      - name: Restart Email Gateway
+        run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-email-gateway
+      - name: Restart SMS Gateway
+        run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-sms-gateway
