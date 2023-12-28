@@ -108,7 +108,7 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}-sms-gateway
-          image: "{{ .Values.sms_gateway.repository }}:{{ .Values.email_gateway.tag }}"
+          image: "{{ .Values.sms_gateway.repository }}:{{ .Values.sms_gateway.tag }}"
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
