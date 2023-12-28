@@ -20,7 +20,7 @@ public class TwilioService {
     public Message sendSms(String toNumber, String body) {
         return Message.creator(
                         new com.twilio.type.PhoneNumber(toNumber),
-                        new com.twilio.type.PhoneNumber(twilioProperties.getFromPhoneNumber()),
+                        new com.twilio.type.PhoneNumber("+" + twilioProperties.getFromPhoneNumber()),
                         body)
                 .create();
     }
