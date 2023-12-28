@@ -89,5 +89,64 @@ spec:
               value: "{{ .Values.email_gateway.region }}"
             - name: "GATEWAY_LOGGING_LEVEL"
               value: "{{ .Values.email_gateway.loggingLevel }}"
-
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-sms-gateway
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-sms-gateway
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-sms-gateway
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-sms-gateway
+          image: "{{ .Values.sms_gateway.repository }}:{{ .Values.email_gateway.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            {{- if .Values.useAwsKubernetesSecret }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_SECRET_ACCESS_KEY
+                        {{- end }}
+            - name: "TWILIO_ACCOUNT_SID"
+              value: "{{ .Values.env.sms_gateway.twilioAccountSid }}"
+            - name: "TWILIO_AUTH_TOKEN"
+              value: "{{ .Values.env.sms_gateway.twilioAuthToken }}"
+            - name: "TWILIO_FROM_PHONE_NUMBER"
+              value: "{{ .Values.env.sms_gateway.fromPhoneNumber }}"
+            - name: "TWILIO_POLLING_INTERVAL"
+              value: "{{ .Values.sms_gateway.twilioPollingInterval }}"
+            - name: "TWILIO_MAXIMUM_POLLING_ATTEMPTS"
+              value: "{{ .Values.sms_gateway.maximumPollingAttempts }}"
+            - name: "USER1_NAME"
+              value: "{{ .Values.env.sms_gateway.user1.name }}"
+            - name: "USER1_PHONE_NUMBER"
+              value: "{{ .Values.env.sms_gateway.user1.phoneNumber }}"
+            - name: "USER2_NAME"
+              value: "{{ .Values.env.sms_gateway.user2.name }}"
+            - name: "USER2_PHONE_NUMBER"
+              value: "{{ .Values.env.sms_gateway.user1.phoneNumber }}"
+            - name: "COMMUNICATION_HISTORY_TABLE_NAME"
+              value: "{{ .Values.env.sms_gateway.tableName }}"
+            - name: "REGION"
+              value: "{{ .Values.sms_gateway.region }}"
+            - name: "GATEWAY_LOGGING"
+              value: "{{ .Values.sms_gateway.loggingLevel }}"
 

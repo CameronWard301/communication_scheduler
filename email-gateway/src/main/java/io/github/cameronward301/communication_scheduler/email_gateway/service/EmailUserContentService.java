@@ -10,7 +10,7 @@ import io.github.cameronward301.communication_scheduler.gateway_library.user.con
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailUserContentService implements UserContentService<EmailUser, EmailContent>, GetUserAndContent<EmailUser, EmailContent> {
+public class EmailUserContentService extends GetUserAndContent<EmailUser, EmailContent> implements UserContentService<EmailUser, EmailContent>  {
 
     private final UserRepository userRepository;
     private final ContentRepository contentRepository;
