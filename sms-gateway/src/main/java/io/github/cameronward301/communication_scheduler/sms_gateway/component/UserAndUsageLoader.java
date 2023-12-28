@@ -21,20 +21,28 @@ public class UserAndUsageLoader implements CommandLineRunner {
     @Value("${user1.phoneNumber}")
     private String user1_phoneNumber;
 
+    @Value("${user1.name}")
+    private String user1_name;
+
+
+
     @Value("${user2.phoneNumber}")
     private String user2_phoneNumber;
+
+    @Value("${user2.name}")
+    private String user2_name;
 
     @Override
     public void run(String... args) {
         SmsUser smsUser1 = SmsUser.builder()
                 .id("c96f0fdd-0029-4b3a-91e0-b93f2d93713d")
-                .firstName("Cameron")
+                .firstName(user1_name)
                 .phoneNumber(user1_phoneNumber)
                 .build();
 
         SmsUser smsUser2 = SmsUser.builder()
                 .id("d1bb525d-5732-4396-b4de-c64baec8e3b4")
-                .firstName("Cameron")
+                .firstName(user2_name)
                 .phoneNumber(user2_phoneNumber)
                 .build();
 

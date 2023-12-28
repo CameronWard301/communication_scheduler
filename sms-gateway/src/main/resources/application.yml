@@ -6,10 +6,12 @@ twilio:
   maximum-polling-attempts: ${TWILIO_MAXIMUM_POLLING_ATTEMPTS:10}
 
 user1:
+  name: ${USER1_NAME:Cameron}
   phoneNumber: ${USER1_PHONE_NUMBER:+441234567890}
 
 
 user2:
+  name: ${USER2_NAME:Cameron}
   phoneNumber: ${USER2_PHONE_NUMBER:+441234567890}
 
 
