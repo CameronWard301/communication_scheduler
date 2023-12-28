@@ -115,9 +115,12 @@ data "aws_iam_policy_document" "DynamoDBPolicy" {
   statement {
     actions = [
       "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:DeleteItem"
     ]
     resources = [
-      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/gateway-db-${var.account_name}-${data.aws_caller_identity.current.account_id}-${var.region}"
+      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/gateway-db-${var.account_name}-${data.aws_caller_identity.current.account_id}-${var.region}",
+      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/history-db-${var.account_name}-${data.aws_caller_identity.current.account_id}-${var.region}"
     ]
   }
 }
