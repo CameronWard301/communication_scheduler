@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>email_gateway</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
     <name>email-gateway</name>
     <description>email-gateway</description>
     <properties>
