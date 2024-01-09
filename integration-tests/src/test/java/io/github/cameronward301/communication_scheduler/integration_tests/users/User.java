@@ -10,4 +10,8 @@ public abstract class User {
         this.id = id;
     }
 
+    public User() {
+        this.id = "unknown";
+    }
+
 }

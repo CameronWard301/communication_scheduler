@@ -10,4 +10,8 @@ public abstract class Gateway {
     public Gateway(String id) {
         this.id = id;
     }
+
+    public Gateway() {
+        this.id = "unknown";
+    }
 }
