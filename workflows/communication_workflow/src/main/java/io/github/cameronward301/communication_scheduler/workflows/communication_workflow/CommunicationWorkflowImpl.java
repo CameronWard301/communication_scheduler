@@ -1,7 +1,5 @@
 package io.github.cameronward301.communication_scheduler.workflows.communication_workflow;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetGatewayFromDbActivity;
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetPreferencesActivity;
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.SendMessageToGatewayActivity;
@@ -13,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -21,7 +20,6 @@ import java.util.Map;
 @Slf4j
 public class CommunicationWorkflowImpl implements CommunicationWorkflow {
 
-    ObjectMapper objectMapper = new ObjectMapper();
     @Value("${temporal-properties.task-queue}")
     private String taskQueue;
     private final GetPreferencesActivity getSettingsActivity = Workflow.newActivityStub(GetPreferencesActivity.class,
@@ -33,7 +31,7 @@ public class CommunicationWorkflowImpl implements CommunicationWorkflow {
                     .build());
 
     @Override
-    public String sendCommunication(Map<String, String> payload) throws JsonProcessingException {
+    public Map<String, String> sendCommunication(Map<String, String> payload) {
         log.info("Started workflow with payload: {}", payload.toString());
         log.info("Getting preferences");
         Preferences preferences = getSettingsActivity.getPreferences();
@@ -71,8 +69,9 @@ public class CommunicationWorkflowImpl implements CommunicationWorkflow {
         log.info("Got gateway URL: {}", gatewayURL);
 
         log.info("Sending message to gateway");
-        String response = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(sendMessageToGatewayActivity.invokeGateway(payload.get("userId"), Workflow.getInfo().getRunId(), gatewayURL, preferences));
-        log.info("Got response from gateway: {}", response);
+
+        Map<String, String> response = sendMessageToGatewayActivity.invokeGateway(payload.get("userId"), Workflow.getInfo().getRunId(), gatewayURL, preferences);
+        log.info("Got response from gateway: {}", Arrays.toString(response.entrySet().toArray()));
 
         return response;
 

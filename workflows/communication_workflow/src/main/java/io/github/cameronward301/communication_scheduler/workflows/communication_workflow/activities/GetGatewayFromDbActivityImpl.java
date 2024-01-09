@@ -1,6 +1,9 @@
 package io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities;
 
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.exception.GatewayNotFoundException;
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.AwsProperties;
+import io.temporal.failure.ActivityFailure;
+import io.temporal.failure.TemporalFailure;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
@@ -33,6 +36,10 @@ public class GetGatewayFromDbActivityImpl implements GetGatewayFromDbActivity {
         log.debug("Sending dynamoDb request: {}", getItemRequest);
         GetItemResponse getItemResponse = dynamoDbClient.getItem(getItemRequest).join();
         log.debug("Retrieved dynamoDb response: {}", getItemResponse);
+
+        if (!getItemResponse.hasItem()) {
+            throw new GatewayNotFoundException(gatewayId);
+        }
 
         return getItemResponse.item().get("endpoint_url").s();
     }

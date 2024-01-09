@@ -1,6 +1,8 @@
 package io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities
 
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.exception.GatewayNotFoundException
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.AwsProperties
+import io.temporal.failure.ActivityFailure
 import io.temporal.testing.TestActivityEnvironment
 import io.temporal.testing.TestEnvironmentOptions
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient
@@ -57,6 +59,28 @@ class GetGatewayFromDbActivityTest extends Specification {
 
         then: "the correct url is returned"
         urlResult == expectedUrl
+    }
+
+    def "getGatewayEndpointUrl throws GatewayNotFoundException if gateway does not exist"() {
+        given: "Mocked dynamoDbAsyncClient returns correct response"
+        DynamoDbResponse getItemResponse = GetItemResponse.builder()
+                .item(null)
+                .build()
+
+        GetItemRequest getItemRequest = GetItemRequest.builder()
+                .tableName(awsProperties.getTable_name())
+                .key(Map.of(awsProperties.getKey_name(), AttributeValue.builder().s("test-gateway").build()))
+                .build() as GetItemRequest
+
+        dynamoDbAsyncClient.getItem(getItemRequest) >> CompletableFuture.completedFuture(getItemResponse)
+
+        when: "getGatewayEndpointUrl is called"
+        getGatewayFromDbActivity.getGatewayEndpointUrl("test-gateway")
+
+
+        then: "the GatewayNotFoundException is thrown"
+        def exception = thrown(ActivityFailure)
+        exception.getOriginalMessage() == "Gateway with id test-gateway not found"
     }
 
 }
