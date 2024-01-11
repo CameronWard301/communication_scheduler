@@ -22,6 +22,7 @@ public class GatewayRepository {
 
     /**
      * Gets all gateways from DynamoDB
+     *
      * @param startKey the id of the last gateway returned in the previous request, can be null
      * @param pageSize the number of gateways to return in this page
      * @return a list of gateways in the page
@@ -37,10 +38,11 @@ public class GatewayRepository {
 
     /**
      * Gets gateways from DynamoDB by query
+     *
      * @param filterExpression the filter expression to use
      * @param expressionValues the expression values to use
-     * @param startKey the id of the last gateway returned in the previous request, can be null
-     * @param pageSize the number of gateways to return in this page
+     * @param startKey         the id of the last gateway returned in the previous request, can be null
+     * @param pageSize         the number of gateways to return in this page
      * @return a list of gateways matching the query
      */
     public List<Gateway> getGatewaysByQuery(String filterExpression, Map<String, AttributeValue> expressionValues, Map<String, AttributeValue> startKey, int pageSize) {
@@ -55,6 +57,7 @@ public class GatewayRepository {
 
     /**
      * Creates a new gateway if the id does not exist or updates an existing gateway using the provided id in the Gateway model
+     *
      * @param gateway the gateway to save
      */
     public void save(Gateway gateway) {
@@ -63,6 +66,7 @@ public class GatewayRepository {
 
     /**
      * Gets a gateway by id
+     *
      * @param id the id of the gateway to get
      * @return a list of gateways matching the query (should only be one)
      */
@@ -75,6 +79,7 @@ public class GatewayRepository {
 
     /**
      * Deletes a gateway
+     *
      * @param gateway the gateway to delete from the id and dateCreated fields
      */
     public void delete(Gateway gateway) {

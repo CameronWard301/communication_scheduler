@@ -15,6 +15,7 @@ public class ExceptionResolver {
 
     /**
      * Handles exceptions thrown by the gateway API
+     *
      * @param exception The RequestException thrown by the gateway API
      * @return A response entity containing the exception message and HTTP status code
      */

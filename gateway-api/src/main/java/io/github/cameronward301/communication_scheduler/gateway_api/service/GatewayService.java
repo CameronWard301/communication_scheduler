@@ -22,10 +22,11 @@ public class GatewayService {
 
     /**
      * Gets all gateways from DynamoDB
-     * @param startKey the id of the last gateway returned in the previous request, can be null
-     * @param pageSize the number of gateways to return in this page
+     *
+     * @param startKey     the id of the last gateway returned in the previous request, can be null
+     * @param pageSize     the number of gateways to return in this page
      * @param friendlyName match results that contain this string
-     * @param endpointUrl match results that contain this string
+     * @param endpointUrl  match results that contain this string
      * @return a list of gateways in the page matching the query
      */
     public List<Gateway> getGateways(String startKey, int pageSize, String friendlyName, String endpointUrl) {
@@ -61,6 +62,7 @@ public class GatewayService {
      * Creates a new gateway,
      * This layer is responsible for generating the id and dateCreated fields
      * The friendlyName and description fields are converted to lowercase to help with searching in future queries
+     *
      * @param gateway the gateway to create
      * @return the created gateway with the id and dateCreated fields populated
      */
@@ -75,6 +77,7 @@ public class GatewayService {
 
     /**
      * Gets a gateway by id
+     *
      * @param id the id of the gateway to get
      * @return the gateway matching the provided id
      */
@@ -88,6 +91,7 @@ public class GatewayService {
 
     /**
      * Deletes a gateway by id
+     *
      * @param id the id of the gateway to delete
      */
     public void deleteGatewayById(String id) {
@@ -97,6 +101,7 @@ public class GatewayService {
 
     /**
      * Updates a gateway,
+     *
      * @param gateway the gateway to update with the id field populated, createdDate cannot be changed
      * @return the updated gateway
      */

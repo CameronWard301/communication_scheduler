@@ -13,6 +13,7 @@ public class DynamoDbConfiguration {
 
     /**
      * Creates a DynamoDBMapper bean with AWS credentials from the environment
+     *
      * @return DynamoDBMapper bean
      */
     @Bean

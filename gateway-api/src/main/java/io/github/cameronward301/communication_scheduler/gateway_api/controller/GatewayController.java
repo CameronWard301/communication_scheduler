@@ -26,10 +26,11 @@ public class GatewayController {
 
     /**
      * Get all gateways with optional pagination and filtering
-     * @param startKey the id of the last gateway returned in the previous request, can be null
-     * @param pageSize the number of gateways to return
+     *
+     * @param startKey     the id of the last gateway returned in the previous request, can be null
+     * @param pageSize     the number of gateways to return
      * @param friendlyName match results that contain this string
-     * @param endpointUrl match results that contain this string
+     * @param endpointUrl  match results that contain this string
      * @return a list of gateways matching the query
      */
     @GetMapping("")
@@ -44,7 +45,8 @@ public class GatewayController {
 
     /**
      * Create a new gateway
-     * @param gateway the gateway to create in JSON format
+     *
+     * @param gateway       the gateway to create in JSON format
      * @param bindingResult the result of the validation
      * @return the created gateway with the id and dateCreated fields populated
      * @throws RequestException if the request body is invalid
@@ -62,6 +64,7 @@ public class GatewayController {
 
     /**
      * Get a gateway by id
+     *
      * @param id the id of the gateway to get
      * @return the gateway matching the provided id
      */
@@ -72,6 +75,7 @@ public class GatewayController {
 
     /**
      * Delete a gateway by id
+     *
      * @param id the id of the gateway to delete
      * @return 204 No Content
      */
@@ -83,7 +87,8 @@ public class GatewayController {
 
     /**
      * Update a gateway
-     * @param gateway the gateway to update in JSON format with the id field populated, createdDate cannot be changed
+     *
+     * @param gateway       the gateway to update in JSON format with the id field populated, createdDate cannot be changed
      * @param bindingResult the result of the validation
      * @return the updated gateway
      * @throws RequestException if the request body is invalid

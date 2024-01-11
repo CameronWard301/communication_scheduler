@@ -12,7 +12,8 @@ public class RequestException extends RuntimeException {
 
     /**
      * Constructor for RequestException
-     * @param message The exception message
+     *
+     * @param message    The exception message
      * @param httpStatus The HTTP status code
      */
     public RequestException(String message, HttpStatus httpStatus) {
