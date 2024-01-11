@@ -1,14 +1,9 @@
 package io.github.cameronward301.communication_scheduler.gateway_api.repository
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression
-import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList
-import com.amazonaws.services.dynamodbv2.datamodeling.ScanResultPage
+import com.amazonaws.services.dynamodbv2.datamodeling.*
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import io.github.cameronward301.communication_scheduler.gateway_api.model.Gateway
 import spock.lang.Specification
-
 
 class GatewayRepositoryTest extends Specification {
     private DynamoDBMapper dynamoDBMapper = Mock(DynamoDBMapper)
@@ -51,7 +46,7 @@ class GatewayRepositoryTest extends Specification {
         noExceptionThrown()
     }
 
-    def "should return a list of gateways when providing a start key and page size"(){
+    def "should return a list of gateways when providing a start key and page size"() {
         given: "input parameters"
         def pageSize = 2
 
@@ -67,7 +62,7 @@ class GatewayRepositoryTest extends Specification {
         results.size() == 1
     }
 
-    def "should return a list of gateways for the given query"(){
+    def "should return a list of gateways for the given query"() {
         given: "Input args"
         String filterExpression = "test-filter-expression"
         Map<String, AttributeValue> expressionValues = Map<String, AttributeValue>.of("id", new AttributeValue("test-id-2"))

@@ -24,7 +24,7 @@ class GatewayServiceTest extends Specification {
     def "should return a list of gateways when getAllGateways is called"() {
         given: "Request parameters"
         def pageSize = 2
-        def startKey  = null
+        def startKey = null
         def friendlyName = null
         def endpointUrl = null
 
@@ -41,7 +41,7 @@ class GatewayServiceTest extends Specification {
     def "should return a list of gateways when getAllGateways is called with start key"() {
         given: "Request parameters"
         def pageSize = 2
-        def startKey  = "1234"
+        def startKey = "1234"
         def friendlyName = null
         def endpointUrl = null
 
@@ -58,7 +58,7 @@ class GatewayServiceTest extends Specification {
     def "should return a list of gateways when getAllGateways is called with friendly name"() {
         given: "Request parameters"
         def pageSize = 2
-        def startKey  = null
+        def startKey = null
         def friendlyName = "test-friendly-name"
         def endpointUrl = null
 
@@ -81,7 +81,7 @@ class GatewayServiceTest extends Specification {
     def "should return a list of gateways when getAllGateways is called with endpoint url"() {
         given: "Request parameters"
         def pageSize = 2
-        def startKey  = null
+        def startKey = null
         def friendlyName = null
         def endpointUrl = "test-endpoint-url"
 
@@ -104,7 +104,7 @@ class GatewayServiceTest extends Specification {
     def "should return a list of gateways when getAllGateways is called with endpoint url and friendly name"() {
         given: "Request parameters"
         def pageSize = 2
-        def startKey  = null
+        def startKey = null
         def friendlyName = "test-friendly-name"
         def endpointUrl = "test-endpoint-url"
 
@@ -133,7 +133,7 @@ class GatewayServiceTest extends Specification {
                 .build()
 
         and: "GatewayRepository creates gateway"
-        gatewayRepository.save(gatewayRequest) >> { }
+        gatewayRepository.save(gatewayRequest) >> {}
 
         when:
         def response = gatewayService.createGateway(gatewayRequest)
@@ -193,7 +193,7 @@ class GatewayServiceTest extends Specification {
         gatewayRepository.findById(gatewayId) >> mockList
 
         and: "GatewayRepository deletes gateway"
-        gatewayRepository.delete(testGateway) >> { }
+        gatewayRepository.delete(testGateway) >> {}
 
         when:
         gatewayService.deleteGatewayById(gatewayId)
@@ -242,7 +242,7 @@ class GatewayServiceTest extends Specification {
         gatewayRepository.findById(testGateway.getId()) >> mockList
 
         and: "GatewayRepository updates gateway"
-        gatewayRepository.save(gatewayRequest) >> { }
+        gatewayRepository.save(gatewayRequest) >> {}
 
         when:
         def response = gatewayService.updateGateway(gatewayRequest)

@@ -5,7 +5,7 @@ import spock.lang.Specification
 
 class ExceptionResolverTest extends Specification {
 
-    private ExceptionResolver exceptionResolver;
+    private ExceptionResolver exceptionResolver
 
     def setup() {
         exceptionResolver = new ExceptionResolver()

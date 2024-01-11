@@ -4,7 +4,6 @@ import io.github.cameronward301.communication_scheduler.gateway_api.exception.Re
 import io.github.cameronward301.communication_scheduler.gateway_api.model.Gateway
 import io.github.cameronward301.communication_scheduler.gateway_api.service.GatewayService
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
 import org.springframework.validation.FieldError
 import spock.lang.Specification
@@ -26,7 +25,7 @@ class GatewayControllerTest extends Specification {
     def "should return 200 when (GET) getAllGateways is called"() {
         given: "Request parameters"
         def pageSize = 2
-        def startKey  = null
+        def startKey = null
         def friendlyName = null
         def gatewayType = null
 
@@ -95,7 +94,7 @@ class GatewayControllerTest extends Specification {
 
     def "Should throw RequestException with status code 404 when (GET) by id is called with invalid id"() {
         given: "Gateway service returns gateway"
-        gatewayService.getGatewayById(testGateway.getId()) >> {throw new RequestException("Gateway not found", HttpStatus.NOT_FOUND)}
+        gatewayService.getGatewayById(testGateway.getId()) >> { throw new RequestException("Gateway not found", HttpStatus.NOT_FOUND) }
 
         when:
         gatewayController.getGatewayById(testGateway.getId())
@@ -110,7 +109,7 @@ class GatewayControllerTest extends Specification {
 
     def "Should throw RequestException with status code 404 when (DELETE) by id is called with invalid id"() {
         given: "Gateway service returns gateway"
-        gatewayService.deleteGatewayById(testGateway.getId()) >> {throw new RequestException("Gateway not found", HttpStatus.NOT_FOUND)}
+        gatewayService.deleteGatewayById(testGateway.getId()) >> { throw new RequestException("Gateway not found", HttpStatus.NOT_FOUND) }
 
         when:
         gatewayController.deleteGatewayById(testGateway.getId())

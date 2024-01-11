@@ -31,11 +31,11 @@ public class GatewayService {
         } else {
             String expression;
             Map<String, AttributeValue> expressionValues = new HashMap<>();
-            if (friendlyName != null && endpointUrl != null){
+            if (friendlyName != null && endpointUrl != null) {
                 expression = "contains(friendly_name, :friendlyName) and contains(endpoint_url, :endpointUrl)";
                 expressionValues.put(":friendlyName", new AttributeValue().withS(friendlyName));
                 expressionValues.put(":endpointUrl", new AttributeValue().withS(endpointUrl));
-            } else if (friendlyName != null){
+            } else if (friendlyName != null) {
                 expression = "contains(friendly_name, :friendlyName)";
                 expressionValues.put(":friendlyName", new AttributeValue().withS(friendlyName));
             } else {
