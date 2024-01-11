@@ -10,6 +10,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Model class for a Gateway
+ * Primary key is a composite key of the gateway id and the date_created fields.
+ */
 @Data
 @Builder
 @DynamoDBTable(tableName = "gateway-db-dev-326610803524-eu-west-1")

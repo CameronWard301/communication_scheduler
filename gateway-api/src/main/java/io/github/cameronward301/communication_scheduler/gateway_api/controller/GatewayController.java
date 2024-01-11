@@ -15,12 +15,23 @@ import java.util.List;
 import java.util.Objects;
 
 
+/**
+ * GatewayController see API spec here: <a href="https://app.swaggerhub.com/apis/CameronWard301/Communication_APIs">Gateway API</a>
+ */
 @Controller
 @RequestMapping("/gateway")
 @RequiredArgsConstructor
 public class GatewayController {
     private final GatewayService gatewayService;
 
+    /**
+     * Get all gateways with optional pagination and filtering
+     * @param startKey the id of the last gateway returned in the previous request, can be null
+     * @param pageSize the number of gateways to return
+     * @param friendlyName match results that contain this string
+     * @param endpointUrl match results that contain this string
+     * @return a list of gateways matching the query
+     */
     @GetMapping("")
     public ResponseEntity<List<Gateway>> getAllGateways(
             @RequestParam(value = "startKey", required = false) String startKey,
@@ -31,6 +42,13 @@ public class GatewayController {
         return ResponseEntity.ok(gatewayService.getGateways(startKey, pageSize, friendlyName, endpointUrl));
     }
 
+    /**
+     * Create a new gateway
+     * @param gateway the gateway to create in JSON format
+     * @param bindingResult the result of the validation
+     * @return the created gateway with the id and dateCreated fields populated
+     * @throws RequestException if the request body is invalid
+     */
     @PostMapping("")
     public ResponseEntity<Gateway> createGateway(
             @Valid @RequestBody Gateway gateway,
@@ -42,17 +60,34 @@ public class GatewayController {
         return ResponseEntity.ok(gatewayService.createGateway(gateway));
     }
 
+    /**
+     * Get a gateway by id
+     * @param id the id of the gateway to get
+     * @return the gateway matching the provided id
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Gateway> getGatewayById(@PathVariable String id) {
         return ResponseEntity.ok(gatewayService.getGatewayById(id));
     }
 
+    /**
+     * Delete a gateway by id
+     * @param id the id of the gateway to delete
+     * @return 204 No Content
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteGatewayById(@PathVariable String id) {
         gatewayService.deleteGatewayById(id);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Update a gateway
+     * @param gateway the gateway to update in JSON format with the id field populated, createdDate cannot be changed
+     * @param bindingResult the result of the validation
+     * @return the updated gateway
+     * @throws RequestException if the request body is invalid
+     */
     @PutMapping("")
     public ResponseEntity<Gateway> updateGateway(
             @Valid @RequestBody Gateway gateway,
