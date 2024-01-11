@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "gateway.dynamodb.table.name",
+      "type": "java.lang.String",
+      "description": "The gateway DynamoDB table name."
+    },
+    {
+      "name": "aws.region",
+      "type": "java.lang.String",
+      "description": "The aws region for credentials."
+    }
+  ] }

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @Builder
-@DynamoDBTable(tableName = "gateway-db-dev-326610803524-eu-west-1")
+@DynamoDBTable(tableName = "") //Defined in the application.properties file and configured in DynamoDbConfiguration.java
 @AllArgsConstructor
 @NoArgsConstructor
 public class Gateway {
