@@ -1,7 +1,5 @@
 package io.github.cameronward301.communication_scheduler.gateway_api.config;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
