@@ -6,9 +6,15 @@ resource "aws_dynamodb_table" "gateway_table" {
   read_capacity = var.billing_mode == "PROVISIONED" ? var.read_capacity : null
   write_capacity = var.billing_mode == "PROVISIONED" ? var.write_capacity : null
   hash_key = "id"
+  range_key = "date_created"
 
   attribute {
     name = "id"
+    type = "S"
+  }
+
+  attribute {
+    name = "date_created"
     type = "S"
   }
 
@@ -22,13 +28,14 @@ resource "aws_dynamodb_table_item" "mock-gateway" {
   count = var.deploy_mock_gateway_api ? 1 : 0
   hash_key   = aws_dynamodb_table.gateway_table.hash_key
   table_name = aws_dynamodb_table.gateway_table.name
+  range_key = aws_dynamodb_table.gateway_table.range_key
   item       = <<ITEM
   {
     "id": { "S": "mock-gateway" },
     "endpoint_url": { "S": "${aws_api_gateway_stage.live-stage[count.index].invoke_url}/mock-gateway" },
     "friendly_name": { "S": "AWS Mock Gateway Endpoint" },
-    "description": { "S": "Links to API gateway that will always return the userId passed to the request body and \"test-hash\" for the messageHash field" }
-
+    "description": { "S": "Links to API gateway that will always return the userId passed to the request body and \"test-hash\" for the messageHash field" },
+    "date_created": { "S": "2024-01-11T11:37:22" }
   }
   ITEM
 }
