@@ -222,6 +222,12 @@ sms_gateway:
   region: eu-west-1
   loggingLevel: DEBUG
 
+gateway_api:
+  repository: cameronward/gateway-api
+  tag: 0.1.0
+  region: eu-west-1
+  loggingLevel: DEBUG
+
 integration_tests:
   repository: cameronward/cs-integration-tests
   tag: latest

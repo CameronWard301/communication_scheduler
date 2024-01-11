@@ -1,2 +1,5 @@
-gateway.dynamodb.table.name: ${DYNAMODB_TABLE_NAME:gateway-db-dev-326610803524-eu-west-1}
+gateway.dynamodb.table.name: ${DYNAMODB_TABLE_NAME:gateway-table-name}
 aws.region: ${AWS_REGION:eu-west-1}
+logging:
+  level:
+    root: ${LOGGING_LEVEL:info}

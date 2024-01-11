@@ -51,6 +51,7 @@ jobs:
             --set "env.sms_gateway.user1.name=${{ secrets.USER_1_NAME }}"
             --set "env.sms_gateway.user2.phoneNumber=${USER_2_PHONE_NUMBER}"
             --set "env.sms_gateway.user2.name=${{ secrets.USER_2_NAME }}"
+            --set "env.gateway_api.tableName=${{ secrets.GATEWAY_DB_TABLE_NAME }}"
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
@@ -84,6 +85,7 @@ jobs:
             --set "env.sms_gateway.user1.name=${{ secrets.USER_1_NAME }}"
             --set "env.sms_gateway.user2.phoneNumber=${USER_2_PHONE_NUMBER}"
             --set "env.sms_gateway.user2.name=${{ secrets.USER_2_NAME }}"
+            --set "env.gateway_api.tableName=${{ secrets.GATEWAY_DB_TABLE_NAME }}"
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
