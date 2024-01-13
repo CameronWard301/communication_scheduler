@@ -90,7 +90,7 @@ public class CommunicationWorkflowStepDefinitions {
     @When("A CommunicationWorkflow is started")
     public void aCommunicationWorkflowIsStarted() {
         CommunicationWorkflow workflow = workflowClient.newWorkflowStub(CommunicationWorkflow.class, WorkflowOptions.newBuilder()
-                .setWorkflowId("intergration-test-" + user.getId() + "-" + gateway.getId())
+                .setWorkflowId("intergration-test:" + user.getId() + ":" + gateway.getId())
                 .setTaskQueue(temporalProperties.getTaskQueue())
                 .setWorkflowExecutionTimeout(workflowExecutionTimeout)
                 .build());
@@ -106,7 +106,7 @@ public class CommunicationWorkflowStepDefinitions {
     @Then("Workflow status is {WorkflowExecutionStatus}")
     public void pollWorkflowStatusUntil(WorkflowExecutionStatus status) {
         WorkflowExecution execution = WorkflowExecution.newBuilder()
-                .setWorkflowId("intergration-test-" + user.getId())
+                .setWorkflowId("intergration-test:" + user.getId() + ":" + gateway.getId())
                 .build();
 
         DescribeWorkflowExecutionRequest describeWorkflowExecutionRequest = DescribeWorkflowExecutionRequest.newBuilder()

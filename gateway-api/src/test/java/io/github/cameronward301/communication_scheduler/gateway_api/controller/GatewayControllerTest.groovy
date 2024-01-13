@@ -22,7 +22,7 @@ class GatewayControllerTest extends Specification {
         gatewayController = new GatewayController(gatewayService)
     }
 
-    def "should return 200 when (GET) getAllGateways is called"() {
+    def "should return 20 when (GET) getAllGateways is called"() {
         given: "Request parameters"
         def pageSize = 2
         def startKey = null
@@ -42,7 +42,7 @@ class GatewayControllerTest extends Specification {
         response.getBody().size() == 2
     }
 
-    def "Should return 200 when create (POST) gateway is called"() {
+    def "Should return 201 when create (POST) gateway is called"() {
         given: "Gateway service creates gateway"
         gatewayService.createGateway(testGateway) >> testGateway
 
@@ -54,7 +54,7 @@ class GatewayControllerTest extends Specification {
         def response = gatewayController.createGateway(testGateway, bindingResult)
 
         then:
-        response.getStatusCode() == HttpStatus.OK
+        response.getStatusCode() == HttpStatus.CREATED
     }
 
     def "Should throw RequestException with status code 400 when create (POST) gateway is called with invalid request body"() {

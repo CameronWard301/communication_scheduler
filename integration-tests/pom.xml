@@ -68,6 +68,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-dynamodb</artifactId>
+            <version>1.12.633</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>io.temporal</groupId>
             <artifactId>temporal-testing</artifactId>
             <version>1.22.3</version>
