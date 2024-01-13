@@ -185,8 +185,10 @@ spec:
                   name: aws-credentials
                   key: AWS_SECRET_ACCESS_KEY
                         {{- end }}
-            - name: "DYNAMODB_TABLE_NAME"
-              value: "{{ .Values.env.gateway_api.tableName }}"
+            - name: "MONGODB_DATABASE_NAME"
+              value: "{{ .Values.env.gateway_api.mongo.databaseName }}"
+            - name: "MONGODB_CONNECTION_STRING"
+              value: "{{ .Values.env.gateway_api.mongo.connectionString }}"
             - name: "LOGGING_LEVEL"
               value: "{{ .Values.gateway_api.loggingLevel }}"
             - name: "AWS_REGION"

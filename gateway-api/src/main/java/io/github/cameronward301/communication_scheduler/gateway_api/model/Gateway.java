@@ -1,43 +1,25 @@
 package io.github.cameronward301.communication_scheduler.gateway_api.model;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-/**
- * Model class for a Gateway
- * Primary key is a composite key of the gateway id and the date_created fields.
- */
+@Document
 @Data
-@Builder
-@DynamoDBTable(tableName = "") //Defined in the application.properties file and configured in DynamoDbConfiguration.java
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Gateway {
+    @Id
     private String id;
-
-    @DynamoDBAttribute(attributeName = "endpoint_url")
     @NotBlank(message = "'endpointUrl' cannot be empty")
     private String endpointUrl;
-
-    @DynamoDBAttribute(attributeName = "friendly_name")
     @NotBlank(message = "'friendlyName' cannot be empty")
     private String friendlyName;
     private String description = "";
-
-    @DynamoDBAttribute(attributeName = "date_created")
     private String dateCreated;
-
-    @DynamoDBHashKey(attributeName = "id")
-    public String getId() {
-        return id;
-    }
-
-    @DynamoDBIndexHashKey(attributeName = "friendly_name",  globalSecondaryIndexName = "friendly-name-index")
-    public String getFriendlyName() {
-        return friendlyName;
-    }
 }

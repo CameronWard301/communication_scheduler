@@ -1,10 +1,11 @@
 package io.github.cameronward301.communication_scheduler.gateway_api.service
 
-import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList
-import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import io.github.cameronward301.communication_scheduler.gateway_api.exception.RequestException
 import io.github.cameronward301.communication_scheduler.gateway_api.model.Gateway
 import io.github.cameronward301.communication_scheduler.gateway_api.repository.GatewayRepository
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import spock.lang.Specification
 
@@ -21,104 +22,93 @@ class GatewayServiceTest extends Specification {
         gatewayService = new GatewayService(gatewayRepository)
     }
 
-    def "should return a list of gateways when getAllGateways is called"() {
+    def "should return a list of gateways when findAll is called"() {
         given: "Request parameters"
-        def pageSize = 2
-        def startKey = null
-        def friendlyName = null
-        def endpointUrl = null
+        def pageSize = "2"
+        def pageNumber = "0"
+        def sortField = "dateCreated"
+        def sortDirection = "desc"
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField)
 
         and: "GatewayRepository returns a list of gateways"
-        gatewayRepository.getAllGateways(startKey, pageSize) >> List<Gateway>.of(testGateway, testGateway)
+        gatewayRepository.findAll(PageRequest.of(
+                pageNumber == null ? 0 : Integer.parseInt(pageNumber),
+                pageSize == null ? 0 : Integer.parseInt(pageSize),
+                sort
+        )) >> new PageImpl<Gateway>(List.of(testGateway, testGateway))
 
         when:
-        def response = gatewayService.getGateways(startKey, pageSize, friendlyName, endpointUrl)
+        def response = gatewayService.getGateways(pageNumber, pageSize, null, null, null, sortField, sortDirection)
 
         then:
         response.size() == 2
     }
 
-    def "should return a list of gateways when getAllGateways is called with start key"() {
+    def "Should throw exception when findAll is called with invalid sort direction"() {
         given: "Request parameters"
-        def pageSize = 2
-        def startKey = "1234"
-        def friendlyName = null
-        def endpointUrl = null
-
-        and: "GatewayRepository returns a list of gateways"
-        gatewayRepository.getAllGateways(Map<String, AttributeValue>.of("id", new AttributeValue(startKey)), pageSize) >> List<Gateway>.of(testGateway, testGateway)
+        def pageSize = "2"
+        def pageNumber = "0"
+        def sortField = "dateCreated"
+        def sortDirection = "invalid"
 
         when:
-        def response = gatewayService.getGateways(startKey, pageSize, friendlyName, endpointUrl)
+        gatewayService.getGateways(pageNumber, pageSize, null, null, null, sortField, sortDirection)
+
+        then:
+        def exception = thrown(RequestException)
+
+        and:
+        exception.getMessage() == "Invalid sort sortDirection: '" + sortDirection + "', must be asc or desc"
+        exception.getHttpStatus() == HttpStatus.BAD_REQUEST
+    }
+
+    def "Should be able to set the sort direction to ascending when getting all gateways"(){
+        given: "Request parameters"
+        def pageSize = "2"
+        def pageNumber = "0"
+        def sortField = "dateCreated"
+        def sortDirection = "asc"
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField)
+
+        and: "GatewayRepository returns a list of gateways"
+        gatewayRepository.findAll(PageRequest.of(
+                pageNumber == null ? 0 : Integer.parseInt(pageNumber),
+                pageSize == null ? 0 : Integer.parseInt(pageSize),
+                sort
+        )) >> new PageImpl<Gateway>(List.of(testGateway, testGateway))
+
+        when:
+        def response = gatewayService.getGateways(pageNumber, pageSize, null, null, null, sortField, sortDirection)
 
         then:
         response.size() == 2
     }
 
-    def "should return a list of gateways when getAllGateways is called with friendly name"() {
+    def "Should return a page of gateways when filtering friendlyName, endpointUrl and description"(){
         given: "Request parameters"
-        def pageSize = 2
-        def startKey = null
-        def friendlyName = "test-friendly-name"
-        def endpointUrl = null
-
-        and: "expression string is"
-        def expressionString = "contains(friendly_name, :friendlyName)"
-
-        and: "expression values are"
-        def expressionValues = Map<String, AttributeValue>.of(":friendlyName", new AttributeValue(friendlyName))
-
-        and: "GatewayRepository returns a list of gateways"
-        gatewayRepository.getGatewaysByQuery(expressionString, expressionValues, startKey, pageSize) >> List<Gateway>.of(testGateway, testGateway)
-
-        when:
-        def response = gatewayService.getGateways(startKey, pageSize, friendlyName, endpointUrl)
-
-        then:
-        response.size() == 2
-    }
-
-    def "should return a list of gateways when getAllGateways is called with endpoint url"() {
-        given: "Request parameters"
-        def pageSize = 2
-        def startKey = null
-        def friendlyName = null
-        def endpointUrl = "test-endpoint-url"
-
-        and: "expression string is"
-        def expressionString = "contains(endpoint_url, :endpointUrl)"
-
-        and: "expression values are"
-        def expressionValues = Map<String, AttributeValue>.of(":endpointUrl", new AttributeValue(endpointUrl))
-
-        and: "GatewayRepository returns a list of gateways"
-        gatewayRepository.getGatewaysByQuery(expressionString, expressionValues, startKey, pageSize) >> List<Gateway>.of(testGateway, testGateway)
-
-        when:
-        def response = gatewayService.getGateways(startKey, pageSize, friendlyName, endpointUrl)
-
-        then:
-        response.size() == 2
-    }
-
-    def "should return a list of gateways when getAllGateways is called with endpoint url and friendly name"() {
-        given: "Request parameters"
-        def pageSize = 2
-        def startKey = null
+        def pageSize = "2"
+        def pageNumber = "0"
+        def sortField = "dateCreated"
+        def sortDirection = "desc"
         def friendlyName = "test-friendly-name"
         def endpointUrl = "test-endpoint-url"
+        def description = "test-description"
 
-        and: "expression string is"
-        def expressionString = "contains(friendly_name, :friendlyName) and contains(endpoint_url, :endpointUrl)"
-
-        and: "expression values are"
-        def expressionValues = Map<String, AttributeValue>.of(":friendlyName", new AttributeValue().withS(friendlyName), ":endpointUrl", new AttributeValue().withS(endpointUrl))
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField)
 
         and: "GatewayRepository returns a list of gateways"
-        gatewayRepository.getGatewaysByQuery(expressionString, expressionValues, startKey, pageSize) >> List<Gateway>.of(testGateway, testGateway)
+        gatewayRepository.findByFriendlyNameRegexAndEndpointUrlRegexAndDescriptionRegex(
+                friendlyName, endpointUrl, description, PageRequest.of(
+                        pageNumber == null ? 0 : Integer.parseInt(pageNumber),
+                        pageSize == null ? 0 : Integer.parseInt(pageSize),
+                        sort
+                )
+        ) >> new PageImpl<Gateway>(List.of(testGateway, testGateway))
 
         when:
-        def response = gatewayService.getGateways(startKey, pageSize, friendlyName, endpointUrl)
+        def response = gatewayService.getGateways(pageNumber, pageSize, friendlyName, endpointUrl, description, sortField, sortDirection)
 
         then:
         response.size() == 2
@@ -145,15 +135,32 @@ class GatewayServiceTest extends Specification {
         response.description == gatewayRequest.description.toLowerCase()
     }
 
+    def "create gateway without description should set field to empty string"(){
+        given: "Gateway request"
+        def gatewayRequest = Gateway.builder()
+                .friendlyName("Test-friendly-name")
+                .endpointUrl("test-endpoint-url")
+                .build()
+
+        and: "GatewayRepository creates gateway"
+        gatewayRepository.save(gatewayRequest) >> {}
+
+        when:
+        def response = gatewayService.createGateway(gatewayRequest)
+
+        then:
+        response.dateCreated != null
+        response.id != null
+        response.friendlyName == gatewayRequest.friendlyName.toLowerCase()
+        response.description == ""
+    }
+
     def "Get gatewayById should return gateway"() {
         given: "Gateway id"
         def gatewayId = testGateway.getId()
 
         and: "GatewayRepository returns gateway"
-        PaginatedQueryList<Gateway> mockList = Mock(PaginatedQueryList)
-        1 * mockList.isEmpty() >> false
-        1 * mockList.getFirst() >> testGateway
-        gatewayRepository.findById(gatewayId) >> mockList
+        gatewayRepository.findById(gatewayId) >> Optional.of(testGateway)
 
         when:
         def response = gatewayService.getGatewayById(gatewayId)
@@ -167,9 +174,7 @@ class GatewayServiceTest extends Specification {
         def gatewayId = testGateway.getId()
 
         and: "GatewayRepository returns no results"
-        PaginatedQueryList<Gateway> mockList = Mock(PaginatedQueryList)
-        1 * mockList.isEmpty() >> true
-        gatewayRepository.findById(gatewayId) >> mockList
+        gatewayRepository.findById(gatewayId) >> Optional.empty()
 
         when:
         gatewayService.getGatewayById(gatewayId)
@@ -187,13 +192,10 @@ class GatewayServiceTest extends Specification {
         def gatewayId = testGateway.getId()
 
         and: "GatewayRepository returns gateway"
-        PaginatedQueryList<Gateway> mockList = Mock(PaginatedQueryList)
-        1 * mockList.isEmpty() >> false
-        1 * mockList.getFirst() >> testGateway
-        gatewayRepository.findById(gatewayId) >> mockList
+        gatewayRepository.findById(gatewayId) >> Optional.of(testGateway)
 
         and: "GatewayRepository deletes gateway"
-        gatewayRepository.delete(testGateway) >> {}
+        gatewayRepository.deleteById(testGateway.getId()) >> {}
 
         when:
         gatewayService.deleteGatewayById(gatewayId)
@@ -207,9 +209,7 @@ class GatewayServiceTest extends Specification {
         def gatewayId = testGateway.getId()
 
         and: "GatewayRepository returns no results"
-        PaginatedQueryList<Gateway> mockList = Mock(PaginatedQueryList)
-        1 * mockList.isEmpty() >> true
-        gatewayRepository.findById(gatewayId) >> mockList
+        gatewayRepository.findById(gatewayId) >> Optional.empty()
 
         when:
         gatewayService.deleteGatewayById(gatewayId)
@@ -236,13 +236,16 @@ class GatewayServiceTest extends Specification {
                 .build()
 
         and: "FindById returns gateway"
-        PaginatedQueryList<Gateway> mockList = Mock(PaginatedQueryList)
-        1 * mockList.isEmpty() >> false
-        1 * mockList.getFirst() >> testGateway
-        gatewayRepository.findById(testGateway.getId()) >> mockList
+        gatewayRepository.findById(testGateway.getId()) >> Optional.of(testGateway)
 
         and: "GatewayRepository updates gateway"
-        gatewayRepository.save(gatewayRequest) >> {}
+        gatewayRepository.save(_ as Gateway) >> Gateway.builder()
+                .id(testGateway.getId())
+                .friendlyName(gatewayRequest.friendlyName.toLowerCase())
+                .description(gatewayRequest.description.toLowerCase())
+                .dateCreated(testGateway.getDateCreated())
+                .endpointUrl(gatewayRequest.endpointUrl)
+                .build()
 
         when:
         def response = gatewayService.updateGateway(gatewayRequest)
@@ -266,9 +269,7 @@ class GatewayServiceTest extends Specification {
                 .build()
 
         and: "FindById returns no results"
-        PaginatedQueryList<Gateway> mockList = Mock(PaginatedQueryList)
-        1 * mockList.isEmpty() >> true
-        gatewayRepository.findById(testGateway.getId()) >> mockList
+        gatewayRepository.findById(testGateway.getId()) >> Optional.empty()
 
         when:
         gatewayService.updateGateway(gatewayRequest)

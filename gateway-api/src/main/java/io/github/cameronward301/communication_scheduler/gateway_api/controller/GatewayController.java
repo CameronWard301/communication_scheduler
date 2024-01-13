@@ -5,13 +5,13 @@ import io.github.cameronward301.communication_scheduler.gateway_api.model.Gatewa
 import io.github.cameronward301.communication_scheduler.gateway_api.service.GatewayService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Objects;
 
 
@@ -27,20 +27,23 @@ public class GatewayController {
     /**
      * Get all gateways with optional pagination and filtering
      *
-     * @param startKey     the id of the last gateway returned in the previous request, can be null
+     * @param pageNumber     the id of the last gateway returned in the previous request, can be null
      * @param pageSize     the number of gateways to return
      * @param friendlyName match results that contain this string
      * @param endpointUrl  match results that contain this string
      * @return a list of gateways matching the query
      */
     @GetMapping("")
-    public ResponseEntity<List<Gateway>> getAllGateways(
-            @RequestParam(value = "startKey", required = false) String startKey,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
-            @RequestParam(value = "friendlyName", required = false) String friendlyName,
-            @RequestParam(value = "endpointUrl", required = false) String endpointUrl
-    ) {
-        return ResponseEntity.ok(gatewayService.getGateways(startKey, pageSize, friendlyName, endpointUrl));
+    public ResponseEntity<Page<Gateway>> getAllGateways(
+            @RequestParam(value = "pageNumber", required = false, defaultValue = "0") String pageNumber,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "5") String pageSize,
+            @RequestParam(value = "friendlyName", required = false, defaultValue = ".*") String friendlyName,
+            @RequestParam(value = "endpointUrl", required = false, defaultValue = ".*") String endpointUrl,
+            @RequestParam(value = "description", required = false, defaultValue = ".*") String description,
+            @RequestParam(value = "sort", required = false, defaultValue = "dateCreated") String sortField,
+            @RequestParam(value = "sortDirection", required = false, defaultValue = "desc") String sortDirection
+            ) {
+        return ResponseEntity.ok(gatewayService.getGateways(pageNumber, pageSize, friendlyName, endpointUrl, description, sortField, sortDirection));
     }
 
     /**

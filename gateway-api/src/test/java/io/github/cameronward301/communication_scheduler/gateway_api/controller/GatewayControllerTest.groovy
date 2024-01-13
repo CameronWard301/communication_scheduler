@@ -3,6 +3,8 @@ package io.github.cameronward301.communication_scheduler.gateway_api.controller
 import io.github.cameronward301.communication_scheduler.gateway_api.exception.RequestException
 import io.github.cameronward301.communication_scheduler.gateway_api.model.Gateway
 import io.github.cameronward301.communication_scheduler.gateway_api.service.GatewayService
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.validation.BindingResult
 import org.springframework.validation.FieldError
@@ -22,18 +24,21 @@ class GatewayControllerTest extends Specification {
         gatewayController = new GatewayController(gatewayService)
     }
 
-    def "should return 20 when (GET) getAllGateways is called"() {
+    def "should return 200 when (GET) getAllGateways is called"() {
         given: "Request parameters"
-        def pageSize = 2
-        def startKey = null
+        def pageSize = "2"
+        def pageNumber = "0"
         def friendlyName = null
-        def gatewayType = null
+        def gatewayUrl = null
+        def description = null
+        def sortField = null
+        def sortDirection = null
 
         and: "GatewayService returns a response"
-        gatewayService.getGateways(startKey, pageSize, friendlyName, gatewayType) >> List<Gateway>.of(testGateway, testGateway)
+        gatewayService.getGateways(pageNumber, pageSize, friendlyName, gatewayUrl, description, sortField, sortDirection) >> new PageImpl<Gateway>(List.of(testGateway, testGateway))
 
         when:
-        def response = gatewayController.getAllGateways(startKey, pageSize, friendlyName, gatewayType)
+        def response = gatewayController.getAllGateways(pageNumber, pageSize, friendlyName, gatewayUrl, description, sortField, sortDirection)
 
         then:
         response.getStatusCode() == HttpStatus.OK
