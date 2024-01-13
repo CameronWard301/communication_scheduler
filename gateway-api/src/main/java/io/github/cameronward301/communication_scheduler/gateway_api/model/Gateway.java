@@ -1,9 +1,6 @@
 package io.github.cameronward301.communication_scheduler.gateway_api.model;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,8 +36,8 @@ public class Gateway {
         return id;
     }
 
-    @DynamoDBRangeKey(attributeName = "date_created")
-    public String getDateCreated() {
-        return dateCreated;
+    @DynamoDBIndexHashKey(attributeName = "friendly_name",  globalSecondaryIndexName = "friendly-name-index")
+    public String getFriendlyName() {
+        return friendlyName;
     }
 }

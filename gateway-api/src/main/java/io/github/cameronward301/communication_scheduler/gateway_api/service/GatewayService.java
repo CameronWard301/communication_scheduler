@@ -70,6 +70,9 @@ public class GatewayService {
         gateway.setId(UUID.randomUUID().toString());
         gateway.setDateCreated(Instant.now().toString());
         gateway.setFriendlyName(gateway.getFriendlyName().toLowerCase());
+        if (gateway.getDescription() == null) {
+            gateway.setDescription("");
+        }
         gateway.setDescription(gateway.getDescription().toLowerCase());
         gatewayRepository.save(gateway);
         return gateway;

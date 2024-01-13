@@ -59,7 +59,7 @@ public class GatewayController {
         if (bindingResult.hasErrors()) {
             throw new RequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(gatewayService.createGateway(gateway));
+        return ResponseEntity.status(HttpStatus.CREATED).body(gatewayService.createGateway(gateway));
     }
 
     /**
