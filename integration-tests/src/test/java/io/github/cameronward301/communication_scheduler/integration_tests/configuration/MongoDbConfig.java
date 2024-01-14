@@ -26,7 +26,7 @@ public class MongoDbConfig extends AbstractMongoClientConfiguration {
     protected String getDatabaseName() {
         return dbName;
     }
-    
+
     @Override
     public MongoClient mongoClient() {
         ConnectionString connectionString = new ConnectionString(this.connectionString);
@@ -38,6 +38,7 @@ public class MongoDbConfig extends AbstractMongoClientConfiguration {
 
     /**
      * Creates a Gateway bean for use in tests
+     *
      * @return Gateway bean
      */
     @Bean

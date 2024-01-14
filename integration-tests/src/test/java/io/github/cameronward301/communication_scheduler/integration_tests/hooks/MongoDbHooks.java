@@ -10,10 +10,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.util.List;
 
 public class MongoDbHooks {
-    
+
     private final GatewayRepository gatewayRepository;
     private final Gateway gateway;
     private final List<Gateway> gateways;
+
     public MongoDbHooks(GatewayRepository gatewayRepository,
                         @Qualifier("gatewayDbModel") Gateway gateway,
                         @Qualifier("gatewayDbModels") List<Gateway> gateways) {
@@ -21,10 +22,10 @@ public class MongoDbHooks {
         this.gateways = gateways;
         this.gateway = gateway;
     }
-    
+
     @Before("@MongoDbSetupEntity")
     public void setupMongoDBEntity() {
-        if (doesEntityExist(gateway.getId())){
+        if (doesEntityExist(gateway.getId())) {
             removeMongoDBEntity();
         }
         saveEntity(gateway);
@@ -33,7 +34,7 @@ public class MongoDbHooks {
     @Before("@MongoDbAddMultipleEntities")
     public void setupMongoDBEntities() {
         for (Gateway gateway : gateways) {
-            if (doesEntityExist(gateway.getId())){
+            if (doesEntityExist(gateway.getId())) {
                 removeMongoDBEntity();
             }
             saveEntity(gateway);

@@ -1,7 +1,6 @@
 package io.github.cameronward301.communication_scheduler.integration_tests.step.definitions;
 
 import io.cucumber.datatable.DataTable;
-import io.cucumber.datatable.TypeReference;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -11,8 +10,6 @@ import io.github.cameronward301.communication_scheduler.integration_tests.gatewa
 import io.github.cameronward301.communication_scheduler.integration_tests.repository.GatewayRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +17,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -30,17 +30,13 @@ public class GatewayAPIStepDefinitions {
     private final GatewayRepository gatewayRepository;
     private final RestTemplate restTemplate = new RestTemplate();
     private final String existingGatewayId;
-
+    HttpClientErrorException httpClientErrorException;
     private Gateway gateway; //inject bean but also allow for new instance
-
-    private Map<String, String> queryParams = new HashMap<>();
+    private final Map<String, String> queryParams = new HashMap<>();
     private List<Gateway> existingGateways;
     private ResponseEntity<GatewayPageImpl<Gateway>> listGatewayResponseEntity;
     private ResponseEntity<Gateway> responseEntity;
     private ResponseEntity<Void> deleteResponseEntity;
-
-    HttpClientErrorException httpClientErrorException;
-
     @Value("${gateway-api.address}")
     private String gatewayAPIUrl;
 
@@ -132,7 +128,7 @@ public class GatewayAPIStepDefinitions {
         }
     }
 
-    private void updateGateway(){
+    private void updateGateway() {
         HttpEntity<Gateway> entity = new HttpEntity<>(gateway);
         responseEntity = restTemplate.exchange(gatewayAPIUrl, HttpMethod.PUT, entity, Gateway.class);
     }
@@ -187,7 +183,8 @@ public class GatewayAPIStepDefinitions {
                 for (Map.Entry<String, String> parameter : queryParams.entrySet()) {
                     queryUri.queryParam(parameter.getKey(), parameter.getValue());
                 }
-                listGatewayResponseEntity = restTemplate.exchange(queryUri.encode().toUriString(), HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
+                listGatewayResponseEntity = restTemplate.exchange(queryUri.encode().toUriString(), HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+                });
             }
 
         } catch (HttpClientErrorException e) {

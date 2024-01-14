@@ -45,9 +45,9 @@ Feature: Gateway Api
   @MongoDbAddMultipleEntities
   @MongoDbRemoveMultipleEntities
   Scenario: User gets a list of gateways
-  When I get the list of gateways
-  Then the list of gateways is returned with a status code of 200
-  And there are 5 gateways in the list
+    When I get the list of gateways
+    Then the list of gateways is returned with a status code of 200
+    And there are 5 gateways in the list
 
   @MongoDbAddMultipleEntities
   @MongoDbRemoveMultipleEntities
@@ -94,8 +94,8 @@ Feature: Gateway Api
 
   @MongoDbSetupEntity
   Scenario: User deletes a gateway by its id
-      When I delete the existing gateway by id
-      Then the response code is 204
+    When I delete the existing gateway by id
+    Then the response code is 204
 
   Scenario: User deletes a gateway by an unknown id
     When I delete the gateway with an unknown id: "573df1e-0b99-4bea-a38b-a8defdf0c6f0"

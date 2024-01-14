@@ -55,11 +55,11 @@ public class CommunicationWorkflowStepDefinitions {
             case "SmsUser1" -> user = smsUser1;
             case "EmailUser1" -> user = emailUser1;
             case "Unknown" -> user = new User() {
-                    @Override
-                    public String getId() {
-                        return super.getId();
-                    }
-                };
+                @Override
+                public String getId() {
+                    return super.getId();
+                }
+            };
             default -> throw new IllegalStateException("Unexpected value: " + userName);
         }
     }

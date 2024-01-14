@@ -16,7 +16,6 @@ import java.util.List;
 
 /**
  * Adapted from here: <a href="https://www.baeldung.com/resttemplate-page-entity-response#5-how-to-solve-httpmessageconversionexception">here</a>
- *
  */
 @Getter
 @Setter
