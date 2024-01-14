@@ -32,8 +32,8 @@ Feature: Gateway Api
     When I create the gateway
     Then the response code is 400 and message: "400 : \"'friendlyName' cannot be empty\""
 
-  @DynamoDbSetupEntity
-  @DynamoDbRemoveEntity
+  @MongoDbSetupEntity
+  @MongoDbRemoveEntity
   Scenario: User gets a gateway by id
     When I get the gateway by id
     Then a gateway is returned with a status code of 200
@@ -42,15 +42,15 @@ Feature: Gateway Api
     When I get the gateway by an unknown id: "573df1e-0b99-4bea-a38b-a8defdf0c6f0"
     Then the response code is 404 and message: "404 : \"Gateway with id '573df1e-0b99-4bea-a38b-a8defdf0c6f0' not found\""
 
-  @DynamoDbAddMultipleEntities
-  @DynamoDbRemoveMultipleEntities
+  @MongoDbAddMultipleEntities
+  @MongoDbRemoveMultipleEntities
   Scenario: User gets a list of gateways
   When I get the list of gateways
   Then the list of gateways is returned with a status code of 200
   And there are 5 gateways in the list
 
-  @DynamoDbAddMultipleEntities
-  @DynamoDbRemoveMultipleEntities
+  @MongoDbAddMultipleEntities
+  @MongoDbRemoveMultipleEntities
   Scenario: User gets a list of gateways with query parameters
     Given I set the "friendlyName" query parameter to "test"
     And I set the "pageSize" query parameter to "10"
@@ -58,8 +58,8 @@ Feature: Gateway Api
     Then the list of gateways is returned with a status code of 200
     And there are 10 gateways in the list
 
-  @DynamoDbSetupEntity
-  @DynamoDbRemoveEntity
+  @MongoDbSetupEntity
+  @MongoDbRemoveEntity
   Scenario: User updates a gateway
     Given I have a gateway with the following information:
       | endpointUrl                    | friendlyName         | description          |
@@ -67,8 +67,8 @@ Feature: Gateway Api
     When I update the existing gateway
     Then a gateway is returned with a status code of 200
 
-  @DynamoDbSetupEntity
-  @DynamoDbRemoveEntity
+  @MongoDbSetupEntity
+  @MongoDbRemoveEntity
   Scenario: User updates a gateway and tires to remove the endpointUrl
     Given I have a gateway with the following information:
       | friendlyName         | description          |
@@ -76,8 +76,8 @@ Feature: Gateway Api
     When I update the existing gateway
     Then the response code is 400 and message: "400 : \"'endpointUrl' cannot be empty\""
 
-  @DynamoDbSetupEntity
-  @DynamoDbRemoveEntity
+  @MongoDbSetupEntity
+  @MongoDbRemoveEntity
   Scenario: User updates a gateway and tires to remove the friendlyName
     Given I have a gateway with the following information:
       | endpointUrl          | description          |
@@ -92,7 +92,7 @@ Feature: Gateway Api
     When I update the gateway without an id
     Then the response code is 400 and message: "400 : \"Please provide a gateway 'id' in the request body\""
 
-  @DynamoDbSetupEntity
+  @MongoDbSetupEntity
   Scenario: User deletes a gateway by its id
       When I delete the existing gateway by id
       Then the response code is 204

@@ -1,17 +1,20 @@
 package io.github.cameronward301.communication_scheduler.integration_tests.gateway;
 
-
-import lombok.Getter;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
-public abstract class Gateway {
-    private final String id;
-
-    public Gateway(String id) {
-        this.id = id;
-    }
-
-    public Gateway() {
-        this.id = "unknown";
-    }
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Document()
+public class Gateway {
+    @Id
+    private String id;
+    private String endpointUrl;
+    private String friendlyName;
+    private String description = "";
+    private String dateCreated;
 }

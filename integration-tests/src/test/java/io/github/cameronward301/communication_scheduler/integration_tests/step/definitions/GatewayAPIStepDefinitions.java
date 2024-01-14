@@ -1,14 +1,18 @@
 package io.github.cameronward301.communication_scheduler.integration_tests.step.definitions;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.datatable.TypeReference;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.java.sl.In;
-import io.github.cameronward301.communication_scheduler.integration_tests.gateway.GatewayDbModel;
+import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Gateway;
+import io.github.cameronward301.communication_scheduler.integration_tests.gateway.GatewayPageImpl;
+import io.github.cameronward301.communication_scheduler.integration_tests.repository.GatewayRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +20,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.Instant;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,16 +27,16 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
 public class GatewayAPIStepDefinitions {
-    private final DynamoDBMapper dynamoDBMapper;
+    private final GatewayRepository gatewayRepository;
     private final RestTemplate restTemplate = new RestTemplate();
     private final String existingGatewayId;
 
-    private GatewayDbModel gatewayDbModel; //inject bean but also allow for new instance
+    private Gateway gateway; //inject bean but also allow for new instance
 
     private Map<String, String> queryParams = new HashMap<>();
-    private List<GatewayDbModel> existingGateways;
-    private ResponseEntity<GatewayDbModel[]> listGatewayResponseEntity;
-    private ResponseEntity<GatewayDbModel> responseEntity;
+    private List<Gateway> existingGateways;
+    private ResponseEntity<GatewayPageImpl<Gateway>> listGatewayResponseEntity;
+    private ResponseEntity<Gateway> responseEntity;
     private ResponseEntity<Void> deleteResponseEntity;
 
     HttpClientErrorException httpClientErrorException;
@@ -41,26 +44,26 @@ public class GatewayAPIStepDefinitions {
     @Value("${gateway-api.address}")
     private String gatewayAPIUrl;
 
-    public GatewayAPIStepDefinitions(DynamoDBMapper dynamoDBMapper, GatewayDbModel gatewayDbModel) {
-        this.dynamoDBMapper = dynamoDBMapper;
-        this.gatewayDbModel = gatewayDbModel;
-        this.existingGatewayId = gatewayDbModel.getId();
+    public GatewayAPIStepDefinitions(GatewayRepository gatewayRepository, Gateway gateway) {
+        this.gatewayRepository = gatewayRepository;
+        this.gateway = gateway;
+        this.existingGatewayId = gateway.getId();
     }
 
     @Given("I have a gateway with the following information:")
     public void iHaveAGatewayWithTheFollowingInformation(DataTable gatewayData) {
-        gatewayDbModel = new GatewayDbModel();
-        gatewayDbModel.setId(null);
-        gatewayDbModel.setDateCreated(null);
-        gatewayDbModel.setEndpointUrl(gatewayData.asMaps().get(0).get("endpointUrl"));
-        gatewayDbModel.setFriendlyName(gatewayData.asMaps().get(0).get("friendlyName"));
-        gatewayDbModel.setDescription(gatewayData.asMaps().get(0).get("description"));
+        gateway = new Gateway();
+        gateway.setId(null);
+        gateway.setDateCreated(null);
+        gateway.setEndpointUrl(gatewayData.asMaps().get(0).get("endpointUrl"));
+        gateway.setFriendlyName(gatewayData.asMaps().get(0).get("friendlyName"));
+        gateway.setDescription(gatewayData.asMaps().get(0).get("description"));
     }
 
     @When("I create the gateway")
     public void iCreateTheGateway() {
         try {
-            responseEntity = restTemplate.postForEntity(gatewayAPIUrl, gatewayDbModel, GatewayDbModel.class);
+            responseEntity = restTemplate.postForEntity(gatewayAPIUrl, gateway, Gateway.class);
 
         } catch (HttpClientErrorException e) {
             httpClientErrorException = e;
@@ -72,14 +75,14 @@ public class GatewayAPIStepDefinitions {
         assertEquals(statusCode, responseEntity.getStatusCode().value());
         assertNotEquals(null, Objects.requireNonNull(responseEntity.getBody()).getId());
         assertNotEquals(null, Objects.requireNonNull(responseEntity.getBody()).getDateCreated());
-        assertEquals(gatewayDbModel.getEndpointUrl(), responseEntity.getBody().getEndpointUrl());
-        assertEquals(gatewayDbModel.getFriendlyName().toLowerCase(), responseEntity.getBody().getFriendlyName());
-        assertEquals(gatewayDbModel.getDescription() != null ? gatewayDbModel.getDescription().toLowerCase() : "", responseEntity.getBody().getDescription());
+        assertEquals(gateway.getEndpointUrl(), responseEntity.getBody().getEndpointUrl());
+        assertEquals(gateway.getFriendlyName().toLowerCase(), responseEntity.getBody().getFriendlyName());
+        assertEquals(gateway.getDescription() != null ? gateway.getDescription().toLowerCase() : "", responseEntity.getBody().getDescription());
     }
 
     @And("the test framework removes the gateway")
     public void theTestFrameworkRemovesTheGateway() {
-        dynamoDBMapper.delete(responseEntity.getBody());
+        gatewayRepository.deleteById(Objects.requireNonNull(responseEntity.getBody()).getId());
     }
 
     @Then("the response code is {int} and message: {string}")
@@ -91,7 +94,7 @@ public class GatewayAPIStepDefinitions {
     @When("I get the gateway by id")
     public void iGetTheGatewayById() {
         try {
-            responseEntity = restTemplate.getForEntity(gatewayAPIUrl + "/" + gatewayDbModel.getId(), GatewayDbModel.class);
+            responseEntity = restTemplate.getForEntity(gatewayAPIUrl + "/" + gateway.getId(), Gateway.class);
 
         } catch (HttpClientErrorException e) {
             httpClientErrorException = e;
@@ -101,7 +104,7 @@ public class GatewayAPIStepDefinitions {
     @When("I get the gateway by an unknown id: {string}")
     public void iGetTheGatewayByAnUnknownId(String id) {
         try {
-            responseEntity = restTemplate.getForEntity(gatewayAPIUrl + "/" + id, GatewayDbModel.class);
+            responseEntity = restTemplate.getForEntity(gatewayAPIUrl + "/" + id, Gateway.class);
 
         } catch (HttpClientErrorException e) {
             httpClientErrorException = e;
@@ -111,7 +114,7 @@ public class GatewayAPIStepDefinitions {
     @When("I update the existing gateway")
     public void iUpdateTheGateway() {
         try {
-            gatewayDbModel.setId(existingGatewayId);
+            gateway.setId(existingGatewayId);
             updateGateway();
 
         } catch (HttpClientErrorException e) {
@@ -130,8 +133,8 @@ public class GatewayAPIStepDefinitions {
     }
 
     private void updateGateway(){
-        HttpEntity<GatewayDbModel> entity = new HttpEntity<>(gatewayDbModel);
-        responseEntity = restTemplate.exchange(gatewayAPIUrl, HttpMethod.PUT, entity, GatewayDbModel.class);
+        HttpEntity<Gateway> entity = new HttpEntity<>(gateway);
+        responseEntity = restTemplate.exchange(gatewayAPIUrl, HttpMethod.PUT, entity, Gateway.class);
     }
 
     @When("I delete the existing gateway by id")
@@ -159,31 +162,32 @@ public class GatewayAPIStepDefinitions {
         }
     }
 
-    @Given("I already have the following gateways:")
+/*    @Given("I already have the following gateways:")
     public void iAlreadyHaveTheFollowingGateways(DataTable gateways) {
         for (int i = 0; i < gateways.asMaps().size(); i++) {
-            GatewayDbModel gatewayDbModel = new GatewayDbModel();
-            gatewayDbModel.setId(UUID.randomUUID().toString());
-            gatewayDbModel.setDateCreated(Instant.now().toString());
-            gatewayDbModel.setEndpointUrl(gateways.asMaps().get(i).get("endpointUrl"));
-            gatewayDbModel.setFriendlyName(gateways.asMaps().get(i).get("friendlyName"));
-            gatewayDbModel.setDescription(gateways.asMaps().get(i).get("description"));
-            dynamoDBMapper.save(gatewayDbModel);
-            existingGateways.add(gatewayDbModel);
+            Gateway gateway = new Gateway();
+            gateway.setId(UUID.randomUUID().toString());
+            gateway.setDateCreated(Instant.now().toString());
+            gateway.setEndpointUrl(gateways.asMaps().get(i).get("endpointUrl"));
+            gateway.setFriendlyName(gateways.asMaps().get(i).get("friendlyName"));
+            gateway.setDescription(gateways.asMaps().get(i).get("description"));
+            gatewayRepository.save(gateway);
+            existingGateways.add(gateway);
         }
-    }
+    }*/
 
     @When("I get the list of gateways")
     public void iGetTheListOfGateways() {
         try {
             if (queryParams.isEmpty()) {
-                listGatewayResponseEntity = restTemplate.getForEntity(gatewayAPIUrl, GatewayDbModel[].class);
+                listGatewayResponseEntity = restTemplate.exchange(gatewayAPIUrl, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+                });
             } else {
                 UriComponentsBuilder queryUri = UriComponentsBuilder.fromHttpUrl(gatewayAPIUrl);
                 for (Map.Entry<String, String> parameter : queryParams.entrySet()) {
                     queryUri.queryParam(parameter.getKey(), parameter.getValue());
                 }
-                listGatewayResponseEntity = restTemplate.getForEntity(queryUri.encode().toUriString(), GatewayDbModel[].class);
+                listGatewayResponseEntity = restTemplate.exchange(queryUri.encode().toUriString(), HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
             }
 
         } catch (HttpClientErrorException e) {
@@ -198,7 +202,7 @@ public class GatewayAPIStepDefinitions {
 
     @And("there are {int} gateways in the list")
     public void thereAreGatewaysInTheList(int numberOfGateways) {
-        assertEquals(numberOfGateways, Objects.requireNonNull(listGatewayResponseEntity.getBody()).length);
+        assertEquals(numberOfGateways, Objects.requireNonNull(listGatewayResponseEntity.getBody()).getNumberOfElements());
 
     }
 

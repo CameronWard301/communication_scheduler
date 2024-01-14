@@ -1,14 +1,12 @@
 package io.github.cameronward301.communication_scheduler.integration_tests.step.definitions;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectReader;
 import io.cucumber.java.ParameterType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Email;
-import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Gateway;
+import io.github.cameronward301.communication_scheduler.integration_tests.gateway.GatewayType;
 import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Sms;
 import io.github.cameronward301.communication_scheduler.integration_tests.properties.TemporalProperties;
 import io.github.cameronward301.communication_scheduler.integration_tests.users.EmailUser1;
@@ -44,7 +42,7 @@ public class CommunicationWorkflowStepDefinitions {
     private final SmsUser1 smsUser1;
     private final EmailUser1 emailUser1;
     private User user;
-    private Gateway gateway;
+    private GatewayType gatewayType;
 
     private Map<String, String> response;
     private Duration workflowExecutionTimeout = Duration.ofSeconds(15);
@@ -66,13 +64,13 @@ public class CommunicationWorkflowStepDefinitions {
         }
     }
 
-    @And("Using gateway {string}")
+    @And("Using gatewayType {string}")
     public void usingGateway(String gatewayName) {
         switch (gatewayName) {
-            case "Sms" -> gateway = sms;
+            case "Sms" -> gatewayType = sms;
 
-            case "Email" -> gateway = email;
-            case "Unknown" -> gateway = new Gateway() {
+            case "Email" -> gatewayType = email;
+            case "Unknown" -> gatewayType = new GatewayType() {
                 @Override
                 public String getId() {
                     return super.getId();
@@ -90,13 +88,13 @@ public class CommunicationWorkflowStepDefinitions {
     @When("A CommunicationWorkflow is started")
     public void aCommunicationWorkflowIsStarted() {
         CommunicationWorkflow workflow = workflowClient.newWorkflowStub(CommunicationWorkflow.class, WorkflowOptions.newBuilder()
-                .setWorkflowId("intergration-test:" + user.getId() + ":" + gateway.getId())
+                .setWorkflowId("intergration-test:" + user.getId() + ":" + gatewayType.getId())
                 .setTaskQueue(temporalProperties.getTaskQueue())
                 .setWorkflowExecutionTimeout(workflowExecutionTimeout)
                 .build());
 
         try {
-            response = workflow.sendCommunication(Map.of("userId", user.getId(), "gatewayId", gateway.getId()));
+            response = workflow.sendCommunication(Map.of("userId", user.getId(), "gatewayId", gatewayType.getId()));
         } catch (WorkflowFailedException e) {
             workflowFailedException = e;
         }
@@ -106,7 +104,7 @@ public class CommunicationWorkflowStepDefinitions {
     @Then("Workflow status is {WorkflowExecutionStatus}")
     public void pollWorkflowStatusUntil(WorkflowExecutionStatus status) {
         WorkflowExecution execution = WorkflowExecution.newBuilder()
-                .setWorkflowId("intergration-test:" + user.getId() + ":" + gateway.getId())
+                .setWorkflowId("intergration-test:" + user.getId() + ":" + gatewayType.getId())
                 .build();
 
         DescribeWorkflowExecutionRequest describeWorkflowExecutionRequest = DescribeWorkflowExecutionRequest.newBuilder()
@@ -133,7 +131,7 @@ public class CommunicationWorkflowStepDefinitions {
     @And("Communication response is Status: {int}")
     public void communicationResponseIsStatus(int status) {
         ApplicationFailure applicationFailure = (ApplicationFailure) workflowFailedException.getCause().getCause();
-        assertThat(applicationFailure.getMessage(), CoreMatchers.containsString("Gateway unsuccessful, status: " + status));
+        assertThat(applicationFailure.getMessage(), CoreMatchers.containsString("GatewayType unsuccessful, status: " + status));
 
     }
 

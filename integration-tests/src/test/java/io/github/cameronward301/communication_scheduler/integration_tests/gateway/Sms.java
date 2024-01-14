@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-public class Sms extends Gateway {
+public class Sms extends GatewayType {
 
     public Sms(GatewayProperties gatewayProperties) {
         super(gatewayProperties.getSms().getId());
