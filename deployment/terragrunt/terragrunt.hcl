@@ -33,8 +33,8 @@ generate "provider" {
   provider "aws" {
   region = "${local.aws_region}"
   # uncomment here for local testing
-  # shared_credentials_files = ["~/.aws/credentials"]
-  # profile = "saml"
+  shared_credentials_files = ["~/.aws/credentials"]
+  profile = "saml"
 
   default_tags {
   # Use heredoc syntax to render the json to avoid quoting complications.
@@ -57,7 +57,7 @@ remote_state {
   config = {
     encrypt        = true
     # uncomment for local testing:
-    # profile        = "saml"
+    profile        = "saml"
     bucket         = "terraform-state-${local.account_name}-${local.account_id}-${local.aws_region}"
     key            = "${path_relative_to_include()}/terraform.tfstate"
     region         = local.aws_region

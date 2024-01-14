@@ -15,7 +15,9 @@ import io.github.cameronward301.communication_scheduler.workflows.communication_
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.SendMessageToGatewayActivityImpl
 
 import io.temporal.client.WorkflowClient
+import io.temporal.client.WorkflowFailedException
 import io.temporal.client.WorkflowOptions
+import io.temporal.failure.ActivityFailure
 import io.temporal.testing.TestWorkflowEnvironment
 import io.temporal.worker.Worker
 import okhttp3.mockwebserver.MockResponse
@@ -28,6 +30,7 @@ import software.amazon.awssdk.services.dynamodb.model.GetItemRequest
 import software.amazon.awssdk.services.dynamodb.model.GetItemResponse
 import spock.lang.Specification
 
+import java.time.Duration
 import java.util.concurrent.CompletableFuture
 
 class CommunicationWorkflowTest extends Specification {
@@ -124,12 +127,11 @@ class CommunicationWorkflowTest extends Specification {
         CommunicationWorkflow communicationWorkflow = workflowClient.newWorkflowStub(CommunicationWorkflow.class, WorkflowOptions.newBuilder().setTaskQueue(TASK_QUEUE).build())
 
         when: "communication workflow is started"
-        String workflowResult = communicationWorkflow.sendCommunication(Map.of("gatewayId", GATEWAY_ID, "userId", USER_ID))
+        Map<String, String> workflowResult = communicationWorkflow.sendCommunication(Map.of("gatewayId", GATEWAY_ID, "userId", USER_ID))
 
         then: "workflow completes successfully"
-        Map<String, String> resultObject = objectMapper.readValue(workflowResult, Map.class)
-        resultObject.get("status") == "complete"
-        resultObject.get("userId") == USER_ID
-        resultObject.get("messageHash") == messageHash
+        workflowResult.get("status") == "complete"
+        workflowResult.get("userId") == USER_ID
+        workflowResult.get("messageHash") == messageHash
     }
 }

@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: integration-tests
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+spec:
+  template:
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-integration-tests
+          image: "{{ .Values.integration_tests.repository }}:{{ .Values.integration_tests.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "TEMPORAL_HOST"
+              value: "{{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local:7233"
+      initContainers:
+        - name: wait-for-temporal
+          image: busybox
+          command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for temporal; sleep 2; done;']
+        - name: wait-for-email-gateway
+          image: busybox
+          command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-email-gateway-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for email gateway; sleep 2; done;']
+        - name: wait-for-sms-gateway
+          image: busybox
+          command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-sms-gateway-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for sms gateway; sleep 2; done;']
+        - name: wait-for-gateway-api
+          image: busybox
+          command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-gateway-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for gateway api; sleep 2; done;']
+      restartPolicy: Never
+  backoffLimit: 0
