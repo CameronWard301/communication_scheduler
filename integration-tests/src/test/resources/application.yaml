@@ -1,0 +1,25 @@
+gateway:
+  sms:
+    id: d2a3d6f8-2a67-471f-aa8f-75cbed07ebf9
+    user1:
+      id: c96f0fdd-0029-4b3a-91e0-b93f2d93713d
+
+  email:
+    id: 5e9500ff-59ac-4e0f-8e86-9cf21b6e500d
+    user1:
+      id: 62f8a8e1-f55a-4d9a-ab15-852168a321a4
+
+
+temporal-connection:
+  namespace: ${$TEMPORAL_NAMESPACE:default}
+  host: ${TEMPORAL_HOST:localhost:7233}
+  taskQueue: ${TEMPORAL_TASK_QUEUE:communication-workflow}
+
+gateway-api:
+  address: ${GATEWAY_API_ADDRESS:http://localhost:8080/gateway}
+  entity.id: ${GATEWAY_API_ENTITY_ID:test-gateway-api-entity}
+  mongoDb:
+    database:
+      name: ${MONGODB_DATABASE_NAME:gateway-database-name}
+    connection:
+      string: ${MONGODB_CONNECTION_STRING:mongodb://localhost:27017}

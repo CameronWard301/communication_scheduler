@@ -1,0 +1,10 @@
+gateway:
+  mongodb:
+    database:
+      name: ${MONGODB_DATABASE_NAME:gateway-database-name}
+    connection:
+      string: ${MONGODB_CONNECTION_STRING:mongodb://localhost:27017}
+aws.region: ${AWS_REGION:eu-west-1}
+logging:
+  level:
+    root: ${LOGGING_LEVEL:info}

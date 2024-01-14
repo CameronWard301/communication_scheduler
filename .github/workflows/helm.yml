@@ -21,11 +21,13 @@ jobs:
         with:
           exec: helm dependency build ./deployment/helm/
       - name: AWS configure
+        id: aws-kubeconfig
         run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set default.region eu-west-1
           aws eks update-kubeconfig --region eu-west-1 --name communication-eks
+          cat ~/.kube/config | base64
       - name: Helm Plan
         uses: WyriHaximus/github-action-helm3@v3.1.0
         with:
@@ -49,6 +51,9 @@ jobs:
             --set "env.sms_gateway.user1.name=${{ secrets.USER_1_NAME }}"
             --set "env.sms_gateway.user2.phoneNumber=${USER_2_PHONE_NUMBER}"
             --set "env.sms_gateway.user2.name=${{ secrets.USER_2_NAME }}"
+            --set "env.gateway_api.tableName=${{ secrets.GATEWAY_DB_TABLE_NAME }}"
+            --set "env.gateway_api.mongo.databaseName=${{ secrets.MONGO_DB_DATABASE_NAME }}"
+            --set "env.gateway_api.mongo.connectionString=${{ secrets.MONGO_DB_CONNECTION_STRING }}"
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
@@ -82,6 +87,8 @@ jobs:
             --set "env.sms_gateway.user1.name=${{ secrets.USER_1_NAME }}"
             --set "env.sms_gateway.user2.phoneNumber=${USER_2_PHONE_NUMBER}"
             --set "env.sms_gateway.user2.name=${{ secrets.USER_2_NAME }}"
+            --set "env.gateway_api.mongo.databaseName=${{ secrets.MONGO_DB_DATABASE_NAME }}"
+            --set "env.gateway_api.mongo.connectionString=${{ secrets.MONGO_DB_CONNECTION_STRING }}"
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
@@ -91,3 +98,11 @@ jobs:
           FROM_PHONE_NUMBER: ${{ secrets.FROM_PHONE_NUMBER }}
           USER_1_PHONE_NUMBER: ${{ secrets.USER_1_PHONE_NUMBER }}
           USER_2_PHONE_NUMBER: ${{ secrets.USER_2_PHONE_NUMBER }}
+      - name: Get integration test output
+        if: github.ref == 'refs/heads/main' && always() # Always run this step, even if the previous step fails but only if on the main branch
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ steps.aws-kubeconfig.outputs.stdout }}
+        with:
+          args: logs jobs/integration-tests
+

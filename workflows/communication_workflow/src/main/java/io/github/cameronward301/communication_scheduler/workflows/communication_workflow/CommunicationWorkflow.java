@@ -17,8 +17,7 @@ public interface CommunicationWorkflow {
      *
      * @param payload The JSON payload for the workflow containing the userId and gatewayId stored in the scheduled workflow
      * @return JSON response from the gateway
-     * @throws JsonProcessingException if the response from the gateway can't be parsed
      */
     @WorkflowMethod
-    String sendCommunication(Map<String, String> payload) throws JsonProcessingException;
+    Map<String, String> sendCommunication(Map<String, String> payload);
 }

@@ -7,6 +7,8 @@ on:
       - communication_worker/**
       - email-gateway/**
       - sms-gateway/**
+      - integration-tests/**
+      - gateway-api/**
       - .github/workflows/build-containers.yml
     branches:
       - "**"
@@ -146,13 +148,98 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
+  gateway-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Get version
+        working-directory: ./gateway-api
+        run: |
+          CONTAINER_VERSION=$(mvn help:evaluate -Dexpression="project.version" -q -DforceStdout)
+          echo ${CONTAINER_VERSION}
+          echo "CONTAINER_VERSION=${CONTAINER_VERSION}" >> $GITHUB_ENV
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/gateway-api
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}},value=v${{ env.CONTAINER_VERSION }}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./gateway-api
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Get version
+        working-directory: ./integration-tests
+        run: |
+          CONTAINER_VERSION=$(mvn help:evaluate -Dexpression="project.version" -q -DforceStdout)
+          echo ${CONTAINER_VERSION}
+          echo "CONTAINER_VERSION=${CONTAINER_VERSION}" >> $GITHUB_ENV
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/cs-integration-tests
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}},value=v${{ env.CONTAINER_VERSION }}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./integration-tests
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
   restart-deployments:
     runs-on: ubuntu-latest
     needs:
       - communication-worker
       - email-gateway
       - sms-gateway
+      - integration-tests
+      - gateway-api
     steps:
       - name: Checkout
         uses: actions/checkout@v4

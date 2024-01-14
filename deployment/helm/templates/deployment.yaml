@@ -149,4 +149,47 @@ spec:
               value: "{{ .Values.sms_gateway.region }}"
             - name: "GATEWAY_LOGGING"
               value: "{{ .Values.sms_gateway.loggingLevel }}"
-
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-gateway-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-gateway-api
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-gateway-api
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-gateway-api
+          image: "{{ .Values.gateway_api.repository }}:{{ .Values.gateway_api.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            {{- if .Values.useAwsKubernetesSecret }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_SECRET_ACCESS_KEY
+                        {{- end }}
+            - name: "MONGODB_DATABASE_NAME"
+              value: "{{ .Values.env.gateway_api.mongo.databaseName }}"
+            - name: "MONGODB_CONNECTION_STRING"
+              value: "{{ .Values.env.gateway_api.mongo.connectionString }}"
+            - name: "LOGGING_LEVEL"
+              value: "{{ .Values.gateway_api.loggingLevel }}"
+            - name: "AWS_REGION"
+              value: "{{ .Values.gateway_api.region }}"
