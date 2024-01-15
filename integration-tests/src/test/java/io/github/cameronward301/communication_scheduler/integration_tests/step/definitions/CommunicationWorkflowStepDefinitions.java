@@ -131,7 +131,7 @@ public class CommunicationWorkflowStepDefinitions {
     @And("Communication response is Status: {int}")
     public void communicationResponseIsStatus(int status) {
         ApplicationFailure applicationFailure = (ApplicationFailure) workflowFailedException.getCause().getCause();
-        assertThat(applicationFailure.getMessage(), CoreMatchers.containsString("GatewayType unsuccessful, status: " + status));
+        assertThat(applicationFailure.getMessage(), CoreMatchers.containsString("Gateway unsuccessful, status: " + status));
 
     }
 

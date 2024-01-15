@@ -11,7 +11,7 @@ Feature: Email Gateway Integration Tests
     Then Workflow status is WORKFLOW_EXECUTION_STATUS_COMPLETED
     And Communication response is ok
 
-  Scenario: Send an SMS Communication with unknown user id
+  Scenario: Send an Email Communication with unknown user id
     Given I am user: "Unknown"
     And Using gateway "Email"
     And Workflow timeout is 5 seconds
