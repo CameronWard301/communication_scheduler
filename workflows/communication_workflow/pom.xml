@@ -16,7 +16,7 @@
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler.workflows</groupId>
     <artifactId>communication_workflow</artifactId>
-    <version>0.11.0</version>
+    <version>0.12.0</version>
     <name>communication_workflow</name>
     <description>communication_workflow library for use in a worker or cucumber project</description>
     <url>https://github.com/CameronWard301/communication_scheduler/tree/main/workflows/communication_workflow</url>
@@ -77,10 +77,10 @@
             <artifactId>kubernetes-client</artifactId>
             <version>6.9.2</version>
         </dependency>
+
         <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>dynamodb</artifactId>
-            <version>2.20.109</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
         <dependency>
             <groupId>io.temporal</groupId>

@@ -64,7 +64,7 @@ public class CommunicationWorkflowStepDefinitions {
         }
     }
 
-    @And("Using gatewayType {string}")
+    @And("Using gateway {string}")
     public void usingGateway(String gatewayName) {
         switch (gatewayName) {
             case "Sms" -> gatewayType = sms;

@@ -1,37 +1,26 @@
 package io.github.cameronward301.communication_scheduler.workflows.communication_workflow.workflows
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.CommunicationWorkflow
-import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetPreferencesActivityImpl
-import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences
-import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.AwsProperties
-import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.TemporalProperties
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder
 import io.fabric8.kubernetes.client.KubernetesClient
 import io.fabric8.kubernetes.client.dsl.MixedOperation
 import io.fabric8.kubernetes.client.dsl.Resource
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.CommunicationWorkflow
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.CommunicationWorkflowImpl
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetGatewayFromDbActivityImpl
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.GetPreferencesActivityImpl
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities.SendMessageToGatewayActivityImpl
-
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Gateway
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.TemporalProperties
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.repository.GatewayRepository
 import io.temporal.client.WorkflowClient
-import io.temporal.client.WorkflowFailedException
 import io.temporal.client.WorkflowOptions
-import io.temporal.failure.ActivityFailure
 import io.temporal.testing.TestWorkflowEnvironment
 import io.temporal.worker.Worker
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.springframework.web.reactive.function.client.WebClient
-import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue
-import software.amazon.awssdk.services.dynamodb.model.DynamoDbResponse
-import software.amazon.awssdk.services.dynamodb.model.GetItemRequest
-import software.amazon.awssdk.services.dynamodb.model.GetItemResponse
 import spock.lang.Specification
-
-import java.time.Duration
-import java.util.concurrent.CompletableFuture
 
 class CommunicationWorkflowTest extends Specification {
 
@@ -40,8 +29,7 @@ class CommunicationWorkflowTest extends Specification {
     private WorkflowClient workflowClient
     private TemporalProperties temporalProperties
     private KubernetesClient kubernetesClient
-    private AwsProperties awsProperties
-    DynamoDbAsyncClient dynamoDbAsyncClient = Mock(DynamoDbAsyncClient.class)
+    GatewayRepository gatewayRepository = Mock(GatewayRepository.class)
 
     public static MockWebServer mockWebServer
 
@@ -55,7 +43,6 @@ class CommunicationWorkflowTest extends Specification {
     final String NAMESPACE = "default"
     final String TASK_QUEUE = "test-task-queue"
     final String GATEWAY_ID = "test-gateway"
-    final ObjectMapper objectMapper = new ObjectMapper()
 
 
     def setup() {
@@ -70,10 +57,6 @@ class CommunicationWorkflowTest extends Specification {
         temporalProperties = properties
 
         this.kubernetesClient = Mock(KubernetesClient.class)
-
-        awsProperties = new AwsProperties()
-        awsProperties.setTable_name("test_table")
-        awsProperties.setKey_name("id")
 
         mockWebServer = new MockWebServer()
         mockWebServer.start()
@@ -102,20 +85,11 @@ class CommunicationWorkflowTest extends Specification {
         (mockConfigMap.get()) >> configMap
 
 
-        DynamoDbResponse getItemResponse = GetItemResponse.builder()
-                .item(Collections.singletonMap("endpoint_url", AttributeValue.builder().s(gatewayUrl).build()))
-                .build()
-
-        GetItemRequest getItemRequest = GetItemRequest.builder()
-                .tableName(awsProperties.getTable_name())
-                .key(Map.of(awsProperties.getKey_name(), AttributeValue.builder().s(GATEWAY_ID).build()))
-                .build() as GetItemRequest
-
-        dynamoDbAsyncClient.getItem(getItemRequest) >> CompletableFuture.completedFuture(getItemResponse)
+        gatewayRepository.findById(GATEWAY_ID) >> Optional.of(Gateway.builder().endpointUrl(gatewayUrl).build())
 
 
         worker.registerActivitiesImplementations(new GetPreferencesActivityImpl(temporalProperties, kubernetesClient))
-        worker.registerActivitiesImplementations(new GetGatewayFromDbActivityImpl(awsProperties, dynamoDbAsyncClient))
+        worker.registerActivitiesImplementations(new GetGatewayFromDbActivityImpl(gatewayRepository))
         worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient))
 
         final String messageHash = "test-hash"
