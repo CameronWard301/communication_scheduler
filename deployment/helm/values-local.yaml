@@ -39,7 +39,7 @@ communication_worker:
   repository: cameronward/communication-worker
   tag: latest
   debug: debug
-  springDebug: debug
+  springDebug: info
   temporal:
     taskQueue: communication-worker
     namespace: default

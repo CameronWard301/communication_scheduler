@@ -1,5 +1,6 @@
 package io.github.cameronward301.communication_scheduler.sms_gateway.service
 
+import io.github.cameronward301.communication_scheduler.gateway_library.exception.ResourceNotFoundException
 import io.github.cameronward301.communication_scheduler.gateway_library.user.content.UserAndContent
 import io.github.cameronward301.communication_scheduler.sms_gateway.model.SmsUser
 import io.github.cameronward301.communication_scheduler.sms_gateway.model.UserUsage
@@ -51,5 +52,18 @@ class SmsUserContentServiceTest extends Specification {
         response.getUser().getPhoneNumber() == smsUser.getPhoneNumber()
         response.getUser().getFirstName() == smsUser.getFirstName()
         response.getUser() == smsUser
+    }
+
+    def "Should throw exception if user could not be found"(){
+        given:
+        userUsageRepository.findByUser_Id("test-user-id") >> null
+
+        when:
+        UserAndContent response = smsUserContentService.getUserAndContent("test-user-id")
+
+        then:
+        def exception = thrown(ResourceNotFoundException)
+        and:
+        exception.getMessage() == "Could not find user and usage with id: 'test-user-id'"
     }
 }

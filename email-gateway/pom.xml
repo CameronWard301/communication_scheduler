@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
+        <version>3.2.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>email_gateway</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <name>email-gateway</name>
     <description>email-gateway</description>
     <properties>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.sendgrid</groupId>
             <artifactId>sendgrid-java</artifactId>
-            <version>4.9.3</version>
+            <version>4.10.1</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>io.github.cameronward301.communication_scheduler</groupId>
             <artifactId>gateway-library</artifactId>
-            <version>0.2.13</version>
+            <version>0.2.15</version>
         </dependency>
 
         <dependency>
