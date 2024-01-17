@@ -23,18 +23,18 @@ spec:
           env:
             - name: "TEMPORAL_ENDPOINT"
               value: "{{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local:7233"
-            {{- if .Values.useAwsKubernetesSecret }}
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: aws-credentials
-                  key: AWS_ACCESS_KEY_ID
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: aws-credentials
-                  key: AWS_SECRET_ACCESS_KEY
-            {{- end }}
+            - name: "TEMPORAL_NAMESPACE"
+              value: "{{ .Values.communication_worker.temporal.namespace }}"
+            - name: "TEMPORAL_TASK_QUEUE"
+              value: "{{ .Values.communication_worker.temporal.taskQueue }}"
+            - name: "WORKER_DEBUG"
+              value: "{{ .Values.communication_worker.debug }}"
+            - name: "SPRING_DEBUG"
+              value: "{{ .Values.communication_worker.springDebug }}"
+            - name: "MONGODB_DATABASE_NAME"
+              value: "{{ .Values.env.communication_worker.mongo.databaseName }}"
+            - name: "MONGODB_CONNECTION_STRING"
+              value: "{{ .Values.env.communication_worker.mongo.connectionString }}"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -173,23 +173,9 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            {{- if .Values.useAwsKubernetesSecret }}
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: aws-credentials
-                  key: AWS_ACCESS_KEY_ID
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: aws-credentials
-                  key: AWS_SECRET_ACCESS_KEY
-                        {{- end }}
             - name: "MONGODB_DATABASE_NAME"
               value: "{{ .Values.env.gateway_api.mongo.databaseName }}"
             - name: "MONGODB_CONNECTION_STRING"
               value: "{{ .Values.env.gateway_api.mongo.connectionString }}"
             - name: "LOGGING_LEVEL"
               value: "{{ .Values.gateway_api.loggingLevel }}"
-            - name: "AWS_REGION"
-              value: "{{ .Values.gateway_api.region }}"

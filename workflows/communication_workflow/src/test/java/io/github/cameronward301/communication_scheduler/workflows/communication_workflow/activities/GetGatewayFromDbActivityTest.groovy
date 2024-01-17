@@ -1,24 +1,18 @@
 package io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities
 
-import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.exception.GatewayNotFoundException
-import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.AwsProperties
+
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Gateway
+
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.repository.GatewayRepository
 import io.temporal.failure.ActivityFailure
 import io.temporal.testing.TestActivityEnvironment
 import io.temporal.testing.TestEnvironmentOptions
-import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue
-import software.amazon.awssdk.services.dynamodb.model.DynamoDbResponse
-import software.amazon.awssdk.services.dynamodb.model.GetItemRequest
-import software.amazon.awssdk.services.dynamodb.model.GetItemResponse
 import spock.lang.Specification
-
-import java.util.concurrent.CompletableFuture
 
 class GetGatewayFromDbActivityTest extends Specification {
     TestActivityEnvironment testActivityEnvironment
-    DynamoDbAsyncClient dynamoDbAsyncClient = Mock(DynamoDbAsyncClient.class)
+    GatewayRepository gatewayRepository = Mock(GatewayRepository)
     GetGatewayFromDbActivity getGatewayFromDbActivity
-    AwsProperties awsProperties
 
 
     def setup() {
@@ -28,11 +22,7 @@ class GetGatewayFromDbActivityTest extends Specification {
                         .build()
         )
 
-        awsProperties = new AwsProperties()
-        awsProperties.setTable_name("test_table")
-        awsProperties.setKey_name("id")
-
-        testActivityEnvironment.registerActivitiesImplementations(new GetGatewayFromDbActivityImpl(awsProperties, dynamoDbAsyncClient))
+        testActivityEnvironment.registerActivitiesImplementations(new GetGatewayFromDbActivityImpl(gatewayRepository))
         getGatewayFromDbActivity = testActivityEnvironment.newActivityStub(GetGatewayFromDbActivity.class)
     }
 
@@ -43,16 +33,8 @@ class GetGatewayFromDbActivityTest extends Specification {
     def "getGatewayEndpointUrl returns correct url"() {
         given: "Mocked dynamoDbAsyncClient returns correct response"
         String expectedUrl = "https://test-gateway.com"
-        DynamoDbResponse getItemResponse = GetItemResponse.builder()
-                .item(Collections.singletonMap("endpoint_url", AttributeValue.builder().s(expectedUrl).build()))
-                .build()
 
-        GetItemRequest getItemRequest = GetItemRequest.builder()
-                .tableName(awsProperties.getTable_name())
-                .key(Map.of(awsProperties.getKey_name(), AttributeValue.builder().s("test-gateway").build()))
-                .build() as GetItemRequest
-
-        dynamoDbAsyncClient.getItem(getItemRequest) >> CompletableFuture.completedFuture(getItemResponse)
+        gatewayRepository.findById("test-gateway") >> Optional.of(Gateway.builder().endpointUrl(expectedUrl).build())
 
         when: "getGatewayEndpointUrl is called"
         def urlResult = getGatewayFromDbActivity.getGatewayEndpointUrl("test-gateway")
@@ -63,16 +45,8 @@ class GetGatewayFromDbActivityTest extends Specification {
 
     def "getGatewayEndpointUrl throws GatewayNotFoundException if gateway does not exist"() {
         given: "Mocked dynamoDbAsyncClient returns correct response"
-        DynamoDbResponse getItemResponse = GetItemResponse.builder()
-                .item(null)
-                .build()
 
-        GetItemRequest getItemRequest = GetItemRequest.builder()
-                .tableName(awsProperties.getTable_name())
-                .key(Map.of(awsProperties.getKey_name(), AttributeValue.builder().s("test-gateway").build()))
-                .build() as GetItemRequest
-
-        dynamoDbAsyncClient.getItem(getItemRequest) >> CompletableFuture.completedFuture(getItemResponse)
+        gatewayRepository.findById("test-gateway") >> Optional.empty()
 
         when: "getGatewayEndpointUrl is called"
         getGatewayFromDbActivity.getGatewayEndpointUrl("test-gateway")
