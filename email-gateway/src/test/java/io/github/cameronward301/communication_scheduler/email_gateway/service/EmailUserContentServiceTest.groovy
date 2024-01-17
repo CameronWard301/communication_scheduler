@@ -4,6 +4,7 @@ import io.github.cameronward301.communication_scheduler.email_gateway.model.Emai
 import io.github.cameronward301.communication_scheduler.email_gateway.model.EmailUser
 import io.github.cameronward301.communication_scheduler.email_gateway.repository.ContentRepository
 import io.github.cameronward301.communication_scheduler.email_gateway.repository.UserRepository
+import io.github.cameronward301.communication_scheduler.gateway_library.exception.ResourceNotFoundException
 import io.github.cameronward301.communication_scheduler.gateway_library.user.content.UserAndContent
 import spock.lang.Specification
 
@@ -51,5 +52,31 @@ class EmailUserContentServiceTest extends Specification {
         response.getUser().getEmail() == emailUser.getEmail()
         response.getUser().getFirstName() == emailUser.getFirstName()
         response.getUser() == emailUser
+    }
+
+    def "Should throw exception if content could not be found"(){
+        given:
+        userRepository.findById("test-user-id") >> Optional.of(emailUser)
+        contentRepository.findByUserId("test-user-id") >> null
+
+        when:
+        emailUserContentService.getUserAndContent("test-user-id")
+
+        then:
+        def exception = thrown(ResourceNotFoundException)
+        exception.getMessage() == "Could not find content with id: 'test-user-id'"
+    }
+
+    def "Should throw exception if user could not be found"(){
+        given:
+        userRepository.findById("test-user-id") >> Optional.empty()
+        contentRepository.findByUserId("test-user-id") >> emailContent
+
+        when:
+        emailUserContentService.getUserAndContent("test-user-id")
+
+        then:
+        def exception = thrown(ResourceNotFoundException)
+        exception.getMessage() == "Could not find user with id: 'test-user-id'"
     }
 }

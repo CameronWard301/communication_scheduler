@@ -14,8 +14,14 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: "GATEWAY_API_ADDRESS"
+              value: "http://{{ .Release.Name}}-gateway-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/gateway"
             - name: "TEMPORAL_HOST"
               value: "{{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local:7233"
+            - name: "MONGODB_DATABASE_NAME"
+              value: "{{ .Values.env.gateway_api.mongo.databaseName }}"
+            - name: "MONGODB_CONNECTION_STRING"
+              value: "{{ .Values.env.gateway_api.mongo.connectionString }}"
       initContainers:
         - name: wait-for-temporal
           image: busybox

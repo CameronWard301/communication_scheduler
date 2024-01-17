@@ -64,7 +64,7 @@ public class CommunicationWorkflowStepDefinitions {
         }
     }
 
-    @And("Using gatewayType {string}")
+    @And("Using gateway {string}")
     public void usingGateway(String gatewayName) {
         switch (gatewayName) {
             case "Sms" -> gatewayType = sms;
@@ -131,7 +131,7 @@ public class CommunicationWorkflowStepDefinitions {
     @And("Communication response is Status: {int}")
     public void communicationResponseIsStatus(int status) {
         ApplicationFailure applicationFailure = (ApplicationFailure) workflowFailedException.getCause().getCause();
-        assertThat(applicationFailure.getMessage(), CoreMatchers.containsString("GatewayType unsuccessful, status: " + status));
+        assertThat(applicationFailure.getMessage(), CoreMatchers.containsString("Gateway unsuccessful, status: " + status));
 
     }
 

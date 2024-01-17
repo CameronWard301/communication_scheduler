@@ -38,6 +38,11 @@ temporal:
 communication_worker:
   repository: cameronward/communication-worker
   tag: latest
+  debug: debug
+  springDebug: info
+  temporal:
+    taskQueue: communication-worker
+    namespace: default
 
 email_gateway:
   repository: cameronward/email-gateway

@@ -4,6 +4,7 @@ import io.github.cameronward301.communication_scheduler.email_gateway.model.Emai
 import io.github.cameronward301.communication_scheduler.email_gateway.model.EmailUser;
 import io.github.cameronward301.communication_scheduler.email_gateway.repository.ContentRepository;
 import io.github.cameronward301.communication_scheduler.email_gateway.repository.UserRepository;
+import io.github.cameronward301.communication_scheduler.gateway_library.exception.ResourceNotFoundException;
 import io.github.cameronward301.communication_scheduler.gateway_library.service.UserContentService;
 import io.github.cameronward301.communication_scheduler.gateway_library.user.content.GetUserAndContent;
 import io.github.cameronward301.communication_scheduler.gateway_library.user.content.UserAndContent;
@@ -30,11 +31,16 @@ public class EmailUserContentService extends GetUserAndContent<EmailUser, EmailC
 
     @Override
     public EmailUser getUser(String userId) {
-        return userRepository.findById(userId).orElseThrow();
+        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Could not find user with id: '" + userId + "'"));
     }
 
     @Override
     public EmailContent getContent(String userId) {
-        return contentRepository.findByUserId(userId);
+        EmailContent emailContent =  contentRepository.findByUserId(userId);
+        if (emailContent == null) {
+            throw new ResourceNotFoundException("Could not find content with id: '" + userId + "'");
+        }
+        return emailContent;
+
     }
 }
