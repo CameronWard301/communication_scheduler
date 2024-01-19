@@ -13,6 +13,7 @@ import io.github.cameronward301.communication_scheduler.workflows.communication_
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.TemporalProperties
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.repository.GatewayRepository
+import io.temporal.api.enums.v1.IndexedValueType
 import io.temporal.client.WorkflowClient
 import io.temporal.client.WorkflowOptions
 import io.temporal.testing.TestWorkflowEnvironment
@@ -48,6 +49,9 @@ class CommunicationWorkflowTest extends Specification {
     def setup() {
         testWorkflowEnvironment = TestWorkflowEnvironment.newInstance()
         worker = testWorkflowEnvironment.newWorker(TASK_QUEUE)
+        testWorkflowEnvironment.registerSearchAttribute("gatewayId", IndexedValueType.INDEXED_VALUE_TYPE_TEXT)
+        testWorkflowEnvironment.registerSearchAttribute("userId", IndexedValueType.INDEXED_VALUE_TYPE_TEXT)
+        testWorkflowEnvironment.registerSearchAttribute("scheduleId", IndexedValueType.INDEXED_VALUE_TYPE_TEXT)
 
         worker.registerWorkflowImplementationTypes(CommunicationWorkflowImpl.class)
         workflowClient = testWorkflowEnvironment.getWorkflowClient()
@@ -94,11 +98,12 @@ class CommunicationWorkflowTest extends Specification {
 
         final String messageHash = "test-hash"
         final String USER_ID = "test-user"
+        final String SCHEDULE_ID = "mySchedule"
         String responseJSON = "{\"userId\":\"" + USER_ID + "\",\"messageHash\":\""+ messageHash + "\"}"
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json").setBody(responseJSON))
         testWorkflowEnvironment.start()
 
-        CommunicationWorkflow communicationWorkflow = workflowClient.newWorkflowStub(CommunicationWorkflow.class, WorkflowOptions.newBuilder().setTaskQueue(TASK_QUEUE).build())
+        CommunicationWorkflow communicationWorkflow = workflowClient.newWorkflowStub(CommunicationWorkflow.class, WorkflowOptions.newBuilder().setTaskQueue(TASK_QUEUE).setWorkflowId(GATEWAY_ID + ":"+ USER_ID + ":" + SCHEDULE_ID + ":-timestamp").build())
 
         when: "communication workflow is started"
         Map<String, String> workflowResult = communicationWorkflow.sendCommunication(Map.of("gatewayId", GATEWAY_ID, "userId", USER_ID))
