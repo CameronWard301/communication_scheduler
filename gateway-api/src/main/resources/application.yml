@@ -8,3 +8,10 @@ aws.region: ${AWS_REGION:eu-west-1}
 logging:
   level:
     root: ${LOGGING_LEVEL:info}
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${JWKS_URI:http://localhost:9090/auth/.well-known/jwks.json}
