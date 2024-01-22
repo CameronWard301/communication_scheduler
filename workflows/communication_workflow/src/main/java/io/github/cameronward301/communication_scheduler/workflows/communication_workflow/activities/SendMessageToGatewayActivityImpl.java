@@ -47,8 +47,7 @@ public class SendMessageToGatewayActivityImpl implements SendMessageToGatewayAct
             return Map.of("status", "complete", "userId", response.get("userId"), "messageHash", response.get("messageHash"));
 
 
-        }
-        catch (WebClientResponseException e) {
+        } catch (WebClientResponseException e) {
             if (e.getCause() instanceof UnsupportedMediaTypeException) {
                 log.error("Gateway did not return content type of application/json", e);
                 throw ApplicationFailure.newFailure("Gateway did not return content type of application/json", "GatewayError");

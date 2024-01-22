@@ -8,7 +8,6 @@ import io.temporal.activity.ActivityOptions;
 import io.temporal.common.RetryOptions;
 import io.temporal.common.SearchAttributeKey;
 import io.temporal.common.SearchAttributeUpdate;
-import io.temporal.common.SearchAttributes;
 import io.temporal.workflow.Workflow;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
