@@ -23,9 +23,12 @@ spec:
             - name: "MONGODB_CONNECTION_STRING"
               value: "{{ .Values.env.gateway_api.mongo.connectionString }}"
       initContainers:
-        - name: wait-for-temporal
+        - name: wait-for-temporal-worker
           image: busybox
-          command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for temporal; sleep 2; done;']
+          command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-temporal-worker-headless.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for temporal worker; sleep 2; done;']
+        - name: wait-for-temporal-frontend
+          image: busybox
+          command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for temporal frontend; sleep 2; done;']
         - name: wait-for-email-gateway
           image: busybox
           command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-email-gateway-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for email gateway; sleep 2; done;']

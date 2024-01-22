@@ -11,3 +11,17 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   {{ $ConfigMapData }}
+---
+## Only create config map if it doesn't exist, otherwise write the existing values during a helm deployment.
+{{- $configMapAuthKeyStore := lookup "v1" "ConfigMap" .Release.Namespace "auth-keystore" }}
+{{- $configMapAuthKeyStoreData := "" }}
+{{- if $configMapAuthKeyStore }}
+{{- $configMapAuthKeyStoreData = $configMapAuthKeyStore.data}}
+{{- end }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-keystore
+  namespace: {{ .Release.Namespace }}
+data:
+  {{ $configMapAuthKeyStoreData }}
