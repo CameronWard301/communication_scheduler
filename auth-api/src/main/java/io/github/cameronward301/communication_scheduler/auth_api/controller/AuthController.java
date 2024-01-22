@@ -1,6 +1,6 @@
 package io.github.cameronward301.communication_scheduler.auth_api.controller;
 
-import io.github.cameronward301.communication_scheduler.auth_api.controller.model.JwtDTO;
+import io.github.cameronward301.communication_scheduler.auth_api.model.JwtDTO;
 import io.github.cameronward301.communication_scheduler.auth_api.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

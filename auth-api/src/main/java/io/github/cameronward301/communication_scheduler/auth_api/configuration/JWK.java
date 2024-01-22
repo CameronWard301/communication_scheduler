@@ -15,10 +15,10 @@ import java.security.interfaces.RSAPublicKey;
 @Configuration
 @RequiredArgsConstructor
 public class JWK {
+    private final PublicKey publicKey;
     @Value("${auth-api.key-id}")
     private String keyId;
 
-    private final PublicKey publicKey;
     @Bean
     public JWKSet jwkSet() {
         RSAKey.Builder builder = new RSAKey.Builder((RSAPublicKey) publicKey)

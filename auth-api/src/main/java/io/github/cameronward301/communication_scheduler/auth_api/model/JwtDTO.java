@@ -1,9 +1,9 @@
-package io.github.cameronward301.communication_scheduler.auth_api.controller.model;
+package io.github.cameronward301.communication_scheduler.auth_api.model;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @Builder
 public class JwtDTO {
     private String token;
