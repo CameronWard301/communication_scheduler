@@ -1,0 +1,12 @@
+auth-api:
+  key-id: ${AUTH_API_KEY_ID:communication-auth-api}
+  private-key: ${AUTH_API_PRIVATE_KEY}
+  public-key: ${AUTH_API_PUBLIC_KEY}
+  token-expiration-seconds: ${AUTH_API_TOKEN_EXPIRATION:3600}
+
+server:
+  port: ${AUTH_API_PORT:8080}
+
+logging:
+  level:
+    root: ${SPRING_DEBUG:info}

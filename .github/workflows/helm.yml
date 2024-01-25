@@ -54,8 +54,14 @@ jobs:
             --set "env.gateway_api.tableName=${{ secrets.GATEWAY_DB_TABLE_NAME }}"
             --set "env.gateway_api.mongo.databaseName=${{ secrets.MONGO_DB_DATABASE_NAME }}"
             --set "env.gateway_api.mongo.connectionString=${{ secrets.MONGO_DB_CONNECTION_STRING }}"
+            --set "env.gateway_api.gateway_keystore=${{ secrets.GATEWAY_API_SSL_KEYSTORE }}"
+            --set "env.gateway_api.keyStorePassword=${{ secrets.KEY_STORE_PASSWORD }}"
             --set "env.communication_worker.mongo.databaseName=${{ secrets.MONGO_DB_DATABASE_NAME }}"
             --set "env.communication_worker.mongo.connectionString${{ secrets.MONGO_DB_WORKER_CONNECTION_STRING }}"
+            --set "env.auth_api.publicKey=${{ secrets.AUTH_API_PUBLIC_KEY }}"
+            --set "env.auth_api.privateKey=${{ secrets.AUTH_API_PRIVATE_KEY }}"
+            --set "env.auth_api.keyStorePassword=${{ secrets.KEY_STORE_PASSWORD }}"
+            --set "env.auth_api_ssl_keystore=${{ secrets.AUTH_API_SSL_KEYSTORE }}"
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
@@ -91,8 +97,14 @@ jobs:
             --set "env.sms_gateway.user2.name=${{ secrets.USER_2_NAME }}"
             --set "env.gateway_api.mongo.databaseName=${{ secrets.MONGO_DB_DATABASE_NAME }}"
             --set "env.gateway_api.mongo.connectionString=${{ secrets.MONGO_DB_CONNECTION_STRING }}"
+            --set "env.gateway_api.gateway_keystore=${{ secrets.GATEWAY_API_SSL_KEYSTORE }}"
+            --set "env.gateway_api.keyStorePassword=${{ secrets.KEY_STORE_PASSWORD }}"
             --set "env.communication_worker.mongo.databaseName=${{ secrets.MONGO_DB_DATABASE_NAME }}"
             --set "env.communication_worker.mongo.connectionString${{ secrets.MONGO_DB_WORKER_CONNECTION_STRING }}"
+            --set "env.auth_api.publicKey=${{ secrets.AUTH_API_PUBLIC_KEY }}"
+            --set "env.auth_api.privateKey=${{ secrets.AUTH_API_PRIVATE_KEY }}"
+            --set "env.auth_api.keyStorePassword=${{ secrets.KEY_STORE_PASSWORD }}"
+            --set "env.auth_api_ssl_keystore=${{ secrets.AUTH_API_SSL_KEYSTORE }}"
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}

@@ -1,6 +1,5 @@
 package io.github.cameronward301.communication_scheduler.workflows.communication_workflow;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
 

@@ -16,6 +16,7 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
     private String dbName = "";
     @Value("${mongodb.connection.string}")
     private String connectionString = "";
+
     @Override
     protected String getDatabaseName() {
         return dbName;

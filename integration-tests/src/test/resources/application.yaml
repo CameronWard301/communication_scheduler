@@ -15,8 +15,10 @@ temporal-connection:
   host: ${TEMPORAL_HOST:localhost:7233}
   taskQueue: ${TEMPORAL_TASK_QUEUE:communication-workflow}
 
+auth-api.address: ${AUTH_API_ADDRESS:http://localhost:53655/auth}
+
 gateway-api:
-  address: ${GATEWAY_API_ADDRESS:http://localhost:8080/gateway}
+  address: ${GATEWAY_API_ADDRESS:http://localhost:64854/gateway}
   entity.id: ${GATEWAY_API_ENTITY_ID:test-gateway-api-entity}
   mongoDb:
     database:

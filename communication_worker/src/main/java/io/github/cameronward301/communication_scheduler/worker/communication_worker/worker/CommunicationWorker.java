@@ -21,7 +21,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Component
 @Slf4j
 public class CommunicationWorker {
-    public CommunicationWorker(WorkerTemporalProperties temporalProperties,  WorkerGatewayRepository gatewayRepository) {
+    public CommunicationWorker(WorkerTemporalProperties temporalProperties, WorkerGatewayRepository gatewayRepository) {
         log.debug("Connecting to temporal at {}", temporalProperties.getEndpoint());
         WorkflowServiceStubs service = WorkflowServiceStubs.newServiceStubs(WorkflowServiceStubsOptions.newBuilder()
                 .setTarget(temporalProperties.getEndpoint()).build());
@@ -34,9 +34,6 @@ public class CommunicationWorker {
         WorkerFactory factory = WorkerFactory.newInstance(client);
         Worker worker = factory.newWorker(temporalProperties.getTaskQueue());
 
-//        log.debug("Connecting to dynamoDb at {}", awsProperties.getRegion());
-//
-//        log.debug("Connected to dynamoDb");
 
         WebClient webClient = WebClient.create();
 

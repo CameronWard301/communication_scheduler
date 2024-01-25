@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,7 @@ public class GatewayController {
      * @return a list of gateways matching the query
      */
     @GetMapping("")
+    @PreAuthorize("hasAuthority('SCOPE_GATEWAY:READ')")
     public ResponseEntity<Page<Gateway>> getAllGateways(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") String pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "5") String pageSize,
@@ -55,6 +57,7 @@ public class GatewayController {
      * @throws RequestException if the request body is invalid
      */
     @PostMapping("")
+    @PreAuthorize("hasAuthority('SCOPE_GATEWAY:WRITE')")
     public ResponseEntity<Gateway> createGateway(
             @Valid @RequestBody Gateway gateway,
             BindingResult bindingResult
@@ -72,6 +75,7 @@ public class GatewayController {
      * @return the gateway matching the provided id
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_GATEWAY:READ')")
     public ResponseEntity<Gateway> getGatewayById(@PathVariable String id) {
         return ResponseEntity.ok(gatewayService.getGatewayById(id));
     }
@@ -83,6 +87,7 @@ public class GatewayController {
      * @return 204 No Content
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_GATEWAY:DELETE')")
     public ResponseEntity<String> deleteGatewayById(@PathVariable String id) {
         gatewayService.deleteGatewayById(id);
         return ResponseEntity.noContent().build();
@@ -97,6 +102,7 @@ public class GatewayController {
      * @throws RequestException if the request body is invalid
      */
     @PutMapping("")
+    @PreAuthorize("hasAuthority('SCOPE_GATEWAY:WRITE')")
     public ResponseEntity<Gateway> updateGateway(
             @Valid @RequestBody Gateway gateway,
             BindingResult bindingResult

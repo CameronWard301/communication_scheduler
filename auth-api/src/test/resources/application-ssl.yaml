@@ -1,0 +1,8 @@
+server:
+  ssl:
+    key-store: classpath:keystore/auth-api.p12
+    key-store-password: password
+    key-store-type: PKCS12
+    enabled: true
+    key-alias: auth-api
+    key-password: password

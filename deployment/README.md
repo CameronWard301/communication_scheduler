@@ -18,3 +18,9 @@ data:
       groups:
         - system:masters
 ```
+
+
+# Add search attributes to temporal:
+tctl admin cluster add-search-attributes --name userId --type Text
+tctl admin cluster add-search-attributes --name gatewayId --type Text
+tctl admin cluster add-search-attributes --name scheduleId --type Text
