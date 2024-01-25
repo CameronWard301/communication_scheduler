@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.hamcrest.CoreMatchers;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -43,6 +44,7 @@ public class CommunicationWorkflowStepDefinitions {
     private final EmailUser1 emailUser1;
     private User user;
     private GatewayType gatewayType;
+    private Instant workflowStartTime;
 
     private Map<String, String> response;
     private Duration workflowExecutionTimeout = Duration.ofSeconds(15);
@@ -87,8 +89,9 @@ public class CommunicationWorkflowStepDefinitions {
 
     @When("A CommunicationWorkflow is started")
     public void aCommunicationWorkflowIsStarted() {
+        workflowStartTime = Instant.now();
         CommunicationWorkflow workflow = workflowClient.newWorkflowStub(CommunicationWorkflow.class, WorkflowOptions.newBuilder()
-                .setWorkflowId("intergration-test:" + user.getId() + ":" + gatewayType.getId())
+                .setWorkflowId(gatewayType.getId() + ":" + user.getId() + ":intergration-test:-" + workflowStartTime.toString())
                 .setTaskQueue(temporalProperties.getTaskQueue())
                 .setWorkflowExecutionTimeout(workflowExecutionTimeout)
                 .build());
@@ -104,7 +107,7 @@ public class CommunicationWorkflowStepDefinitions {
     @Then("Workflow status is {WorkflowExecutionStatus}")
     public void pollWorkflowStatusUntil(WorkflowExecutionStatus status) {
         WorkflowExecution execution = WorkflowExecution.newBuilder()
-                .setWorkflowId("intergration-test:" + user.getId() + ":" + gatewayType.getId())
+                .setWorkflowId(gatewayType.getId() + ":" + user.getId() + ":intergration-test:-" + workflowStartTime.toString())
                 .build();
 
         DescribeWorkflowExecutionRequest describeWorkflowExecutionRequest = DescribeWorkflowExecutionRequest.newBuilder()
@@ -113,7 +116,7 @@ public class CommunicationWorkflowStepDefinitions {
                 .build();
 
         DescribeWorkflowExecutionResponse describeWorkflowExecutionResponse = workflowServiceStubs.blockingStub().describeWorkflowExecution(describeWorkflowExecutionRequest);
-        assert describeWorkflowExecutionResponse.getWorkflowExecutionInfo().getStatus().equals(status);
+        assertEquals(status, describeWorkflowExecutionResponse.getWorkflowExecutionInfo().getStatus());
     }
 
     @And("Communication response is ok")

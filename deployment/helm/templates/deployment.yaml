@@ -35,6 +35,14 @@ spec:
               value: "{{ .Values.env.communication_worker.mongo.databaseName }}"
             - name: "MONGODB_CONNECTION_STRING"
               value: "{{ .Values.env.communication_worker.mongo.connectionString }}"
+      initContainers:
+        - name: wait-for-temporal-worker
+          image: busybox
+          command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-temporal-worker-headless.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for temporal worker; sleep 2; done;' ]
+        - name: wait-for-temporal-frontend
+          image: busybox
+          command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for temporal frontend; sleep 2; done;' ]
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -179,3 +187,66 @@ spec:
               value: "{{ .Values.env.gateway_api.mongo.connectionString }}"
             - name: "LOGGING_LEVEL"
               value: "{{ .Values.gateway_api.loggingLevel }}"
+            - name: "JWKS_URI"
+              value: https://{{ .Release.Name}}-auth-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/auth/.well-known/jwks.json
+            - name: "GATEWAY_API_SSL_KEY_STORE"
+              value: "{{ .Values.gateway_api.keyStorePath }}"
+            - name: "GATEWAY_API_SSL_KEY_STORE_PASSWORD"
+              value: "{{ .Values.env.gateway_api.keyStorePassword }}"
+          volumeMounts:
+            - mountPath: /certs/
+              name: gateway-keystore
+              readOnly: true
+      volumes:
+        - name: gateway-keystore
+          secret:
+            secretName: gateway-api-ssl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-auth-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-auth-api
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-auth-api
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-auth-api
+          image: "{{ .Values.auth_api.repository }}:{{ .Values.auth_api.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "AUTH_API_KEY_ID"
+              value: "{{ .Values.auth_api.keyId }}"
+            - name: "AUTH_API_PRIVATE_KEY"
+              value: "{{ .Values.env.auth_api.privateKey }}"
+            - name: "AUTH_API_PUBLIC_KEY"
+              value: "{{ .Values.env.auth_api.publicKey}}"
+            - name: "AUTH_API_TOKEN_EXPIRATION"
+              value: "{{ .Values.auth_api.tokenExpiration }}"
+            - name: "AUTH_API_SSL_KEY_STORE"
+              value: "{{ .Values.auth_api.keyStorePath }}"
+            - name: "AUTH_API_SSL_KEY_STORE_PASSWORD"
+              value: "{{ .Values.env.auth_api.keyStorePassword }}"
+            - name: "SPRING_PROFILES_ACTIVE"
+              value: "{{ .Values.auth_api.profile }}"
+            - name: "SPRING_DEBUG"
+              value: "{{ .Values.auth_api.loggingLevel }}"
+          volumeMounts:
+            - mountPath: /certs/
+              name: keystore
+              readOnly: true
+      volumes:
+        - name: keystore
+          secret:
+            secretName: auth-api-ssl
+
