@@ -275,40 +275,40 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-  restart-deployments:
-    runs-on: ubuntu-latest
-    needs:
-      - communication-worker
-      - email-gateway
-      - sms-gateway
-      - integration-tests
-      - gateway-api
-      - auth-api
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: AWS configure
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set default.region eu-west-1
-          aws eks update-kubeconfig --region eu-west-1 --name communication-eks
-      - name: Encode Kubeconfig file
-        run: |
-          KUBE_CONFIG_BASE64=$(base64 -w 0 /home/runner/.kube/config)
-          echo "KUBE_CONFIG_BASE64=${KUBE_CONFIG_BASE64}" >> $GITHUB_ENV
-        shell: bash
-      - name: Setup kubectl
-        uses: tale/kubectl-action@v1
-        with:
-          base64-kube-config: ${{ env.KUBE_CONFIG_BASE64 }}
-      - name: Restart Communication Workers
-        run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-communication-worker
-      - name: Restart Email Gateway
-        run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-email-gateway
-      - name: Restart SMS Gateway
-        run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-sms-gateway
-      - name: Restart Gateway API
-        run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-gateway-api
-      - name: Restart Auth API
-        run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-auth-api
+#  restart-deployments:
+#    runs-on: ubuntu-latest
+#    needs:
+#      - communication-worker
+#      - email-gateway
+#      - sms-gateway
+#      - integration-tests
+#      - gateway-api
+#      - auth-api
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#      - name: AWS configure
+#        run: |
+#          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws configure set default.region eu-west-1
+#          aws eks update-kubeconfig --region eu-west-1 --name communication-eks
+#      - name: Encode Kubeconfig file
+#        run: |
+#          KUBE_CONFIG_BASE64=$(base64 -w 0 /home/runner/.kube/config)
+#          echo "KUBE_CONFIG_BASE64=${KUBE_CONFIG_BASE64}" >> $GITHUB_ENV
+#        shell: bash
+#      - name: Setup kubectl
+#        uses: tale/kubectl-action@v1
+#        with:
+#          base64-kube-config: ${{ env.KUBE_CONFIG_BASE64 }}
+#      - name: Restart Communication Workers
+#        run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-communication-worker
+#      - name: Restart Email Gateway
+#        run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-email-gateway
+#      - name: Restart SMS Gateway
+#        run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-sms-gateway
+#      - name: Restart Gateway API
+#        run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-gateway-api
+#      - name: Restart Auth API
+#        run: kubectl rollout restart deployment/${{ env.DEPLOYMENT_NAME }}-auth-api

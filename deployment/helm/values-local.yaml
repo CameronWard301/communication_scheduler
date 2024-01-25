@@ -68,6 +68,7 @@ gateway_api:
   tag: latest
   region: eu-west-1
   loggingLevel: DEBUG
+  keyStorePath: /certs/gateway-api.p12
 
 auth_api:
   keyId: "communication-auth-api"

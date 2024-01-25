@@ -187,6 +187,20 @@ spec:
               value: "{{ .Values.env.gateway_api.mongo.connectionString }}"
             - name: "LOGGING_LEVEL"
               value: "{{ .Values.gateway_api.loggingLevel }}"
+            - name: "JWKS_URI"
+              value: https://{{ .Release.Name}}-auth-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/auth/.well-known/jwks.json
+            - name: "GATEWAY_API_SSL_KEY_STORE"
+              value: "{{ .Values.gateway_api.keyStorePath }}"
+            - name: "GATEWAY_API_SSL_KEY_STORE_PASSWORD"
+              value: "{{ .Values.env.gateway_api.keyStorePassword }}"
+          volumeMounts:
+            - mountPath: /certs/
+              name: gateway-keystore
+              readOnly: true
+      volumes:
+        - name: gateway-keystore
+          secret:
+            secretName: gateway-api-ssl
 ---
 apiVersion: apps/v1
 kind: Deployment

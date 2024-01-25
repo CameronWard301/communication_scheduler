@@ -15,7 +15,9 @@ spec:
             - containerPort: 8080
           env:
             - name: "GATEWAY_API_ADDRESS"
-              value: "http://{{ .Release.Name}}-gateway-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/gateway"
+              value: "https://{{ .Release.Name}}-gateway-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/gateway"
+            - name: "AUTH_API_ADDRESS"
+              value: "https://{{ .Release.Name}}-auth-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/auth"
             - name: "TEMPORAL_HOST"
               value: "{{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local:7233"
             - name: "MONGODB_DATABASE_NAME"

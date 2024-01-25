@@ -207,8 +207,8 @@ temporal:
 communication_worker:
   repository: cameronward/communication-worker
   tag: 0.3.0
-  debug: debug
-  springDebug: debug
+  debug: info
+  springDebug: info
   temporal:
     taskQueue: communication-worker
     namespace: default
@@ -217,7 +217,7 @@ email_gateway:
   repository: cameronward/email-gateway
   tag: 0.1.0
   region: eu-west-1
-  loggingLevel: DEBUG
+  loggingLevel: INFO
 
 sms_gateway:
   repository: cameronward/sms-gateway
@@ -225,13 +225,14 @@ sms_gateway:
   maximumPollingAttempts: 10
   tag: 0.1.1
   region: eu-west-1
-  loggingLevel: DEBUG
+  loggingLevel: INFO
 
 gateway_api:
   repository: cameronward/gateway-api
   tag: 0.2.0
   region: eu-west-1
-  loggingLevel: DEBUG
+  loggingLevel: INFO
+  keyStorePath: /certs/gateway-api.p12
 
 auth_api:
   keyId: "communication-auth-api"
@@ -241,7 +242,7 @@ auth_api:
   region: eu-west-1
   loggingLevel: INFO
   profile: ssl
-  keyStorePath: /auth-api.p12
+  keyStorePath: /certs/auth-api.p12
 
 integration_tests:
   repository: cameronward/cs-integration-tests
