@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>integration-tests</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <name>integration-tests</name>
     <description>integration-tests</description>
     <properties>
@@ -41,6 +41,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

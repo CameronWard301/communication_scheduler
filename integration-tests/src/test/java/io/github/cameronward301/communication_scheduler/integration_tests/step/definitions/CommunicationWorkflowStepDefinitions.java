@@ -107,7 +107,7 @@ public class CommunicationWorkflowStepDefinitions {
     @Then("Workflow status is {WorkflowExecutionStatus}")
     public void pollWorkflowStatusUntil(WorkflowExecutionStatus status) {
         WorkflowExecution execution = WorkflowExecution.newBuilder()
-                .setWorkflowId(gatewayType.getId() + ":" + user.getId() + ":" + ":intergration-test:-" + workflowStartTime.toString())
+                .setWorkflowId(gatewayType.getId() + ":" + user.getId() + ":intergration-test:-" + workflowStartTime.toString())
                 .build();
 
         DescribeWorkflowExecutionRequest describeWorkflowExecutionRequest = DescribeWorkflowExecutionRequest.newBuilder()
