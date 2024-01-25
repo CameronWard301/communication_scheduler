@@ -1,4 +1,5 @@
 gateway:
+  verify-hostnames: ${VERIFY_HOSTNAMES:false}
   mongodb:
     database:
       name: ${MONGODB_DATABASE_NAME:gateway-database-name}
@@ -14,4 +15,14 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${JWKS_URI:http://localhost:9090/auth/.well-known/jwks.json}
+          jwk-set-uri: ${JWKS_URI:https://localhost:53655/auth/.well-known/jwks.json}
+
+
+server:
+  ssl:
+    key-store: ${AUTH_API_SSL_KEY_STORE:classpath:keystore/auth-api.p12}
+    key-store-password: ${AUTH_API_SSL_KEY_STORE_PASSWORD}
+    key-store-type: PKCS12
+    enabled: true
+    key-alias: gateway-api
+    key-password: ${AUTH_API_SSL_KEY_STORE_PASSWORD}
