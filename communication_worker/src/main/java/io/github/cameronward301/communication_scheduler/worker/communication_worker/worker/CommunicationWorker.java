@@ -14,6 +14,7 @@ import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -21,7 +22,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Component
 @Slf4j
 public class CommunicationWorker {
-    public CommunicationWorker(WorkerTemporalProperties temporalProperties, WorkerGatewayRepository gatewayRepository) {
+
+    public CommunicationWorker(WorkerTemporalProperties temporalProperties, WorkerGatewayRepository gatewayRepository, WebClient webClient) {
         log.debug("Connecting to temporal at {}", temporalProperties.getEndpoint());
         WorkflowServiceStubs service = WorkflowServiceStubs.newServiceStubs(WorkflowServiceStubsOptions.newBuilder()
                 .setTarget(temporalProperties.getEndpoint()).build());
@@ -33,9 +35,6 @@ public class CommunicationWorker {
 
         WorkerFactory factory = WorkerFactory.newInstance(client);
         Worker worker = factory.newWorker(temporalProperties.getTaskQueue());
-
-
-        WebClient webClient = WebClient.create();
 
         log.debug("Connecting to kubernetes");
         KubernetesClient kubernetesClient = new KubernetesClientBuilder().build();
