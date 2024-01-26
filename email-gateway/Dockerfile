@@ -11,4 +11,4 @@ FROM gcr.io/distroless/java21-debian12:latest
 WORKDIR /app
 COPY --from=build /src/app/target/*.jar /app/app.jar
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "/app/app.jar"]
