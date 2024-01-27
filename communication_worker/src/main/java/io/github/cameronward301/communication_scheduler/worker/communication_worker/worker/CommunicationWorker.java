@@ -23,10 +23,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Slf4j
 public class CommunicationWorker {
 
-    @Value("${worker.apiKey}")
-    private String GATEWAY_API_KEY;
-
-    public CommunicationWorker(WorkerTemporalProperties temporalProperties, WorkerGatewayRepository gatewayRepository, WebClient webClient) {
+    public CommunicationWorker(
+            WorkerTemporalProperties temporalProperties,
+            WorkerGatewayRepository gatewayRepository,
+            WebClient webClient,
+            @Value("${worker.apiKey}") String GATEWAY_API_KEY
+    ) {
         log.debug("Connecting to temporal at {}", temporalProperties.getEndpoint());
         WorkflowServiceStubs service = WorkflowServiceStubs.newServiceStubs(WorkflowServiceStubsOptions.newBuilder()
                 .setTarget(temporalProperties.getEndpoint()).build());
