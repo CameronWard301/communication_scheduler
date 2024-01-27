@@ -14,14 +14,17 @@ import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 @Slf4j
 public class CommunicationWorker {
+
+    @Value("${worker.apiKey}")
+    private String GATEWAY_API_KEY;
 
     public CommunicationWorker(WorkerTemporalProperties temporalProperties, WorkerGatewayRepository gatewayRepository, WebClient webClient) {
         log.debug("Connecting to temporal at {}", temporalProperties.getEndpoint());
@@ -45,7 +48,7 @@ public class CommunicationWorker {
         worker.registerWorkflowImplementationTypes(CommunicationWorkflowImpl.class);
         worker.registerActivitiesImplementations(new GetPreferencesActivityImpl(temporalProperties, kubernetesClient));
         worker.registerActivitiesImplementations(new GetGatewayFromDbActivityImpl(gatewayRepository));
-        worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient));
+        worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient, GATEWAY_API_KEY));
         log.debug("Registered workflow and activities");
 
         log.info("Worker started");

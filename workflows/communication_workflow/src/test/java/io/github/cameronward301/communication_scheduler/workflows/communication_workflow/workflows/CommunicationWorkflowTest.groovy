@@ -44,6 +44,7 @@ class CommunicationWorkflowTest extends Specification {
     final String NAMESPACE = "default"
     final String TASK_QUEUE = "test-task-queue"
     final String GATEWAY_ID = "test-gateway"
+    final String API_KEY = "1234"
 
 
     def setup() {
@@ -94,7 +95,7 @@ class CommunicationWorkflowTest extends Specification {
 
         worker.registerActivitiesImplementations(new GetPreferencesActivityImpl(temporalProperties, kubernetesClient))
         worker.registerActivitiesImplementations(new GetGatewayFromDbActivityImpl(gatewayRepository))
-        worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient))
+        worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient, API_KEY))
 
         final String messageHash = "test-hash"
         final String USER_ID = "test-user"

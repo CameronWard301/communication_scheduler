@@ -3,6 +3,9 @@ logging:
     io.github.cameronward301.communication_scheduler.worker.communication_worker: ${WORKER_DEBUG:info}
     root: ${SPRING_DEBUG:info}
 
+worker:
+  apiKey: ${GATEWAY_API_KEY:replace-me}
+
 web-client:
   ssl-verification: ${SSL_VERIFICATION:true}
 
