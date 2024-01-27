@@ -35,6 +35,10 @@ spec:
               value: "{{ .Values.env.communication_worker.mongo.databaseName }}"
             - name: "MONGODB_CONNECTION_STRING"
               value: "{{ .Values.env.communication_worker.mongo.connectionString }}"
+            - name: "GATEWAY_API_KEY"
+              value: "{{ .Values.env.communication_worker.apiKey }}"
+            - name: "SSL_VERIFICATION"
+              value: "{{ .Values.communication_worker.sslVerification }}"
       initContainers:
         - name: wait-for-temporal-worker
           image: busybox
@@ -97,6 +101,24 @@ spec:
               value: "{{ .Values.email_gateway.region }}"
             - name: "GATEWAY_LOGGING_LEVEL"
               value: "{{ .Values.email_gateway.loggingLevel }}"
+            - name: "SPRING_PROFILES_ACTIVE"
+              value: "{{ .Values.email_gateway.profile }}"
+            - name: "WORKER_API_KEY"
+              value: "{{ .Values.env.communication_worker.apiKey }}"
+            - name: "EMAIL_GATEWAY_SSL_KEY_STORE"
+              value: "{{ .Values.email_gateway.keyStorePath }}"
+            - name: "EMAIL_GATEWAY_SSL_KEY_STORE_PASSWORD"
+              value: "{{ .Values.env.email_gateway.keyStorePassword }}"
+            - name: "ROOT_LOGGING"
+              value: "{{ .Values.email_gateway.rootLoggingLevel }}"
+          volumeMounts:
+            - mountPath: /certs/
+              name: email-gateway-keystore
+              readOnly: true
+      volumes:
+        - name: email-gateway-keystore
+          secret:
+            secretName: email-gateway-ssl
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -157,6 +179,22 @@ spec:
               value: "{{ .Values.sms_gateway.region }}"
             - name: "GATEWAY_LOGGING"
               value: "{{ .Values.sms_gateway.loggingLevel }}"
+            - name: "SPRING_PROFILES_ACTIVE"
+              value: "{{ .Values.sms_gateway.profile }}"
+            - name: "WORKER_API_KEY"
+              value: "{{ .Values.env.communication_worker.apiKey }}"
+            - name: "SMS_GATEWAY_SSL_KEY_STORE"
+              value: "{{ .Values.sms_gateway.keyStorePath }}"
+            - name: "SMS_GATEWAY_SSL_KEY_STORE_PASSWORD"
+              value: "{{ .Values.env.sms_gateway.keyStorePassword }}"
+          volumeMounts:
+            - mountPath: /certs/
+              name: sms-gateway-keystore
+              readOnly: true
+      volumes:
+        - name: sms-gateway-keystore
+          secret:
+            secretName: sms-gateway-ssl
 ---
 apiVersion: apps/v1
 kind: Deployment
