@@ -18,11 +18,14 @@ import java.util.Map;
  */
 @Slf4j
 public class SendMessageToGatewayActivityImpl implements SendMessageToGatewayActivity {
+    private static final String HEADER_KEY = "x-worker-api-key";
 
     private final WebClient webClient;
+    private final String apiKey;
 
-    public SendMessageToGatewayActivityImpl(WebClient webClient) {
+    public SendMessageToGatewayActivityImpl(WebClient webClient, String apiKey) {
         this.webClient = webClient;
+        this.apiKey = apiKey;
     }
 
     @Override
@@ -31,6 +34,7 @@ public class SendMessageToGatewayActivityImpl implements SendMessageToGatewayAct
             log.debug("Invoking gateway, userId: {}, workflowRunId: {}", userId, workflowRunId);
             Map<String, String> response = webClient.post()
                     .uri(gatewayUrl)
+                    .header(HEADER_KEY, apiKey)
                     .bodyValue(Map.of("userId", userId, "workflowRunId", workflowRunId))
                     .retrieve()
                     .bodyToFlux(new ParameterizedTypeReference<Map<String, String>>() {

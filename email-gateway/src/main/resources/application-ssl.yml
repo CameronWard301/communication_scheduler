@@ -1,0 +1,8 @@
+server:
+  ssl:
+    key-store: ${EMAIL_GATEWAY_SSL_KEY_STORE:classpath:keystore/email-gateway.p12}
+    key-store-password: ${EMAIL_GATEWAY_SSL_KEY_STORE_PASSWORD}
+    key-store-type: PKCS12
+    enabled: true
+    key-alias: email-gateway
+    key-password: ${EMAIL_GATEWAY_SSL_KEY_STORE_PASSWORD}
