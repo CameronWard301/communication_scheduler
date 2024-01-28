@@ -209,6 +209,7 @@ communication_worker:
   tag: 0.3.0
   debug: info
   springDebug: info
+  sslVerification: false
   temporal:
     taskQueue: communication-worker
     namespace: default
@@ -218,6 +219,9 @@ email_gateway:
   tag: 0.1.0
   region: eu-west-1
   loggingLevel: INFO
+  rootLoggingLevel: INFO
+  profile: ssl
+  keyStorePath: /certs/email-gateway.p12
 
 sms_gateway:
   repository: cameronward/sms-gateway
@@ -225,6 +229,8 @@ sms_gateway:
   maximumPollingAttempts: 10
   tag: 0.1.1
   region: eu-west-1
+  profile: ssl
+  keyStorePath: /certs/sms-gateway.p12
   loggingLevel: INFO
 
 gateway_api:

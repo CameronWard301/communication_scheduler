@@ -1,12 +1,19 @@
 logging:
   level:
-    io.github.cameronward301.communication_scheduler.worker.communication_worker: ${WORKER_DEBUG:debug}
+    io.github.cameronward301.communication_scheduler.worker.communication_worker: ${WORKER_DEBUG:info}
     root: ${SPRING_DEBUG:info}
+
+worker:
+  apiKey: ${GATEWAY_API_KEY:replace-me}
+
+web-client:
+  ssl-verification: ${SSL_VERIFICATION:true}
 
 temporal-properties:
   namespace: ${NAMESPACE:default}
   task-queue: ${TASK_QUEUE:communication-workflow}
   endpoint: ${TEMPORAL_ENDPOINT:localhost:7233}
+
 mongodb:
   database:
     name: ${MONGODB_DATABASE_NAME:communication-database-name}

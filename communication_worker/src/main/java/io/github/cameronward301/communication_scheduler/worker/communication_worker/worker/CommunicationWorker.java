@@ -15,13 +15,20 @@ import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 @Slf4j
 public class CommunicationWorker {
-    public CommunicationWorker(WorkerTemporalProperties temporalProperties, WorkerGatewayRepository gatewayRepository) {
+
+    public CommunicationWorker(
+            WorkerTemporalProperties temporalProperties,
+            WorkerGatewayRepository gatewayRepository,
+            WebClient webClient,
+            @Value("${worker.apiKey}") String GATEWAY_API_KEY
+    ) {
         log.debug("Connecting to temporal at {}", temporalProperties.getEndpoint());
         WorkflowServiceStubs service = WorkflowServiceStubs.newServiceStubs(WorkflowServiceStubsOptions.newBuilder()
                 .setTarget(temporalProperties.getEndpoint()).build());
@@ -34,9 +41,6 @@ public class CommunicationWorker {
         WorkerFactory factory = WorkerFactory.newInstance(client);
         Worker worker = factory.newWorker(temporalProperties.getTaskQueue());
 
-
-        WebClient webClient = WebClient.create();
-
         log.debug("Connecting to kubernetes");
         KubernetesClient kubernetesClient = new KubernetesClientBuilder().build();
         log.debug("Connected to kubernetes");
@@ -46,7 +50,7 @@ public class CommunicationWorker {
         worker.registerWorkflowImplementationTypes(CommunicationWorkflowImpl.class);
         worker.registerActivitiesImplementations(new GetPreferencesActivityImpl(temporalProperties, kubernetesClient));
         worker.registerActivitiesImplementations(new GetGatewayFromDbActivityImpl(gatewayRepository));
-        worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient));
+        worker.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient, GATEWAY_API_KEY));
         log.debug("Registered workflow and activities");
 
         log.info("Worker started");

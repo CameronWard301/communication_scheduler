@@ -1,3 +1,6 @@
+worker:
+  apiKey: ${WORKER_API_KEY:replace-me}
+
 sendgrid:
   email-newsletter-api-key: ${EMAIL_NEWSLETTER_API:SG.1234}
   from-email: ${FROM_EMAIL:test@example.com}
@@ -27,3 +30,4 @@ default-communication-history-access-provider:
 logging:
   level:
     io.github.cameronward301.communication_scheduler.gateway_library: ${GATEWAY_LOGGING:DEBUG}
+    root: ${ROOT_LOGGING:debug}

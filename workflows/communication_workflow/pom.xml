@@ -11,12 +11,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.2.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler.workflows</groupId>
     <artifactId>communication_workflow</artifactId>
-    <version>0.15.0</version>
+    <version>0.16.0</version>
     <name>communication_workflow</name>
     <description>communication_workflow library for use in a worker or cucumber project</description>
     <url>https://github.com/CameronWard301/communication_scheduler/tree/main/workflows/communication_workflow</url>
@@ -82,17 +82,35 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
+
+<!--        Fix Temporal Google Guava Vulnerability-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>32.0.1-jre</version>
+        </dependency>
         <dependency>
             <groupId>io.temporal</groupId>
             <artifactId>temporal-sdk</artifactId>
             <version>${temporal.version}</version>
         </dependency>
+<!--        Fix Temporal Google Guava Vulnerability-->
+
+<!--        Fix Temporal Json Path Vulnerability-->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+
         <dependency>
             <groupId>io.temporal</groupId>
             <artifactId>temporal-testing</artifactId>
             <version>${temporal.version}</version>
             <scope>test</scope>
         </dependency>
+<!--        Fix Temporal Json Path Vulnerability-->
+
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>

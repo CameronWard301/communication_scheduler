@@ -1,0 +1,8 @@
+server:
+  ssl:
+    key-store: ${SMS_GATEWAY_SSL_KEY_STORE:classpath:keystore/sms-gateway.p12}
+    key-store-password: ${SMS_GATEWAY_SSL_KEY_STORE_PASSWORD}
+    key-store-type: PKCS12
+    enabled: true
+    key-alias: sms-gateway
+    key-password: ${SMS_GATEWAY_SSL_KEY_STORE_PASSWORD}

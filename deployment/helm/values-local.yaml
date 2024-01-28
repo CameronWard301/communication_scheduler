@@ -44,7 +44,8 @@ communication_worker:
   repository: cameronward/communication-worker
   tag: latest
   debug: debug
-  springDebug: info
+  springDebug: debug
+  sslVerification: false
   temporal:
     taskQueue: communication-worker
     namespace: default
@@ -54,6 +55,9 @@ email_gateway:
   tag: latest
   region: eu-west-1
   loggingLevel: DEBUG
+  rootLoggingLevel: DEBUG
+  profile: ssl
+  keyStorePath: /certs/email-gateway.p12
 
 sms_gateway:
   repository: cameronward/sms-gateway
@@ -61,6 +65,8 @@ sms_gateway:
   maximumPollingAttempts: 10
   tag: latest
   region: eu-west-1
+  profile: ssl
+  keyStorePath: /certs/sms-gateway.p12
   loggingLevel: DEBUG
 
 gateway_api:

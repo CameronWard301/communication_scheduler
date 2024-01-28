@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.2.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.github.CameronWard301.communication_scheduler.worker</groupId>
     <artifactId>communication_worker</artifactId>
-    <version>0.5.0</version>
+    <version>0.7.1</version>
     <name>communication_worker</name>
     <description>communication_worker</description>
     <properties>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>io.github.cameronward301.communication_scheduler.workflows</groupId>
             <artifactId>communication_workflow</artifactId>
-            <version>0.15.0</version>
+            <version>0.16.0</version>
         </dependency>
 
         <dependency>
@@ -45,12 +45,29 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+<!--        Fix Temporal Json Path and guava vulnerability-->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>32.0.1-jre</version>
+        </dependency>
+
         <dependency>
             <groupId>io.temporal</groupId>
             <artifactId>temporal-testing</artifactId>
             <version>${temporal.version}</version>
             <scope>test</scope>
         </dependency>
+
+<!--        Fix Temporal Json Path vulnerability-->
+
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>

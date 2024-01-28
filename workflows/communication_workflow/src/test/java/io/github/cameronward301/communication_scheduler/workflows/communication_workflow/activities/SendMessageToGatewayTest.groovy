@@ -17,6 +17,7 @@ class SendMessageToGatewayTest extends Specification {
     SendMessageToGatewayActivity sendMessageToGatewayActivity
     final String USER_ID = "test-user"
     final String WORKFLOW_RUN_ID = "test-run-id"
+    final String apiKey = "1234"
     String baseUrl
     String gatewayUrl
     Preferences preferences = new Preferences()
@@ -37,7 +38,7 @@ class SendMessageToGatewayTest extends Specification {
 
         preferences.setGatewayTimeoutSeconds(1)
 
-        testActivityEnvironment.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient))
+        testActivityEnvironment.registerActivitiesImplementations(new SendMessageToGatewayActivityImpl(webClient, apiKey))
         sendMessageToGatewayActivity = testActivityEnvironment.newActivityStub(SendMessageToGatewayActivity.class)
         baseUrl = String.format("http://localhost:%s", mockWebServer.getPort())
         gatewayUrl = baseUrl + "/test-gateway"
@@ -137,6 +138,19 @@ class SendMessageToGatewayTest extends Specification {
     def "unauthorised error 401 should throw ActivityFailure"() {
         int responseCode = 401
         given: "Mocked webClient returns invalid response code 401"
+        mockWebServer.enqueue(new MockResponse().setResponseCode(responseCode).addHeader("Content-Type", "application/json"))
+
+        when: "sendMessageToGatewayActivity is invoked"
+        sendMessageToGatewayActivity.invokeGateway(USER_ID, WORKFLOW_RUN_ID, gatewayUrl, preferences)
+
+        then: "exception is thrown"
+        def exception = thrown(ActivityFailure)
+        exception.originalMessage == "Gateway unsuccessful, status: " + responseCode + " from: " + gatewayUrl
+    }
+
+    def "forbidden error 403 should throw ActivityFailure"() {
+        int responseCode = 403
+        given: "Mocked webClient returns invalid response code 403"
         mockWebServer.enqueue(new MockResponse().setResponseCode(responseCode).addHeader("Content-Type", "application/json"))
 
         when: "sendMessageToGatewayActivity is invoked"
