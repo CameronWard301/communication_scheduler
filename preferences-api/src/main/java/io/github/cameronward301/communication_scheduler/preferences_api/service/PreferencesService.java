@@ -26,7 +26,11 @@ public class PreferencesService {
     private final ClusterPreferences clusterPreferences;
     private final ObjectMapper objectMapper;
 
-    public Preferences getPreferences() throws Exception {
+    /**
+     * Get the preferences from the kubernetes cluster using the client
+     * @return the Preferences object containing the platforms configuration
+     */
+    public Preferences getPreferences() {
         log.debug("Retrieving config map from kubernetes client with name: {} in namespace {}", "preferences", clusterPreferences.getNamespace());
         Map<String, String> preferences = kubernetesClient.configMaps()
                 .inNamespace(clusterPreferences.getNamespace())
@@ -58,10 +62,15 @@ public class PreferencesService {
 
         } catch (JsonProcessingException e) {
             log.error("Could not convert config map to retry policy");
-            throw new Exception("Could not process preferences config map");
+            throw new RequestException("Could not process preferences config map", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * Update the retry policy in the preferences config map to the provided retry policy. All values will be overwritten in the existing retry policy
+     * @param retryPolicy to set
+     * @return the updated policy
+     */
     public RetryPolicy setRetryPolicy(RetryPolicy retryPolicy) {
         try {
             log.debug("Updating retry policy to: {}", retryPolicy);
@@ -81,6 +90,11 @@ public class PreferencesService {
         }
     }
 
+    /**
+     * Update the gateway timeout setting to the value provided
+     * @param gatewayTimeout - the new value to set
+     * @return the updated value
+     */
     public GatewayTimeout setGatewayTimeoutSeconds(GatewayTimeout gatewayTimeout) {
         log.debug("Updating gateway timeout seconds to: {}", gatewayTimeout.getGatewayTimeoutSeconds());
         try {

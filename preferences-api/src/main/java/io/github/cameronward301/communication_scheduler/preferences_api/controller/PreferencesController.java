@@ -19,18 +19,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Objects;
 
+/**
+ * Controller for managing the preferences config map
+ */
 @Controller
 @RequestMapping("/preferences")
 @RequiredArgsConstructor
 public class PreferencesController {
 
     private final PreferencesService preferencesService;
+
+    /**
+     * Get the preferences from the cluster
+     * @return Preferences object containing the platforms configuration
+     */
     @GetMapping("")
     @PreAuthorize("hasAuthority('SCOPE_PREFERENCES:READ')")
-    public ResponseEntity<Preferences> getRetryPolicy() throws Exception {
+    public ResponseEntity<Preferences> getRetryPolicy() {
         return ResponseEntity.ok(preferencesService.getPreferences());
     }
 
+    /**
+     * Update the platforms retry policy
+     * @param retryPolicy - the retry policy to set
+     * @param bindingResult - validation errors from the provided retry policy request
+     * @return the updated retry-policy
+     * @throws RequestException if there is an error processing the update
+     */
     @PutMapping("/retry-policy")
     @PreAuthorize("hasAuthority('SCOPE_PREFERENCES:WRITE')")
     public ResponseEntity<RetryPolicy> setRetryPolicy(@Valid @RequestBody RetryPolicy retryPolicy, BindingResult bindingResult) throws RequestException {
@@ -40,6 +55,13 @@ public class PreferencesController {
         return ResponseEntity.ok(preferencesService.setRetryPolicy(retryPolicy));
     }
 
+    /**
+     * Update the platforms gateway timeout value
+     * @param gatewayTimeout the new value to set
+     * @param bindingResult validation errors of the new value
+     * @return the updated setting
+     * @throws RequestException if there is an error processing the update
+     */
     @PutMapping("/gateway-timeout")
     @PreAuthorize("hasAuthority('SCOPE_PREFERENCES:WRITE')")
     public ResponseEntity<GatewayTimeout> setGatewayTimeout(@Valid @RequestBody GatewayTimeout gatewayTimeout, BindingResult bindingResult) throws RequestException {
