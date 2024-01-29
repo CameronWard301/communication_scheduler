@@ -1,4 +1,5 @@
-api.verify-hostnames: ${VERIFY_HOSTNAMES:true}
+api:
+  verify-hostnames: ${VERIFY_HOSTNAMES:true}
 
 
 spring:

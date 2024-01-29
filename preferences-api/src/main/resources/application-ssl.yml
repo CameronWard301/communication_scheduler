@@ -1,0 +1,8 @@
+server:
+  ssl:
+    key-store: ${PREFERENCES_API_SSL_KEY_STORE:classpath:keystore/preferences-api.p12}
+    key-store-password: ${PREFERENCES_API_SSL_KEY_STORE_PASSWORD}
+    key-store-type: PKCS12
+    enabled: true
+    key-alias: preferences-api
+    key-password: ${PREFERENCES_API_SSL_KEY_STORE_PASSWORD}
