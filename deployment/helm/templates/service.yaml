@@ -43,6 +43,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: {{ .Release.Name }}-preferences-api-service
+spec:
+  selector:
+    app: {{ .Release.Name }}-preferences-api
+    release: {{ .Release.Name }}
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: {{ .Release.Name }}-auth-api-service
 spec:
   selector:

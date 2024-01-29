@@ -76,6 +76,16 @@ gateway_api:
   loggingLevel: DEBUG
   keyStorePath: /certs/gateway-api.p12
 
+preferences_api:
+  repository: cameronward/preferences-api
+  tag: latest
+  region: eu-west-1
+  loggingLevel: DEBUG
+  profile: ssl
+  verifyHostnames: false
+  clusterNamespace: default
+  keyStorePath: /certs/preferences-api.p12
+
 auth_api:
   keyId: "communication-auth-api"
   repository: cameronward/auth-api
