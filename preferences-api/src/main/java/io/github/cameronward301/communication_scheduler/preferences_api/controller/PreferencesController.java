@@ -35,7 +35,7 @@ public class PreferencesController {
      */
     @GetMapping("")
     @PreAuthorize("hasAuthority('SCOPE_PREFERENCES:READ')")
-    public ResponseEntity<Preferences> getRetryPolicy() {
+    public ResponseEntity<Preferences> getPreferences() {
         return ResponseEntity.ok(preferencesService.getPreferences());
     }
 

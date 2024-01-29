@@ -86,7 +86,7 @@ public class PreferencesService {
             ).getData().get("RetryPolicy"), RetryPolicy.class);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
-            throw new RequestException("Could not save convert policy string to object, INVALID JSON", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RequestException("Could not convert policy string to object, INVALID JSON", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -104,7 +104,7 @@ public class PreferencesService {
                             .build()
             ).getData().get("GatewayTimeoutSeconds"), GatewayTimeout.class);
         } catch (JsonProcessingException e) {
-            throw new RequestException("Could not save convert policy string to object, INVALID JSON", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RequestException("Could not convert policy string to object, INVALID JSON", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
