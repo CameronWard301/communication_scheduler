@@ -4,7 +4,6 @@ import io.github.cameronward301.communication_scheduler.gateway_api.exception.Re
 import io.github.cameronward301.communication_scheduler.gateway_api.model.Gateway
 import io.github.cameronward301.communication_scheduler.gateway_api.service.GatewayService
 import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.validation.BindingResult
 import org.springframework.validation.FieldError

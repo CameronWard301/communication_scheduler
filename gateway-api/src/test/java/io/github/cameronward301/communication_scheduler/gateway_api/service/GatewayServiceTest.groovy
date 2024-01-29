@@ -63,7 +63,7 @@ class GatewayServiceTest extends Specification {
         exception.getHttpStatus() == HttpStatus.BAD_REQUEST
     }
 
-    def "Should be able to set the sort direction to ascending when getting all gateways"(){
+    def "Should be able to set the sort direction to ascending when getting all gateways"() {
         given: "Request parameters"
         def pageSize = "2"
         def pageNumber = "0"
@@ -86,7 +86,7 @@ class GatewayServiceTest extends Specification {
         response.size() == 2
     }
 
-    def "Should return a page of gateways when filtering friendlyName, endpointUrl and description"(){
+    def "Should return a page of gateways when filtering friendlyName, endpointUrl and description"() {
         given: "Request parameters"
         def pageSize = "2"
         def pageNumber = "0"
@@ -101,10 +101,10 @@ class GatewayServiceTest extends Specification {
         and: "GatewayRepository returns a list of gateways"
         gatewayRepository.findByFriendlyNameRegexAndEndpointUrlRegexAndDescriptionRegex(
                 friendlyName, endpointUrl, description, PageRequest.of(
-                        pageNumber == null ? 0 : Integer.parseInt(pageNumber),
-                        pageSize == null ? 0 : Integer.parseInt(pageSize),
-                        sort
-                )
+                pageNumber == null ? 0 : Integer.parseInt(pageNumber),
+                pageSize == null ? 0 : Integer.parseInt(pageSize),
+                sort
+        )
         ) >> new PageImpl<Gateway>(List.of(testGateway, testGateway))
 
         when:
@@ -135,7 +135,7 @@ class GatewayServiceTest extends Specification {
         response.description == gatewayRequest.description.toLowerCase()
     }
 
-    def "create gateway without description should set field to empty string"(){
+    def "create gateway without description should set field to empty string"() {
         given: "Gateway request"
         def gatewayRequest = Gateway.builder()
                 .friendlyName("Test-friendly-name")

@@ -20,7 +20,7 @@ public class MongoDbConfig extends AbstractMongoClientConfiguration {
     protected String getDatabaseName() {
         return dbName;
     }
-    
+
     @Override
     public MongoClient mongoClient() {
         ConnectionString connectionString = new ConnectionString(this.connectionString);

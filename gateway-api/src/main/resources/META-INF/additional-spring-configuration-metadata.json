@@ -10,4 +10,5 @@
       "type": "java.lang.String",
       "description": "The aws region for credentials."
     }
-  ] }
+  ]
+}
