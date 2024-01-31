@@ -1,4 +1,4 @@
-# Created by Cameron at 09/01/2024
+@InvalidGateway
 Feature: Invalid gateway integration tests
   Test the workflow to handle gateways that don't exist in the database
 

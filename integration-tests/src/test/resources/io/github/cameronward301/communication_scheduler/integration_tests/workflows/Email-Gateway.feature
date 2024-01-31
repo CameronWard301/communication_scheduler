@@ -1,4 +1,4 @@
-# Created by Cameron at 09/01/2024
+@EmailGateway
 Feature: Email Gateway Integration Tests
   Integration testing for sending communications through the Email gateway
 
