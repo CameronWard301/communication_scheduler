@@ -14,12 +14,20 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: "TEST_FILTER_EXPRESSION"
+              value: "{{ .Values.integration_tests.filterExpression }}"
+            - name: "PREFERENCES_API_ADDRESS"
+              value: "https://{{ .Release.Name}}-preferences-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/preferences"
             - name: "GATEWAY_API_ADDRESS"
-              value: "https://{{ .Release.Name}}-gateway-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/gateway"
+              value: "https://{{ .Release.Name}}-gateway-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/gateway"
             - name: "AUTH_API_ADDRESS"
               value: "https://{{ .Release.Name}}-auth-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/auth"
             - name: "TEMPORAL_HOST"
               value: "{{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local:7233"
+            - name: "TEMPORAL_NAMESPACE"
+              value: "{{ .Values.integration_tests.temporalNamespace }}"
+            - name: "KUBERNETES_NAMESPACE"
+              value: "{{ .Values.integration_tests.kubernetesNamespace }}"
             - name: "MONGODB_DATABASE_NAME"
               value: "{{ .Values.env.gateway_api.mongo.databaseName }}"
             - name: "MONGODB_CONNECTION_STRING"
@@ -40,5 +48,9 @@ spec:
         - name: wait-for-gateway-api
           image: busybox
           command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-gateway-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for gateway api; sleep 2; done;']
+        - name: wait-for-preferences-api
+          image: busybox
+          command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-preferences-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for preferences api; sleep 2; done;' ]
+
       restartPolicy: Never
   backoffLimit: 0
