@@ -5,7 +5,7 @@ WORKDIR /app
 COPY pom.xml ./
 COPY src src
 
-ENTRYPOINT ["mvn", "test", "-Dcucumber.filter.tags={$TEST_FILTER_EXPRESSION}"]
+ENTRYPOINT ["mvn", "test", "-Dcucumber.filter.tags=${TEST_FILTER_EXPRESSION}"]
 
 
 #docker buildx create --use
