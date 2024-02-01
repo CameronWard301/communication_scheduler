@@ -1,5 +1,8 @@
 temporal-properties:
   namespace: ${TEMPORAL_NAMESPACE:default}
+  encryption:
+    password: ${ENCRYPTION_PASSWORD:change-me}
+    salt: ${ENCRYPTION_SALT:change-me}
 activity-properties:
   gateway-timeout-seconds: 60
 logging:

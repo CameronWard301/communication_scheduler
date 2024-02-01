@@ -1,8 +1,6 @@
 package io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities
 
-
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Gateway
-
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.repository.GatewayRepository
 import io.temporal.failure.ActivityFailure
 import io.temporal.testing.TestActivityEnvironment

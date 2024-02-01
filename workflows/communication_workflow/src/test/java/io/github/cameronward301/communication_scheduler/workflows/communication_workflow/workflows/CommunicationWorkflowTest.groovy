@@ -100,11 +100,11 @@ class CommunicationWorkflowTest extends Specification {
         final String messageHash = "test-hash"
         final String USER_ID = "test-user"
         final String SCHEDULE_ID = "mySchedule"
-        String responseJSON = "{\"userId\":\"" + USER_ID + "\",\"messageHash\":\""+ messageHash + "\"}"
+        String responseJSON = "{\"userId\":\"" + USER_ID + "\",\"messageHash\":\"" + messageHash + "\"}"
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).addHeader("Content-Type", "application/json").setBody(responseJSON))
         testWorkflowEnvironment.start()
 
-        CommunicationWorkflow communicationWorkflow = workflowClient.newWorkflowStub(CommunicationWorkflow.class, WorkflowOptions.newBuilder().setTaskQueue(TASK_QUEUE).setWorkflowId(GATEWAY_ID + ":"+ USER_ID + ":" + SCHEDULE_ID + ":-timestamp").build())
+        CommunicationWorkflow communicationWorkflow = workflowClient.newWorkflowStub(CommunicationWorkflow.class, WorkflowOptions.newBuilder().setTaskQueue(TASK_QUEUE).setWorkflowId(GATEWAY_ID + ":" + USER_ID + ":" + SCHEDULE_ID + ":-timestamp").build())
 
         when: "communication workflow is started"
         Map<String, String> workflowResult = communicationWorkflow.sendCommunication(Map.of("gatewayId", GATEWAY_ID, "userId", USER_ID))

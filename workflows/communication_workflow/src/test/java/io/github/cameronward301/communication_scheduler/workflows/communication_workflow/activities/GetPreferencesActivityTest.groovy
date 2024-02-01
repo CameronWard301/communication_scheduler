@@ -1,11 +1,10 @@
 package io.github.cameronward301.communication_scheduler.workflows.communication_workflow.activities
 
-
-import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.TemporalProperties
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder
 import io.fabric8.kubernetes.client.KubernetesClient
 import io.fabric8.kubernetes.client.dsl.MixedOperation
 import io.fabric8.kubernetes.client.dsl.Resource
+import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.properties.TemporalProperties
 import io.temporal.failure.ActivityFailure
 import io.temporal.testing.TestActivityEnvironment
 import io.temporal.testing.TestEnvironmentOptions
