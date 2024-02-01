@@ -75,6 +75,17 @@ gateway_api:
   region: eu-west-1
   loggingLevel: DEBUG
   keyStorePath: /certs/gateway-api.p12
+  verifyHostnames: false
+
+preferences_api:
+  repository: cameronward/preferences-api
+  tag: latest
+  region: eu-west-1
+  loggingLevel: DEBUG
+  profile: ssl
+  verifyHostnames: false
+  clusterNamespace: default
+  keyStorePath: /certs/preferences-api.p12
 
 auth_api:
   keyId: "communication-auth-api"
@@ -89,6 +100,9 @@ auth_api:
 integration_tests:
   repository: cameronward/cs-integration-tests
   tag: latest
+  temporalNamespace: default
+  kubernetesNamespace: default
+  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway"
 
 PreferencesDefaults:
   GatewayTimeoutSeconds: "60"

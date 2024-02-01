@@ -27,7 +27,7 @@ public class RestTemplateConfig {
      */
     @Bean
     public RestTemplate getRestTemplate() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        if (verifyHostnames){
+        if (verifyHostnames) {
             return new RestTemplate();
         }
 

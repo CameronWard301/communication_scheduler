@@ -1,5 +1,5 @@
 gateway:
-  verify-hostnames: ${VERIFY_HOSTNAMES:false}
+  verify-hostnames: ${VERIFY_HOSTNAMES:true}
   mongodb:
     database:
       name: ${MONGODB_DATABASE_NAME:gateway-database-name}

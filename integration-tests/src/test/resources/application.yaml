@@ -9,17 +9,24 @@ gateway:
     user1:
       id: 62f8a8e1-f55a-4d9a-ab15-852168a321a4
 
+kubernetes:
+  namespace: ${KUBERNETES_NAMESPACE:default}
 
 temporal-connection:
-  namespace: ${$TEMPORAL_NAMESPACE:default}
+  namespace: ${TEMPORAL_NAMESPACE:default}
   host: ${TEMPORAL_HOST:localhost:7233}
   taskQueue: ${TEMPORAL_TASK_QUEUE:communication-workflow}
 
-auth-api.address: ${AUTH_API_ADDRESS:http://localhost:53655/auth}
+auth-api:
+  address: ${AUTH_API_ADDRESS:https://localhost:53655/auth}
+
+preferences-api:
+  address: ${PREFERENCES_API_ADDRESS:https://localhost:53933/preferences}
 
 gateway-api:
-  address: ${GATEWAY_API_ADDRESS:http://localhost:64854/gateway}
-  entity.id: ${GATEWAY_API_ENTITY_ID:test-gateway-api-entity}
+  address: ${GATEWAY_API_ADDRESS:https://localhost:64854/gateway}
+  entity:
+    id: ${GATEWAY_API_ENTITY_ID:test-gateway-api-entity}
   mongoDb:
     database:
       name: ${MONGODB_DATABASE_NAME:gateway-database-name}

@@ -231,6 +231,8 @@ spec:
               value: "{{ .Values.gateway_api.keyStorePath }}"
             - name: "GATEWAY_API_SSL_KEY_STORE_PASSWORD"
               value: "{{ .Values.env.gateway_api.keyStorePassword }}"
+            - name: "VERIFY_HOSTNAMES"
+              value: "{{ .Values.gateway_api.verifyHostnames }}"
           volumeMounts:
             - mountPath: /certs/
               name: gateway-keystore
@@ -239,6 +241,52 @@ spec:
         - name: gateway-keystore
           secret:
             secretName: gateway-api-ssl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-preferences-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-preferences-api
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-preferences-api
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-preferences-api
+          image: "{{ .Values.preferences_api.repository }}:{{ .Values.preferences_api.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "VERIFY_HOSTNAMES"
+              value: "{{ .Values.preferences_api.verifyHostnames}}"
+            - name: "CLUSTER_NAMESPACE"
+              value: "{{ .Values.preferences_api.clusterNamespace }}"
+            - name: "SPRING_PROFILES_ACTIVE"
+              value: "{{ .Values.preferences_api.profile }}"
+            - name: "LOGGING_LEVEL"
+              value: "{{ .Values.preferences_api.loggingLevel }}"
+            - name: "JWKS_URI"
+              value: https://{{ .Release.Name}}-auth-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/auth/.well-known/jwks.json
+            - name: "PREFERENCES_API_SSL_KEY_STORE"
+              value: "{{ .Values.preferences_api.keyStorePath }}"
+            - name: "PREFERENCES_API_SSL_KEY_STORE_PASSWORD"
+              value: "{{ .Values.env.preferences_api.keystorePassword }}"
+          volumeMounts:
+            - mountPath: /certs/
+              name: preferences-keystore
+              readOnly: true
+      volumes:
+        - name: preferences-keystore
+          secret:
+            secretName: preferences-api-ssl
 ---
 apiVersion: apps/v1
 kind: Deployment
