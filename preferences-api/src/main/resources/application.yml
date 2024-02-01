@@ -1,0 +1,16 @@
+api:
+  verify-hostnames: ${VERIFY_HOSTNAMES:true}
+
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${JWKS_URI:https://localhost:53655/auth/.well-known/jwks.json}
+logging:
+  level:
+    root: ${LOGGING_LEVEL:info}
+
+cluster:
+  namespace: ${CLUSTER_NAMESPACE:default}

@@ -28,7 +28,7 @@ public class GatewayController {
     /**
      * Get all gateways with optional pagination and filtering
      *
-     * @param pageNumber     the id of the last gateway returned in the previous request, can be null
+     * @param pageNumber   the id of the last gateway returned in the previous request, can be null
      * @param pageSize     the number of gateways to return
      * @param friendlyName match results that contain this string
      * @param endpointUrl  match results that contain this string
@@ -44,7 +44,7 @@ public class GatewayController {
             @RequestParam(value = "description", required = false, defaultValue = ".*") String description,
             @RequestParam(value = "sort", required = false, defaultValue = "dateCreated") String sortField,
             @RequestParam(value = "sortDirection", required = false, defaultValue = "desc") String sortDirection
-            ) {
+    ) {
         return ResponseEntity.ok(gatewayService.getGateways(pageNumber, pageSize, friendlyName, endpointUrl, description, sortField, sortDirection));
     }
 

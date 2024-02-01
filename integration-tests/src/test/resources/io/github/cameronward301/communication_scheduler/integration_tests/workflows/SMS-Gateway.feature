@@ -1,3 +1,4 @@
+@SmsGateway
 Feature: Communication Workflow
   Integration testing for sending communications through the SMS gateway
 

@@ -1,4 +1,4 @@
-# Created by Cameron at 12/01/2024
+@GatewayAPI
 Feature: Gateway Api
   Tests the Gateway Api GET, POST, PUT, DELETE methods
 
@@ -48,6 +48,7 @@ Feature: Gateway Api
     Given I have a gateway with the following information:
       | endpointUrl            | friendlyName |
       | http://example.com/api | Test Gateway |
+    And I have no token
     When I create the gateway
     Then the response code is 401 and message: "401 : [no body]"
 
@@ -87,6 +88,7 @@ Feature: Gateway Api
     Then the response code is 403 and message: "403 : [no body]"
 
   Scenario: User gets a gateway with no auth token
+    Given I have no token
     When I get the gateway by an unknown id: "573df1e-0b99-4bea-a38b-a8defdf0c6f0"
     Then the response code is 401 and message: "401 : [no body]"
 
@@ -144,6 +146,7 @@ Feature: Gateway Api
     Given I have a gateway with the following information:
       | endpointUrl                    | friendlyName         | description          |
       | http://updated-example.com/api | Updated Test Gateway | Updated Gateway Desc |
+    And I have no token
     When I update the existing gateway
     Then the response code is 401 and message: "401 : [no body]"
 
@@ -164,5 +167,6 @@ Feature: Gateway Api
     Then the response code is 403 and message: "403 : [no body]"
 
   Scenario: User deletes a gateway with no auth token
+    Given I have no token
     When I delete the gateway with an unknown id: "573df1e-0b99-4bea-a38b-a8defdf0c6f0"
     Then the response code is 401 and message: "401 : [no body]"
