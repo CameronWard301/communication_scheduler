@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.encrypt.BytesEncryptor;
 import org.springframework.security.crypto.encrypt.Encryptors;
 
+import java.util.HexFormat;
+
 @Configuration
 public class EncryptorConfig {
 
@@ -13,6 +15,6 @@ public class EncryptorConfig {
     public BytesEncryptor bytesEncryptor(
             @Value("${temporal-properties.encryption.password}") String password,
             @Value("${temporal-properties.encryption.salt}") String salt) {
-        return Encryptors.stronger(password, salt);
+        return Encryptors.stronger(password, HexFormat.of().formatHex(salt.getBytes()));
     }
 }

@@ -21,7 +21,7 @@
         <dependency>
             <groupId>io.github.cameronward301.communication_scheduler.workflows</groupId>
             <artifactId>communication_workflow</artifactId>
-            <version>0.16.0</version>
+            <version>0.17.2</version>
         </dependency>
 
         <dependency>
@@ -38,6 +38,11 @@
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
         </dependency>
 
         <dependency>
