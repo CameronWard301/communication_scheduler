@@ -1,8 +1,7 @@
-package com.example.data_converter_api.controller;
+package io.github.cameronward301.communication_scheduler.data_converter_api.controller;
 
-import com.example.data_converter_api.model.CodecDTO;
-import com.example.data_converter_api.service.CodecService;
-import com.google.rpc.Code;
+import io.github.cameronward301.communication_scheduler.data_converter_api.model.CodecDTO;
+import io.github.cameronward301.communication_scheduler.data_converter_api.service.CodecService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

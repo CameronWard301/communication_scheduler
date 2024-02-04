@@ -1,4 +1,4 @@
-package com.example.data_converter_api;
+package io.github.cameronward301.communication_scheduler.data_converter_api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
