@@ -36,6 +36,8 @@ jobs:
             --values=./deployment/helm/values-eks.yaml
             --set "env.temporal.password=${{ secrets.TEMPORAL_DB_PASSWORD }}"
             --set "env.temporal.user=${{ secrets.TEMPORAL_DB_USERNAME }}"
+            --set "env.temporal.encryption.password=${{ secrets.TEMPORAL_ENCRYPTION_PASSWORD }}"
+            --set "env.temporal.encryption.salt=${{ secrets.TEMPORAL_ENCRYPTION_SALT }}"
             --set "env.email_gateway.sendgridApiKey=${{ secrets.SENDGRID_API_KEY }}"
             --set "env.email_gateway.fromEmail=${{ secrets.FROM_EMAIL }}"
             --set "env.email_gateway.fromName=${{ secrets.FROM_NAME }}"
@@ -87,6 +89,8 @@ jobs:
             --values=./deployment/helm/values-eks.yaml
             --set "env.temporal.password=${{ secrets.TEMPORAL_DB_PASSWORD }}"
             --set "env.temporal.user=${{ secrets.TEMPORAL_DB_USERNAME }}"
+            --set "env.temporal.encryption.password=${{ secrets.TEMPORAL_ENCRYPTION_PASSWORD }}"
+            --set "env.temporal.encryption.salt=${{ secrets.TEMPORAL_ENCRYPTION_SALT }}"
             --set "env.email_gateway.sendgridApiKey=${{ secrets.SENDGRID_API_KEY }}"
             --set "env.email_gateway.fromEmail=${{ secrets.FROM_EMAIL }}"
             --set "env.email_gateway.fromName=${{ secrets.FROM_NAME }}"
