@@ -1,6 +1,6 @@
 package io.github.cameronward301.communication_scheduler.data_converter_api.service
 
-import com.fasterxml.jackson.databind.JsonNode
+
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.protobuf.ByteString
 import com.google.protobuf.util.JsonFormat
@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
 
-import java.nio.charset.StandardCharsets
-
 import static java.nio.charset.StandardCharsets.UTF_8
-
 
 @SpringBootTest
 class CodecServiceTest extends Specification {
@@ -26,7 +23,7 @@ class CodecServiceTest extends Specification {
             ByteString.copyFrom("json/plain", UTF_8)
 
     private final ByteString METADATA_ENCRYPTION_CIPHER =
-            ByteString.copyFrom("AES/GCM/NoPadding", UTF_8);
+            ByteString.copyFrom("AES/GCM/NoPadding", UTF_8)
 
     private final String METADATA_ENCRYPTION_CIPHER_KEY = "encryption-cipher"
 
@@ -78,7 +75,7 @@ class CodecServiceTest extends Specification {
 
         and: "headers are set"
         jsonPayloadService.jsonToPayload(decryptedDTO.getPayloads()).get(0).getMetadataOrDefault(EncodingKeys.METADATA_ENCODING_KEY, null) == METADATA_JSON
-       }
+    }
 
     def "Should return error codec if cryptography codec throws IllegalStateException exception"() {
         given: "Mocked jsonPayloadService"

@@ -10,7 +10,6 @@ class JsonPayloadServiceTest extends Specification {
     def jsonPayloadService = new JsonPayloadService(objectMapper)
 
 
-
     def "Should throw RuntimeException if json is invalid when converting to payload"() {
         given: "JSON Nodes"
         def invalidJsonString = "{\"invalidField\": \"value\"}"
@@ -29,7 +28,7 @@ class JsonPayloadServiceTest extends Specification {
         def jsonPayloadService = new JsonPayloadService(objectMapperMock)
 
         and: "object mapper throws exception"
-        objectMapperMock.readTree(_ as String) >> {throw new InvalidProtocolBufferException("test-exception")}
+        objectMapperMock.readTree(_ as String) >> { throw new InvalidProtocolBufferException("test-exception") }
 
         and: "payload"
         def payload = Payload.newBuilder().build()

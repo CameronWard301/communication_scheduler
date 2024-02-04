@@ -1,13 +1,12 @@
 package io.github.cameronward301.communication_scheduler.data_converter_api.service;
 
-import io.github.cameronward301.communication_scheduler.data_converter_api.model.CodecDTO;
 import com.google.protobuf.ByteString;
+import io.github.cameronward301.communication_scheduler.data_converter_api.model.CodecDTO;
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.codec.CryptographyCodec;
 import io.temporal.api.common.v1.Payload;
 import io.temporal.common.converter.EncodingKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -16,10 +15,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CodecService {
 
-    private final CryptographyCodec cryptographyCodec;
-    private final JsonPayloadService jsonPayloadService;
     public final ByteString METADATA_JSON =
             ByteString.copyFrom("json/plain", StandardCharsets.UTF_8);
+    private final CryptographyCodec cryptographyCodec;
+    private final JsonPayloadService jsonPayloadService;
 
     public CodecDTO encrypt(CodecDTO codec) {
         return new CodecDTO(jsonPayloadService.payloadToJson(

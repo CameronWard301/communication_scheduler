@@ -19,13 +19,13 @@ public class ConverterController {
 
     @PostMapping("/encode")
     @CrossOrigin
-    public ResponseEntity<CodecDTO> encode(@RequestBody CodecDTO requestDTO){
+    public ResponseEntity<CodecDTO> encode(@RequestBody CodecDTO requestDTO) {
         return ResponseEntity.ok(codecService.encrypt(requestDTO));
     }
 
     @PostMapping("/decode")
     @CrossOrigin
-    public ResponseEntity<CodecDTO> decode(@RequestBody CodecDTO requestDTO){
+    public ResponseEntity<CodecDTO> decode(@RequestBody CodecDTO requestDTO) {
         return ResponseEntity.ok(codecService.decrypt(requestDTO));
     }
 }

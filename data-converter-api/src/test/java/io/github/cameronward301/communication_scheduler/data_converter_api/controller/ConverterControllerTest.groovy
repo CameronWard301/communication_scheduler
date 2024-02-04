@@ -1,6 +1,6 @@
 package io.github.cameronward301.communication_scheduler.data_converter_api.controller
 
-import com.fasterxml.jackson.databind.JsonNode
+
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.protobuf.ByteString
 import com.google.protobuf.util.JsonFormat
