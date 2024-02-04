@@ -39,6 +39,16 @@ spec:
               value: "{{ .Values.env.communication_worker.apiKey }}"
             - name: "SSL_VERIFICATION"
               value: "{{ .Values.communication_worker.sslVerification }}"
+            - name: "ENCRYPTION_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: data-converter-encryption
+            - name: "ENCRYPTION_SALT"
+              valueFrom:
+                secretKeyRef:
+                  key: salt
+                  name: data-converter-encryption
       initContainers:
         - name: wait-for-temporal-worker
           image: busybox
@@ -335,4 +345,40 @@ spec:
         - name: keystore
           secret:
             secretName: auth-api-ssl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-data-converter-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-data-converter-api
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-data-converter-api
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-data-converter-api
+          image: "{{ .Values.data_converter_api.repository }}:{{ .Values.data_converter_api.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "LOGGING_LEVEL"
+              value: "{{ .Values.data_converter_api.loggingLevel }}"
+            - name: "ENCRYPTION_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: data-converter-encryption
+            - name: "ENCRYPTION_SALT"
+              valueFrom:
+                secretKeyRef:
+                  key: salt
+                  name: data-converter-encryption
 

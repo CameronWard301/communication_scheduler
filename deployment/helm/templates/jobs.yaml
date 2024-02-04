@@ -20,6 +20,8 @@ spec:
               value: "https://{{ .Release.Name}}-preferences-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/preferences"
             - name: "GATEWAY_API_ADDRESS"
               value: "https://{{ .Release.Name}}-gateway-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/gateway"
+            - name: "DATA_CONVERTER_API_ADDRESS"
+              value: "https://{{ .Release.Name}}-data-converter-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/codec"
             - name: "AUTH_API_ADDRESS"
               value: "https://{{ .Release.Name}}-auth-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/auth"
             - name: "TEMPORAL_HOST"
@@ -32,6 +34,16 @@ spec:
               value: "{{ .Values.env.gateway_api.mongo.databaseName }}"
             - name: "MONGODB_CONNECTION_STRING"
               value: "{{ .Values.env.gateway_api.mongo.connectionString }}"
+            - name: "ENCRYPTION_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: data-converter-encryption
+            - name: "ENCRYPTION_SALT"
+              valueFrom:
+                secretKeyRef:
+                  key: salt
+                  name: data-converter-encryption
       initContainers:
         - name: wait-for-temporal-worker
           image: busybox

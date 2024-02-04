@@ -261,6 +261,11 @@ auth_api:
   profile: ssl
   keyStorePath: /certs/auth-api.p12
 
+data_converter_api:
+  repository: cameronward/data-converter-api
+  tag: latest
+  loggingLevel: INFO
+
 integration_tests:
   repository: cameronward/cs-integration-tests
   tag: latest
