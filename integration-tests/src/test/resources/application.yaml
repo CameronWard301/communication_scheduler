@@ -26,6 +26,9 @@ auth-api:
 preferences-api:
   address: ${PREFERENCES_API_ADDRESS:https://localhost:53933/preferences}
 
+data-converter-api:
+  address: ${DATA_CONVERTER_API_ADDRESS:http://localhost:63458/codec}
+
 gateway-api:
   address: ${GATEWAY_API_ADDRESS:https://localhost:64854/gateway}
   entity:
