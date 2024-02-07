@@ -20,6 +20,8 @@ spec:
               value: "https://{{ .Release.Name}}-preferences-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/preferences"
             - name: "GATEWAY_API_ADDRESS"
               value: "https://{{ .Release.Name}}-gateway-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/gateway"
+            - name: "DATA_CONVERTER_API_ADDRESS"
+              value: "http://{{ .Release.Name}}-data-converter-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/codec"
             - name: "AUTH_API_ADDRESS"
               value: "https://{{ .Release.Name}}-auth-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/auth"
             - name: "TEMPORAL_HOST"
@@ -29,9 +31,25 @@ spec:
             - name: "KUBERNETES_NAMESPACE"
               value: "{{ .Values.integration_tests.kubernetesNamespace }}"
             - name: "MONGODB_DATABASE_NAME"
-              value: "{{ .Values.env.gateway_api.mongo.databaseName }}"
+              valueFrom:
+                secretKeyRef:
+                  key: mongo-db-name
+                  name: {{ .Release.Name }}-gateway-api
             - name: "MONGODB_CONNECTION_STRING"
-              value: "{{ .Values.env.gateway_api.mongo.connectionString }}"
+              valueFrom:
+                secretKeyRef:
+                  key: mongo-db-connection-string
+                  name: {{ .Release.Name }}-gateway-api
+            - name: "ENCRYPTION_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: {{ .Release.Name}}-data-converter-encryption
+            - name: "ENCRYPTION_SALT"
+              valueFrom:
+                secretKeyRef:
+                  key: salt
+                  name: {{ .Release.Name}}-data-converter-encryption
       initContainers:
         - name: wait-for-temporal-worker
           image: busybox

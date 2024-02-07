@@ -8,7 +8,7 @@ import io.cucumber.java.en.When;
 import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Email;
 import io.github.cameronward301.communication_scheduler.integration_tests.gateway.GatewayType;
 import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Sms;
-import io.github.cameronward301.communication_scheduler.integration_tests.properties.TemporalProperties;
+import io.github.cameronward301.communication_scheduler.integration_tests.properties.IntegrationTestTemporalProperties;
 import io.github.cameronward301.communication_scheduler.integration_tests.users.EmailUser1;
 import io.github.cameronward301.communication_scheduler.integration_tests.users.SmsUser1;
 import io.github.cameronward301.communication_scheduler.integration_tests.users.User;
@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class CommunicationWorkflowStepDefinitions {
     private final WorkflowClient workflowClient;
     private final WorkflowServiceStubs workflowServiceStubs;
-    private final TemporalProperties temporalProperties;
+    private final IntegrationTestTemporalProperties integrationTestTemporalProperties;
     private final Sms sms;
     private final Email email;
     private final SmsUser1 smsUser1;
@@ -92,7 +92,7 @@ public class CommunicationWorkflowStepDefinitions {
         workflowStartTime = Instant.now();
         CommunicationWorkflow workflow = workflowClient.newWorkflowStub(CommunicationWorkflow.class, WorkflowOptions.newBuilder()
                 .setWorkflowId(gatewayType.getId() + ":" + user.getId() + ":intergration-test:-" + workflowStartTime.toString())
-                .setTaskQueue(temporalProperties.getTaskQueue())
+                .setTaskQueue(integrationTestTemporalProperties.getTaskQueue())
                 .setWorkflowExecutionTimeout(workflowExecutionTimeout)
                 .build());
 

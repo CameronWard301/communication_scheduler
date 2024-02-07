@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "temporal-properties.encryption.password",
+      "type": "java.lang.String",
+      "description": "Encryption password to use for encrypting payloads."
+    },
+    {
+      "name": "temporal-properties.encryption.salt",
+      "type": "java.lang.String",
+      "description": "Salt to use for encrypting payloads."
+    },
+    {
+      "name": "web-client.ssl-verification",
+      "type": "java.lang.String",
+      "description": "Enables or disables SSL verification when talking to other services using https."
+    }
+  ] }

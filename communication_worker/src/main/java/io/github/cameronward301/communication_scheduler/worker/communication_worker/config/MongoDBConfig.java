@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 
+import javax.annotation.Nonnull;
+
 @Configuration
 public class MongoDBConfig extends AbstractMongoClientConfiguration {
     @Value("${mongodb.database.name}")
@@ -18,11 +20,13 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
     private String connectionString = "";
 
     @Override
+    @Nonnull
     protected String getDatabaseName() {
         return dbName;
     }
 
     @Override
+    @Nonnull
     public MongoClient mongoClient() {
         ConnectionString connectionString = new ConnectionString(this.connectionString);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
