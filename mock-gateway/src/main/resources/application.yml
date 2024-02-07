@@ -1,0 +1,14 @@
+gateway:
+  simulated-wait-seconds: ${MESSAGE_WAIT:3}
+
+worker:
+  apiKey: ${WORKER_API_KEY:replace-me}
+
+default-communication-history-access-provider:
+  region: ${REGION:eu-west-1}
+  table-name: ${COMMUNICATION_HISTORY_TABLE_NAME:communication-history}
+
+logging:
+  level:
+    io.github.cameronward301.communication_scheduler.gateway_library: ${GATEWAY_LOGGING:info}
+    root: ${ROOT_LOGGING:info}
