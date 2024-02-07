@@ -1,0 +1,7 @@
+temporal-properties:
+  encryption:
+    password: ${ENCRYPTION_PASSWORD:change-me}
+    salt: ${ENCRYPTION_SALT:change-me}
+logging:
+  level:
+    root: ${LOGGING_LEVEL:info}

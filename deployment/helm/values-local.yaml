@@ -97,12 +97,17 @@ auth_api:
   profile: ssl
   keyStorePath: /certs/auth-api.p12
 
+data_converter_api:
+  repository: cameronward/data-converter-api
+  tag: latest
+  loggingLevel: INFO
+
 integration_tests:
   repository: cameronward/cs-integration-tests
   tag: latest
   temporalNamespace: default
   kubernetesNamespace: default
-  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway"
+  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI"
 
 PreferencesDefaults:
   GatewayTimeoutSeconds: "60"

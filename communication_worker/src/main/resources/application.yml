@@ -13,6 +13,9 @@ temporal-properties:
   namespace: ${NAMESPACE:default}
   task-queue: ${TASK_QUEUE:communication-workflow}
   endpoint: ${TEMPORAL_ENDPOINT:localhost:7233}
+  encryption:
+    password: ${ENCRYPTION_PASSWORD:changeme}
+    salt: ${ENCRYPTION_SALT:4573c195d6593c}
 
 mongodb:
   database:

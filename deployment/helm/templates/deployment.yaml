@@ -32,13 +32,32 @@ spec:
             - name: "SPRING_DEBUG"
               value: "{{ .Values.communication_worker.springDebug }}"
             - name: "MONGODB_DATABASE_NAME"
-              value: "{{ .Values.env.communication_worker.mongo.databaseName }}"
+              valueFrom:
+                secretKeyRef:
+                  key: mongo-db-name
+                  name: {{ .Release.Name }}-communication-worker
             - name: "MONGODB_CONNECTION_STRING"
-              value: "{{ .Values.env.communication_worker.mongo.connectionString }}"
+              valueFrom:
+                secretKeyRef:
+                  key: mongo-db-connection-string
+                  name: {{ .Release.Name }}-communication-worker
             - name: "GATEWAY_API_KEY"
-              value: "{{ .Values.env.communication_worker.apiKey }}"
+              valueFrom:
+                secretKeyRef:
+                  key: gateway-api-key
+                  name: {{ .Release.Name }}-communication-worker
             - name: "SSL_VERIFICATION"
               value: "{{ .Values.communication_worker.sslVerification }}"
+            - name: "ENCRYPTION_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: {{ .Release.Name }}-data-converter-encryption
+            - name: "ENCRYPTION_SALT"
+              valueFrom:
+                secretKeyRef:
+                  key: salt
+                  name: {{ .Release.Name }}-data-converter-encryption
       initContainers:
         - name: wait-for-temporal-worker
           image: busybox
@@ -84,19 +103,40 @@ spec:
                   key: AWS_SECRET_ACCESS_KEY
                         {{- end }}
             - name: "EMAIL_NEWSLETTER_API"
-              value: "{{ .Values.env.email_gateway.sendgridApiKey}}"
+              valueFrom:
+                secretKeyRef:
+                  key: sendgrid-api-key
+                  name: {{ .Release.Name }}-email-gateway
             - name: "FROM_EMAIL"
-              value: "{{ .Values.env.email_gateway.fromEmail }}"
+              valueFrom:
+                secretKeyRef:
+                  key: from-email
+                  name: {{ .Release.Name }}-email-gateway
             - name: "FROM_NAME"
-              value: "{{ .Values.env.email_gateway.fromName }}"
+              valueFrom:
+                secretKeyRef:
+                  key: from-name
+                  name: {{ .Release.Name }}-email-gateway
             - name: "MONTHLY_NEWSLETTER_TEMPLATE_ID"
-              value: "{{ .Values.env.email_gateway.monthlyNewsletterTemplateId }}"
+              valueFrom:
+                secretKeyRef:
+                  key: monthly-template-id
+                  name: {{ .Release.Name }}-email-gateway
             - name: "USER1_EMAIL"
-              value: "{{ .Values.env.email_gateway.user1Email }}"
+              valueFrom:
+                secretKeyRef:
+                  key: user1-email
+                  name: {{ .Release.Name }}-email-gateway
             - name: "USER2_EMAIL"
-              value: "{{ .Values.env.email_gateway.user2Email }}"
+              valueFrom:
+                secretKeyRef:
+                  key: user2-email
+                  name: {{ .Release.Name }}-email-gateway
             - name: "COMMUNICATION_HISTORY_TABLE_NAME"
-              value: "{{ .Values.env.email_gateway.tableName }}"
+              valueFrom:
+                secretKeyRef:
+                  key: history-table-name
+                  name: {{ .Release.Name }}-email-gateway
             - name: "REGION"
               value: "{{ .Values.email_gateway.region }}"
             - name: "GATEWAY_LOGGING_LEVEL"
@@ -104,11 +144,17 @@ spec:
             - name: "SPRING_PROFILES_ACTIVE"
               value: "{{ .Values.email_gateway.profile }}"
             - name: "WORKER_API_KEY"
-              value: "{{ .Values.env.communication_worker.apiKey }}"
+              valueFrom:
+                secretKeyRef:
+                  key: gateway-api-key
+                  name: {{ .Release.Name }}-communication-worker
             - name: "EMAIL_GATEWAY_SSL_KEY_STORE"
               value: "{{ .Values.email_gateway.keyStorePath }}"
             - name: "EMAIL_GATEWAY_SSL_KEY_STORE_PASSWORD"
-              value: "{{ .Values.env.email_gateway.keyStorePassword }}"
+              valueFrom:
+                secretKeyRef:
+                  key: keystore-password
+                  name: {{ .Release.Name }}-email-gateway
             - name: "ROOT_LOGGING"
               value: "{{ .Values.email_gateway.rootLoggingLevel }}"
           volumeMounts:
@@ -118,7 +164,7 @@ spec:
       volumes:
         - name: email-gateway-keystore
           secret:
-            secretName: email-gateway-ssl
+            secretName: {{ .Release.Name }}-email-gateway-ssl
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -156,25 +202,49 @@ spec:
                   key: AWS_SECRET_ACCESS_KEY
                         {{- end }}
             - name: "TWILIO_ACCOUNT_SID"
-              value: "{{ .Values.env.sms_gateway.twilioAccountSid }}"
+              valueFrom:
+                secretKeyRef:
+                  key: twilio-account-id
+                  name: {{ .Release.Name }}-sms-gateway
             - name: "TWILIO_AUTH_TOKEN"
-              value: "{{ .Values.env.sms_gateway.twilioAuthToken }}"
+              valueFrom:
+                secretKeyRef:
+                  key: twilio-auth-token
+                  name: {{ .Release.Name }}-sms-gateway
             - name: "TWILIO_FROM_PHONE_NUMBER"
-              value: "{{ .Values.env.sms_gateway.fromPhoneNumber }}"
+              valueFrom:
+                secretKeyRef:
+                  key: twilio-from-phone
+                  name: {{ .Release.Name }}-sms-gateway
             - name: "TWILIO_POLLING_INTERVAL"
               value: "{{ .Values.sms_gateway.twilioPollingInterval }}"
             - name: "TWILIO_MAXIMUM_POLLING_ATTEMPTS"
               value: "{{ .Values.sms_gateway.maximumPollingAttempts }}"
             - name: "USER1_NAME"
-              value: "{{ .Values.env.sms_gateway.user1.name }}"
+              valueFrom:
+                secretKeyRef:
+                  key: user1-name
+                  name: {{ .Release.Name }}-sms-gateway
             - name: "USER1_PHONE_NUMBER"
-              value: "{{ .Values.env.sms_gateway.user1.phoneNumber }}"
+              valueFrom:
+                secretKeyRef:
+                  key: user1-phone
+                  name: {{ .Release.Name }}-sms-gateway
             - name: "USER2_NAME"
-              value: "{{ .Values.env.sms_gateway.user2.name }}"
+              valueFrom:
+                secretKeyRef:
+                  key: user2-name
+                  name: {{ .Release.Name }}-sms-gateway
             - name: "USER2_PHONE_NUMBER"
-              value: "{{ .Values.env.sms_gateway.user1.phoneNumber }}"
+              valueFrom:
+                secretKeyRef:
+                  key: user2-phone
+                  name: {{ .Release.Name }}-sms-gateway
             - name: "COMMUNICATION_HISTORY_TABLE_NAME"
-              value: "{{ .Values.env.sms_gateway.tableName }}"
+              valueFrom:
+                secretKeyRef:
+                  key: history-table-name
+                  name: {{ .Release.Name }}-sms-gateway
             - name: "REGION"
               value: "{{ .Values.sms_gateway.region }}"
             - name: "GATEWAY_LOGGING"
@@ -182,7 +252,10 @@ spec:
             - name: "SPRING_PROFILES_ACTIVE"
               value: "{{ .Values.sms_gateway.profile }}"
             - name: "WORKER_API_KEY"
-              value: "{{ .Values.env.communication_worker.apiKey }}"
+              valueFrom:
+                secretKeyRef:
+                  key: gateway-api-key
+                  name: {{ .Release.Name }}-communication-worker
             - name: "SMS_GATEWAY_SSL_KEY_STORE"
               value: "{{ .Values.sms_gateway.keyStorePath }}"
             - name: "SMS_GATEWAY_SSL_KEY_STORE_PASSWORD"
@@ -194,7 +267,7 @@ spec:
       volumes:
         - name: sms-gateway-keystore
           secret:
-            secretName: sms-gateway-ssl
+            secretName: {{ .Release.Name }}-sms-gateway-ssl
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -220,9 +293,15 @@ spec:
             - containerPort: 8080
           env:
             - name: "MONGODB_DATABASE_NAME"
-              value: "{{ .Values.env.gateway_api.mongo.databaseName }}"
+              valueFrom:
+                secretKeyRef:
+                  key: mongo-db-name
+                  name: {{ .Release.Name }}-gateway-api
             - name: "MONGODB_CONNECTION_STRING"
-              value: "{{ .Values.env.gateway_api.mongo.connectionString }}"
+              valueFrom:
+                secretKeyRef:
+                  key: mongo-db-connection-string
+                  name: {{ .Release.Name }}-gateway-api
             - name: "LOGGING_LEVEL"
               value: "{{ .Values.gateway_api.loggingLevel }}"
             - name: "JWKS_URI"
@@ -230,7 +309,10 @@ spec:
             - name: "GATEWAY_API_SSL_KEY_STORE"
               value: "{{ .Values.gateway_api.keyStorePath }}"
             - name: "GATEWAY_API_SSL_KEY_STORE_PASSWORD"
-              value: "{{ .Values.env.gateway_api.keyStorePassword }}"
+              valueFrom:
+                secretKeyRef:
+                  key: keystore-password
+                  name: {{ .Release.Name }}-gateway-api
             - name: "VERIFY_HOSTNAMES"
               value: "{{ .Values.gateway_api.verifyHostnames }}"
           volumeMounts:
@@ -240,7 +322,7 @@ spec:
       volumes:
         - name: gateway-keystore
           secret:
-            secretName: gateway-api-ssl
+            secretName: {{ .Release.Name }}-gateway-api-ssl
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -278,7 +360,10 @@ spec:
             - name: "PREFERENCES_API_SSL_KEY_STORE"
               value: "{{ .Values.preferences_api.keyStorePath }}"
             - name: "PREFERENCES_API_SSL_KEY_STORE_PASSWORD"
-              value: "{{ .Values.env.preferences_api.keystorePassword }}"
+              valueFrom:
+                secretKeyRef:
+                  key: keystore-password
+                  name: {{ .Release.Name }}-preferences-api
           volumeMounts:
             - mountPath: /certs/
               name: preferences-keystore
@@ -286,7 +371,7 @@ spec:
       volumes:
         - name: preferences-keystore
           secret:
-            secretName: preferences-api-ssl
+            secretName: {{ .Release.Name }}-preferences-api-ssl
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -316,7 +401,7 @@ spec:
             - name: "AUTH_API_PRIVATE_KEY"
               value: "{{ .Values.env.auth_api.privateKey }}"
             - name: "AUTH_API_PUBLIC_KEY"
-              value: "{{ .Values.env.auth_api.publicKey}}"
+              value: "{{ .Values.env.auth_api.publicKey }}"
             - name: "AUTH_API_TOKEN_EXPIRATION"
               value: "{{ .Values.auth_api.tokenExpiration }}"
             - name: "AUTH_API_SSL_KEY_STORE"
@@ -334,5 +419,41 @@ spec:
       volumes:
         - name: keystore
           secret:
-            secretName: auth-api-ssl
+            secretName: {{ .Release.Name }}-auth-api-ssl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-data-converter-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-data-converter-api
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-data-converter-api
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-data-converter-api
+          image: "{{ .Values.data_converter_api.repository }}:{{ .Values.data_converter_api.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "LOGGING_LEVEL"
+              value: "{{ .Values.data_converter_api.loggingLevel }}"
+            - name: "ENCRYPTION_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: {{ .Release.Name }}-data-converter-encryption
+            - name: "ENCRYPTION_SALT"
+              valueFrom:
+                secretKeyRef:
+                  key: salt
+                  name: {{ .Release.Name }}-data-converter-encryption
 
