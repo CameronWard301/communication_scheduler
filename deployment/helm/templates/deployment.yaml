@@ -65,7 +65,6 @@ spec:
         - name: wait-for-temporal-frontend
           image: busybox
           command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for temporal frontend; sleep 2; done;' ]
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -74,9 +73,9 @@ metadata:
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
-      matchLabels:
-        app: {{ .Release.Name }}-email-gateway
-        release: {{ .Release.Name }}
+    matchLabels:
+      app: {{ .Release.Name }}-email-gateway
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
@@ -165,6 +164,58 @@ spec:
         - name: email-gateway-keystore
           secret:
             secretName: {{ .Release.Name }}-email-gateway-ssl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-mock-gateway
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+      matchLabels:
+        app: {{ .Release.Name }}-mock-gateway
+        release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-mock-gateway
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-mock-gateway
+          image: "{{ .Values.mock_gateway.repository }}:{{ .Values.mock_gateway.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            {{- if .Values.useAwsKubernetesSecret }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_SECRET_ACCESS_KEY
+                        {{- end }}
+            - name: "COMMUNICATION_HISTORY_TABLE_NAME"
+              valueFrom:
+                secretKeyRef:
+                  key: history-table-name
+                  name: {{ .Release.Name }}-mock-gateway
+            - name: "REGION"
+              value: "{{ .Values.mock_gateway.region }}"
+            - name: "GATEWAY_LOGGING_LEVEL"
+              value: "{{ .Values.mock_gateway.loggingLevel }}"
+            - name: "WORKER_API_KEY"
+              valueFrom:
+                secretKeyRef:
+                  key: gateway-api-key
+                  name: {{ .Release.Name }}-communication-worker
+            - name: "ROOT_LOGGING"
+              value: "{{ .Values.mock_gateway.rootLoggingLevel }}"
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -11,7 +11,7 @@ web-client:
 
 temporal-properties:
   namespace: ${NAMESPACE:default}
-  task-queue: ${TASK_QUEUE:communication-workflow}
+  task-queue: ${TEMPORAL_TASK_QUEUE:communication-workflow}
   endpoint: ${TEMPORAL_ENDPOINT:localhost:7233}
   encryption:
     password: ${ENCRYPTION_PASSWORD:changeme}
