@@ -7,6 +7,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Email;
 import io.github.cameronward301.communication_scheduler.integration_tests.gateway.GatewayType;
+import io.github.cameronward301.communication_scheduler.integration_tests.gateway.MockGateway;
 import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Sms;
 import io.github.cameronward301.communication_scheduler.integration_tests.properties.IntegrationTestTemporalProperties;
 import io.github.cameronward301.communication_scheduler.integration_tests.users.EmailUser1;
@@ -40,6 +41,7 @@ public class CommunicationWorkflowStepDefinitions {
     private final IntegrationTestTemporalProperties integrationTestTemporalProperties;
     private final Sms sms;
     private final Email email;
+    private final MockGateway mockGateway;
     private final SmsUser1 smsUser1;
     private final EmailUser1 emailUser1;
     private User user;
@@ -72,6 +74,7 @@ public class CommunicationWorkflowStepDefinitions {
             case "Sms" -> gatewayType = sms;
 
             case "Email" -> gatewayType = email;
+            case "Mock" -> gatewayType = mockGateway;
             case "Unknown" -> gatewayType = new GatewayType() {
                 @Override
                 public String getId() {

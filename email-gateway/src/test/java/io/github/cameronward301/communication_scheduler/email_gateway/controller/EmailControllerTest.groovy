@@ -22,7 +22,7 @@ class EmailControllerTest extends Specification {
         emailController = new EmailController(contentDeliveryService, userContentService, communicationHistoryAccessProvider, gatewayService)
     }
 
-    def "should return 200 when EmailUserContentService is called"() {
+    def "should return 200 when controller is called"() {
         given:
         GatewayRequest emailRequest = new GatewayRequest("test-user-id", "test-run-id")
         gatewayService.sendCommunication(_ as GatewayProperties) >> new ResponseEntity<>(GatewayResponse.builder().messageHash("test-hash").userId("test-user-id").build(), HttpStatus.OK)
