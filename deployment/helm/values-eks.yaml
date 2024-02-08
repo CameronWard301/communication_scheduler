@@ -211,7 +211,7 @@ communication_worker:
   springDebug: info
   sslVerification: false
   temporal:
-    taskQueue: communication-worker
+    taskQueue: communication-workflow
     namespace: default
 
 email_gateway:
@@ -261,6 +261,13 @@ auth_api:
   profile: ssl
   keyStorePath: /certs/auth-api.p12
 
+mock_gateway:
+  repository: cameronward/mock-gateway
+  tag: latest
+  rootLoggingLevel: info
+  loggingLevel: info
+  region: eu-west-1
+
 data_converter_api:
   repository: cameronward/data-converter-api
   tag: latest
@@ -271,7 +278,7 @@ integration_tests:
   tag: latest
   temporalNamespace: default
   kubernetesNamespace: default
-  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI"
+  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI or @MockGateway"
 
 PreferencesDefaults:
   GatewayTimeoutSeconds: "60"

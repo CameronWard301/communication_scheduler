@@ -22,6 +22,8 @@ temporal:
 
   prometheus:
     enabled: true
+    nodeExporter:
+      enabled: true
 
   grafana:
     image:
@@ -44,10 +46,10 @@ communication_worker:
   repository: cameronward/communication-worker
   tag: latest
   debug: debug
-  springDebug: debug
+  springDebug: info
   sslVerification: false
   temporal:
-    taskQueue: communication-worker
+    taskQueue: communication-workflow
     namespace: default
 
 email_gateway:
@@ -68,6 +70,13 @@ sms_gateway:
   profile: ssl
   keyStorePath: /certs/sms-gateway.p12
   loggingLevel: DEBUG
+
+mock_gateway:
+  repository: cameronward/mock-gateway
+  tag: latest
+  rootLoggingLevel: info
+  loggingLevel: info
+  region: eu-west-1
 
 gateway_api:
   repository: cameronward/gateway-api
@@ -107,7 +116,7 @@ integration_tests:
   tag: latest
   temporalNamespace: default
   kubernetesNamespace: default
-  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI"
+  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI or @MockGateway"
 
 PreferencesDefaults:
   GatewayTimeoutSeconds: "60"

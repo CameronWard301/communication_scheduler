@@ -63,6 +63,9 @@ spec:
         - name: wait-for-sms-gateway
           image: busybox
           command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-sms-gateway-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for sms gateway; sleep 2; done;']
+        - name: wait-for-mock-gateway
+          image: busybox
+          command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-mock-gateway-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for sms gateway; sleep 2; done;' ]
         - name: wait-for-gateway-api
           image: busybox
           command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-gateway-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for gateway api; sleep 2; done;']
