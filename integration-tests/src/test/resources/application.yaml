@@ -1,13 +1,15 @@
 gateway:
+  mock-gateway:
+    id: ${MOCK_GATEWAY_ID:2cba1413-63b1-4c25-b13b-976c8794dd9b}
   sms:
-    id: d2a3d6f8-2a67-471f-aa8f-75cbed07ebf9
+    id: ${SMS_GATEWAY_ID:d2a3d6f8-2a67-471f-aa8f-75cbed07ebf9}
     user1:
-      id: c96f0fdd-0029-4b3a-91e0-b93f2d93713d
+      id: ${SMS_USER_1_ID:c96f0fdd-0029-4b3a-91e0-b93f2d93713d}
 
   email:
-    id: 5e9500ff-59ac-4e0f-8e86-9cf21b6e500d
+    id: ${EMAIL_GATEWAY_ID:5e9500ff-59ac-4e0f-8e86-9cf21b6e500d}
     user1:
-      id: 62f8a8e1-f55a-4d9a-ab15-852168a321a4
+      id: ${EMAIL_USER_1_ID:62f8a8e1-f55a-4d9a-ab15-852168a321a4}
 
 kubernetes:
   namespace: ${KUBERNETES_NAMESPACE:default}

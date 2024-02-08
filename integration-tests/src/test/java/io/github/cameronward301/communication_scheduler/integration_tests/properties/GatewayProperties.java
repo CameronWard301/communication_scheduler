@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class GatewayProperties {
     private GatewayProperties.Sms sms;
     private GatewayProperties.Email email;
+    private GatewayProperties.MockGateway mockGateway;
 
     @Data
     public static class Sms {
@@ -25,6 +26,11 @@ public class GatewayProperties {
 
     @Data
     public static class User {
+        private String id;
+    }
+
+    @Data
+    public static class MockGateway {
         private String id;
     }
 }
