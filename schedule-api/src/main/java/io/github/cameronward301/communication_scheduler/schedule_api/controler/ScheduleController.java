@@ -113,7 +113,7 @@ public class ScheduleController {
     public ResponseEntity<ScheduleDescriptionDTO> getScheduleById(
             @PathVariable String id
     ) {
-        return null;
+        return ResponseEntity.ok(scheduleService.getScheduleById(id));
     }
 
 

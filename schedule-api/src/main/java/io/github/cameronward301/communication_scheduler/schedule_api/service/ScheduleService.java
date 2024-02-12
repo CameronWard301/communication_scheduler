@@ -6,10 +6,14 @@ import io.github.cameronward301.communication_scheduler.schedule_api.herlper.Dto
 import io.github.cameronward301.communication_scheduler.schedule_api.model.CreateScheduleDTO;
 import io.github.cameronward301.communication_scheduler.schedule_api.model.ScheduleDescriptionDTO;
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.CommunicationWorkflow;
+import io.grpc.Status;
+import io.grpc.StatusException;
+import io.grpc.StatusRuntimeException;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.client.schedules.*;
 import io.temporal.common.SearchAttributeKey;
 import io.temporal.common.SearchAttributes;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -25,6 +29,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 @Service
+@Slf4j
 public class ScheduleService {
 
     private final ScheduleClient scheduleClient;
@@ -100,6 +105,18 @@ public class ScheduleService {
                         .setTypedSearchAttributes(getSearchAttributes(createScheduleDTO, scheduleId))
                         .build()
                 ).describe(), ScheduleDescriptionDTO.class);
+    }
+
+    public ScheduleDescriptionDTO getScheduleById(String scheduleId) {
+        try {
+            return modelMapper.map(scheduleClient.getHandle(scheduleId).describe(), ScheduleDescriptionDTO.class);
+        } catch (ScheduleException e) {
+            log.debug(e.getMessage());
+            if (Objects.equals(((StatusRuntimeException) e.getCause()).getStatus().getCode(), Status.NOT_FOUND.getCode())) {
+                throw new RequestException(format("Could not find Schedule with Id: %s", scheduleId), HttpStatus.NOT_FOUND);
+            }
+            throw new RuntimeException(e);
+        }
     }
 
     private ScheduleSpec getScheduleSpec(CreateScheduleDTO createScheduleDTO) {
