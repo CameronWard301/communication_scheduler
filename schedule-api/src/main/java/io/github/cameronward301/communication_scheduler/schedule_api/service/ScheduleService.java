@@ -2,6 +2,7 @@ package io.github.cameronward301.communication_scheduler.schedule_api.service;
 
 import io.github.cameronward301.communication_scheduler.schedule_api.exception.RequestException;
 import io.github.cameronward301.communication_scheduler.schedule_api.herlper.DtoConverter;
+import io.github.cameronward301.communication_scheduler.schedule_api.model.CountDTO;
 import io.github.cameronward301.communication_scheduler.schedule_api.model.CreateScheduleDTO;
 import io.github.cameronward301.communication_scheduler.schedule_api.model.ScheduleDescriptionDTO;
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.CommunicationWorkflow;
@@ -129,6 +130,12 @@ public class ScheduleService {
         }
     }
 
+    public CountDTO getScheduleCount(Optional<String> userId, Optional<String> gatewayId) {
+        return CountDTO.builder()
+                .total(scheduleClient.listSchedules().filter(getStreamFilter(userId, gatewayId)).count())
+                .build();
+    }
+
     public void deleteSchedulesByFilter(Optional<String> userId, Optional<String> gatewayId) {
         if (userId.isEmpty() && gatewayId.isEmpty()) {
             throw new RequestException("Must provide at least one of 'gatewayId' or 'userId' filters", HttpStatus.BAD_REQUEST);
@@ -137,7 +144,6 @@ public class ScheduleService {
         for (ScheduleListDescription schedule: filteredSchedules) {
             deleteScheduleById(schedule.getScheduleId());
         }
-
     }
 
     private ScheduleSpec getScheduleSpec(CreateScheduleDTO createScheduleDTO) {
