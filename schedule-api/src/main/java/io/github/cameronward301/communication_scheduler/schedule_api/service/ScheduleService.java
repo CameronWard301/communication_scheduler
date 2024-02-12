@@ -1,13 +1,11 @@
 package io.github.cameronward301.communication_scheduler.schedule_api.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.cameronward301.communication_scheduler.schedule_api.exception.RequestException;
 import io.github.cameronward301.communication_scheduler.schedule_api.herlper.DtoConverter;
 import io.github.cameronward301.communication_scheduler.schedule_api.model.CreateScheduleDTO;
 import io.github.cameronward301.communication_scheduler.schedule_api.model.ScheduleDescriptionDTO;
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.CommunicationWorkflow;
 import io.grpc.Status;
-import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.client.schedules.*;
@@ -110,6 +108,18 @@ public class ScheduleService {
     public ScheduleDescriptionDTO getScheduleById(String scheduleId) {
         try {
             return modelMapper.map(scheduleClient.getHandle(scheduleId).describe(), ScheduleDescriptionDTO.class);
+        } catch (ScheduleException e) {
+            log.debug(e.getMessage());
+            if (Objects.equals(((StatusRuntimeException) e.getCause()).getStatus().getCode(), Status.NOT_FOUND.getCode())) {
+                throw new RequestException(format("Could not find Schedule with Id: %s", scheduleId), HttpStatus.NOT_FOUND);
+            }
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteScheduleById(String scheduleId) {
+        try {
+            scheduleClient.getHandle(scheduleId).delete();
         } catch (ScheduleException e) {
             log.debug(e.getMessage());
             if (Objects.equals(((StatusRuntimeException) e.getCause()).getStatus().getCode(), Status.NOT_FOUND.getCode())) {

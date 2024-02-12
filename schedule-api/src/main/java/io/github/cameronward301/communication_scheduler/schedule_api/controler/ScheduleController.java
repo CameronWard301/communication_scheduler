@@ -6,7 +6,6 @@ import io.github.cameronward301.communication_scheduler.schedule_api.model.Creat
 import io.github.cameronward301.communication_scheduler.schedule_api.model.ScheduleDescriptionDTO;
 import io.github.cameronward301.communication_scheduler.schedule_api.model.SchedulePatchDTO;
 import io.github.cameronward301.communication_scheduler.schedule_api.service.ScheduleService;
-import io.temporal.client.schedules.ScheduleDescription;
 import io.temporal.client.schedules.ScheduleListDescription;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -105,7 +104,8 @@ public class ScheduleController {
     public ResponseEntity<String> deleteById(
             @PathVariable String id
     ){
-        return null;
+        scheduleService.deleteScheduleById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAuthority('SCOPE_SCHEDULE:READ')")
