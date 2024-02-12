@@ -1,10 +1,7 @@
 package io.github.cameronward301.communication_scheduler.schedule_api.controler;
 
 import io.github.cameronward301.communication_scheduler.schedule_api.exception.RequestException;
-import io.github.cameronward301.communication_scheduler.schedule_api.model.CountDTO;
-import io.github.cameronward301.communication_scheduler.schedule_api.model.CreateScheduleDTO;
-import io.github.cameronward301.communication_scheduler.schedule_api.model.ScheduleDescriptionDTO;
-import io.github.cameronward301.communication_scheduler.schedule_api.model.SchedulePatchDTO;
+import io.github.cameronward301.communication_scheduler.schedule_api.model.*;
 import io.github.cameronward301.communication_scheduler.schedule_api.service.ScheduleService;
 import io.temporal.client.schedules.ScheduleListDescription;
 import jakarta.validation.Valid;
@@ -58,7 +55,7 @@ public class ScheduleController {
 
     @PreAuthorize("hasAuthority('SCOPE_SCHEDULE:WRITE')")
     @PatchMapping
-    public ResponseEntity<String> batchUpdateSchedules(
+    public ResponseEntity<UpdateDTO> batchUpdateSchedules(
             @RequestParam(value = "userId", required = false) Optional<String> userId,
             @RequestParam(value = "gatewayId", required = false) Optional<String> gatewayId,
             @Valid @RequestBody SchedulePatchDTO schedulePatchDTO,
@@ -67,7 +64,8 @@ public class ScheduleController {
         if (bindingResult.hasErrors()) {
             throw new RequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
-        return null;
+
+        return ResponseEntity.ok(scheduleService.batchUpdateSchedules(userId, gatewayId, schedulePatchDTO));
     }
 
     @PreAuthorize("hasAuthority('SCOPE_SCHEDULE:READ')")

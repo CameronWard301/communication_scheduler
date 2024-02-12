@@ -2,9 +2,7 @@ package io.github.cameronward301.communication_scheduler.schedule_api.service;
 // Code adapted from: https://github.com/temporalio/samples-java/blob/main/core/src/main/java/io/temporal/samples/hello/HelloSchedules.java
 import io.github.cameronward301.communication_scheduler.schedule_api.exception.RequestException;
 import io.github.cameronward301.communication_scheduler.schedule_api.herlper.DtoConverter;
-import io.github.cameronward301.communication_scheduler.schedule_api.model.CountDTO;
-import io.github.cameronward301.communication_scheduler.schedule_api.model.CreateScheduleDTO;
-import io.github.cameronward301.communication_scheduler.schedule_api.model.ScheduleDescriptionDTO;
+import io.github.cameronward301.communication_scheduler.schedule_api.model.*;
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.CommunicationWorkflow;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
@@ -74,7 +72,7 @@ public class ScheduleService {
         createScheduleDTO.setScheduleId(UUID.randomUUID().toString());
         return modelMapper.map(scheduleClient.createSchedule(createScheduleDTO.getScheduleId(),
                 Schedule.newBuilder()
-                        .setState(getScheduleState(createScheduleDTO))
+                        .setState(getScheduleState(createScheduleDTO.isPaused()))
                         .setSpec(getScheduleSpec(createScheduleDTO))
                         .setAction(getScheduleAction(createScheduleDTO))
                         .build(),
@@ -94,8 +92,12 @@ public class ScheduleService {
                     (ScheduleUpdateInput existingSchedule) -> {
                         Schedule.Builder builder = Schedule.newBuilder(existingSchedule.getDescription().getSchedule());
 
-                        builder.setState(getScheduleState(scheduleDTO));
-                        builder.setSpec(getScheduleSpec(scheduleDTO));
+                        builder.setState(getScheduleState(scheduleDTO.isPaused()));
+
+                        if (scheduleDTO.getCalendar() != null || scheduleDTO.getInterval() != null || scheduleDTO.getCronExpression() != null) {
+                            builder.setSpec(getScheduleSpec(scheduleDTO));
+                        }
+
                         builder.setAction(getScheduleAction(scheduleDTO));
 
                         return new ScheduleUpdate(builder.build());
@@ -110,6 +112,58 @@ public class ScheduleService {
             }
             throw new RuntimeException(e);
         }
+    }
+
+    public UpdateDTO batchUpdateSchedules(Optional<String> userId, Optional<String> gatewayId, SchedulePatchDTO schedulePatchDTO) {
+        if (userId.isEmpty() && gatewayId.isEmpty()) {
+            throw new RequestException("Must supply at least one of 'userId' or 'gatewayId' as a query parameter", HttpStatus.BAD_REQUEST);
+        }
+        List<ScheduleListDescription> filteredSchedules = scheduleClient.listSchedules().filter(getStreamFilter(userId, gatewayId)).toList();
+        for (ScheduleListDescription schedule: filteredSchedules) {
+
+            String existingUserId = (String) ((List<?>) schedule.getSearchAttributes().get("userId")).get(0);
+            String existingGatewayId = (String) ((List<?>) schedule.getSearchAttributes().get("gatewayId")).get(0);
+
+            CreateScheduleDTO scheduleDetails = CreateScheduleDTO.builder()
+                    .scheduleId(schedule.getScheduleId())
+                    .userId(existingUserId)
+                    .gatewayId(existingGatewayId)
+                    .build();
+
+            //Get existing schedule details
+            Schedule.Builder updatedSchedule = Schedule.newBuilder()
+                    .setState(getScheduleState(schedule.getSchedule().getState().isPaused()))
+                    .setSpec(ScheduleSpec.newBuilder()
+                            .setCronExpressions(schedule.getSchedule().getSpec().getCronExpressions())
+                            .setIntervals(schedule.getSchedule().getSpec().getIntervals())
+                            .setCalendars(schedule.getSchedule().getSpec().getCalendars())
+                            .build())
+                    .setAction(getScheduleAction(scheduleDetails));
+
+            //Make updates if provided
+            if (schedulePatchDTO.getPaused() != null) {
+                updatedSchedule.setState(getScheduleState(schedulePatchDTO.getPaused()));
+            }
+
+            if (schedulePatchDTO.getGatewayId() != null ) {
+                scheduleDetails.setGatewayId(schedulePatchDTO.getGatewayId());
+            }
+            //Delete old schedule
+            scheduleClient.getHandle(schedule.getScheduleId()).delete();
+
+            //Create new one with updated search attributes. Note that this may be possible to do with an Update in the future
+            scheduleClient.createSchedule(schedule.getScheduleId(),
+                    updatedSchedule.build(), ScheduleOptions.newBuilder()
+                            .setTypedSearchAttributes(getSearchAttributes(scheduleDetails))
+                            .build()
+                    );
+
+        }
+
+        return UpdateDTO.builder()
+                .message("Completed")
+                .totalUpdated(filteredSchedules.size())
+                .build();
 
     }
 
@@ -172,10 +226,10 @@ public class ScheduleService {
                 .build();
     }
 
-    private ScheduleState getScheduleState(CreateScheduleDTO createScheduleDTO) {
+    private ScheduleState getScheduleState(boolean paused) {
         return ScheduleState.newBuilder()
                 .setNote("")
-                .setPaused(createScheduleDTO.isPaused())
+                .setPaused(paused)
                 .build();
     }
 
