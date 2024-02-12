@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @Builder
 public class CreateScheduleDTO {
+    private String scheduleId; //only to be sent if updating an exising schedule
 
     @NotBlank(message = "'gatewayId' cannot be empty")
     private String gatewayId;

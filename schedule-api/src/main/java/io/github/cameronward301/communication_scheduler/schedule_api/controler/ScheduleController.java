@@ -43,7 +43,7 @@ public class ScheduleController {
 
     @PreAuthorize("hasAuthority('SCOPE_SCHEDULE:WRITE')")
     @PutMapping
-    public ResponseEntity<ScheduleListDescription> updateSchedule(
+    public ResponseEntity<ScheduleDescriptionDTO> updateSchedule(
             @Valid @RequestBody CreateScheduleDTO createScheduleDTO,
             BindingResult bindingResult
     ) {
@@ -53,7 +53,7 @@ public class ScheduleController {
         if (createScheduleDTO.isInvalid()) {
             throw new RequestException("Please provide exactly one schedule configuration, either: 'calendar', 'interval' or 'cronExpression'", HttpStatus.BAD_REQUEST);
         }
-        return null;
+        return ResponseEntity.ok(scheduleService.updateSchedule(createScheduleDTO));
     }
 
     @PreAuthorize("hasAuthority('SCOPE_SCHEDULE:WRITE')")

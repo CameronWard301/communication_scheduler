@@ -1,5 +1,5 @@
 package io.github.cameronward301.communication_scheduler.schedule_api.service;
-
+// Code adapted from: https://github.com/temporalio/samples-java/blob/main/core/src/main/java/io/temporal/samples/hello/HelloSchedules.java
 import io.github.cameronward301.communication_scheduler.schedule_api.exception.RequestException;
 import io.github.cameronward301.communication_scheduler.schedule_api.herlper.DtoConverter;
 import io.github.cameronward301.communication_scheduler.schedule_api.model.CountDTO;
@@ -71,39 +71,46 @@ public class ScheduleService {
     // At least one of schedules will not be null, todo update this
     // Creates workflow with ID format GATEWAY_ID:USER_ID:SCHEDULE_ID:<scheduleTime>
     public ScheduleDescriptionDTO createSchedule(CreateScheduleDTO createScheduleDTO) {
-        String scheduleId = UUID.randomUUID().toString();
-        return modelMapper.map(scheduleClient.createSchedule(scheduleId,
+        createScheduleDTO.setScheduleId(UUID.randomUUID().toString());
+        return modelMapper.map(scheduleClient.createSchedule(createScheduleDTO.getScheduleId(),
                 Schedule.newBuilder()
-                        .setState(
-                                ScheduleState.newBuilder()
-                                        .setPaused(createScheduleDTO.isPaused())
-                                        .setNote("")
-                                        .build()
-                        )
+                        .setState(getScheduleState(createScheduleDTO))
                         .setSpec(getScheduleSpec(createScheduleDTO))
-                        .setAction(
-                                ScheduleActionStartWorkflow.newBuilder()
-                                        .setWorkflowType(CommunicationWorkflow.class)
-                                        .setArguments(Map.of(
-                                                "userId", createScheduleDTO.getUserId(),
-                                                "gatewayId", createScheduleDTO.getGatewayId()
-                                        ))
-                                        .setOptions(WorkflowOptions.newBuilder()
-                                                .setTaskQueue(taskQueue)
-                                                .setTypedSearchAttributes(getSearchAttributes(createScheduleDTO, scheduleId))
-                                                .setWorkflowId(
-                                                        format("%s:%s:%s:",
-                                                                createScheduleDTO.getGatewayId(),
-                                                                createScheduleDTO.getUserId(),
-                                                                scheduleId))
-                                                .build())
-                                        .build()
-                        )
+                        .setAction(getScheduleAction(createScheduleDTO))
                         .build(),
                 ScheduleOptions.newBuilder()
-                        .setTypedSearchAttributes(getSearchAttributes(createScheduleDTO, scheduleId))
+                        .setTypedSearchAttributes(getSearchAttributes(createScheduleDTO))
                         .build()
                 ).describe(), ScheduleDescriptionDTO.class);
+    }
+
+    public ScheduleDescriptionDTO updateSchedule(CreateScheduleDTO scheduleDTO) {
+        if (scheduleDTO.getScheduleId() == null || scheduleDTO.getScheduleId().isBlank()) {
+            throw new RequestException("Please provide a 'scheduleId' in the request body to update a schedule", HttpStatus.BAD_REQUEST);
+        }
+        try {
+            ScheduleHandle schedule = scheduleClient.getHandle(scheduleDTO.getScheduleId());
+            schedule.update(
+                    (ScheduleUpdateInput existingSchedule) -> {
+                        Schedule.Builder builder = Schedule.newBuilder(existingSchedule.getDescription().getSchedule());
+
+                        builder.setState(getScheduleState(scheduleDTO));
+                        builder.setSpec(getScheduleSpec(scheduleDTO));
+                        builder.setAction(getScheduleAction(scheduleDTO));
+
+                        return new ScheduleUpdate(builder.build());
+                    }
+            );
+            return modelMapper.map(schedule.describe(), ScheduleDescriptionDTO.class);
+
+        } catch (ScheduleException e) {
+            log.debug(e.getMessage());
+            if (Objects.equals(((StatusRuntimeException) e.getCause()).getStatus().getCode(), Status.NOT_FOUND.getCode())) {
+                throw new RequestException(format("Could not find Schedule with Id: %s", scheduleDTO.getScheduleId()), HttpStatus.NOT_FOUND);
+            }
+            throw new RuntimeException(e);
+        }
+
     }
 
     public ScheduleDescriptionDTO getScheduleById(String scheduleId) {
@@ -146,6 +153,32 @@ public class ScheduleService {
         }
     }
 
+    private ScheduleActionStartWorkflow getScheduleAction(CreateScheduleDTO createScheduleDTO) {
+        return ScheduleActionStartWorkflow.newBuilder()
+                .setWorkflowType(CommunicationWorkflow.class)
+                .setArguments(Map.of(
+                        "userId", createScheduleDTO.getUserId(),
+                        "gatewayId", createScheduleDTO.getGatewayId()
+                ))
+                .setOptions(WorkflowOptions.newBuilder()
+                        .setTaskQueue(taskQueue)
+                        .setTypedSearchAttributes(getSearchAttributes(createScheduleDTO))
+                        .setWorkflowId(
+                                format("%s:%s:%s:",
+                                        createScheduleDTO.getGatewayId(),
+                                        createScheduleDTO.getUserId(),
+                                        createScheduleDTO.getScheduleId()))
+                        .build())
+                .build();
+    }
+
+    private ScheduleState getScheduleState(CreateScheduleDTO createScheduleDTO) {
+        return ScheduleState.newBuilder()
+                .setNote("")
+                .setPaused(createScheduleDTO.isPaused())
+                .build();
+    }
+
     private ScheduleSpec getScheduleSpec(CreateScheduleDTO createScheduleDTO) {
         if (createScheduleDTO.getCalendar() != null) {
             return ScheduleSpec.newBuilder()
@@ -165,11 +198,11 @@ public class ScheduleService {
         throw new RequestException("Please provide exactly one schedule configuration, either: 'calendar', 'interval' or 'cronExpression'", HttpStatus.BAD_REQUEST);
     }
 
-    private SearchAttributes getSearchAttributes(CreateScheduleDTO createScheduleDTO, String scheduleId) {
+    private SearchAttributes getSearchAttributes(CreateScheduleDTO createScheduleDTO) {
         return SearchAttributes.newBuilder()
                 .set(SearchAttributeKey.forKeyword("userId"), createScheduleDTO.getUserId())
                 .set(SearchAttributeKey.forKeyword("gatewayId"), createScheduleDTO.getGatewayId())
-                .set(SearchAttributeKey.forKeyword("scheduleId"), scheduleId)
+                .set(SearchAttributeKey.forKeyword("scheduleId"), createScheduleDTO.getScheduleId())
                 .build();
     }
 
