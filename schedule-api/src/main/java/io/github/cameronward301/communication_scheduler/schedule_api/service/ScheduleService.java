@@ -129,6 +129,17 @@ public class ScheduleService {
         }
     }
 
+    public void deleteSchedulesByFilter(Optional<String> userId, Optional<String> gatewayId) {
+        if (userId.isEmpty() && gatewayId.isEmpty()) {
+            throw new RequestException("Must provide at least one of 'gatewayId' or 'userId' filters", HttpStatus.BAD_REQUEST);
+        }
+        List<ScheduleListDescription> filteredSchedules = scheduleClient.listSchedules().filter(getStreamFilter(userId, gatewayId)).toList();
+        for (ScheduleListDescription schedule: filteredSchedules) {
+            deleteScheduleById(schedule.getScheduleId());
+        }
+
+    }
+
     private ScheduleSpec getScheduleSpec(CreateScheduleDTO createScheduleDTO) {
         if (createScheduleDTO.getCalendar() != null) {
             return ScheduleSpec.newBuilder()

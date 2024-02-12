@@ -87,7 +87,8 @@ public class ScheduleController {
             @RequestParam(value = "userId", required = false) Optional<String> userId,
             @RequestParam(value = "gatewayId", required = false) Optional<String> gatewayId
     ) {
-        return null;
+        scheduleService.deleteSchedulesByFilter(userId, gatewayId);
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAuthority('SCOPE_SCHEDULE:READ')")
