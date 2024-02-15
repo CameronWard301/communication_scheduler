@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -42,13 +41,13 @@ public class CreateScheduleDTO {
     @Getter
     @AllArgsConstructor
     public static class ScheduleCalendarSpecDTO {
-        private List<ScheduleRangeDTO> seconds = new ArrayList<>();
-        private List<ScheduleRangeDTO> minutes = new ArrayList<>();
-        private List<ScheduleRangeDTO> hour = new ArrayList<>();
-        private List<ScheduleRangeDTO> dayOfMonth = new ArrayList<>();
-        private List<ScheduleRangeDTO> month = new ArrayList<>();
-        private List<ScheduleRangeDTO> year = new ArrayList<>();
-        private List<ScheduleRangeDTO> dayOfWeek = new ArrayList<>();
+        private List<ScheduleRangeDTO> seconds;
+        private List<ScheduleRangeDTO> minutes;
+        private List<ScheduleRangeDTO> hour;
+        private List<ScheduleRangeDTO> dayOfMonth;
+        private List<ScheduleRangeDTO> month;
+        private List<ScheduleRangeDTO> year;
+        private List<ScheduleRangeDTO> dayOfWeek;
     }
 
     @Getter

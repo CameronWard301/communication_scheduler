@@ -35,7 +35,7 @@ public class TemporalConfig {
                         DefaultDataConverter.newDefaultInstance(),
                         Collections.singletonList(cryptographyCodec)
                 ))
-                .setNamespace("default") //todo add this as a parameter
+                .setNamespace(namespace)
                 .build());
     }
 
