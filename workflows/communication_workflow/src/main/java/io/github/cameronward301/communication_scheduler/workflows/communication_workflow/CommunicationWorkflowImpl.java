@@ -6,15 +6,12 @@ import io.github.cameronward301.communication_scheduler.workflows.communication_
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.model.Preferences;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.common.RetryOptions;
-import io.temporal.common.SearchAttributeKey;
-import io.temporal.common.SearchAttributeUpdate;
 import io.temporal.workflow.Workflow;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 
@@ -37,15 +34,6 @@ public class CommunicationWorkflowImpl implements CommunicationWorkflow {
     @Override
     public Map<String, String> sendCommunication(Map<String, String> payload) {
         log.info("Started workflow with payload: {}", payload.toString());
-
-        String workflowId = Workflow.getInfo().getWorkflowId();
-        log.info("Got workflow id {}", workflowId);
-        List<String> attributes = List.of(workflowId.split(":"));
-        log.info("Got attributes {}", attributes);
-
-        Workflow.upsertTypedSearchAttributes(SearchAttributeUpdate.valueSet(SearchAttributeKey.forText("gatewayId"), attributes.get(0)));
-        Workflow.upsertTypedSearchAttributes(SearchAttributeUpdate.valueSet(SearchAttributeKey.forText("userId"), attributes.get(1)));
-        Workflow.upsertTypedSearchAttributes(SearchAttributeUpdate.valueSet(SearchAttributeKey.forText("scheduleId"), attributes.get(2)));
 
         log.info("Getting preferences");
         Preferences preferences = getSettingsActivity.getPreferences();
