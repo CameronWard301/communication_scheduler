@@ -33,6 +33,15 @@ public class ScheduleService {
     private final ModelMapper modelMapper;
     private final ScheduleHelper scheduleHelper;
 
+    /**
+     * Get all schedules matching the given filter
+     *
+     * @param pageNumber of paged results
+     * @param pageSize   how many results to include in a page
+     * @param userId     to filter results
+     * @param gatewayId  to filter results
+     * @return a page matching the filters with the correct paging parameters
+     */
 
     public Page<ScheduleListDescription> getAllSchedules(
             String pageNumber,
@@ -53,7 +62,16 @@ public class ScheduleService {
     }
 
     // At least one of schedules will not be null, todo update this
-    // Creates workflow with ID format GATEWAY_ID:USER_ID:SCHEDULE_ID:<scheduleTime>
+    // Creates workflow with ID format
+
+    /**
+     * Creates a new schedule from the request DTO
+     * Schedule will create workflows with the id: GATEWAY_ID:USER_ID:SCHEDULE_ID:<scheduleTime>
+     * Note that the scheduleSpec must not be null and contain at least one specification
+     *
+     * @param createScheduleDTO to create the schedule from
+     * @return the created schedule DTO
+     */
     public ScheduleDescriptionDTO createSchedule(CreateScheduleDTO createScheduleDTO) {
         createScheduleDTO.setScheduleId(UUID.randomUUID().toString());
         return modelMapper.map(scheduleClient.createSchedule(createScheduleDTO.getScheduleId(),
@@ -68,6 +86,12 @@ public class ScheduleService {
         ).describe(), ScheduleDescriptionDTO.class);
     }
 
+    /**
+     * Update a given schedule from a dto
+     *
+     * @param scheduleDTO to update (contains the existing schedule ID)
+     * @return the updated schedule result
+     */
     public ScheduleDescriptionDTO updateSchedule(CreateScheduleDTO scheduleDTO) {
         if (scheduleDTO.getScheduleId() == null || scheduleDTO.getScheduleId().isBlank()) {
             throw new RequestException("Please provide a 'scheduleId' in the request body to update a schedule", HttpStatus.BAD_REQUEST);
@@ -96,6 +120,14 @@ public class ScheduleService {
         }
     }
 
+    /**
+     * Update multiple schedules matching a given filter
+     *
+     * @param userId           to filter schedules by
+     * @param gatewayId        to filter schedules by
+     * @param schedulePatchDTO to update schedule to
+     * @return ModifiedDTO containing the number of modified schedules.
+     */
     public ModifiedDTO batchUpdateSchedules(Optional<String> userId, Optional<String> gatewayId, SchedulePatchDTO schedulePatchDTO) {
         if (userId.isEmpty() && gatewayId.isEmpty()) {
             throw new RequestException("Must supply at least one of 'userId' or 'gatewayId' as a query parameter", HttpStatus.BAD_REQUEST);
@@ -133,7 +165,7 @@ public class ScheduleService {
             //Delete old schedule
             scheduleClient.getHandle(schedule.getScheduleId()).delete();
 
-            //Create new one with updated search attributes. Note that this may be possible to do with an Update in the future
+            //Create new one with updated search attributes. Note that this may be possible to do with an Update in future temporal SDK versions
             scheduleClient.createSchedule(schedule.getScheduleId(),
                     updatedSchedule.build(), ScheduleOptions.newBuilder()
                             .setTypedSearchAttributes(scheduleHelper.getSearchAttributes(scheduleDetails))
@@ -149,6 +181,12 @@ public class ScheduleService {
 
     }
 
+    /**
+     * Get a schedule by ID
+     *
+     * @param scheduleId to get the schedule by
+     * @return the schedule matching the id
+     */
     public ScheduleDescriptionDTO getScheduleById(String scheduleId) {
         try {
             return modelMapper.map(scheduleClient.getHandle(scheduleId).describe(), ScheduleDescriptionDTO.class);
@@ -157,6 +195,11 @@ public class ScheduleService {
         }
     }
 
+    /**
+     * Delete schedule by its id
+     *
+     * @param scheduleId of the schedule to delete
+     */
     public void deleteScheduleById(String scheduleId) {
         try {
             scheduleClient.getHandle(scheduleId).delete();
@@ -165,12 +208,26 @@ public class ScheduleService {
         }
     }
 
+    /**
+     * Get the number of schedules matching a given filter
+     *
+     * @param userId    to match schedules by
+     * @param gatewayId to match schedules by
+     * @return the number of schedules that have both userId and gatewayId
+     */
     public CountDTO getScheduleCount(Optional<String> userId, Optional<String> gatewayId) {
         return CountDTO.builder()
                 .total(scheduleClient.listSchedules().filter(scheduleHelper.getStreamFilter(userId, gatewayId)).count())
                 .build();
     }
 
+    /**
+     * Delete multiple schedules matching the given filters
+     *
+     * @param userId    of the schedules to delete
+     * @param gatewayId of the schedules to delete
+     * @return the number of delete schedules
+     */
     public ModifiedDTO deleteSchedulesByFilter(Optional<String> userId, Optional<String> gatewayId) {
         if (userId.isEmpty() && gatewayId.isEmpty()) {
             throw new RequestException("Must provide at least one of 'gatewayId' or 'userId' filters", HttpStatus.BAD_REQUEST);
@@ -182,6 +239,13 @@ public class ScheduleService {
         return ModifiedDTO.builder().message("Successfully Deleted").totalModified(filteredSchedules.size()).build();
     }
 
+    /**
+     * Handles exceptions where the schedule cannot be found by its id or other issue
+     *
+     * @param e          the exception thrown
+     * @param scheduleId the schedule ID trying to be found
+     * @return request exception if the schedule cannot be found, otherwise generic runtimeException.
+     */
     private RuntimeException handleScheduleException(ScheduleException e, String scheduleId) {
         log.debug(e.getMessage());
         Throwable cause = e.getCause();

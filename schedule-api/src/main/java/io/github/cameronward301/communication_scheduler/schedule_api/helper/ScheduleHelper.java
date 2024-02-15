@@ -19,6 +19,9 @@ import java.util.function.Predicate;
 
 import static java.lang.String.format;
 
+/**
+ * Builds a number of Temporal Scheduling Objects from DTOs or other helpful converter functions
+ */
 @Component
 public class ScheduleHelper {
     private final String taskQueue;
@@ -31,6 +34,12 @@ public class ScheduleHelper {
         this.dtoConverter = dtoConverter;
     }
 
+    /**
+     * Creates a new schedule action for a new schedule to be created
+     *
+     * @param createScheduleDTO the schedule to create
+     * @return ScheduleAction containing the workflow details and search attributes
+     */
     public ScheduleActionStartWorkflow getScheduleAction(CreateScheduleDTO createScheduleDTO) {
         return ScheduleActionStartWorkflow.newBuilder()
                 .setWorkflowType(CommunicationWorkflow.class)
@@ -50,6 +59,12 @@ public class ScheduleHelper {
                 .build();
     }
 
+    /**
+     * Create a Schedule state from a paused parameter
+     *
+     * @param paused schedule paused state
+     * @return schedule state object
+     */
     public ScheduleState getScheduleState(boolean paused) {
         return ScheduleState.newBuilder()
                 .setNote("")
@@ -57,6 +72,12 @@ public class ScheduleHelper {
                 .build();
     }
 
+    /**
+     * Create a schedule spec from a DTO. Must provide exactly one schedule configuration
+     *
+     * @param createScheduleDTO to create the schedule spec from
+     * @return a new ScheduleSpec object
+     */
     public ScheduleSpec getScheduleSpec(CreateScheduleDTO createScheduleDTO) {
         if (createScheduleDTO.getCalendar() != null) {
             return ScheduleSpec.newBuilder()
@@ -76,6 +97,12 @@ public class ScheduleHelper {
         throw new RequestException("Please provide exactly one schedule configuration, either: 'calendar', 'interval' or 'cronExpression'", HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Generate search attributes from the create request
+     *
+     * @param createScheduleDTO of the schedule to be created
+     * @return SearchAttributes object from the userId, gatewayId and scheduleId
+     */
     public SearchAttributes getSearchAttributes(CreateScheduleDTO createScheduleDTO) {
         return SearchAttributes.newBuilder()
                 .set(SearchAttributeKey.forKeyword("userId"), createScheduleDTO.getUserId())
@@ -84,6 +111,13 @@ public class ScheduleHelper {
                 .build();
     }
 
+    /**
+     * Create a predicate filter to sort through schedules
+     *
+     * @param userId    to add to the predicate
+     * @param gatewayId to add to the predicate
+     * @return a predicate containing the userId or gatewayId filters or both
+     */
     public Predicate<ScheduleListDescription> getStreamFilter(Optional<String> userId, Optional<String> gatewayId) {
         Predicate<ScheduleListDescription> predicate = scheduleListDescription -> true;
 

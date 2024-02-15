@@ -8,6 +8,9 @@ import lombok.Getter;
 
 import java.util.List;
 
+/**
+ * Used to create and update schedules with
+ */
 @Data
 @Builder
 public class CreateScheduleDTO {

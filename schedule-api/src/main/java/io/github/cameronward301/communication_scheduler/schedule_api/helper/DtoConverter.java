@@ -13,8 +13,18 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Converts DTOs to Temporal objects
+ */
 @Component
 public class DtoConverter {
+
+    /**
+     * Convert a CalendarSpecDto to a Temporal ScheduleCalendarSpec
+     *
+     * @param calendarSpecDTO to convert
+     * @return Temporal's Schedule Calendar spec
+     */
     public ScheduleCalendarSpec getCalendar(CreateScheduleDTO.ScheduleCalendarSpecDTO calendarSpecDTO) {
         return ScheduleCalendarSpec.newBuilder()
                 .setSeconds(getScheduleRange(calendarSpecDTO.getSeconds()))
@@ -27,6 +37,13 @@ public class DtoConverter {
                 .build();
     }
 
+    /**
+     * Convert an IntervalSpecDTO into a Temporal ScheduleIntervalSpec
+     *
+     * @param intervalSpecDTO to convert
+     * @return ScheduleIntervalSpec
+     * @throws RequestException if the string in the DTO cannot be converted to a Duration object
+     */
     public ScheduleIntervalSpec getInterval(CreateScheduleDTO.ScheduleIntervalSpecDTO intervalSpecDTO) {
         try {
             return new ScheduleIntervalSpec(Duration.parse(intervalSpecDTO.getEvery()), Duration.parse(intervalSpecDTO.getOffset()));
@@ -36,6 +53,12 @@ public class DtoConverter {
         }
     }
 
+    /**
+     * For a given list of rangeDTOs convert them to a list of Temporal Schedule Ranges
+     *
+     * @param scheduleRangeDTOs to convert
+     * @return a list of Temporal ScheduleRange
+     */
     private List<ScheduleRange> getScheduleRange(List<CreateScheduleDTO.ScheduleRangeDTO> scheduleRangeDTOs) {
         return scheduleRangeDTOs.stream().map(scheduleRangeDTO ->
                         new ScheduleRange(scheduleRangeDTO.getStart(), scheduleRangeDTO.getEnd(), scheduleRangeDTO.getStep()))

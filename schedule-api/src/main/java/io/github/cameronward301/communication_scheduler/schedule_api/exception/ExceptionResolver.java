@@ -26,6 +26,12 @@ public class ExceptionResolver {
         return new ResponseEntity<>(exception.getMessage(), exception.getHttpStatus());
     }
 
+    /**
+     * Handles runtime exceptions thrown by the Temporal Schedule client
+     *
+     * @param exception The StatusRuntimeException thrown by the schedule client
+     * @return A response entity containing the message and BAD request (400) HTTP status code
+     */
     @ExceptionHandler(StatusRuntimeException.class)
     protected ResponseEntity<Object> handleStatusRuntimeException(StatusRuntimeException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);

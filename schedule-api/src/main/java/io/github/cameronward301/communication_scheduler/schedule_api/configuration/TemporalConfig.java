@@ -14,6 +14,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Collections;
 
+/**
+ * Creates temporal clients for use in service layer
+ */
 @Configuration
 @RequiredArgsConstructor
 public class TemporalConfig {
