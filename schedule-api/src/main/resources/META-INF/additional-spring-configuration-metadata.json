@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "temporal-properties.encryption.salt",
+      "type": "java.lang.String",
+      "description": "Encryption salt for temporal data converter."
+    },
+    {
+      "name": "temporal-properties.encryption.password",
+      "type": "java.lang.String",
+      "description": "Encryption password for temporal data converter."
+    }
+  ] }
