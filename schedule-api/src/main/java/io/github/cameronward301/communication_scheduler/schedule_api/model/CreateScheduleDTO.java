@@ -1,10 +1,7 @@
 package io.github.cameronward301.communication_scheduler.schedule_api.model;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +24,8 @@ public class CreateScheduleDTO {
     private boolean paused;
 
 
-    @Data
+    @Getter
     @AllArgsConstructor
-    @NoArgsConstructor
     public static class ScheduleCalendarSpecDTO {
         private List<ScheduleRangeDTO> seconds = new ArrayList<>();
         private List<ScheduleRangeDTO> minutes = new ArrayList<>();
@@ -40,18 +36,16 @@ public class CreateScheduleDTO {
         private List<ScheduleRangeDTO> dayOfWeek = new ArrayList<>();
     }
 
-    @Data
+    @Getter
     @AllArgsConstructor
-    @NoArgsConstructor
     public static class ScheduleRangeDTO {
         private int start;
         private int end;
         private int step;
     }
 
-    @Data
+    @Getter
     @AllArgsConstructor
-    @NoArgsConstructor
     public static class ScheduleIntervalSpecDTO {
         private String every;
         private String offset;

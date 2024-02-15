@@ -1,18 +1,15 @@
 package io.github.cameronward301.communication_scheduler.schedule_api.service;
 // Code adapted from: https://github.com/temporalio/samples-java/blob/main/core/src/main/java/io/temporal/samples/hello/HelloSchedules.java
 import io.github.cameronward301.communication_scheduler.schedule_api.exception.RequestException;
-import io.github.cameronward301.communication_scheduler.schedule_api.herlper.DtoConverter;
+import io.github.cameronward301.communication_scheduler.schedule_api.helper.ScheduleHelper;
 import io.github.cameronward301.communication_scheduler.schedule_api.model.*;
-import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.CommunicationWorkflow;
 import io.grpc.Status;
+import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;
-import io.temporal.client.WorkflowOptions;
 import io.temporal.client.schedules.*;
-import io.temporal.common.SearchAttributeKey;
-import io.temporal.common.SearchAttributes;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -20,33 +17,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Predicate;
+
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ScheduleService {
 
     private final ScheduleClient scheduleClient;
-
-    private final String taskQueue;
-
-    private final DtoConverter dtoConverter;
     private final ModelMapper modelMapper;
+    private final ScheduleHelper scheduleHelper;
 
-    public ScheduleService(
-            ScheduleClient scheduleClient,
-            @Value("${temporal-properties.taskQueue}") String taskQueue,
-            DtoConverter dtoConverter,
-            ModelMapper modelMapper
-    ) {
-        this.scheduleClient = scheduleClient;
-        this.taskQueue = taskQueue;
-        this.dtoConverter = dtoConverter;
-        this.modelMapper = modelMapper;
-    }
 
     public Page<ScheduleListDescription> getAllSchedules(
             String pageNumber,
@@ -57,7 +41,7 @@ public class ScheduleService {
         try {
             int pageNumberInt = Integer.parseInt(pageNumber);
             int pageSizeInt = Integer.parseInt(pageSize);
-            List<ScheduleListDescription> filteredSchedules = scheduleClient.listSchedules().filter(getStreamFilter(userId, gatewayId)).toList();
+            List<ScheduleListDescription> filteredSchedules = scheduleClient.listSchedules().filter(scheduleHelper.getStreamFilter(userId, gatewayId)).toList();
             int totalResults = filteredSchedules.size();
 
             return new PageImpl<>(filteredSchedules.stream().skip((long) pageNumberInt * pageSizeInt).limit(pageSizeInt).collect(Collectors.toList()), PageRequest.of(pageNumberInt, pageSizeInt), totalResults);
@@ -72,12 +56,12 @@ public class ScheduleService {
         createScheduleDTO.setScheduleId(UUID.randomUUID().toString());
         return modelMapper.map(scheduleClient.createSchedule(createScheduleDTO.getScheduleId(),
                 Schedule.newBuilder()
-                        .setState(getScheduleState(createScheduleDTO.isPaused()))
-                        .setSpec(getScheduleSpec(createScheduleDTO))
-                        .setAction(getScheduleAction(createScheduleDTO))
+                        .setState(scheduleHelper.getScheduleState(createScheduleDTO.isPaused()))
+                        .setSpec(scheduleHelper.getScheduleSpec(createScheduleDTO))
+                        .setAction(scheduleHelper.getScheduleAction(createScheduleDTO))
                         .build(),
                 ScheduleOptions.newBuilder()
-                        .setTypedSearchAttributes(getSearchAttributes(createScheduleDTO))
+                        .setTypedSearchAttributes(scheduleHelper.getSearchAttributes(createScheduleDTO))
                         .build()
                 ).describe(), ScheduleDescriptionDTO.class);
     }
@@ -92,13 +76,13 @@ public class ScheduleService {
                     (ScheduleUpdateInput existingSchedule) -> {
                         Schedule.Builder builder = Schedule.newBuilder(existingSchedule.getDescription().getSchedule());
 
-                        builder.setState(getScheduleState(scheduleDTO.isPaused()));
+                        builder.setState(scheduleHelper.getScheduleState(scheduleDTO.isPaused()));
 
                         if (scheduleDTO.getCalendar() != null || scheduleDTO.getInterval() != null || scheduleDTO.getCronExpression() != null) {
-                            builder.setSpec(getScheduleSpec(scheduleDTO));
+                            builder.setSpec(scheduleHelper.getScheduleSpec(scheduleDTO));
                         }
 
-                        builder.setAction(getScheduleAction(scheduleDTO));
+                        builder.setAction(scheduleHelper.getScheduleAction(scheduleDTO));
 
                         return new ScheduleUpdate(builder.build());
                     }
@@ -106,19 +90,15 @@ public class ScheduleService {
             return modelMapper.map(schedule.describe(), ScheduleDescriptionDTO.class);
 
         } catch (ScheduleException e) {
-            log.debug(e.getMessage());
-            if (Objects.equals(((StatusRuntimeException) e.getCause()).getStatus().getCode(), Status.NOT_FOUND.getCode())) {
-                throw new RequestException(format("Could not find Schedule with Id: %s", scheduleDTO.getScheduleId()), HttpStatus.NOT_FOUND);
-            }
-            throw new RuntimeException(e);
+            throw handleScheduleException(e, scheduleDTO.getScheduleId());
         }
     }
 
-    public UpdateDTO batchUpdateSchedules(Optional<String> userId, Optional<String> gatewayId, SchedulePatchDTO schedulePatchDTO) {
+    public ModifiedDTO batchUpdateSchedules(Optional<String> userId, Optional<String> gatewayId, SchedulePatchDTO schedulePatchDTO) {
         if (userId.isEmpty() && gatewayId.isEmpty()) {
             throw new RequestException("Must supply at least one of 'userId' or 'gatewayId' as a query parameter", HttpStatus.BAD_REQUEST);
         }
-        List<ScheduleListDescription> filteredSchedules = scheduleClient.listSchedules().filter(getStreamFilter(userId, gatewayId)).toList();
+        List<ScheduleListDescription> filteredSchedules = scheduleClient.listSchedules().filter(scheduleHelper.getStreamFilter(userId, gatewayId)).toList();
         for (ScheduleListDescription schedule: filteredSchedules) {
 
             String existingUserId = (String) ((List<?>) schedule.getSearchAttributes().get("userId")).get(0);
@@ -132,17 +112,17 @@ public class ScheduleService {
 
             //Get existing schedule details
             Schedule.Builder updatedSchedule = Schedule.newBuilder()
-                    .setState(getScheduleState(schedule.getSchedule().getState().isPaused()))
+                    .setState(scheduleHelper.getScheduleState(schedule.getSchedule().getState().isPaused()))
                     .setSpec(ScheduleSpec.newBuilder()
                             .setCronExpressions(schedule.getSchedule().getSpec().getCronExpressions())
                             .setIntervals(schedule.getSchedule().getSpec().getIntervals())
                             .setCalendars(schedule.getSchedule().getSpec().getCalendars())
                             .build())
-                    .setAction(getScheduleAction(scheduleDetails));
+                    .setAction(scheduleHelper.getScheduleAction(scheduleDetails));
 
             //Make updates if provided
             if (schedulePatchDTO.getPaused() != null) {
-                updatedSchedule.setState(getScheduleState(schedulePatchDTO.getPaused()));
+                updatedSchedule.setState(scheduleHelper.getScheduleState(schedulePatchDTO.getPaused()));
             }
 
             if (schedulePatchDTO.getGatewayId() != null ) {
@@ -154,15 +134,15 @@ public class ScheduleService {
             //Create new one with updated search attributes. Note that this may be possible to do with an Update in the future
             scheduleClient.createSchedule(schedule.getScheduleId(),
                     updatedSchedule.build(), ScheduleOptions.newBuilder()
-                            .setTypedSearchAttributes(getSearchAttributes(scheduleDetails))
+                            .setTypedSearchAttributes(scheduleHelper.getSearchAttributes(scheduleDetails))
                             .build()
                     );
 
         }
 
-        return UpdateDTO.builder()
+        return ModifiedDTO.builder()
                 .message("Completed")
-                .totalUpdated(filteredSchedules.size())
+                .totalModified(filteredSchedules.size())
                 .build();
 
     }
@@ -171,11 +151,7 @@ public class ScheduleService {
         try {
             return modelMapper.map(scheduleClient.getHandle(scheduleId).describe(), ScheduleDescriptionDTO.class);
         } catch (ScheduleException e) {
-            log.debug(e.getMessage());
-            if (Objects.equals(((StatusRuntimeException) e.getCause()).getStatus().getCode(), Status.NOT_FOUND.getCode())) {
-                throw new RequestException(format("Could not find Schedule with Id: %s", scheduleId), HttpStatus.NOT_FOUND);
-            }
-            throw new RuntimeException(e);
+            throw handleScheduleException(e, scheduleId);
         }
     }
 
@@ -183,94 +159,37 @@ public class ScheduleService {
         try {
             scheduleClient.getHandle(scheduleId).delete();
         } catch (ScheduleException e) {
-            log.debug(e.getMessage());
-            if (Objects.equals(((StatusRuntimeException) e.getCause()).getStatus().getCode(), Status.NOT_FOUND.getCode())) {
-                throw new RequestException(format("Could not find Schedule with Id: %s", scheduleId), HttpStatus.NOT_FOUND);
-            }
-            throw new RuntimeException(e);
+            throw handleScheduleException(e, scheduleId);
         }
     }
 
     public CountDTO getScheduleCount(Optional<String> userId, Optional<String> gatewayId) {
         return CountDTO.builder()
-                .total(scheduleClient.listSchedules().filter(getStreamFilter(userId, gatewayId)).count())
+                .total(scheduleClient.listSchedules().filter(scheduleHelper.getStreamFilter(userId, gatewayId)).count())
                 .build();
     }
 
-    public void deleteSchedulesByFilter(Optional<String> userId, Optional<String> gatewayId) {
+    public ModifiedDTO deleteSchedulesByFilter(Optional<String> userId, Optional<String> gatewayId) {
         if (userId.isEmpty() && gatewayId.isEmpty()) {
             throw new RequestException("Must provide at least one of 'gatewayId' or 'userId' filters", HttpStatus.BAD_REQUEST);
         }
-        List<ScheduleListDescription> filteredSchedules = scheduleClient.listSchedules().filter(getStreamFilter(userId, gatewayId)).toList();
+        List<ScheduleListDescription> filteredSchedules = scheduleClient.listSchedules().filter(scheduleHelper.getStreamFilter(userId, gatewayId)).toList();
         for (ScheduleListDescription schedule: filteredSchedules) {
             deleteScheduleById(schedule.getScheduleId());
         }
+        return ModifiedDTO.builder().message("Successfully Deleted").totalModified(filteredSchedules.size()).build();
     }
 
-    private ScheduleActionStartWorkflow getScheduleAction(CreateScheduleDTO createScheduleDTO) {
-        return ScheduleActionStartWorkflow.newBuilder()
-                .setWorkflowType(CommunicationWorkflow.class)
-                .setArguments(Map.of(
-                        "userId", createScheduleDTO.getUserId(),
-                        "gatewayId", createScheduleDTO.getGatewayId()
-                ))
-                .setOptions(WorkflowOptions.newBuilder()
-                        .setTaskQueue(taskQueue)
-                        .setTypedSearchAttributes(getSearchAttributes(createScheduleDTO))
-                        .setWorkflowId(
-                                format("%s:%s:%s:",
-                                        createScheduleDTO.getGatewayId(),
-                                        createScheduleDTO.getUserId(),
-                                        createScheduleDTO.getScheduleId()))
-                        .build())
-                .build();
-    }
-
-    private ScheduleState getScheduleState(boolean paused) {
-        return ScheduleState.newBuilder()
-                .setNote("")
-                .setPaused(paused)
-                .build();
-    }
-
-    private ScheduleSpec getScheduleSpec(CreateScheduleDTO createScheduleDTO) {
-        if (createScheduleDTO.getCalendar() != null) {
-            return ScheduleSpec.newBuilder()
-                    .setCalendars(List.of(dtoConverter.getCalendar(createScheduleDTO.getCalendar())))
-                    .build();
+    private RuntimeException handleScheduleException(ScheduleException e, String scheduleId) {
+        log.debug(e.getMessage());
+        Throwable cause = e.getCause();
+        if (cause instanceof StatusRuntimeException){
+            if (Objects.equals(((StatusRuntimeException) e.getCause()).getStatus().getCode(), Status.NOT_FOUND.getCode())) {
+                return new RequestException(format("Could not find Schedule with Id: %s", scheduleId), HttpStatus.NOT_FOUND);
+            }
         }
-        if (createScheduleDTO.getInterval() != null) {
-            return ScheduleSpec.newBuilder()
-                    .setIntervals(List.of(dtoConverter.getInterval(createScheduleDTO.getInterval())))
-                    .build();
-        }
-        if (!createScheduleDTO.getCronExpression().isEmpty()) {
-            return ScheduleSpec.newBuilder()
-                    .setCronExpressions(List.of(createScheduleDTO.getCronExpression()))
-                    .build();
-        }
-        throw new RequestException("Please provide exactly one schedule configuration, either: 'calendar', 'interval' or 'cronExpression'", HttpStatus.BAD_REQUEST);
+        return new RuntimeException(e);
     }
 
-    private SearchAttributes getSearchAttributes(CreateScheduleDTO createScheduleDTO) {
-        return SearchAttributes.newBuilder()
-                .set(SearchAttributeKey.forKeyword("userId"), createScheduleDTO.getUserId())
-                .set(SearchAttributeKey.forKeyword("gatewayId"), createScheduleDTO.getGatewayId())
-                .set(SearchAttributeKey.forKeyword("scheduleId"), createScheduleDTO.getScheduleId())
-                .build();
-    }
 
-    private Predicate<ScheduleListDescription> getStreamFilter (Optional<String> userId, Optional<String> gatewayId){
-        Predicate<ScheduleListDescription> predicate = scheduleListDescription -> true;
-
-        if (userId.isPresent()) {
-            predicate = predicate.and(scheduleListDescription -> Objects.equals(scheduleListDescription.getSearchAttributes().get("userId"), Collections.singletonList(userId.get())));
-        }
-
-        if (gatewayId.isPresent()){
-            predicate = predicate.and(scheduleListDescription -> Objects.equals(scheduleListDescription.getSearchAttributes().get("gatewayId"), Collections.singletonList(gatewayId.get())));
-        }
-
-        return predicate;
-    }
 }

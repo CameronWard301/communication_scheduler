@@ -55,7 +55,7 @@ public class ScheduleController {
 
     @PreAuthorize("hasAuthority('SCOPE_SCHEDULE:WRITE')")
     @PatchMapping
-    public ResponseEntity<UpdateDTO> batchUpdateSchedules(
+    public ResponseEntity<ModifiedDTO> batchUpdateSchedules(
             @RequestParam(value = "userId", required = false) Optional<String> userId,
             @RequestParam(value = "gatewayId", required = false) Optional<String> gatewayId,
             @Valid @RequestBody SchedulePatchDTO schedulePatchDTO,
@@ -81,12 +81,12 @@ public class ScheduleController {
 
     @PreAuthorize("hasAuthority('SCOPE_SCHEDULE:DELETE')")
     @DeleteMapping
-    public ResponseEntity<String> batchDeleteSchedules(
+    public ResponseEntity<ModifiedDTO> batchDeleteSchedules(
             @RequestParam(value = "userId", required = false) Optional<String> userId,
             @RequestParam(value = "gatewayId", required = false) Optional<String> gatewayId
     ) {
-        scheduleService.deleteSchedulesByFilter(userId, gatewayId);
-        return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(scheduleService.deleteSchedulesByFilter(userId, gatewayId));
     }
 
     @PreAuthorize("hasAuthority('SCOPE_SCHEDULE:READ')")

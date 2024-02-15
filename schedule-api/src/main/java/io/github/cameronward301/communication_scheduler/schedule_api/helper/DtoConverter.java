@@ -1,4 +1,4 @@
-package io.github.cameronward301.communication_scheduler.schedule_api.herlper;
+package io.github.cameronward301.communication_scheduler.schedule_api.helper;
 
 import io.github.cameronward301.communication_scheduler.schedule_api.exception.RequestException;
 import io.github.cameronward301.communication_scheduler.schedule_api.model.CreateScheduleDTO;
