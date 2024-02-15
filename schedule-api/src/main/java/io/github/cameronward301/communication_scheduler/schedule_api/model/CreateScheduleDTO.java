@@ -1,7 +1,10 @@
 package io.github.cameronward301.communication_scheduler.schedule_api.model;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,18 @@ public class CreateScheduleDTO {
 
     private boolean paused;
 
+    /**
+     * Only supply one type of way for the schedule to be created
+     *
+     * @return true if one schedule type has been set otherwise false
+     */
+    public boolean isInvalid() {
+        int count = 0;
+        if (calendar != null) count++;
+        if (interval != null) count++;
+        if (cronExpression != null) count++;
+        return count != 1;
+    }
 
     @Getter
     @AllArgsConstructor
@@ -49,18 +64,6 @@ public class CreateScheduleDTO {
     public static class ScheduleIntervalSpecDTO {
         private String every;
         private String offset;
-    }
-
-    /**
-     * Only supply one type of way for the schedule to be created
-     * @return true if one schedule type has been set otherwise false
-     */
-    public boolean isInvalid() {
-        int count = 0;
-        if (calendar != null) count ++;
-        if (interval != null) count ++;
-        if (cronExpression != null) count ++;
-        return count != 1;
     }
 
 

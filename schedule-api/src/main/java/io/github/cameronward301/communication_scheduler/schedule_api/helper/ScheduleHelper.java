@@ -84,14 +84,14 @@ public class ScheduleHelper {
                 .build();
     }
 
-    public Predicate<ScheduleListDescription> getStreamFilter (Optional<String> userId, Optional<String> gatewayId){
+    public Predicate<ScheduleListDescription> getStreamFilter(Optional<String> userId, Optional<String> gatewayId) {
         Predicate<ScheduleListDescription> predicate = scheduleListDescription -> true;
 
         if (userId.isPresent()) {
             predicate = predicate.and(scheduleListDescription -> Objects.equals(scheduleListDescription.getSearchAttributes().get("userId"), Collections.singletonList(userId.get())));
         }
 
-        if (gatewayId.isPresent()){
+        if (gatewayId.isPresent()) {
             predicate = predicate.and(scheduleListDescription -> Objects.equals(scheduleListDescription.getSearchAttributes().get("gatewayId"), Collections.singletonList(gatewayId.get())));
         }
 

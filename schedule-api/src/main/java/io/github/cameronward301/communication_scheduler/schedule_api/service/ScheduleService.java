@@ -1,10 +1,10 @@
 package io.github.cameronward301.communication_scheduler.schedule_api.service;
 // Code adapted from: https://github.com/temporalio/samples-java/blob/main/core/src/main/java/io/temporal/samples/hello/HelloSchedules.java
+
 import io.github.cameronward301.communication_scheduler.schedule_api.exception.RequestException;
 import io.github.cameronward301.communication_scheduler.schedule_api.helper.ScheduleHelper;
 import io.github.cameronward301.communication_scheduler.schedule_api.model.*;
 import io.grpc.Status;
-import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;
 import io.temporal.client.schedules.*;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -63,7 +65,7 @@ public class ScheduleService {
                 ScheduleOptions.newBuilder()
                         .setTypedSearchAttributes(scheduleHelper.getSearchAttributes(createScheduleDTO))
                         .build()
-                ).describe(), ScheduleDescriptionDTO.class);
+        ).describe(), ScheduleDescriptionDTO.class);
     }
 
     public ScheduleDescriptionDTO updateSchedule(CreateScheduleDTO scheduleDTO) {
@@ -99,7 +101,7 @@ public class ScheduleService {
             throw new RequestException("Must supply at least one of 'userId' or 'gatewayId' as a query parameter", HttpStatus.BAD_REQUEST);
         }
         List<ScheduleListDescription> filteredSchedules = scheduleClient.listSchedules().filter(scheduleHelper.getStreamFilter(userId, gatewayId)).toList();
-        for (ScheduleListDescription schedule: filteredSchedules) {
+        for (ScheduleListDescription schedule : filteredSchedules) {
 
             String existingUserId = (String) ((List<?>) schedule.getSearchAttributes().get("userId")).get(0);
             String existingGatewayId = (String) ((List<?>) schedule.getSearchAttributes().get("gatewayId")).get(0);
@@ -125,7 +127,7 @@ public class ScheduleService {
                 updatedSchedule.setState(scheduleHelper.getScheduleState(schedulePatchDTO.getPaused()));
             }
 
-            if (schedulePatchDTO.getGatewayId() != null ) {
+            if (schedulePatchDTO.getGatewayId() != null) {
                 scheduleDetails.setGatewayId(schedulePatchDTO.getGatewayId());
             }
             //Delete old schedule
@@ -136,7 +138,7 @@ public class ScheduleService {
                     updatedSchedule.build(), ScheduleOptions.newBuilder()
                             .setTypedSearchAttributes(scheduleHelper.getSearchAttributes(scheduleDetails))
                             .build()
-                    );
+            );
 
         }
 
@@ -174,7 +176,7 @@ public class ScheduleService {
             throw new RequestException("Must provide at least one of 'gatewayId' or 'userId' filters", HttpStatus.BAD_REQUEST);
         }
         List<ScheduleListDescription> filteredSchedules = scheduleClient.listSchedules().filter(scheduleHelper.getStreamFilter(userId, gatewayId)).toList();
-        for (ScheduleListDescription schedule: filteredSchedules) {
+        for (ScheduleListDescription schedule : filteredSchedules) {
             deleteScheduleById(schedule.getScheduleId());
         }
         return ModifiedDTO.builder().message("Successfully Deleted").totalModified(filteredSchedules.size()).build();
@@ -183,7 +185,7 @@ public class ScheduleService {
     private RuntimeException handleScheduleException(ScheduleException e, String scheduleId) {
         log.debug(e.getMessage());
         Throwable cause = e.getCause();
-        if (cause instanceof StatusRuntimeException){
+        if (cause instanceof StatusRuntimeException) {
             if (Objects.equals(((StatusRuntimeException) e.getCause()).getStatus().getCode(), Status.NOT_FOUND.getCode())) {
                 return new RequestException(format("Could not find Schedule with Id: %s", scheduleId), HttpStatus.NOT_FOUND);
             }

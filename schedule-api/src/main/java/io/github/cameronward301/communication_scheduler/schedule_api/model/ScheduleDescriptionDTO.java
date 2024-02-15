@@ -1,6 +1,8 @@
 package io.github.cameronward301.communication_scheduler.schedule_api.model;
 
-import io.temporal.client.schedules.*;
+import io.temporal.client.schedules.ScheduleInfo;
+import io.temporal.client.schedules.ScheduleSpec;
+import io.temporal.client.schedules.ScheduleState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .jwt(jwt -> jwt
                                 .jwtAuthenticationConverter(roleConverter())
                                 .decoder(jwtDecoder()))
-        );
+                );
         return httpSecurity.build();
     }
 

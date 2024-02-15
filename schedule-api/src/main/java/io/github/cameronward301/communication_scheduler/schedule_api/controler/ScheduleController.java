@@ -28,7 +28,7 @@ public class ScheduleController {
     @PostMapping
     public ResponseEntity<ScheduleDescriptionDTO> createSchedule(
             @Valid @RequestBody CreateScheduleDTO createScheduleDTO,
-            BindingResult bindingResult){
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new RequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -60,7 +60,7 @@ public class ScheduleController {
             @RequestParam(value = "gatewayId", required = false) Optional<String> gatewayId,
             @Valid @RequestBody SchedulePatchDTO schedulePatchDTO,
             BindingResult bindingResult
-            ) {
+    ) {
         if (bindingResult.hasErrors()) {
             throw new RequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -75,7 +75,7 @@ public class ScheduleController {
             @RequestParam(value = "pageSize", required = false, defaultValue = "25") String pageSize,
             @RequestParam(value = "userId", required = false) Optional<String> userId,
             @RequestParam(value = "gatewayId", required = false) Optional<String> gatewayId
-            ) {
+    ) {
         return ResponseEntity.ok(scheduleService.getAllSchedules(pageNumber, pageSize, userId, gatewayId));
     }
 
@@ -102,7 +102,7 @@ public class ScheduleController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(
             @PathVariable String id
-    ){
+    ) {
         scheduleService.deleteScheduleById(id);
         return ResponseEntity.noContent().build();
     }

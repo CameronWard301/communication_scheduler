@@ -24,7 +24,7 @@ public class TemporalConfig {
     private String namespace;
 
     @Bean
-    WorkflowServiceStubs workflowServiceStubs(){
+    WorkflowServiceStubs workflowServiceStubs() {
         return WorkflowServiceStubs.newLocalServiceStubs();
     }
 
@@ -40,7 +40,7 @@ public class TemporalConfig {
     }
 
     @Bean
-    ScheduleClient scheduleClient(WorkflowServiceStubs workflowServiceStubs){
+    ScheduleClient scheduleClient(WorkflowServiceStubs workflowServiceStubs) {
         return ScheduleClient.newInstance(workflowServiceStubs);
     }
 

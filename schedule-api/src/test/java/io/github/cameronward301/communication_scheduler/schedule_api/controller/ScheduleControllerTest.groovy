@@ -2,21 +2,10 @@ package io.github.cameronward301.communication_scheduler.schedule_api.controller
 
 import io.github.cameronward301.communication_scheduler.schedule_api.controler.ScheduleController
 import io.github.cameronward301.communication_scheduler.schedule_api.exception.RequestException
-import io.github.cameronward301.communication_scheduler.schedule_api.model.CountDTO
-import io.github.cameronward301.communication_scheduler.schedule_api.model.CreateScheduleDTO
-import io.github.cameronward301.communication_scheduler.schedule_api.model.ModifiedDTO
-import io.github.cameronward301.communication_scheduler.schedule_api.model.ScheduleDescriptionDTO
-import io.github.cameronward301.communication_scheduler.schedule_api.model.SchedulePatchDTO
+import io.github.cameronward301.communication_scheduler.schedule_api.model.*
 import io.github.cameronward301.communication_scheduler.schedule_api.service.ScheduleService
 import io.temporal.api.common.v1.Payload
-import io.temporal.client.schedules.ScheduleInfo
-import io.temporal.client.schedules.ScheduleListActionStartWorkflow
-import io.temporal.client.schedules.ScheduleListDescription
-import io.temporal.client.schedules.ScheduleListInfo
-import io.temporal.client.schedules.ScheduleListSchedule
-import io.temporal.client.schedules.ScheduleListState
-import io.temporal.client.schedules.ScheduleSpec
-import io.temporal.client.schedules.ScheduleState
+import io.temporal.client.schedules.*
 import io.temporal.common.converter.DefaultDataConverter
 import org.springframework.data.domain.PageImpl
 import org.springframework.http.HttpStatus
@@ -25,7 +14,6 @@ import org.springframework.validation.FieldError
 import spock.lang.Specification
 
 import java.time.Instant
-
 
 class ScheduleControllerTest extends Specification {
     private ScheduleController scheduleController
@@ -304,7 +292,7 @@ class ScheduleControllerTest extends Specification {
                                 .build())
                         .build()
         )
-        dto.setInfo(new ScheduleInfo(0, 0, 0,[],[],[], Instant.now(), null))
+        dto.setInfo(new ScheduleInfo(0, 0, 0, [], [], [], Instant.now(), null))
 
         and:
         service.getScheduleById(id) >> dto
