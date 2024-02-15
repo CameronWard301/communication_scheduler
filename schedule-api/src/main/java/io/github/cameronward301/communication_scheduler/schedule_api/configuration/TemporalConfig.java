@@ -7,6 +7,7 @@ import io.temporal.client.schedules.ScheduleClient;
 import io.temporal.common.converter.CodecDataConverter;
 import io.temporal.common.converter.DefaultDataConverter;
 import io.temporal.serviceclient.WorkflowServiceStubs;
+import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -27,8 +28,10 @@ public class TemporalConfig {
     private String namespace;
 
     @Bean
-    WorkflowServiceStubs workflowServiceStubs() {
-        return WorkflowServiceStubs.newLocalServiceStubs();
+    WorkflowServiceStubs workflowServiceStubs(@Value("${temporal-properties.endpoint}") String endpoint) {
+        return WorkflowServiceStubs.newServiceStubs(WorkflowServiceStubsOptions.newBuilder()
+                        .setTarget(endpoint)
+                .build());
     }
 
     @Bean

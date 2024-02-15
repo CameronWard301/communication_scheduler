@@ -31,6 +31,7 @@ class ScheduleHelperTest extends Specification {
         then:
         result.getCalendars() != null
         result.getCalendars().get(0) == dtoConverter.getCalendar(scheduleDto.getCalendar())
+        result.getCalendars().get(0).getYear().get(0).getStart() == 1
     }
 
     def "Should get schedule spec with interval"() {

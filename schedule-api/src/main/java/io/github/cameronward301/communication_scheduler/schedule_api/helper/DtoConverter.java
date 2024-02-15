@@ -31,6 +31,7 @@ public class DtoConverter {
                 .setHour(getScheduleRange(calendarSpecDTO.getHour()))
                 .setMinutes(getScheduleRange(calendarSpecDTO.getMinutes()))
                 .setMonth(getScheduleRange(calendarSpecDTO.getMonth()))
+                .setYear(getScheduleRange(calendarSpecDTO.getYear()))
                 .setDayOfWeek(getScheduleRange(calendarSpecDTO.getDayOfWeek()))
                 .setDayOfMonth(getScheduleRange(calendarSpecDTO.getDayOfMonth()))
                 .setComment("")
