@@ -1,1 +1,2 @@
-api.verify-hostnames: false
+api:
+  verify-hostnames: false

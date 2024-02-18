@@ -1,0 +1,21 @@
+schedule:
+  verify-hostnames: ${VERIFY_HOSTNAMES:true}
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${JWKS_URI:https://localhost:53655/auth/.well-known/jwks.json}
+
+temporal-properties:
+  namespace: ${TEMPORAL_NAMESPACE:default}
+  taskQueue: ${TEMPORAL_TASK_QUEUE:communication-workflow}
+  endpoint: ${TEMPORAL_ENDPOINT:localhost:7233}
+  encryption:
+    password: ${ENCRYPTION_PASSWORD:changeme}
+    salt: ${ENCRYPTION_SALT:4573c195d6593c}
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL:info}

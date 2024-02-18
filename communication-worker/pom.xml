@@ -21,7 +21,7 @@
         <dependency>
             <groupId>io.github.cameronward301.communication_scheduler.workflows</groupId>
             <artifactId>communication_workflow</artifactId>
-            <version>0.17.2</version>
+            <version>0.18.0</version>
         </dependency>
 
         <dependency>

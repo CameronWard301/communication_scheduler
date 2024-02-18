@@ -13,6 +13,7 @@ on:
       - preferences-api/**
       - data-converter-api/**
       - mock-gateway/**
+      - schedule-api/**
       - .github/workflows/build-containers.yml
     branches:
       - "**"
@@ -30,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        container: ["communication-worker", "email-gateway", "sms-gateway", "gateway-api", "preferences-api", "auth-api", "data-converter-api", "mock-gateway"]
+        container: ["communication-worker", "email-gateway", "sms-gateway", "gateway-api", "preferences-api", "auth-api", "data-converter-api", "mock-gateway", "schedule-api"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4

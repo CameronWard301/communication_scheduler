@@ -31,6 +31,9 @@ preferences-api:
 data-converter-api:
   address: ${DATA_CONVERTER_API_ADDRESS:http://localhost:63458/codec}
 
+schedule-api:
+  address: ${SCHEDULE_API_ADDRESS:https://localhost:53286/schedule}
+
 gateway-api:
   address: ${GATEWAY_API_ADDRESS:https://localhost:64854/gateway}
   entity:
