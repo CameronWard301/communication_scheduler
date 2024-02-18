@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>integration-tests</artifactId>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
     <name>integration-tests</name>
     <description>integration-tests</description>
     <properties>
@@ -70,6 +70,13 @@
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-spring</artifactId>
             <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.0.0</version>
             <scope>test</scope>
         </dependency>
 
