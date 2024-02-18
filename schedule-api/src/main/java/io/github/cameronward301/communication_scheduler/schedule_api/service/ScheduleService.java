@@ -61,9 +61,6 @@ public class ScheduleService {
         }
     }
 
-    // At least one of schedules will not be null, todo update this
-    // Creates workflow with ID format
-
     /**
      * Creates a new schedule from the request DTO
      * Schedule will create workflows with the id: GATEWAY_ID:USER_ID:SCHEDULE_ID:<scheduleTime>
@@ -87,7 +84,8 @@ public class ScheduleService {
     }
 
     /**
-     * Update a given schedule from a dto
+     * Update a given schedule from a dto. Removes the old schedule and creates a new schedule to update the search attributes
+     * It may be possible to update schedule search attributes in a future temporal SDK version
      *
      * @param scheduleDTO to update (contains the existing schedule ID)
      * @return the updated schedule result
@@ -97,23 +95,34 @@ public class ScheduleService {
             throw new RequestException("Please provide a 'scheduleId' in the request body to update a schedule", HttpStatus.BAD_REQUEST);
         }
         try {
-            ScheduleHandle schedule = scheduleClient.getHandle(scheduleDTO.getScheduleId());
-            schedule.update(
-                    (ScheduleUpdateInput existingSchedule) -> {
-                        Schedule.Builder builder = Schedule.newBuilder(existingSchedule.getDescription().getSchedule());
+            ScheduleDescription schedule = scheduleClient.getHandle(scheduleDTO.getScheduleId()).describe();
 
-                        builder.setState(scheduleHelper.getScheduleState(scheduleDTO.isPaused()));
+            Schedule.Builder updatedSchedule = Schedule.newBuilder(schedule.getSchedule());
 
-                        if (scheduleDTO.getCalendar() != null || scheduleDTO.getInterval() != null || scheduleDTO.getCronExpression() != null) {
-                            builder.setSpec(scheduleHelper.getScheduleSpec(scheduleDTO));
-                        }
+            updatedSchedule.setState(scheduleHelper.getScheduleState(scheduleDTO.isPaused()));
 
-                        builder.setAction(scheduleHelper.getScheduleAction(scheduleDTO));
+            if (scheduleDTO.getCalendar() != null || scheduleDTO.getInterval() != null || scheduleDTO.getCronExpression() != null) {
+                updatedSchedule.setSpec(scheduleHelper.getScheduleSpec(scheduleDTO));
+            }
 
-                        return new ScheduleUpdate(builder.build());
-                    }
-            );
-            return modelMapper.map(schedule.describe(), ScheduleDescriptionDTO.class);
+            updatedSchedule.setAction(scheduleHelper.getScheduleAction(scheduleDTO));
+
+
+            //Check that the new schedule is valid and then delete it
+            scheduleClient.createSchedule(schedule.getId()+"temp",
+                    updatedSchedule.build(), ScheduleOptions.newBuilder()
+                            .setTypedSearchAttributes(scheduleHelper.getSearchAttributes(scheduleDTO))
+                            .build()).delete();
+
+            //Delete old schedule
+            scheduleClient.getHandle(schedule.getId()).delete();
+
+            //Create new one with updated search attributes. Note that this may be possible to do with an Update in future temporal SDK versions
+            return modelMapper.map(scheduleClient.createSchedule(schedule.getId(),
+                    updatedSchedule.build(), ScheduleOptions.newBuilder()
+                            .setTypedSearchAttributes(scheduleHelper.getSearchAttributes(scheduleDTO))
+                            .build()
+            ).describe(), ScheduleDescriptionDTO.class);
 
         } catch (ScheduleException e) {
             throw handleScheduleException(e, scheduleDTO.getScheduleId());
