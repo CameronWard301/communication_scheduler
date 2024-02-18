@@ -140,6 +140,7 @@ class ScheduleServiceTest extends Specification {
         and: "Schedule handle"
         def scheduleHandle = getScheduleHandle(scheduleDto)
         scheduleClient.getHandle(id) >> scheduleHandle
+        scheduleClient.createSchedule(_ as String, _ as Schedule, _ as ScheduleOptions) >> scheduleHandle
 
 
         when: "Calling update"
