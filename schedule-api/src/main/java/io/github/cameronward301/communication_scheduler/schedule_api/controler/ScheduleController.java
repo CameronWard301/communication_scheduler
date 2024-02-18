@@ -45,7 +45,7 @@ public class ScheduleController {
         if (createScheduleDTO.isInvalid()) {
             throw new RequestException("Please provide exactly one schedule configuration, either: 'calendar', 'interval' or 'cronExpression'", HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(scheduleService.createSchedule(createScheduleDTO));
+        return new ResponseEntity<>(scheduleService.createSchedule(createScheduleDTO), HttpStatus.CREATED);
     }
 
     /**
