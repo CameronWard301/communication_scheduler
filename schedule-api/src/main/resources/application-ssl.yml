@@ -1,0 +1,8 @@
+server:
+  ssl:
+    key-store: ${SCHEDULE_API_SSL_KEY_STORE:classpath:keystore/schedule-api.p12}
+    key-store-password: ${SCHEDULE_API_SSL_KEY_STORE_PASSWORD}
+    key-store-type: PKCS12
+    enabled: true
+    key-alias: schedule-api
+    key-password: ${SCHEDULE_API_SSL_KEY_STORE_PASSWORD}

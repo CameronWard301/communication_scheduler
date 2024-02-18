@@ -111,12 +111,22 @@ data_converter_api:
   tag: latest
   loggingLevel: INFO
 
+schedule_api:
+  repository: cameronward/schedule-api
+  tag: latest
+  loggingLevel: info
+  keyStorePath: /certs/schedule-api.p12
+  profile: ssl
+  temporalNamespace: default
+  verifyHostnames: false
+
+
 integration_tests:
   repository: cameronward/cs-integration-tests
   tag: latest
   temporalNamespace: default
   kubernetesNamespace: default
-  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI or @MockGateway"
+  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI or @MockGateway or @ScheduleAPI"
 
 PreferencesDefaults:
   GatewayTimeoutSeconds: "60"

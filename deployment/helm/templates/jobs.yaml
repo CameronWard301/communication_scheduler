@@ -72,6 +72,9 @@ spec:
         - name: wait-for-preferences-api
           image: busybox
           command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-preferences-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for preferences api; sleep 2; done;' ]
+        - name: wait-for-schedule-api
+          image: busybox
+          command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-schedule-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for schedule api; sleep 2; done;' ]
 
       restartPolicy: Never
   backoffLimit: 0
