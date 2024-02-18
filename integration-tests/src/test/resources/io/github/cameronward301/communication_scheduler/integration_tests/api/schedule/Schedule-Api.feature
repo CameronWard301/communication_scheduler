@@ -93,8 +93,8 @@ Feature: Schedule API Scenarios
 
   Scenario: User creates a new schedule with cron
     Given I have a schedule with the following details:
-      | gatewayId  | userId  | paused | cron         |
-      | my gateway | my user | false  | * * * * MON|
+      | gatewayId  | userId  | paused | cron        |
+      | my gateway | my user | false  | * * * * MON |
     And I have a bearer token with the "SCHEDULE:WRITE" scope
     When I create the schedule
     Then the new or updated schedule is returned with status code of 201
@@ -102,7 +102,7 @@ Feature: Schedule API Scenarios
 
   Scenario: User creates a new schedule with invalid cron
     Given I have a schedule with the following details:
-      | gatewayId  | userId  | paused | cron       |
+      | gatewayId  | userId  | paused | cron  |
       | my gateway | my user | false  | hello |
     And I have a bearer token with the "SCHEDULE:WRITE" scope
     When I create the schedule
@@ -154,7 +154,7 @@ Feature: Schedule API Scenarios
   Scenario: User updates an existing schedule with calendar and pauses
     Given I have a schedule with the following details:
       | gatewayId  | userId  | paused | calendar   |
-      | my gateway | my user | true  | every year |
+      | my gateway | my user | true   | every year |
     And I have a bearer token with the "SCHEDULE:WRITE" scope
     When I update the schedule
     Then the new or updated schedule is returned with status code of 200
@@ -163,8 +163,8 @@ Feature: Schedule API Scenarios
   @RemoveSchedule
   Scenario: User updates an existing schedule with cron string
     Given I have a schedule with the following details:
-      | gatewayId  | userId  | paused | cron   |
-      | my gateway | my user | true  | * * 10 * MON |
+      | gatewayId  | userId  | paused | cron         |
+      | my gateway | my user | true   | * * 10 * MON |
     And I have a bearer token with the "SCHEDULE:WRITE" scope
     When I update the schedule
     Then the new or updated schedule is returned with status code of 200
@@ -205,8 +205,8 @@ Feature: Schedule API Scenarios
 
   Scenario: User updates an existing schedule without providing a schedule id
     Given I have a schedule with the following details:
-      | scheduleId | gatewayId  | userId  | paused |      cron   |
-      | null       | my gateway | my user | true  | * * 10 * MON |
+      | scheduleId | gatewayId  | userId  | paused | cron         |
+      | null       | my gateway | my user | true   | * * 10 * MON |
     And I have a bearer token with the "SCHEDULE:WRITE" scope
     When I update the schedule
     Then the response code is 400 and message: "400 : \"Please provide a 'scheduleId' in the request body to update a schedule\""
@@ -215,16 +215,16 @@ Feature: Schedule API Scenarios
   @RemoveSchedule
   Scenario: User updates an existing schedule with an unknown id
     Given I have a schedule with the following details:
-      | scheduleId | gatewayId  | userId  | paused |      cron   |
-      | test-123   | my gateway | my user | true  | * * 10 * MON |
+      | scheduleId | gatewayId  | userId  | paused | cron         |
+      | test-123   | my gateway | my user | true   | * * 10 * MON |
     And I have a bearer token with the "SCHEDULE:WRITE" scope
     When I update the schedule
     Then the response code is 404 and message: "404 : \"Could not find Schedule with Id: test-123\""
 
   Scenario: User updates a schedule with wrong scope
     Given I have a schedule with the following details:
-      | scheduleId | gatewayId  | userId  | paused |      cron   |
-      | test-123   | my gateway | my user | true  | * * 10 * MON |
+      | scheduleId | gatewayId  | userId  | paused | cron         |
+      | test-123   | my gateway | my user | true   | * * 10 * MON |
     And I have a bearer token with the "SCHEDULE:READ" scope
     When I update the schedule
     Then the response code is 403 and message: "403 : [no body]"
@@ -244,8 +244,8 @@ Feature: Schedule API Scenarios
     Given I have a bearer token with the "SCHEDULE:WRITE" scope
     And I set the userId filter to be: "user1"
     And I have the following patch DTO:
-     | paused |
-     | true   |
+      | paused |
+      | true   |
     When I batch update existing schedules
     Then a modified DTO is returned with status 200 and message "Completed" and totalModified is 1
 
@@ -256,8 +256,8 @@ Feature: Schedule API Scenarios
     Given I have a bearer token with the "SCHEDULE:WRITE" scope
     And I set the gatewayId filter to be: "gateway3"
     And I have the following patch DTO:
-      | gatewayId |
-      | test-gateway-update   |
+      | gatewayId           |
+      | test-gateway-update |
     When I batch update existing schedules
     Then a modified DTO is returned with status 200 and message "Completed" and totalModified is 1
 
@@ -268,24 +268,24 @@ Feature: Schedule API Scenarios
     And I set the gatewayId filter to be: "gateway1"
     And I set the userId filter to be: "user1"
     And I have the following patch DTO:
-      | gatewayId             | paused |
-      | test-gateway-update   | true   |
+      | gatewayId           | paused |
+      | test-gateway-update | true   |
     When I batch update existing schedules
     Then a modified DTO is returned with status 200 and message "Completed" and totalModified is 1
 
   Scenario: User updates multiple schedules without specifying a filter should throw error
     Given I have a bearer token with the "SCHEDULE:WRITE" scope
     And I have the following patch DTO:
-      | gatewayId             | paused |
-      | test-gateway-update   | true   |
+      | gatewayId           | paused |
+      | test-gateway-update | true   |
     When I batch update existing schedules
     Then the response code is 400 and message: "400 : \"Must supply at least one of 'userId' or 'gatewayId' as a query parameter\""
 
   Scenario: User updates a schedule with wrong scope
     Given I have a bearer token with the "SCHEDULE:READ" scope
     And I have the following patch DTO:
-      | gatewayId             | paused |
-      | test-gateway-update   | true   |
+      | gatewayId           | paused |
+      | test-gateway-update | true   |
     When I batch update existing schedules
     Then the response code is 403 and message: "403 : [no body]"
 

@@ -3,7 +3,6 @@ package io.github.cameronward301.communication_scheduler.integration_tests.model
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
-import io.cucumber.cienvironment.internal.com.eclipsesource.json.Json;
 import io.temporal.client.schedules.ScheduleListDescription;
 import lombok.Data;
 import lombok.NoArgsConstructor;

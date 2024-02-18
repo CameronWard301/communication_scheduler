@@ -1,6 +1,9 @@
 package io.github.cameronward301.communication_scheduler.integration_tests.model.schedule;
 
-import io.temporal.client.schedules.*;
+import io.temporal.client.schedules.ScheduleCalendarSpec;
+import io.temporal.client.schedules.ScheduleInfo;
+import io.temporal.client.schedules.ScheduleIntervalSpec;
+import io.temporal.client.schedules.ScheduleState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,7 +37,7 @@ public class ScheduleDescriptionDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ScheduleSpecDTO  {
+    public static class ScheduleSpecDTO {
         private List<CreateScheduleDTO.ScheduleCalendarSpecDTO> calendars;
         private List<ScheduleIntervalSpec> intervals;
         private List<String> cronExpressions;

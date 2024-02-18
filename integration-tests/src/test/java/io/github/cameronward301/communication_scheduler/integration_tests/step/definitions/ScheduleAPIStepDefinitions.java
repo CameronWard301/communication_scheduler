@@ -68,7 +68,7 @@ public class ScheduleAPIStepDefinitions {
                 .userId(schedule.asMaps().get(0).get("userId"))
                 .build();
         if (schedule.asMaps().get(0).get("calendar") != null) {
-            createScheduleRequest.setCalendar(getCalendarSpecDTO(schedule.asMaps().get(0).get("calendar") ));
+            createScheduleRequest.setCalendar(getCalendarSpecDTO(schedule.asMaps().get(0).get("calendar")));
         }
         if (schedule.asMaps().get(0).get("interval") != null) {
             createScheduleRequest.setInterval(getIntervalSpecDTo(schedule.asMaps().get(0).get("interval")));
@@ -76,7 +76,7 @@ public class ScheduleAPIStepDefinitions {
         if (schedule.asMaps().get(0).get("cron") != null) {
             createScheduleRequest.setCronExpression(schedule.asMaps().get(0).get("cron"));
         }
-        if (schedule.asMaps().get(0).get("scheduleId") != null){
+        if (schedule.asMaps().get(0).get("scheduleId") != null) {
             if (!Objects.equals(schedule.asMaps().get(0).get("scheduleId"), "null")) {
                 createScheduleRequest.setScheduleId(schedule.asMaps().get(0).get("scheduleId"));
             }
@@ -84,6 +84,7 @@ public class ScheduleAPIStepDefinitions {
             createScheduleRequest.setScheduleId(scheduleEntity.getScheduleId());
         }
     }
+
     @And("I set the pageSize to be {string}")
     public void iSetThePageSizeToBe(String pageSize) {
         this.pageSize = pageSize;
@@ -239,6 +240,7 @@ public class ScheduleAPIStepDefinitions {
             assertEquals(scheduleEntity.getSchedule().getSpec().getCronExpressions(), responseResponseEntity.getBody().getSchedule().getSpec().getCronExpressions());
         }
     }
+
     @Then("a modified DTO is returned with status {int} and message {string} and totalModified is {int}")
     public void aModifiedDTOIsReturnedWithStatusAndMessageAndTotalModifiedIs(int status, String message, int totalModified) {
         assertEquals(status, modifiedDTOResponseEntity.getStatusCode().value());
@@ -250,7 +252,7 @@ public class ScheduleAPIStepDefinitions {
     public void theNewScheduleIsReturnedWithStatusCodeOf(int status) {
         assertEquals(status, responseResponseEntity.getStatusCode().value());
         assertEquals(createScheduleRequest.isPaused(), Objects.requireNonNull(responseResponseEntity.getBody()).getSchedule().getState().isPaused());
-        assertEquals(createScheduleRequest.getUserId(),    Objects.requireNonNull(responseResponseEntity.getBody()).getSearchAttributes().get("userId").get(0));
+        assertEquals(createScheduleRequest.getUserId(), Objects.requireNonNull(responseResponseEntity.getBody()).getSearchAttributes().get("userId").get(0));
         assertEquals(createScheduleRequest.getGatewayId(), responseResponseEntity.getBody().getSearchAttributes().get("gatewayId").get(0));
         assertNotNull(responseResponseEntity.getBody().getSearchAttributes().get("scheduleId").get(0));
         assertNotNull(responseResponseEntity.getBody().getId());
@@ -282,8 +284,6 @@ public class ScheduleAPIStepDefinitions {
     public void theTestFrameworkRemovesTheSchedule() {
         scheduleClient.getHandle(Objects.requireNonNull(responseResponseEntity.getBody()).getId()).delete();
     }
-
-
 
 
     private CreateScheduleDTO.ScheduleIntervalSpecDTO getIntervalSpecDTo(String interval) {

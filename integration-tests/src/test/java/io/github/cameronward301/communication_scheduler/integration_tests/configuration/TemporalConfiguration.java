@@ -53,7 +53,7 @@ public class TemporalConfiguration {
     }
 
     @Bean
-    public List<ScheduleEntity> scheduleEntities(){
+    public List<ScheduleEntity> scheduleEntities() {
         List<ScheduleEntity> scheduleEntities = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             String userId;
@@ -65,7 +65,7 @@ public class TemporalConfiguration {
                 userId = "user2";
             }
 
-            if (i < 1){
+            if (i < 1) {
                 gatewayId = "gateway1";
             } else if (i < 2) {
                 gatewayId = "gateway2";
@@ -73,42 +73,42 @@ public class TemporalConfiguration {
                 gatewayId = "gateway3";
             }
             scheduleEntities.add(ScheduleEntity.builder()
-                            .scheduleId(scheduleId)
-                            .schedule(Schedule.newBuilder()
-                                    .setState(ScheduleState.newBuilder()
-                                            .setPaused(false)
-                                            .build())
-                                    .setSpec(ScheduleSpec.newBuilder()
-                                            .setIntervals(List.of(new ScheduleIntervalSpec(Duration.parse("PT2H"), Duration.ZERO)))
-                                            .build())
-                                    .setAction(ScheduleActionStartWorkflow.newBuilder()
-                                            .setWorkflowType(CommunicationWorkflow.class)
-                                            .setArguments(Map.of(
-                                                    "userId", userId,
-                                                    "gatewayId", gatewayId
-                                            ))
-                                            .setOptions(WorkflowOptions.newBuilder()
-                                                    .setTaskQueue("test-queue")
-                                                    .setWorkflowExecutionTimeout(Duration.ofSeconds(1))
-                                                    .setTypedSearchAttributes(getSearchAttributes(userId, gatewayId, scheduleId))
-                                                    .setWorkflowId(
-                                                            format("%s:%s:%s:",
-                                                                    gatewayId,
-                                                                    userId,
-                                                                    scheduleId))
-                                                    .build())
+                    .scheduleId(scheduleId)
+                    .schedule(Schedule.newBuilder()
+                            .setState(ScheduleState.newBuilder()
+                                    .setPaused(false)
+                                    .build())
+                            .setSpec(ScheduleSpec.newBuilder()
+                                    .setIntervals(List.of(new ScheduleIntervalSpec(Duration.parse("PT2H"), Duration.ZERO)))
+                                    .build())
+                            .setAction(ScheduleActionStartWorkflow.newBuilder()
+                                    .setWorkflowType(CommunicationWorkflow.class)
+                                    .setArguments(Map.of(
+                                            "userId", userId,
+                                            "gatewayId", gatewayId
+                                    ))
+                                    .setOptions(WorkflowOptions.newBuilder()
+                                            .setTaskQueue("test-queue")
+                                            .setWorkflowExecutionTimeout(Duration.ofSeconds(1))
+                                            .setTypedSearchAttributes(getSearchAttributes(userId, gatewayId, scheduleId))
+                                            .setWorkflowId(
+                                                    format("%s:%s:%s:",
+                                                            gatewayId,
+                                                            userId,
+                                                            scheduleId))
                                             .build())
                                     .build())
-                            .scheduleOptions( ScheduleOptions.newBuilder()
-                                    .setTypedSearchAttributes(getSearchAttributes(userId, gatewayId, scheduleId))
-                                    .build())
+                            .build())
+                    .scheduleOptions(ScheduleOptions.newBuilder()
+                            .setTypedSearchAttributes(getSearchAttributes(userId, gatewayId, scheduleId))
+                            .build())
                     .build());
         }
         return scheduleEntities;
     }
 
     @Bean
-    public ScheduleEntity scheduleEntity(){
+    public ScheduleEntity scheduleEntity() {
         String userId = "user1";
         String gatewayId = "gateway1";
         String scheduleId = UUID.randomUUID().toString();
@@ -138,7 +138,7 @@ public class TemporalConfiguration {
                                         .build())
                                 .build())
                         .build())
-                .scheduleOptions( ScheduleOptions.newBuilder()
+                .scheduleOptions(ScheduleOptions.newBuilder()
                         .setTypedSearchAttributes(getSearchAttributes(userId, gatewayId, scheduleId))
                         .build())
                 .build();
@@ -146,7 +146,7 @@ public class TemporalConfiguration {
 
     private SearchAttributes getSearchAttributes(String userId, String gatewayId, String scheduleId) {
         return SearchAttributes.newBuilder()
-                .set(SearchAttributeKey.forKeyword("userId"),userId)
+                .set(SearchAttributeKey.forKeyword("userId"), userId)
                 .set(SearchAttributeKey.forKeyword("gatewayId"), gatewayId)
                 .set(SearchAttributeKey.forKeyword("scheduleId"), scheduleId)
                 .build();

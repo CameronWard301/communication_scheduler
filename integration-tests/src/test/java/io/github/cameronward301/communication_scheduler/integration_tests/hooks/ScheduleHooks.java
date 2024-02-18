@@ -3,7 +3,8 @@ package io.github.cameronward301.communication_scheduler.integration_tests.hooks
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.github.cameronward301.communication_scheduler.integration_tests.model.schedule.ScheduleEntity;
-import io.temporal.client.schedules.*;
+import io.temporal.client.schedules.ScheduleClient;
+import io.temporal.client.schedules.ScheduleException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -32,7 +33,7 @@ public class ScheduleHooks {
 
     @Before("@CreateMultipleSchedules")
     public void createSchedules() {
-        for (ScheduleEntity schedule : createdSchedules){
+        for (ScheduleEntity schedule : createdSchedules) {
             String id = "integration-test-" + UUID.randomUUID();
             scheduleIds.add(id);
             scheduleClient.createSchedule(id, schedule.getSchedule(), schedule.getScheduleOptions()).describe();
@@ -45,7 +46,7 @@ public class ScheduleHooks {
     }
 
     @After("@RemoveMultipleSchedules")
-    public void removeSchedules(){
+    public void removeSchedules() {
         for (String scheduleId : scheduleIds) {
             try {
                 scheduleClient.getHandle(scheduleId).delete();
