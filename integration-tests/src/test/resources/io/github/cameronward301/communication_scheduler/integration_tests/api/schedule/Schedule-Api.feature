@@ -13,16 +13,16 @@ Feature: Schedule API Scenarios
   Scenario: Get all schedules with no filters
     Given I have a bearer token with the "SCHEDULE:READ" scope
     When I get all schedules
-    Then I receive a page of schedules with 10 items with status code 200
+    Then I receive a page of schedules with 3 items with status code 200
 
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Get all schedules with no filters adjusting page size
     Given I set the pageSize to be "2"
-    And I set the pageNumber to be "2"
+    And I set the pageNumber to be "1"
     Given I have a bearer token with the "SCHEDULE:READ" scope
     When I get all schedules
-    Then I receive a page of schedules with 2 items with status code 200
+    Then I receive a page of schedules with 1 items with status code 200
 
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
@@ -31,7 +31,7 @@ Feature: Schedule API Scenarios
     And I set the userId filter to be: "user1"
     And I have a bearer token with the "SCHEDULE:READ" scope
     When I get all schedules
-    Then I receive a page of schedules with 2 items with status code 200
+    Then I receive a page of schedules with 1 items with status code 200
 
   Scenario: User gets all schedules with wrong scope
     Given I have a bearer token with the "SCHEDULE:WRITE" scope
@@ -247,7 +247,7 @@ Feature: Schedule API Scenarios
      | paused |
      | true   |
     When I batch update existing schedules
-    Then a modified DTO is returned with status 200 and message "Completed" and totalModified is 5
+    Then a modified DTO is returned with status 200 and message "Completed" and totalModified is 1
 
 
   @CreateMultipleSchedules
@@ -259,7 +259,7 @@ Feature: Schedule API Scenarios
       | gatewayId |
       | test-gateway-update   |
     When I batch update existing schedules
-    Then a modified DTO is returned with status 200 and message "Completed" and totalModified is 5
+    Then a modified DTO is returned with status 200 and message "Completed" and totalModified is 1
 
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
@@ -271,7 +271,7 @@ Feature: Schedule API Scenarios
       | gatewayId             | paused |
       | test-gateway-update   | true   |
     When I batch update existing schedules
-    Then a modified DTO is returned with status 200 and message "Completed" and totalModified is 2
+    Then a modified DTO is returned with status 200 and message "Completed" and totalModified is 1
 
   Scenario: User updates multiple schedules without specifying a filter should throw error
     Given I have a bearer token with the "SCHEDULE:WRITE" scope
@@ -305,15 +305,15 @@ Feature: Schedule API Scenarios
     Given I set the gatewayId filter to be: "gateway3"
     And I have a bearer token with the "SCHEDULE:DELETE" scope
     When I batch delete schedules
-    Then a modified DTO is returned with status 200 and message "Successfully Deleted" and totalModified is 5
+    Then a modified DTO is returned with status 200 and message "Successfully Deleted" and totalModified is 1
 
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Delete all schedules matching the userId
-    Given I set the userId filter to be: "user1"
+    Given I set the userId filter to be: "user2"
     And I have a bearer token with the "SCHEDULE:DELETE" scope
     When I batch delete schedules
-    Then a modified DTO is returned with status 200 and message "Successfully Deleted" and totalModified is 5
+    Then a modified DTO is returned with status 200 and message "Successfully Deleted" and totalModified is 2
 
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
@@ -322,7 +322,7 @@ Feature: Schedule API Scenarios
     And I set the gatewayId filter to be: "gateway1"
     And I have a bearer token with the "SCHEDULE:DELETE" scope
     When I batch delete schedules
-    Then a modified DTO is returned with status 200 and message "Successfully Deleted" and totalModified is 2
+    Then a modified DTO is returned with status 200 and message "Successfully Deleted" and totalModified is 1
 
   Scenario: User deletes multiple schedules without specifying a filter should throw error
     Given I have a bearer token with the "SCHEDULE:DELETE" scope
@@ -350,14 +350,14 @@ Feature: Schedule API Scenarios
     And I set the gatewayId filter to be: "gateway1"
     And I have a bearer token with the "SCHEDULE:READ" scope
     When I get the schedule count
-    Then a CountDTO is returned with total: 2 and status code 200
+    Then a CountDTO is returned with total: 1 and status code 200
 
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Get the number of schedules matching an empty filter
     And I have a bearer token with the "SCHEDULE:READ" scope
     When I get the schedule count
-    Then a CountDTO is returned with total: 10 and status code 200
+    Then a CountDTO is returned with total: 3 and status code 200
 
   Scenario: User gets total schedules with wrong scope
     Given I have a bearer token with the "SCHEDULE:WRITE" scope

@@ -164,7 +164,7 @@ public class ScheduleAPIStepDefinitions {
     public void batchUpdateExistingSchedules() throws URISyntaxException, MalformedURLException, InterruptedException {
         try {
             URIBuilder uriBuilder = getUriBuilder();
-            Thread.sleep(1500); // wait for entities to be created before querying
+            Thread.sleep(2000); // wait for entities to be created before querying
             modifiedDTOResponseEntity = restTemplate.exchange(uriBuilder.build().toURL().toString(), HttpMethod.PATCH, new HttpEntity<>(patchDTORequest, world.getHttpHeaders()), ModifiedDTO.class);
         } catch (HttpClientErrorException e) {
             world.setHttpClientErrorException(e);
@@ -175,7 +175,7 @@ public class ScheduleAPIStepDefinitions {
     public void iBatchDeleteSchedules() throws URISyntaxException, InterruptedException, MalformedURLException {
         try {
             URIBuilder uriBuilder = getUriBuilder();
-            Thread.sleep(1500); // wait for entities to be created before deleting
+            Thread.sleep(2000); // wait for entities to be created before deleting
             modifiedDTOResponseEntity = restTemplate.exchange(uriBuilder.build().toURL().toString(), HttpMethod.DELETE, new HttpEntity<>(patchDTORequest, world.getHttpHeaders()), ModifiedDTO.class);
         } catch (HttpClientErrorException e) {
             world.setHttpClientErrorException(e);
@@ -187,7 +187,7 @@ public class ScheduleAPIStepDefinitions {
         try {
             URIBuilder uriBuilder = getUriBuilder();
             uriBuilder.setPath("schedule/count");
-            Thread.sleep(1500); // wait for entities to be created before deleting
+            Thread.sleep(2000); // wait for entities to be created before deleting
             countDTOResponseEntity = restTemplate.exchange(uriBuilder.build().toURL().toString(), HttpMethod.GET, new HttpEntity<>(world.getHttpHeaders()), CountDTO.class);
         } catch (HttpClientErrorException e) {
             world.setHttpClientErrorException(e);

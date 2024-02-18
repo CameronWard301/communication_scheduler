@@ -55,19 +55,19 @@ public class TemporalConfiguration {
     @Bean
     public List<ScheduleEntity> scheduleEntities(){
         List<ScheduleEntity> scheduleEntities = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             String userId;
             String gatewayId;
             String scheduleId = UUID.randomUUID().toString();
-            if (i < 5) {
+            if (i < 1) {
                 userId = "user1";
             } else {
                 userId = "user2";
             }
 
-            if (i < 2){
+            if (i < 1){
                 gatewayId = "gateway1";
-            } else if (i < 5) {
+            } else if (i < 2) {
                 gatewayId = "gateway2";
             } else {
                 gatewayId = "gateway3";
