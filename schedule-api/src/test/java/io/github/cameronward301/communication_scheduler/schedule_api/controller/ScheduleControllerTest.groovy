@@ -75,7 +75,7 @@ class ScheduleControllerTest extends Specification {
         def response = scheduleController.createSchedule(request, bindingResult)
 
         then:
-        response.getStatusCode() == HttpStatus.OK
+        response.getStatusCode() == HttpStatus.CREATED
     }
 
     def "Should throw Request Exception with status 400 if there are binding errors when creating"() {
