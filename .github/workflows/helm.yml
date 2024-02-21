@@ -72,6 +72,10 @@ jobs:
             --set "env.auth_api_ssl_keystore=${{ secrets.AUTH_API_SSL_KEYSTORE }}"
             --set "env.preferences_api.keystorePassword=${{ secrets.KEY_STORE_PASSWORD }}"
             --set "env.preferences_api.preferencesKeystore=${{ secrets.PREFERENCES_API_SSL_KEYSTORE }}"
+            --set "env.schedule_api.keystorePassword=${{ secrets.KEY_STORE_PASSWORD }}"
+            --set "env.schedule_api.schedule_keystore=${{ secrets.SCHEDULE_API_SSL_KEYSTORE }}"
+            --set "env.history_api.keystorePassword=${{ secrets.KEY_STORE_PASSWORD }}"
+            --set "env.history_api.history_keystore=${{ secrets.HISTORY_API_SSL_KEYSTORE }}"
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
@@ -125,6 +129,10 @@ jobs:
             --set "env.auth_api_ssl_keystore=${{ secrets.AUTH_API_SSL_KEYSTORE }}"
             --set "env.preferences_api.keystorePassword=${{ secrets.KEY_STORE_PASSWORD }}"
             --set "env.preferences_api.preferencesKeystore=${{ secrets.PREFERENCES_API_SSL_KEYSTORE }}"
+            --set "env.schedule_api.keystorePassword=${{ secrets.KEY_STORE_PASSWORD }}"
+            --set "env.schedule_api.schedule_keystore=${{ secrets.SCHEDULE_API_SSL_KEYSTORE }}"
+            --set "env.history_api.keystorePassword=${{ secrets.KEY_STORE_PASSWORD }}"
+            --set "env.history_api.history_keystore=${{ secrets.HISTORY_API_SSL_KEYSTORE }}"
           overrule_existing_kubeconfig: "false"
         env:
           TEMPORAL_DB_USERNAME: ${{ secrets.TEMPORAL_DB_USERNAME }}
