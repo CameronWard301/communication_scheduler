@@ -3,13 +3,10 @@ package io.github.cameronward301.communication_scheduler.integration_tests.step.
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.github.cameronward301.communication_scheduler.integration_tests.model.schedule.ScheduleDescriptionDTO;
-import io.github.cameronward301.communication_scheduler.integration_tests.model.schedule.ScheduleEntity;
 import io.github.cameronward301.communication_scheduler.integration_tests.model.workflow.TotalDTO;
 import io.github.cameronward301.communication_scheduler.integration_tests.model.workflow.WorkflowExecutionDTO;
 import io.github.cameronward301.communication_scheduler.integration_tests.model.workflow.WorkflowListDTO;
 import io.github.cameronward301.communication_scheduler.integration_tests.world.World;
-import io.temporal.client.schedules.ScheduleClient;
 import org.apache.hc.core5.net.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -46,6 +43,7 @@ public class HistoryAPIStepDefinitions {
 
     @Value("${history-api.address}")
     private String historyAPIURL;
+
     public HistoryAPIStepDefinitions(World world, RestTemplate restTemplate) {
         this.world = world;
         this.restTemplate = restTemplate;
@@ -54,6 +52,11 @@ public class HistoryAPIStepDefinitions {
     @And("I set the history pageSize to be {int}")
     public void iSetTheHistoryPageSizeToBe(int pageSize) {
         this.pageSize = String.valueOf(pageSize);
+    }
+
+    @And("I set the history pageNumber to be {int}")
+    public void iSetTheHistoryPageNumberToBe(int pageNumber) {
+        this.pageNumber = String.valueOf(pageNumber);
     }
 
     @And("I set the history userId filter to be {string}")
@@ -164,7 +167,7 @@ public class HistoryAPIStepDefinitions {
     private String getWorkflowQueryURI(List<String> paths) throws URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder(historyAPIURL);
         for (String path : paths) {
-             uriBuilder.appendPath(path);
+            uriBuilder.appendPath(path);
         }
         if (pageNumber != null) {
             uriBuilder.addParameter("pageNumber", pageNumber);

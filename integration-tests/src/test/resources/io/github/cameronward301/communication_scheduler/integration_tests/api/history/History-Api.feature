@@ -1,6 +1,6 @@
 @HistoryAPI
 Feature: History API Scenarios
- Tests the history API to make sure previous communications can be fetched, queried and running workflows can be stopped
+  Tests the history API to make sure previous communications can be fetched, queried and running workflows can be stopped
 
 #
 #  #########################
@@ -19,12 +19,27 @@ Feature: History API Scenarios
   Scenario: Should get workflows by filter
     Given I have a bearer token with the "HISTORY:READ" scope
     And I set the history pageSize to be 1
+    And I set the history pageNumber to be 0
     And I set the history userId filter to be "test-user-id"
     And I set the history gatewayId filter to be "test-gateway-id"
     And I set the history scheduleId filter to be "test-schedule-id"
     And I set the status filter to be "RUNNING"
     When I get all workflows
     Then the I receive a page of history workflows with a size of 1 and status code 200
+    And the total number of workflows matching the filter is 10
+
+  @CreateTestWorkflows
+  @RemoveTestWorkflows
+  Scenario: Should get workflows by filter and have 0 results on the third page
+    Given I have a bearer token with the "HISTORY:READ" scope
+    And I set the history pageSize to be 5
+    And I set the history pageNumber to be 2
+    And I set the history userId filter to be "test-user-id"
+    And I set the history gatewayId filter to be "test-gateway-id"
+    And I set the history scheduleId filter to be "test-schedule-id"
+    And I set the status filter to be "RUNNING"
+    When I get all workflows
+    Then the I receive a page of history workflows with a size of 0 and status code 200
     And the total number of workflows matching the filter is 10
 
   @CreateTestWorkflows
