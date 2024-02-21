@@ -6,6 +6,7 @@ import io.github.cameronward301.communication_scheduler.history_api.model.TotalD
 import io.github.cameronward301.communication_scheduler.history_api.model.WorkflowExecutionDTO;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowExecutionMetadata;
+import io.temporal.client.WorkflowNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -49,16 +50,20 @@ public class WorkflowService {
     }
 
     public WorkflowExecutionDTO getWorkflowById(String id, String runId) {
-        return workflowClient.listExecutions("WorkflowId=\"" + id + "\" AND RunId=\"" + runId + "\"")
-                .map(workflowDTOConverters::convertToDTO)
-                .findFirst()
-                .orElse(null);
+        Optional<WorkflowExecutionMetadata> workflowExecutionDTO = workflowClient.listExecutions("WorkflowId=\"" + id + "\" AND RunId=\"" + runId + "\"")
+                .findFirst();
+
+        if (workflowExecutionDTO.isEmpty()) {
+            throw new RequestException("Could not find workflow with id " + id + " and runId " + runId, HttpStatus.NOT_FOUND);
+        } else {
+            return workflowDTOConverters.convertToDTO(workflowExecutionDTO.get());
+        }
     }
 
     public void terminateWorkflow(String id, String runId) {
         try {
             workflowClient.newUntypedWorkflowStub(id, Optional.of(runId), Optional.empty()).terminate("Terminated by History API");
-        } catch (Exception e) {
+        } catch (WorkflowNotFoundException e) {
             log.debug(e.getMessage());
             throw new RequestException("Could not find workflow with id " + id + " and runId " + runId + " to terminate", HttpStatus.NOT_FOUND);
         }

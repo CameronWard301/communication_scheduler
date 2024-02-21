@@ -1,9 +1,6 @@
 package io.github.cameronward301.communication_scheduler.history_api.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
@@ -20,7 +17,7 @@ public class WorkflowExecutionDTO {
     private Time endTime;
     private String taskQueue;
     private int status;
-    @Data
+    @Getter
     @Builder
     public static class Time {
         private long seconds;
