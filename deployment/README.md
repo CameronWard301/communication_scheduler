@@ -21,6 +21,7 @@ data:
 
 
 # Add search attributes to temporal:
-tctl admin cluster add-search-attributes --name userId --type Text
-tctl admin cluster add-search-attributes --name gatewayId --type Text
-tctl admin cluster add-search-attributes --name scheduleId --type Text
+tctl namespace register default
+tctl admin cluster add-search-attributes --name userId --type Keyword
+tctl admin cluster add-search-attributes --name gatewayId --type Keyword
+tctl admin cluster add-search-attributes --name scheduleId --type Keyword
