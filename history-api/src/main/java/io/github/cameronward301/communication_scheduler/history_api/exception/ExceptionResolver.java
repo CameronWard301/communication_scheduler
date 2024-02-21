@@ -1,9 +1,7 @@
 package io.github.cameronward301.communication_scheduler.history_api.exception;
 
-import io.grpc.StatusRuntimeException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

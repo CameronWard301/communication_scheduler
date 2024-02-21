@@ -17,6 +17,7 @@ public class WorkflowExecutionDTO {
     private Time endTime;
     private String taskQueue;
     private int status;
+
     @Getter
     @Builder
     public static class Time {

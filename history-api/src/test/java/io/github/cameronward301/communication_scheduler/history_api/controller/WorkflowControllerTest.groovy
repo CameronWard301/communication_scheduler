@@ -3,7 +3,6 @@ package io.github.cameronward301.communication_scheduler.history_api.controller
 import io.github.cameronward301.communication_scheduler.history_api.model.TotalDTO
 import io.github.cameronward301.communication_scheduler.history_api.model.WorkflowExecutionDTO
 import io.github.cameronward301.communication_scheduler.history_api.service.WorkflowService
-import io.temporal.api.common.v1.WorkflowExecution
 import org.springframework.data.domain.PageImpl
 import org.springframework.http.HttpStatus
 import spock.lang.Specification
@@ -110,8 +109,8 @@ class WorkflowControllerTest extends Specification {
 
         and:
         def totalDTO = TotalDTO.builder()
-        .total(1234)
-        .build()
+                .total(1234)
+                .build()
 
         and:
         workflowService.getTotalWorkflows(userId, gatewayId, scheduleId, status) >> totalDTO

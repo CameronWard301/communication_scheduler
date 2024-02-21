@@ -3,7 +3,6 @@ package io.github.cameronward301.communication_scheduler.history_api.configurati
 import io.github.cameronward301.communication_scheduler.workflows.communication_workflow.codec.CryptographyCodec;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowClientOptions;
-import io.temporal.client.schedules.ScheduleClient;
 import io.temporal.common.converter.CodecDataConverter;
 import io.temporal.common.converter.DefaultDataConverter;
 import io.temporal.serviceclient.WorkflowServiceStubs;
@@ -30,7 +29,7 @@ public class TemporalConfig {
     @Bean
     WorkflowServiceStubs workflowServiceStubs(@Value("${temporal-properties.endpoint}") String endpoint) {
         return WorkflowServiceStubs.newServiceStubs(WorkflowServiceStubsOptions.newBuilder()
-                        .setTarget(endpoint)
+                .setTarget(endpoint)
                 .build());
     }
 

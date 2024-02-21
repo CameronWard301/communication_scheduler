@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class WorkflowDTOConverters {
 
-    public WorkflowExecutionDTO convertToDTO(WorkflowExecutionMetadata workflowExecutionMetadata){
+    public WorkflowExecutionDTO convertToDTO(WorkflowExecutionMetadata workflowExecutionMetadata) {
         WorkflowExecutionDTO workflowExecutionDTO = WorkflowExecutionDTO.builder()
                 .workflowId(workflowExecutionMetadata.getWorkflowExecutionInfo().getExecution().getWorkflowId())
                 .runId(workflowExecutionMetadata.getWorkflowExecutionInfo().getExecution().getRunId())
@@ -26,7 +26,7 @@ public class WorkflowDTOConverters {
 
         if (workflowExecutionMetadata.getCloseTime() != null) {
             workflowExecutionDTO.setEndTime(WorkflowExecutionDTO.Time.builder()
-                            .seconds(workflowExecutionMetadata.getCloseTime().getEpochSecond())
+                    .seconds(workflowExecutionMetadata.getCloseTime().getEpochSecond())
                     .nanos(workflowExecutionMetadata.getCloseTime().getNano())
                     .build());
         }

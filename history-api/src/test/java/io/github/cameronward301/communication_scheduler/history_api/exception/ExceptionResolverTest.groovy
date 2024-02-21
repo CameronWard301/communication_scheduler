@@ -1,7 +1,6 @@
 package io.github.cameronward301.communication_scheduler.history_api.exception
 
-import io.grpc.Status
-import io.grpc.StatusRuntimeException
+
 import org.springframework.http.HttpStatus
 import spock.lang.Specification
 

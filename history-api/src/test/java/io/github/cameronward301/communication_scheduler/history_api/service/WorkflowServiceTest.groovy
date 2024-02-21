@@ -163,7 +163,8 @@ class WorkflowServiceTest extends Specification {
 
         and:
         workflowClient.newUntypedWorkflowStub(workflowId, Optional.of(runId), Optional.empty()) >> { //noinspection GroovyAccessibility
-            throw new WorkflowNotFoundException(new WorkflowExecution(), "test-type", new Throwable("test exception")) }
+            throw new WorkflowNotFoundException(new WorkflowExecution(), "test-type", new Throwable("test exception"))
+        }
 
 
         when:
@@ -244,7 +245,7 @@ class WorkflowServiceTest extends Specification {
         }
 
         when:
-        def response = workflowService.getTotalWorkflows(userId, Optional.empty(), Optional.empty(),null)
+        def response = workflowService.getTotalWorkflows(userId, Optional.empty(), Optional.empty(), null)
 
         then:
         response == TotalDTO.builder().total(1).build()
