@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        container: ["communication-worker", "email-gateway", "sms-gateway", "gateway-api", "preferences-api", "auth-api", "data-converter-api", "mock-gateway", "schedule-api"]
+        container: ["communication-worker", "email-gateway", "sms-gateway", "gateway-api", "preferences-api", "auth-api", "data-converter-api", "mock-gateway", "schedule-api", "history-api"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
