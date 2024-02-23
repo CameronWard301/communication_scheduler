@@ -16,6 +16,8 @@ spec:
           env:
             - name: "TEST_FILTER_EXPRESSION"
               value: "{{ .Values.integration_tests.filterExpression }}"
+            - name: "SCHEDULE_API_ADDRESS"
+              value: "https://{{ .Release.Name}}-schedule-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/schedule"
             - name: "PREFERENCES_API_ADDRESS"
               value: "https://{{ .Release.Name}}-preferences-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/preferences"
             - name: "GATEWAY_API_ADDRESS"

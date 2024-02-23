@@ -573,3 +573,64 @@ spec:
         - name: keystore
           secret:
             secretName: {{ .Release.Name }}-schedule-api-ssl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-history-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-history-api
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-history-api
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-history-api
+          image: "{{ .Values.history_api.repository }}:{{ .Values.history_api.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "TEMPORAL_ENDPOINT"
+              value: "{{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local:7233"
+            - name: "VERIFY_HOSTNAMES"
+              value: "{{ .Values.history_api.verifyHostnames }}"
+            - name: "JWKS_URI"
+              value: https://{{ .Release.Name}}-auth-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/auth/.well-known/jwks.json
+            - name: "LOGGING_LEVEL"
+              value: "{{ .Values.history_api.loggingLevel }}"
+            - name: "ENCRYPTION_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: {{ .Release.Name }}-data-converter-encryption
+            - name: "ENCRYPTION_SALT"
+              valueFrom:
+                secretKeyRef:
+                  key: salt
+                  name: {{ .Release.Name }}-data-converter-encryption
+            - name: "HISTORY_API_SSL_KEY_STORE"
+              value: "{{ .Values.history_api.keyStorePath }}"
+            - name: "HISTORY_API_SSL_KEY_STORE_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  key: keystore-password
+                  name: {{ .Release.Name }}-history-api
+            - name: "SPRING_PROFILES_ACTIVE"
+              value: "{{ .Values.history_api.profile }}"
+            - name: "TEMPORAL_NAMESPACE"
+              value: "{{ .Values.history_api.temporalNamespace }}"
+          volumeMounts:
+            - mountPath: /certs/
+              name: keystore
+              readOnly: true
+      volumes:
+        - name: keystore
+          secret:
+            secretName: {{ .Release.Name }}-history-api-ssl
