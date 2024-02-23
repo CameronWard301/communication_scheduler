@@ -296,7 +296,7 @@ integration_tests:
   tag: latest
   temporalNamespace: default
   kubernetesNamespace: default
-  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI or @MockGateway or @ScheduleAPI"
+  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI or @MockGateway or @ScheduleAPI or @HistoryAPI"
 
 PreferencesDefaults:
   GatewayTimeoutSeconds: "60"

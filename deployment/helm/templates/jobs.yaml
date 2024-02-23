@@ -16,6 +16,8 @@ spec:
           env:
             - name: "TEST_FILTER_EXPRESSION"
               value: "{{ .Values.integration_tests.filterExpression }}"
+            - name: "HISTORY_API_ADDRESS"
+              value: "https://{{ .Release.Name}}-history-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/workflow"
             - name: "SCHEDULE_API_ADDRESS"
               value: "https://{{ .Release.Name}}-schedule-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/schedule"
             - name: "PREFERENCES_API_ADDRESS"
@@ -77,6 +79,8 @@ spec:
         - name: wait-for-schedule-api
           image: busybox
           command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-schedule-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for schedule api; sleep 2; done;' ]
-
+        - name: wait-for-history-api
+          image: busybox
+          command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-history-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for schedule api; sleep 2; done;' ]
       restartPolicy: Never
   backoffLimit: 0
