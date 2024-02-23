@@ -27,7 +27,7 @@
 
 ### Class Diagrams (C4):
 5. [Worker Component Class Diagram](Designs/System%20Context/Components/CommunicationWorkflowClassDiagram.puml)  
-    ![Worker Component Class Diagram](Designs/Images/System%20Context/Components/WorkflowClassDiagram.svg)
+    ![Worker Component Class Diagram](Designs/Images/System%20Context/Components/CommunicationWorkflowClassDiagram.svg)
 
 ### Activity Diagrams:
 6. [Send Communication Workflow](Designs/Activity%20Diagrams/SendCommunicationWorkflow.puml)  
@@ -43,9 +43,9 @@
     ![SendMessageToGatewayActivity](Designs/Images/Activity%20Diagrams/SendMessageToGatewayActivity.svg)
 
 ### Sequence Diagrams:
-10. [Create New Workflow:](Designs/Sequence%20Diagrams/CreateNewWorkflow.puml)  
+10. [Create New Workflow:](Designs/Sequence%20Diagrams/CreateNewSchedule.puml)  
 This describes a business user using the web portal to manually create a new communication schedule between a gateway and a user.  
-    ![Create New Workflow](Designs/Images/Sequence%20Diagrams/CreateNewWorkflow.svg)
+    ![Create New Workflow](Designs/Images/Sequence%20Diagrams/CreateNewSchedule.svg)
 
 11. [Send Communication:](Designs/Sequence%20Diagrams/SendCommunication.puml) This demonstrates the messages transferred between temporal, the workers, the database and the communication gateway when executing a workflow.  
     ![Send Communication](Designs/Images/Sequence%20Diagrams/SendCommunication.svg)

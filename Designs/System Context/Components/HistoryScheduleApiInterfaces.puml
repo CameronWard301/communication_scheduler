@@ -23,32 +23,26 @@ package "Communication APIs" as communicationApis {
     }
 
     interface scheduleController{
-        + Schedule createSchedule(String endpointUrl, String userId, CalendarSpec calendarSpec, boolean paused)
-        + Schedule updateSchedule(Schedule schedule)
-        + List<Schedule> getSchedules(Optional<int> pageNumber, Optional<int> pageSize)
-        + List<Schedule> getSchedules(Optional<int> pageNumber, Optional<int> pageSize)
-        + void deleteScheduleById(String id)
-        + Schedule schedule getScheduleById(String id)
-        + List<Schedule> getSchedulesByGatewayId(String gatewayId, Optional<int> pageNumber, Optional<int> pageSize)
-        + List<Schedule> updateSchedulesByGatewayId(String gatewayId, Schedule schedule)
-        + void deleteSchedulesByGatewayId(String gatewayId)
-        + List<Schedule> getSchedulesByUserId(String userId)
-        + List<Schedule> updateSchedulesByUserId(String userId, Schedule schedule)
-        + void deleteSchedulesByUserId(String userId)
-    }
+            + ResponseEntity<ScheduleDescriptionDTO> createSchedule(CreateScheduleDTO createScheduleDTO, BindingResult bindingResult)
+            + ResponseEntity<ScheduleDescriptionDTO> updateSchedule(CreateScheduleDTO createScheduleDTO, BindingResult bindingResult)
+            + ResponseEntity<ModifiedDTO> batchUpdateSchedules(Optional<String> userId, Optional<String> gatewayId, SchedulePatchDTO schedulePatchDTO, BindingResult bindingResult)
+            + ResponseEntity<Page<ScheduleListDescription>> getSchedules(String pageNumber, String pageSize, Optional<String> userId, Optional<String> gatewayId)
+            + ResponseEntity<ModifiedDTO> batchDeleteSchedules(Optional<String> userId, Optional<String> gatewayId)
+            + ResponseEntity<CountDTO> getScheduleNumber(Optional<String> userId, Optional<String> gatewayId)
+            + ResponseEntity<String> deleteById(String id)
+            + ResponseEntity<ScheduleDescriptionDTO> getScheduleById(String id)
+        }
 
     interface scheduleService {
-        + Schedule createSchedule(String endpointUrl, String userId, CalendarSpec calendarSpec, boolean paused)
-        + Schedule updateSchedule(String id, String endpointUrl, String userId, CalendarSpec calendarSpec, boolean paused)
-        + List<Schedule> getSchedules(int pageNumber, int pageSize)
-        + void deleteScheduleById(String id)
-        + Schedule schedule getScheduleById(String id)
-        + List<Schedule> getSchedulesByGatewayId(String gatewayId, int pageNumber, int pageSize)
-        + void deleteSchedulesByGatewayId(String gatewayId)
-        + List<Schedule> updateSchedulesByGatewayId(String gatewayId, String endpointUrl, String userId, CalendarSpec calendarSpec, boolean paused)
-        + List<Schedule> getSchedulesByUserId(String userId)
-        + void deleteSchedulesByUserId(String userId)
-        + List<Schedule> updateSchedulesByUserId(String userId, String endpointUrl, String userId, CalendarSpec calendarSpec, boolean paused)
+        + Page<ScheduleListDescription> getAllSchedules(String pageNumber, String pageSize, Optional<String> userId, Optional<String> gatewayId)
+        + ScheduleDescriptionDTO createSchedule(CreateScheduleDTO createScheduleDTO)
+        + ScheduleDescriptionDTO updateSchedule(CreateScheduleDTO scheduleDTO)
+        + ModifiedDTO batchUpdateSchedules(Optional<String> userId, Optional<String> gatewayId, SchedulePatchDTO schedulePatchDTO)
+        + ScheduleDescriptionDTO getScheduleById(String scheduleId)
+        + void deleteScheduleById(String scheduleId)
+        + CountDTO getScheduleCount (Optional<String> userId, Optional<String> gatewayId)
+        + ModifiedDTO deleteSchedulesByFilter(Optional<String> userId, Optional<String> gatewayId)
+        - RuntimeException handleScheduleException(ScheduleException e, String scheduleId)
     }
 
 
@@ -61,22 +55,25 @@ package "Communication APIs" as communicationApis {
     }
 
     interface historyController {
-        + List<CommunicationWorkflow> getWorkflows(Optional<String> userId, Optional<String> gatewayId, Optional<int> status, Optional<int> PageNumber, Optional<int> pageSize)
-        + int getWorkflowNumber(Optional<String> userId, Optional<String> gatewayId, Optional<int> status)
-        + CommunicationWorkflow getWorkflowById(String id)
+        + ResponseEntity<Page<WorkflowExecutionDTO>> getWorkflows(Optional<String> userId, Optional<String> gatewayId, Integer status, String PageNumber, String pageSize)
+        + ResponseEntity<WorkflowExecutionDTO> getWorkflow(String workflowId, String runId)
+        + ResponseEntity<Void> terminateWorkflow(String workflowId, String runId)
+        + ResponseEntity<TotalDTO> getTotalWorkflows(Optional<String> userId, Optional<String> gatewayId, Optional<String> scheduleId, Integer status)
     }
 
 
     interface historyService {
-        + List<CommunicationWorkflow> getWorkflows(Optional<String> userId, Optional<String> gatewayId, int status, int PageNumber, int pageSize)
-        + int getWorkflowNumber(Optional<String> userId, Optional<String> gatewayId, int status)
-        + CommunicationWorkflow getWorkflowById(String id)
+        + Page<WorkflowExecutionDTO> getWorkflows(Optional<String> userId, Optional<String> gatewayId, Optional<String> scheduleId, Integer status, String PageNumber, String pageSize)
+        + WorkflowExecutionDTO getWorkflowById(String id, String runId)
+        + void terminateWorkflow(String id, String runId)
+        + TotalDTO getTotalWorkflows(Optional<String> userId, Optional<String> gatewayId, Optional<String> scheduleId, Integer status)
+        - String getWorkflowQueryString(Optional<String> userId, Optional<String> gatewayId, Optional<String> scheduleId, Integer status)
     }
 
     historyApi --|> historyService
     historyApi --|> historyController
     historyController --> historyService
-    
+
 }
 
 
