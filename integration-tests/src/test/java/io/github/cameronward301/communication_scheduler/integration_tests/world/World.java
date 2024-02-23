@@ -11,4 +11,6 @@ import org.springframework.web.client.HttpClientErrorException;
 public class World {
     private HttpHeaders httpHeaders = new HttpHeaders();
     private HttpClientErrorException httpClientErrorException;
+    private String workflowId;
+    private String workflowRunId;
 }

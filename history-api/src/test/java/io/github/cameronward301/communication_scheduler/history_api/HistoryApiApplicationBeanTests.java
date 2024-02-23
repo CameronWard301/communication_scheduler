@@ -1,4 +1,4 @@
-package io.github.cameronward301.communication_scheduler.schedule_api;
+package io.github.cameronward301.communication_scheduler.history_api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-class PreferencesApiApplicationBeanTests {
+class HistoryApiApplicationBeanTests {
 
     @Test
     void contextLoads() {

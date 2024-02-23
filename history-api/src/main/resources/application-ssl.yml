@@ -1,0 +1,8 @@
+server:
+  ssl:
+    key-store: ${HISTORY_API_SSL_KEY_STORE:classpath:keystore/history-api.p12}
+    key-store-password: ${HISTORY_API_SSL_KEY_STORE_PASSWORD}
+    key-store-type: PKCS12
+    enabled: true
+    key-alias: history-api
+    key-password: ${HISTORY_API_SSL_KEY_STORE_PASSWORD}

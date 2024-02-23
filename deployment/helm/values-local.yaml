@@ -120,6 +120,15 @@ schedule_api:
   temporalNamespace: default
   verifyHostnames: false
 
+history_api:
+  repository: cameronward/history-api
+  tag: latest
+  loggingLevel: info
+  keyStorePath: /certs/history-api.p12
+  profile: ssl
+  temporalNamespace: default
+  verifyHostnames: false
+
 
 integration_tests:
   repository: cameronward/cs-integration-tests
