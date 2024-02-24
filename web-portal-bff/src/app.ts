@@ -13,6 +13,7 @@ const router = require("express").Router();
 
 router.use("/api-docs", swaggerUi.serve);
 router.get("/api-docs", swaggerUi.setup(swaggerDocument));
+router.use(express.json());
 app.use(router);
 app.use("", authenticationController);
 

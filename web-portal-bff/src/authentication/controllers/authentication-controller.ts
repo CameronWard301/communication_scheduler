@@ -1,8 +1,10 @@
 import express from "express";
 import { AuthToken } from "../model/auth-models";
 
-const router = express.Router();
+import { AuthService } from "../service/auth-service";
+import {errorHandler} from "../../helper/error-handler";
 
+const router = express.Router();
 router.post("/auth", (req, res) => {
   // #swagger.tags = ["Auth"]
   // #swagger.description = "BFF Auth APIs"
@@ -18,7 +20,12 @@ router.post("/auth", (req, res) => {
                 }
             }
     } */
-  return res.status(200).send({ token: "my", expires: "soon" } as AuthToken);
+  console.log("getting auth token")
+  AuthService().getAuthToken(req.body).then((value) => {
+    return res.status(value.status).send(value.data as AuthToken);
+  }).catch((reason) => {
+    errorHandler(res, reason);
+  });
 });
 
 module.exports = router;
