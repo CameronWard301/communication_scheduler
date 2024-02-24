@@ -26,4 +26,4 @@ EXPOSE 3000
 
 CMD ["build/app.js"]
 #docker buildx create --use
-#docker buildx build --platform linux/amd64,linux/arm64 -t cameronward/web-portal-bff-api:latest --push .
+#docker buildx build --platform linux/amd64,linux/arm64 -t cameronward/web-portal-bff:latest --push .
