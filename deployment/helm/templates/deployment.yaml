@@ -634,3 +634,29 @@ spec:
         - name: keystore
           secret:
             secretName: {{ .Release.Name }}-history-api-ssl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-web-portal-bff-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-web-portal-bff-api
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-web-portal-bff-api
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-web-portal-bff-api
+          image: "{{ .Values.web_bff.repository }}:{{ .Values.web_bff.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 3000
+          envFrom:
+             - secretRef:
+                    name: {{ .Release.Name }}-web-portal-bff-env

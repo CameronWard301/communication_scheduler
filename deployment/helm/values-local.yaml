@@ -129,6 +129,11 @@ history_api:
   temporalNamespace: default
   verifyHostnames: false
 
+web_bff:
+  repository: cameronward/web-portal-bff-api
+  tag: latest
+  port: "3000"
+  sslVerification: "false"
 
 integration_tests:
   repository: cameronward/cs-integration-tests

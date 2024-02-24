@@ -9,7 +9,7 @@
     "build": "npx tsc",
     "start": "node build/index.js",
     "dev": "nodemon src/app.ts",
-    "swagger-autogen": "tsc swagger.ts && node swagger.js"
+    "swagger-autogen": "tsc src/swagger.ts && node src/swagger.js"
   },
   "repository": {
     "type": "git",
