@@ -4,6 +4,8 @@ import {ConfigProvider} from "./context/ConfigContext.tsx";
 import {SnackbarContextProvider} from "./context/SnackbarContext.tsx";
 import {RootStore} from "./stores/RootStore.tsx";
 import {StoreProvider} from "./context/StoreContext.tsx";
+import { BrowserRouter } from 'react-router-dom';
+import NavigationBar from "./components/navigation_bar";
 
 const theme = createTheme({
   palette: {
@@ -22,7 +24,9 @@ function App() {
         <ThemeProvider theme={theme}>
           <ConfigProvider>
             <SnackbarContextProvider>
+              <BrowserRouter>
               <CssBaseline/>
+              <NavigationBar/>
               <h1>Vite + React</h1>
               <div className="card">
 
@@ -31,6 +35,7 @@ function App() {
               <p className="read-the-docs">
                 Click on the Vite and React logos to learn more
               </p>
+              </BrowserRouter>
             </SnackbarContextProvider>
           </ConfigProvider>
         </ThemeProvider>

@@ -21,7 +21,7 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
       axios
         .get("/configuration")
         .then((result) => {
-          setConfig(result.data);
+          setConfig(result.data as Config);
           setLoading(false);
         })
         .catch((error) => {
