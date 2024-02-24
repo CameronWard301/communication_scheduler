@@ -1,6 +1,8 @@
 # Use node:18 to build the app:
 FROM node:20.11.1-slim AS build-env
 
+RUN npm install -g typescript@5.3.3 ts-node@10.9.2
+
 WORKDIR /app
 COPY package.json package-lock.json ./
 
