@@ -6,31 +6,34 @@ import {useAxiosClientContext} from "../context/AxiosContext.tsx";
 
 
 export function useToken(): Promise<AuthToken> {
+  const [config] = useContext(ConfigContext);
+  const client = useAxiosClientContext();
   const token = Cookies.get(APP_VERSION + "-communication-scheduler-token");
-  if (!token) {
-    return useAuthenticate();
+
+  const authenticate = async (): Promise<AuthToken> => {
+
+    return await client
+      .post(config.bffBaseUrl + "/auth",
+        JSON.stringify(["GATEWAY:WRITE", "GATEWAY:READ", "PREFERENCES:READ", "PREFERENCES:WRITE", "SCHEDULE:READ", "SCHEDULE:WRITE", "SCHEDULE:DELETE", "WORKFLOW:TERMINATE", "HISTORY:READ"]))
+      .then((response) => {
+        const token = response.data as AuthToken;
+        Cookies.set(APP_VERSION + "-communication-scheduler-token", JSON.stringify(token), {expires: new Date(token.expires)});
+        return token;
+      })
+      .catch((reason) => {
+        throw reason;
+      });
   }
-  const tokenObject: AuthToken = JSON.parse(token);
+
+  if (!token) {
+    return authenticate();
+  }
+  const tokenObject = JSON.parse(token) as AuthToken;
   if (Date.parse(tokenObject.expires) < Date.now()) {
-    return useAuthenticate();
+    return authenticate();
   }
 
   return Promise.resolve(tokenObject);
 }
 
-async function useAuthenticate(): Promise<AuthToken> {
-  const [config] = useContext(ConfigContext);
-  const client = useAxiosClientContext();
-  return await client
-    .post(config.bffBaseUrl + "/auth",
-      JSON.stringify(["GATEWAY:WRITE", "GATEWAY:READ", "PREFERENCES:READ", "PREFERENCES:WRITE", "SCHEDULE:READ", "SCHEDULE:WRITE", "SCHEDULE:DELETE", "WORKFLOW:TERMINATE", "HISTORY:READ"]))
-    .then((response) => {
-      const token: AuthToken = response.data;
-      Cookies.set(APP_VERSION + "-communication-scheduler-token", JSON.stringify(token), {expires: new Date(token.expires)});
-      return token;
-    })
-    .catch((reason) => {
-      console.log(reason);
-      throw reason;
-    });
-}
+

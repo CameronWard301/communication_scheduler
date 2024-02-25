@@ -10,7 +10,8 @@ export function useAxiosClient() {
     return axios.create({
       headers: {
         "Content-Type": "application/json",
-      }});
+      }
+    });
   } else {
     console.warn("SSL Verification is off");
     return axios.create({
@@ -21,7 +22,6 @@ export function useAxiosClient() {
     });
   }
 }
-
 
 
 export default useAxiosClient;

@@ -1,9 +1,9 @@
 import React from "react";
-import { Button, Fade, Modal, Typography, useTheme } from "@mui/material";
+import {Button, Fade, Modal, Typography, useTheme} from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import CloseIcon from "@mui/icons-material/Close";
-import { observer } from "mobx-react-lite";
+import {observer} from "mobx-react-lite";
 
 type Props = {
   open: boolean;
@@ -18,7 +18,17 @@ type Props = {
 };
 
 const ConfirmModal = observer(
-  ({ open, setOpen, heading, description, confirmIcon, confirmText, cancelIcon = <CloseIcon />, cancelText = "Cancel", onConfirm }: Props) => {
+  ({
+     open,
+     setOpen,
+     heading,
+     description,
+     confirmIcon,
+     confirmText,
+     cancelIcon = <CloseIcon/>,
+     cancelText = "Cancel",
+     onConfirm
+   }: Props) => {
     const theme = useTheme();
     const style = {
       maxWidth: "80%",
@@ -67,7 +77,7 @@ const ConfirmModal = observer(
                     endIcon={cancelIcon}
                     color={"info"}
                     fullWidth
-                    sx={{ height: 56 }}
+                    sx={{height: 56}}
                     onClick={() => {
                       setOpen(false);
                     }}
@@ -76,7 +86,8 @@ const ConfirmModal = observer(
                   </Button>
                 </Grid>
                 <Grid xs={12} md={6} marginTop={"auto"}>
-                  <Button onClick={onConfirm} endIcon={confirmIcon} variant="contained" fullWidth sx={{ height: 56 }} color={"primary"}>
+                  <Button onClick={onConfirm} endIcon={confirmIcon} variant="contained" fullWidth sx={{height: 56}}
+                          color={"primary"}>
                     <span>{confirmText}</span>
                   </Button>
                 </Grid>

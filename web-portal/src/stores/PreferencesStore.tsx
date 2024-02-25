@@ -5,6 +5,7 @@ import {Preferences} from "../models/Preferences.ts";
 export class PreferencesStore {
   rootStore: RootStore;
   modalOpen = false;
+  isLoading = false;
 
   isAdvancedMode = false;
   newMaximumAttempts = 0;
@@ -12,8 +13,8 @@ export class PreferencesStore {
   newInitialInterval = 0;
   newMaximumInterval = 0;
   newGatewayTimeout = 0;
-  newGatewayTimeoutTime = "S";
   newStartToCloseTimeout = 0;
+  newGatewayTimeoutTime = "S";
   newInitialIntervalTime = "S"
   newMaximumIntervalTime = "S"
   newStartToCloseTimeoutTime = "S"
@@ -23,8 +24,8 @@ export class PreferencesStore {
   currentInitialInterval = 0;
   currentMaximumInterval = 0;
   currentGatewayTimeout = 0;
-  currentGatewayTimeoutTime = "S";
   currentStartToCloseTimeout = 0;
+  currentGatewayTimeoutTime = "S";
   currentInitialIntervalTime = "S"
   currentMaximumIntervalTime = "S"
   currentStartToCloseTimeoutTime = "S"
@@ -41,32 +42,61 @@ export class PreferencesStore {
     })();
   }
 
+  setLoading = (loading: boolean) => {
+    action(() => {
+      this.isLoading = loading;
+    })();
+  }
+
   setFromServer = (preferences: Preferences) => {
     action(() => {
       this.newMaximumAttempts = preferences.maximumAttempts;
       this.newBackoffCoefficient = preferences.backoffCoefficient;
       this.newInitialInterval = preferences.initialInterval.value;
       this.newMaximumInterval = preferences.maximumInterval.value;
+      this.newGatewayTimeout = preferences.gatewayTimeout.value;
       this.newStartToCloseTimeout = preferences.startToCloseTimeout.value;
+
+      this.newGatewayTimeoutTime = preferences.gatewayTimeout.unit;
       this.newInitialIntervalTime = preferences.initialInterval.unit;
       this.newMaximumIntervalTime = preferences.initialInterval.unit;
-      this.newStartToCloseTimeoutTime = preferences.initialInterval.unit;
-      this.newGatewayTimeout = preferences.gatewayTimeout.value;
-      this.newGatewayTimeoutTime = preferences.gatewayTimeout.unit;
-      this.currentGatewayTimeout = preferences.gatewayTimeout.value;
-      this.currentGatewayTimeoutTime = preferences.gatewayTimeout.unit;
+      this.newStartToCloseTimeoutTime = preferences.startToCloseTimeout.unit;
 
       this.currentMaximumAttempts = preferences.maximumAttempts;
       this.currentBackoffCoefficient = preferences.backoffCoefficient;
       this.currentInitialInterval = preferences.initialInterval.value;
       this.currentMaximumInterval = preferences.maximumInterval.value;
+      this.currentGatewayTimeout = preferences.gatewayTimeout.value;
       this.currentStartToCloseTimeout = preferences.startToCloseTimeout.value;
+
+      this.currentGatewayTimeoutTime = preferences.gatewayTimeout.unit;
       this.currentInitialIntervalTime = preferences.initialInterval.unit;
       this.currentMaximumIntervalTime = preferences.initialInterval.unit;
-      this.currentStartToCloseTimeoutTime = preferences.initialInterval.unit;
-      this.currentGatewayTimeout = preferences.gatewayTimeout.value;
-      this.currentGatewayTimeoutTime = preferences.gatewayTimeout.unit;
+      this.currentStartToCloseTimeoutTime = preferences.startToCloseTimeout.unit;
     })();
+  }
+
+  getPreferencesUpdate = (): Preferences => {
+    return {
+      maximumAttempts: this.newMaximumAttempts,
+      backoffCoefficient: this.newBackoffCoefficient,
+      gatewayTimeout: {
+        value: this.newGatewayTimeout,
+        unit: this.newGatewayTimeoutTime
+      },
+      initialInterval: {
+        value: this.newInitialInterval,
+        unit: this.newInitialIntervalTime
+      },
+      maximumInterval: {
+        value: this.newMaximumInterval,
+        unit: this.newMaximumIntervalTime
+      },
+      startToCloseTimeout: {
+        value: this.newStartToCloseTimeout,
+        unit: this.newStartToCloseTimeoutTime
+      }
+    }
   }
 
   setAdvancedMode = (mode: boolean) => {

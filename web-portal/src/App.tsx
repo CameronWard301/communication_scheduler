@@ -39,13 +39,13 @@ function App() {
           <ConfigProvider>
             <SnackbarContextProvider>
               <AxiosContextProvider client={client}>
-              <BrowserRouter>
-                <Box sx={{display: 'flex'}}>
-                  <CssBaseline/>
-                  <NavigationBar/>
-                  <AppRouter/>
-                </Box>
-              </BrowserRouter>
+                <BrowserRouter>
+                  <Box sx={{display: 'flex'}}>
+                    <CssBaseline/>
+                    <NavigationBar/>
+                    <AppRouter/>
+                  </Box>
+                </BrowserRouter>
               </AxiosContextProvider>
             </SnackbarContextProvider>
           </ConfigProvider>

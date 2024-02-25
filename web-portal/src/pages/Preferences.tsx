@@ -15,25 +15,31 @@ import {useContext, useEffect} from "react";
 import ConfirmModal from "../components/modal";
 import {PreferenceChanges} from "../components/preference_changes";
 import {SnackbarContext} from "../context/SnackbarContext.tsx";
+import LoadingButton from '@mui/lab/LoadingButton';
+
 
 const Preferences = observer(() => {
   const rootStore = useStore();
-  const { addSnackbar } = useContext(SnackbarContext);
+  const {addSnackbar} = useContext(SnackbarContext);
 
   const preferencesService = usePreferencesService();
 
   useEffect(() => {
     preferencesService.getPreferences();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handeModalOpen = () => {
-    if (rootStore.preferencesStore.hasChanged()){
+    if (rootStore.preferencesStore.hasChanged()) {
       rootStore.preferencesStore.setModalOpen(true);
       return;
     }
     addSnackbar("You haven't made any changes to save", "info");
+  }
 
-
+  const handleSave = () => {
+    preferencesService.setPreferences();
+    rootStore.preferencesStore.setModalOpen(false)
   }
 
   return (
@@ -42,7 +48,7 @@ const Preferences = observer(() => {
         open={rootStore.preferencesStore.modalOpen}
         confirmText={"Save Changes"}
         description={<PreferenceChanges/>}
-        onConfirm={() => rootStore.preferencesStore.setModalOpen(false)}
+        onConfirm={() => handleSave()}
         setOpen={rootStore.preferencesStore.setModalOpen}
         heading={"Save Changes"}
         confirmIcon={<SaveRoundedIcon/>}/>
@@ -180,7 +186,7 @@ const Preferences = observer(() => {
                              onChange={(event) => rootStore.preferencesStore.setStartToCloseTimeout(event.target.value)}/>
                   <TimeSelection keyId={"start-to-close-timeout"}
                                  value={rootStore.preferencesStore.newStartToCloseTimeoutTime} onChange={(event) => {
-                    rootStore.preferencesStore.setStartToCloseTimeout(event.target.value)
+                    rootStore.preferencesStore.setStartToCloseTimeoutTime(event.target.value)
                   }}/>
                   <Button variant={rootStore.preferencesStore.newStartToCloseTimeout == 0 ? "contained" : "outlined"}
                           color={rootStore.preferencesStore.newStartToCloseTimeout == 0 ? "secondary" : "info"}
@@ -193,9 +199,10 @@ const Preferences = observer(() => {
           )
         }
         <Grid xs={12}>
-          <Button variant="contained" color={"primary"} endIcon={<SaveRoundedIcon/>} size={"large"}
-                  onClick={() => handeModalOpen()}>Save
-            Changes</Button>
+          <LoadingButton variant="contained" color={"primary"} endIcon={<SaveRoundedIcon/>} size={"large"}
+                         loadingPosition={"end"} loading={rootStore.preferencesStore.isLoading}
+                         onClick={() => handeModalOpen()}>Save
+            Changes</LoadingButton>
         </Grid>
       </Grid>
     </>
