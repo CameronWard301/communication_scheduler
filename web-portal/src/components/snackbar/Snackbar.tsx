@@ -1,8 +1,8 @@
-
 import React, {Dispatch, SetStateAction} from "react";
 import {AlertColor, Snackbar} from "@mui/material";
 import MuiAlert, {AlertProps} from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
+
 /**
  * Adapted from: https://mui.com/material-ui/react-snackbar/#consecutive-snackbars
  */

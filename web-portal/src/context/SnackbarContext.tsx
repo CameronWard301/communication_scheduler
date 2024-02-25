@@ -1,7 +1,6 @@
 import {AlertColor} from "@mui/material";
 import React, {useState} from "react";
-import SnackbarComponent from "../components/snackbar";
-import {SnackbarMessage} from "../components/snackbar";
+import SnackbarComponent, {SnackbarMessage} from "../components/snackbar";
 
 export type SnackbarContextType = {
   addSnackbar: (message: string, severity: AlertColor) => void;

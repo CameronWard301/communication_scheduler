@@ -1,6 +1,6 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-import {ThemeProvider, createTheme} from '@mui/material'
+import {createTheme, ThemeProvider} from '@mui/material'
 import './App.css'
 import {ConfigProvider} from "./context/ConfigContext.tsx";
 import {SnackbarContextProvider} from "./context/SnackbarContext.tsx";
@@ -37,9 +37,9 @@ function App() {
             <SnackbarContextProvider>
               <BrowserRouter>
                 <Box sx={{display: 'flex'}}>
-              <CssBaseline/>
-              <NavigationBar/>
-                <AppRouter/>
+                  <CssBaseline/>
+                  <NavigationBar/>
+                  <AppRouter/>
                 </Box>
               </BrowserRouter>
             </SnackbarContextProvider>

@@ -1,9 +1,5 @@
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import {
-  Button,
-  TextField,
-  Typography
-} from "@mui/material";
+import {Button, TextField, Typography} from "@mui/material";
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import {observer} from "mobx-react-lite"
 import Box from "@mui/material/Box";
@@ -33,7 +29,8 @@ const Preferences = observer(() => {
             customer if
             the system encounters an error, or select unlimited attempts.
             <Typography variant={"h4"} display={"inline-block"}>Maximum Attempts</Typography>
-            <CustomTooltip message="The maximum number of attempts to send the communication to the customer if the system encounters an error, or select unlimited attempts."/>
+            <CustomTooltip
+              message="The maximum number of attempts to send the communication to the customer if the system encounters an error, or select unlimited attempts."/>
           </Box>
           <Box>
             <TextField label="Maximum Attempts" type="number" variant="outlined" margin={"normal"}
@@ -50,17 +47,21 @@ const Preferences = observer(() => {
           <Button variant="outlined"
                   color="primary"
                   onClick={() => rootStore.preferencesStore.setAdvancedMode(!rootStore.preferencesStore.isAdvancedMode)}
-                  endIcon={rootStore.preferencesStore.isAdvancedMode ? <ArrowUpwardRoundedIcon/>: <ArrowDownwardRoundedIcon/>}
-                  >Advanced Options</Button>
+                  endIcon={rootStore.preferencesStore.isAdvancedMode ? <ArrowUpwardRoundedIcon/> :
+                    <ArrowDownwardRoundedIcon/>}
+          >Advanced Options</Button>
         </Grid>
         {
           rootStore.preferencesStore.isAdvancedMode && (
             <>
               <Grid>
-                <Typography variant={"body1"}>Below you can configure the retry policy. The backoff coefficient is a multiplier for the time it takes to retry the next attempt.
-                 For example if the backoff coefficient is 2 the time between each retry doubles.
-                  If the initial interval is 2, the platform will wait 2 seconds before retrying, then 4 seconds then 8 seconds. This number will
-                  keep increasing unless there is a maximum limit of 100 seconds, then the platform will retry every 100 seconds after reaching this limit .</Typography>
+                <Typography variant={"body1"}>Below you can configure the retry policy. The backoff coefficient is a
+                  multiplier for the time it takes to retry the next attempt.
+                  For example if the backoff coefficient is 2 the time between each retry doubles.
+                  If the initial interval is 2, the platform will wait 2 seconds before retrying, then 4 seconds then 8
+                  seconds. This number will
+                  keep increasing unless there is a maximum limit of 100 seconds, then the platform will retry every 100
+                  seconds after reaching this limit .</Typography>
               </Grid>
 
               <Grid xs={12}>
@@ -123,7 +124,8 @@ const Preferences = observer(() => {
               <Grid xs={12}>
                 <Box>
                   <Typography variant={"h4"} display={"inline-block"}>Start To Close Timeout</Typography>
-                  <CustomTooltip message="The maximum amount of time it should take to send a communication, if the communication execution exceeds this limit then there are no more retries. Set to 0 to disable" />
+                  <CustomTooltip
+                    message="The maximum amount of time it should take to send a communication, if the communication execution exceeds this limit then there are no more retries. Set to 0 to disable"/>
                 </Box>
                 <Box>
                   <TextField label="Maximum Interval" type="number" variant="outlined" margin={"normal"}
@@ -144,7 +146,8 @@ const Preferences = observer(() => {
           )
         }
         <Grid xs={12}>
-          <Button variant="contained" color={"primary"} endIcon={<SaveRoundedIcon/>} size={"large"}>Save Changes</Button>
+          <Button variant="contained" color={"primary"} endIcon={<SaveRoundedIcon/>} size={"large"}>Save
+            Changes</Button>
         </Grid>
       </Grid>
     </>

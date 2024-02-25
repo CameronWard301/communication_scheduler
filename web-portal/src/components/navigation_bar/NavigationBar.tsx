@@ -47,7 +47,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
   },
 });
 
-const DrawerHeader = styled("div")(({ theme }) => ({
+const DrawerHeader = styled("div")(({theme}) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
@@ -58,7 +58,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop: string) => prop !== "open",
-})(({ theme, open }) => ({
+})(({theme, open}) => ({
   width: drawerWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",
@@ -76,7 +76,7 @@ const Drawer = styled(MuiDrawer, {
 export default function NavigationBar() {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
-  const { addSnackbar } = useContext(SnackbarContext);
+  const {addSnackbar} = useContext(SnackbarContext);
 
   const toggleDrawer = () => {
     if (open) {

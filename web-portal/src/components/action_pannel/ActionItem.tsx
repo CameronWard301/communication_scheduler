@@ -2,145 +2,148 @@ import {Card, Fade, Typography, useTheme} from "@mui/material";
 import React from "react";
 import Box from "@mui/material/Box";
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { Variant } from "@mui/material/styles/createTypography";
+import {Variant} from "@mui/material/styles/createTypography";
 
 type Props = {
-    title: string;
-    subtitle?: string;
-    onClick: () => void;
-    Icon?: React.ElementType;
-    disabled?: boolean;
-    size: "small" | "large";
-    selected?: boolean;
+  title: string;
+  subtitle?: string;
+  onClick: () => void;
+  Icon?: React.ElementType;
+  disabled?: boolean;
+  size: "small" | "large";
+  selected?: boolean;
 };
 
 const sizes = {
-    small: {
-        width: 150,
-        titleVariant: "h6",
-        iconSize: "2rem",
-    },
-    large: {
-        width: 300,
-        titleVariant: "h4",
-        iconSize: "7rem",
-    },
+  small: {
+    width: 150,
+    titleVariant: "h6",
+    iconSize: "2rem",
+  },
+  large: {
+    width: 300,
+    titleVariant: "h4",
+    iconSize: "7rem",
+  },
 };
 
-export const ActionItem = ({ title, subtitle, onClick, Icon, size, selected = false, disabled = false }: Props) => {
-    const theme = useTheme();
+export const ActionItem = ({title, subtitle, onClick, Icon, size, selected = false, disabled = false}: Props) => {
+  const theme = useTheme();
 
-    return (
-        <Fade in={true}>
-            <Box display={"inline-block"} width={sizes[size].width} marginTop={2} marginX={1} justifyContent={"center"}>
-                {disabled && (
-                    <Card
-                        elevation={3}
-                        sx={{
-                            cursor: "pointer",
-                            height: "100%",
-                            ":hover": { boxShadow: 10 },
-                            border: 1,
-                            borderColor: theme.palette.primary.main
-                        }}
-                    >
-                        <Grid sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                            <Typography variant={sizes[size].titleVariant as Variant} sx={{ marginTop: 2, marginX: 0.5 }} textAlign={"center"}>
-                                {title}
-                            </Typography>
-                            <Typography variant={"subtitle1"} textAlign={"center"}>
-                                {subtitle}
-                            </Typography>
-                            <Box
-                                sx={{
-                                    my: 3,
-                                    flexGrow: 1,
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent: "flex-end",
-                                    alignItems: "center",
-                                }}
-                            >
-                                {Icon && <Icon sx={{ fontSize: sizes[size].iconSize }} />}
-                            </Box>
-                        </Grid>
-                    </Card>
-                )}
-                {!selected && !disabled && (
-                    <Card
-                        elevation={3}
-                        onClick={() => {
-                            onClick();
-                        }}
-                        sx={{
-                            cursor: "pointer",
-                            height: "100%",
-                            ":hover": { boxShadow: 10 },
-                            border: 1,
-                            borderColor: theme.palette.primary.main,
-                            p:2
-                        }}
-                    >
-                        <Grid sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                            <Box
-                              sx={{
-                                  flexGrow: 1,
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  justifyContent: "flex-start",
-                                  alignItems: "center",
-                              }}
-                            >
-                                {Icon && <Icon sx={{ fontSize: sizes[size].iconSize }} />}
-                            </Box>
-                            <Typography variant={sizes[size].titleVariant as Variant} sx={{ marginY: 2, marginX: 0.5 }} textAlign={"center"}>
-                                {title}
-                            </Typography>
+  return (
+    <Fade in={true}>
+      <Box display={"inline-block"} width={sizes[size].width} marginTop={2} marginX={1} justifyContent={"center"}>
+        {disabled && (
+          <Card
+            elevation={3}
+            sx={{
+              cursor: "pointer",
+              height: "100%",
+              ":hover": {boxShadow: 10},
+              border: 1,
+              borderColor: theme.palette.primary.main
+            }}
+          >
+            <Grid sx={{display: "flex", flexDirection: "column", height: "100%"}}>
+              <Typography variant={sizes[size].titleVariant as Variant} sx={{marginTop: 2, marginX: 0.5}}
+                          textAlign={"center"}>
+                {title}
+              </Typography>
+              <Typography variant={"subtitle1"} textAlign={"center"}>
+                {subtitle}
+              </Typography>
+              <Box
+                sx={{
+                  my: 3,
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                }}
+              >
+                {Icon && <Icon sx={{fontSize: sizes[size].iconSize}}/>}
+              </Box>
+            </Grid>
+          </Card>
+        )}
+        {!selected && !disabled && (
+          <Card
+            elevation={3}
+            onClick={() => {
+              onClick();
+            }}
+            sx={{
+              cursor: "pointer",
+              height: "100%",
+              ":hover": {boxShadow: 10},
+              border: 1,
+              borderColor: theme.palette.primary.main,
+              p: 2
+            }}
+          >
+            <Grid sx={{display: "flex", flexDirection: "column", height: "100%"}}>
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                }}
+              >
+                {Icon && <Icon sx={{fontSize: sizes[size].iconSize}}/>}
+              </Box>
+              <Typography variant={sizes[size].titleVariant as Variant} sx={{marginY: 2, marginX: 0.5}}
+                          textAlign={"center"}>
+                {title}
+              </Typography>
 
-                            <Typography variant={"subtitle1"} textAlign={"center"}>
-                                {subtitle}
-                            </Typography>
+              <Typography variant={"subtitle1"} textAlign={"center"}>
+                {subtitle}
+              </Typography>
 
-                        </Grid>
-                    </Card>
-                )}
-                {selected && (
-                    <Card
-                        elevation={3}
-                        onClick={() => {
-                            onClick();
-                        }}
-                        sx={{
-                            cursor: "pointer",
-                            height: "100%",
-                            ":hover": { boxShadow: 10 },
-                            border: 1,
-                            borderColor: theme.palette.primary.main
-                        }}
-                    >
-                        <Grid sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                            <Typography variant={sizes[size].titleVariant as Variant} sx={{ marginTop: 2, marginX: 0.5 }} color={"white"} textAlign={"center"}>
-                                {title}
-                            </Typography>
-                            <Typography variant={"subtitle1"} textAlign={"center"} color={"white"}>
-                                {subtitle}
-                            </Typography>
-                            <Box
-                                sx={{
-                                    my: 3,
-                                    flexGrow: 1,
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent: "flex-end",
-                                    alignItems: "center",
-                                }}
-                            >
-                                {Icon && <Icon sx={{ color: "white", fontSize: sizes[size].iconSize }} />}
-                            </Box>
-                        </Grid>
-                    </Card>
-                )}
-            </Box>
-        </Fade>
-    );
+            </Grid>
+          </Card>
+        )}
+        {selected && (
+          <Card
+            elevation={3}
+            onClick={() => {
+              onClick();
+            }}
+            sx={{
+              cursor: "pointer",
+              height: "100%",
+              ":hover": {boxShadow: 10},
+              border: 1,
+              borderColor: theme.palette.primary.main
+            }}
+          >
+            <Grid sx={{display: "flex", flexDirection: "column", height: "100%"}}>
+              <Typography variant={sizes[size].titleVariant as Variant} sx={{marginTop: 2, marginX: 0.5}}
+                          color={"white"} textAlign={"center"}>
+                {title}
+              </Typography>
+              <Typography variant={"subtitle1"} textAlign={"center"} color={"white"}>
+                {subtitle}
+              </Typography>
+              <Box
+                sx={{
+                  my: 3,
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                }}
+              >
+                {Icon && <Icon sx={{color: "white", fontSize: sizes[size].iconSize}}/>}
+              </Box>
+            </Grid>
+          </Card>
+        )}
+      </Box>
+    </Fade>
+  );
 };

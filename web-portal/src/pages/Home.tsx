@@ -13,57 +13,57 @@ const Home = () => {
   return (
     <>
 
-    <Grid container spacing={2} justifyContent={"center"} alignItems={"center"} alignContent={"flex-start"}>
-      <Grid xs={12}>
-        <Typography variant="h1" fontSize={"4rem"}>Communication Scheduling Platform</Typography>
+      <Grid container spacing={2} justifyContent={"center"} alignItems={"center"} alignContent={"flex-start"}>
+        <Grid xs={12}>
+          <Typography variant="h1" fontSize={"4rem"}>Communication Scheduling Platform</Typography>
+        </Grid>
+        <Grid xs={12}>
+          <Typography variant="h5" pl={0.5}>Choose an item from the menu to get stared</Typography>
+        </Grid>
+        <ActionPanelCentre>
+          <ActionItem title={"Communication History"}
+                      onClick={() => navigate("/history")}
+                      size={"large"}
+                      Icon={HistoryRoundIcon}
+                      key={"history"}
+                      subtitle={"View the status of previous communications sent through the platform"}>
+
+          </ActionItem>
+          <ActionItem title={"Communication Schedules"}
+                      onClick={() => navigate("/schedules")}
+                      size={"large"}
+                      Icon={ScheduleSendRoundIcon}
+                      key={"schedules"}
+                      subtitle={"Find and manage user's communication schedules or create new schedules"}>
+
+          </ActionItem>
+          <ActionItem title={"Communication Gateways"}
+                      onClick={() => navigate("/gateways")}
+                      size={"large"}
+                      Icon={StorageRoundedIcon}
+                      key={"gateways"}
+                      subtitle={"View and manage the communication gateways available to the platform"}>
+
+          </ActionItem>
+          <ActionItem title={"Platform Configuration"}
+                      onClick={() => navigate("/preferences")}
+                      size={"large"}
+                      Icon={SettingsRoundedIcon}
+                      key={"preferences"}
+                      subtitle={"View and manage the platform configuration options (Advanced Users)"}>
+
+          </ActionItem>
+          <ActionItem title={"Platform monitoring"}
+                      onClick={() => navigate("/stats")}
+                      size={"large"}
+                      Icon={MonitorHeartRoundedIcon}
+                      key={"stats"}
+                      subtitle={"View and monitor the performance of the platform and cluster"}>
+
+          </ActionItem>
+        </ActionPanelCentre>
       </Grid>
-      <Grid xs={12}>
-        <Typography variant="h5" pl={0.5}>Choose an item from the menu to get stared</Typography>
-      </Grid>
-      <ActionPanelCentre>
-        <ActionItem title={"Communication History"}
-                    onClick={()=> navigate("/history")}
-                    size={"large"}
-                    Icon={HistoryRoundIcon}
-                    key={"history"}
-                    subtitle={"View the status of previous communications sent through the platform"}>
-
-        </ActionItem>
-        <ActionItem title={"Communication Schedules"}
-                    onClick={()=> navigate("/schedules")}
-                    size={"large"}
-                    Icon={ScheduleSendRoundIcon}
-                    key={"schedules"}
-                    subtitle={"Find and manage user's communication schedules or create new schedules"}>
-
-        </ActionItem>
-        <ActionItem title={"Communication Gateways"}
-                    onClick={()=> navigate("/gateways")}
-                    size={"large"}
-                    Icon={StorageRoundedIcon}
-                    key={"gateways"}
-                    subtitle={"View and manage the communication gateways available to the platform"}>
-
-        </ActionItem>
-        <ActionItem title={"Platform Configuration"}
-                    onClick={()=> navigate("/preferences")}
-                    size={"large"}
-                    Icon={SettingsRoundedIcon}
-                    key={"preferences"}
-                    subtitle={"View and manage the platform configuration options (Advanced Users)"}>
-
-        </ActionItem>
-        <ActionItem title={"Platform monitoring"}
-                    onClick={()=> navigate("/stats")}
-                    size={"large"}
-                    Icon={MonitorHeartRoundedIcon}
-                    key={"stats"}
-                    subtitle={"View and monitor the performance of the platform and cluster"}>
-
-        </ActionItem>
-      </ActionPanelCentre>
-    </Grid>
-      </>
+    </>
   )
 }
 

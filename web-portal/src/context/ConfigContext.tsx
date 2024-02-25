@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import {Config} from "../config/Config.ts";
 import axios from "axios";
-import { CircularProgress } from "@mui/material";
+import {CircularProgress} from "@mui/material";
 
 import configJson from "../config/config.json";
 
@@ -12,7 +12,7 @@ interface ConfigProviderProps {
   children: React.ReactNode;
 }
 
-const ConfigProvider = ({ children }: ConfigProviderProps) => {
+const ConfigProvider = ({children}: ConfigProviderProps) => {
   const [config, setConfig] = React.useState<Config>(configJson);
   const [loading, setLoading] = React.useState(true);
 
@@ -43,4 +43,4 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
   return <ConfigContext.Provider value={[config, setConfig]}>{children}</ConfigContext.Provider>;
 };
 
-export { ConfigContext, ConfigProvider };
+export {ConfigContext, ConfigProvider};

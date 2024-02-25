@@ -9,7 +9,7 @@ interface StoreProviderProps {
   store: RootStore;
 }
 
-export const StoreProvider = ({ children, store }: StoreProviderProps) => {
+export const StoreProvider = ({children, store}: StoreProviderProps) => {
   return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>;
 }
 
@@ -19,6 +19,6 @@ export const useStore = () => {
 
 export const withStore = (Component: React.ComponentType<any>) => {
   return (props: any) => {
-    return <Component {...props} store={useStore()} />;
+    return <Component {...props} store={useStore()}/>;
   };
 }
