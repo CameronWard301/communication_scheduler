@@ -1,4 +1,6 @@
 // Adapted from https://swagger-autogen.github.io/docs/getting-started/quick-start
+import {TimeUnit} from "./api/preferences/model/Preferences";
+
 const fs = require("fs");
 const path = require("path");
 const options = {
@@ -22,6 +24,10 @@ const doc = {
     {
       name: 'Auth',
       description: 'Authentication related end-points'
+    },
+    {
+      name: 'Preferences',
+      description: 'Preferences related end-points'
     }
   ],
   securityDefinitions: {
@@ -36,7 +42,24 @@ const doc = {
         token: 'string',
         expires: 'string'
       },
-      AuthScopes: ['GATEWAY:READ', 'GATEWAY:WRITE']
+      AuthScopes: ['GATEWAY:READ', 'GATEWAY:WRITE'],
+      Preferences: {
+        gatewayTimeoutSeconds: 100,
+        maximumAttempts: 200,
+        backoffCoefficient: 4.0,
+        initialInterval: {
+          value: 1,
+          unit: 'S'
+        },
+        maximumInterval: {
+          value: 100,
+          unit: 'D'
+        },
+        startToCloseTimeout: {
+          value: 100,
+          unit: 'H'
+        }
+      }
     }
   }
 }

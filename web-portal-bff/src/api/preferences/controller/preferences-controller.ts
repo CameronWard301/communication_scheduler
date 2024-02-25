@@ -1,0 +1,37 @@
+import express from "express";
+import {PreferencesService} from "../service/preferences-service";
+import {ClientPreferences} from "../model/Preferences";
+import {errorHandler} from "../../../helper/error-handler";
+import extractAuthToken from "../../../helper/extract-auth-token";
+
+const router = express.Router();
+
+router.get("/preferences", (req, res) => {
+    // #swagger.tags = ["Preferences"]
+    // #swagger.description = "Get preferences."
+
+    /* #swagger.responses[200] = {
+              description: 'Generate the preferences from the server.',
+               content: {
+                  "application/json": {
+                      schema: { $ref: '#/components/schemas/Preferences' }
+                  }
+              }
+          }
+      #swagger.responses[401] = {
+              description: 'Unauthorized.'
+             }
+      }
+      #swagger.responses[403] = {
+              description: 'Forbidden.'
+      } */
+    PreferencesService().getPreferences(req.headers.authorization).then((value) => {
+            res.status(value.status).send(value.data as ClientPreferences);
+        }).catch((reason) => {
+            errorHandler(res, reason);
+        });
+
+});
+
+module.exports = router;
+export default router;

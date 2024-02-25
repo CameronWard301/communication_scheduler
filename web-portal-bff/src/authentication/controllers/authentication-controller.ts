@@ -7,7 +7,7 @@ import {errorHandler} from "../../helper/error-handler";
 const router = express.Router();
 router.post("/auth", (req, res) => {
   // #swagger.tags = ["Auth"]
-  // #swagger.description = "BFF Auth APIs"
+  // #swagger.description = "Get the auth token with the required scopes."
   /*  #swagger.requestBody = {
               required: true,
               schema: { $ref: "#/components/schemas/AuthScopes" }

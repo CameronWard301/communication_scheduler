@@ -1,4 +1,4 @@
-export type BFFResponse = {
+export type BFFResponse<T>  = {
   status: number;
-  data: any;
+  data: T;
 }

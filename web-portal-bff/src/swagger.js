@@ -1,4 +1,5 @@
-// Adapted from https://swagger-autogen.github.io/docs/getting-started/quick-start
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 var path = require("path");
 var options = {
@@ -21,6 +22,10 @@ var doc = {
         {
             name: 'Auth',
             description: 'Authentication related end-points'
+        },
+        {
+            name: 'Preferences',
+            description: 'Preferences related end-points'
         }
     ],
     securityDefinitions: {
@@ -35,7 +40,24 @@ var doc = {
                 token: 'string',
                 expires: 'string'
             },
-            AuthScopes: ['GATEWAY:READ', 'GATEWAY:WRITE']
+            AuthScopes: ['GATEWAY:READ', 'GATEWAY:WRITE'],
+            Preferences: {
+                gatewayTimeoutSeconds: 100,
+                maximumAttempts: 200,
+                backoffCoefficient: 4.0,
+                initialInterval: {
+                    value: 1,
+                    unit: 'S'
+                },
+                maximumInterval: {
+                    value: 100,
+                    unit: 'D'
+                },
+                startToCloseTimeout: {
+                    value: 100,
+                    unit: 'H'
+                }
+            }
         }
     }
 };

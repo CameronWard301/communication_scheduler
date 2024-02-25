@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import authenticationController from "./authentication/controllers/authentication-controller";
 import swaggerDocument from "./swagger_output.json";
+import preferencesController from "./api/preferences/controller/preferences-controller";
 
 dotenv.config();
 
@@ -15,10 +16,18 @@ router.use("/api-docs", swaggerUi.serve);
 router.get("/api-docs", swaggerUi.setup(swaggerDocument));
 router.use(express.json());
 app.use(router);
+app.use(function (req, res, next)  {
+  res.header("Access-Control-Allow-Origin", process.env.ALLOW_ORIGIN);
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+})
 app.use("", authenticationController);
+app.use("", preferencesController);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
   console.log("[server]: SSL Verification: " + process.env.SSL_VERIFICATION);
   console.log("[server]: Auth service at: " + process.env.AUTH_API_URL);
+  console.log("[server]: Preferences service at: " + process.env.PREFERENCES_API_URL);
+
 });
