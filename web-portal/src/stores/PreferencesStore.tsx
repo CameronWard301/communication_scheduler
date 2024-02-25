@@ -4,6 +4,8 @@ import {Preferences} from "../models/Preferences.ts";
 
 export class PreferencesStore {
   rootStore: RootStore;
+  modalOpen = false;
+
   isAdvancedMode = false;
   newMaximumAttempts = 0;
   newBackoffCoefficient = 1;
@@ -31,6 +33,12 @@ export class PreferencesStore {
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
+  }
+
+  setModalOpen = (open: boolean) => {
+    action(() => {
+      this.modalOpen = open;
+    })();
   }
 
   setFromServer = (preferences: Preferences) => {
@@ -125,6 +133,34 @@ export class PreferencesStore {
     action(() => {
       this.newStartToCloseTimeoutTime = time;
     })();
+  }
+
+  hasMaximumAttemptsChanged = () => {
+    return this.newMaximumAttempts !== this.currentMaximumAttempts;
+  }
+
+  hasBackoffCoefficientChanged = () => {
+    return this.newBackoffCoefficient !== this.currentBackoffCoefficient;
+  }
+
+  hasInitialIntervalChanged = () => {
+    return this.newInitialInterval !== this.currentInitialInterval || this.newInitialIntervalTime !== this.currentInitialIntervalTime;
+  }
+
+  hasMaximumIntervalChanged = () => {
+    return this.newMaximumInterval !== this.currentMaximumInterval || this.newMaximumIntervalTime !== this.currentMaximumIntervalTime;
+  }
+
+  hasGatewayTimeoutChanged = () => {
+    return this.newGatewayTimeout !== this.currentGatewayTimeout || this.newGatewayTimeoutTime !== this.currentGatewayTimeoutTime;
+  }
+
+  hasStartToCloseTimeoutChanged = () => {
+    return this.newStartToCloseTimeout !== this.currentStartToCloseTimeout || this.newStartToCloseTimeoutTime !== this.currentStartToCloseTimeoutTime;
+  }
+
+  hasChanged = () => {
+    return this.hasMaximumAttemptsChanged() || this.hasBackoffCoefficientChanged() || this.hasInitialIntervalChanged() || this.hasMaximumIntervalChanged() || this.hasGatewayTimeoutChanged() || this.hasStartToCloseTimeoutChanged();
   }
 
 }

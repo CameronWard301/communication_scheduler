@@ -60,11 +60,7 @@ const ConfirmModal = observer(
                 <Grid xs={12}>
                   <Box id="transition-modal-description">{description}</Box>
                 </Grid>
-                <Grid xs={12} md={6} marginTop={"auto"}>
-                  <Button onClick={onConfirm} endIcon={confirmIcon} variant="contained" fullWidth sx={{ height: 56 }} color={"primary"}>
-                    <span>{confirmText}</span>
-                  </Button>
-                </Grid>
+
                 <Grid xs={12} md={6}>
                   <Button
                     variant="outlined"
@@ -77,6 +73,11 @@ const ConfirmModal = observer(
                     }}
                   >
                     {cancelText}
+                  </Button>
+                </Grid>
+                <Grid xs={12} md={6} marginTop={"auto"}>
+                  <Button onClick={onConfirm} endIcon={confirmIcon} variant="contained" fullWidth sx={{ height: 56 }} color={"primary"}>
+                    <span>{confirmText}</span>
                   </Button>
                 </Grid>
               </Grid>

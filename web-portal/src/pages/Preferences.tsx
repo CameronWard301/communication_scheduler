@@ -11,23 +11,49 @@ import NotInterestedRoundedIcon from '@mui/icons-material/NotInterestedRounded';
 import TimeSelection from "../components/time_selection";
 import CustomTooltip from "../components/tooltip";
 import {usePreferencesService} from "../service/PreferencesService.ts";
-import {useEffect} from "react";
+import {useContext, useEffect} from "react";
+import ConfirmModal from "../components/modal";
+import {PreferenceChanges} from "../components/preference_changes";
+import {SnackbarContext} from "../context/SnackbarContext.tsx";
 
 const Preferences = observer(() => {
   const rootStore = useStore();
+  const { addSnackbar } = useContext(SnackbarContext);
+
   const preferencesService = usePreferencesService();
 
   useEffect(() => {
     preferencesService.getPreferences();
   }, []);
 
+  const handeModalOpen = () => {
+    if (rootStore.preferencesStore.hasChanged()){
+      rootStore.preferencesStore.setModalOpen(true);
+      return;
+    }
+    addSnackbar("You haven't made any changes to save", "info");
+
+
+  }
+
   return (
     <>
+      <ConfirmModal
+        open={rootStore.preferencesStore.modalOpen}
+        confirmText={"Save Changes"}
+        description={<PreferenceChanges/>}
+        onConfirm={() => rootStore.preferencesStore.setModalOpen(false)}
+        setOpen={rootStore.preferencesStore.setModalOpen}
+        heading={"Save Changes"}
+        confirmIcon={<SaveRoundedIcon/>}/>
+
+
       <Grid container spacing={4} justifyContent={"center"} alignItems={"center"} alignContent={"flex-start"}>
         <Grid xs={12} mb={2}>
           <Typography variant="h1" fontSize={"4rem"}>Platform Configuration</Typography>
           <Typography variant="body1">Here you can configure the retry policies for failed communications. You can
-            specify how many retry attempts should occur before terminating, how quickly the system should try again and
+            specify how many retry attempts should occur before terminating, how quickly the system should try again
+            and
             how long between each retry</Typography>
         </Grid>
         <Grid xs={12}>
@@ -128,15 +154,15 @@ const Preferences = observer(() => {
                 </Box>
                 <Box>
                   <TextField label="Maximum Interval" type="number" variant="outlined" margin={"normal"}
-                             value={rootStore.preferencesStore.newStartToCloseTimeout}
-                             onChange={(event) => rootStore.preferencesStore.setStartToCloseTimeout(event.target.value)}/>
+                             value={rootStore.preferencesStore.newMaximumInterval}
+                             onChange={(event) => rootStore.preferencesStore.setMaximumInterval(event.target.value)}/>
                   <TimeSelection keyId={"maximum-interval-time"}
-                                 value={rootStore.preferencesStore.newStartToCloseTimeoutTime} onChange={(event) => {
-                    rootStore.preferencesStore.setStartToCloseTimeoutTime(event.target.value)
+                                 value={rootStore.preferencesStore.newMaximumIntervalTime} onChange={(event) => {
+                    rootStore.preferencesStore.setMaximumIntervalTime(event.target.value)
                   }}/>
-                  <Button variant={rootStore.preferencesStore.newStartToCloseTimeout == 0 ? "contained" : "outlined"}
-                          color={rootStore.preferencesStore.newStartToCloseTimeout == 0 ? "secondary" : "info"}
-                          onClick={() => rootStore.preferencesStore.setStartToCloseTimeout("0")}
+                  <Button variant={rootStore.preferencesStore.newMaximumInterval == 0 ? "contained" : "outlined"}
+                          color={rootStore.preferencesStore.newMaximumInterval == 0 ? "secondary" : "info"}
+                          onClick={() => rootStore.preferencesStore.setMaximumInterval("0")}
                           endIcon={<NotInterestedRoundedIcon/>}
                           sx={{height: "56px", mt: 2, ml: 3}}>No Limit</Button>
                 </Box>
@@ -149,16 +175,16 @@ const Preferences = observer(() => {
                     message="The maximum amount of time it should take to send a communication, if the communication execution exceeds this limit then there are no more retries. Set to 0 to disable"/>
                 </Box>
                 <Box>
-                  <TextField label="Maximum Interval" type="number" variant="outlined" margin={"normal"}
-                             value={rootStore.preferencesStore.newMaximumInterval}
-                             onChange={(event) => rootStore.preferencesStore.setMaximumInterval(event.target.value)}/>
+                  <TextField label="Start To Close Timeout" type="number" variant="outlined" margin={"normal"}
+                             value={rootStore.preferencesStore.newStartToCloseTimeout}
+                             onChange={(event) => rootStore.preferencesStore.setStartToCloseTimeout(event.target.value)}/>
                   <TimeSelection keyId={"start-to-close-timeout"}
-                                 value={rootStore.preferencesStore.newMaximumIntervalTime} onChange={(event) => {
-                    rootStore.preferencesStore.setMaximumIntervalTime(event.target.value)
+                                 value={rootStore.preferencesStore.newStartToCloseTimeoutTime} onChange={(event) => {
+                    rootStore.preferencesStore.setStartToCloseTimeout(event.target.value)
                   }}/>
-                  <Button variant={rootStore.preferencesStore.newMaximumInterval == 0 ? "contained" : "outlined"}
-                          color={rootStore.preferencesStore.newMaximumInterval == 0 ? "secondary" : "info"}
-                          onClick={() => rootStore.preferencesStore.setMaximumInterval("0")}
+                  <Button variant={rootStore.preferencesStore.newStartToCloseTimeout == 0 ? "contained" : "outlined"}
+                          color={rootStore.preferencesStore.newStartToCloseTimeout == 0 ? "secondary" : "info"}
+                          onClick={() => rootStore.preferencesStore.setStartToCloseTimeout("0")}
                           endIcon={<NotInterestedRoundedIcon/>}
                           sx={{height: "56px", mt: 2, ml: 3}}>No Limit</Button>
                 </Box>
@@ -167,7 +193,8 @@ const Preferences = observer(() => {
           )
         }
         <Grid xs={12}>
-          <Button variant="contained" color={"primary"} endIcon={<SaveRoundedIcon/>} size={"large"}>Save
+          <Button variant="contained" color={"primary"} endIcon={<SaveRoundedIcon/>} size={"large"}
+                  onClick={() => handeModalOpen()}>Save
             Changes</Button>
         </Grid>
       </Grid>

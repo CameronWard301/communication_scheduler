@@ -15,9 +15,9 @@ export interface TimeUnit {
 }
 
 export interface ClientPreferences {
-  gatewayTimeoutSeconds: number,
   maximumAttempts: number;
   backoffCoefficient: number;
+  gatewayTimeout: TimeUnit,
   initialInterval: TimeUnit
   maximumInterval: TimeUnit
   startToCloseTimeout: TimeUnit
