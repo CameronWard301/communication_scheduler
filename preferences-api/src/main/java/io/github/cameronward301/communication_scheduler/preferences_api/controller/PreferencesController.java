@@ -31,6 +31,7 @@ public class PreferencesController {
 
     /**
      * Get the preferences from the cluster
+     *
      * @return Preferences object containing the platforms configuration
      */
     @GetMapping("")
@@ -41,7 +42,8 @@ public class PreferencesController {
 
     /**
      * Update the platforms retry policy
-     * @param retryPolicy - the retry policy to set
+     *
+     * @param retryPolicy   - the retry policy to set
      * @param bindingResult - validation errors from the provided retry policy request
      * @return the updated retry-policy
      * @throws RequestException if there is an error processing the update
@@ -49,7 +51,7 @@ public class PreferencesController {
     @PutMapping("/retry-policy")
     @PreAuthorize("hasAuthority('SCOPE_PREFERENCES:WRITE')")
     public ResponseEntity<RetryPolicy> setRetryPolicy(@Valid @RequestBody RetryPolicy retryPolicy, BindingResult bindingResult) throws RequestException {
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             throw new RequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(preferencesService.setRetryPolicy(retryPolicy));
@@ -57,8 +59,9 @@ public class PreferencesController {
 
     /**
      * Update the platforms gateway timeout value
+     *
      * @param gatewayTimeout the new value to set
-     * @param bindingResult validation errors of the new value
+     * @param bindingResult  validation errors of the new value
      * @return the updated setting
      * @throws RequestException if there is an error processing the update
      */

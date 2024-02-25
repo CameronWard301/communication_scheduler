@@ -10,10 +10,11 @@ public class KubernetesConfig {
 
     /**
      * Connects to the kubernetes cluster to manage its recourses
+     *
      * @return an instance of the kubernetes client
      */
     @Bean
-    KubernetesClient kubernetesClient(){
+    KubernetesClient kubernetesClient() {
         return new KubernetesClientBuilder().build();
     }
 }

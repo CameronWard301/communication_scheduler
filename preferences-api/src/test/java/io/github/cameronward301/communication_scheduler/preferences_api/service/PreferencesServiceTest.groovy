@@ -54,7 +54,7 @@ class PreferencesServiceTest extends Specification {
         response.getGatewayTimeoutSeconds() == 60
         response.getRetryPolicy().getBackoffCoefficient() == 2.0
         response.getRetryPolicy().getStartToCloseTimeout() == "PT10S"
-        response.getRetryPolicy().getMaximumAttempts() == "100"
+        response.getRetryPolicy().getMaximumAttempts() == 100
         response.getRetryPolicy().getInitialInterval() == "PT1S"
         response.getRetryPolicy().getMaximumInterval() == "PT100S"
     }
@@ -100,7 +100,7 @@ class PreferencesServiceTest extends Specification {
         given: "Retry policy"
         def retryPolicy = RetryPolicy.builder()
                 .startToCloseTimeout("test-start-to-close")
-                .maximumAttempts("1234")
+                .maximumAttempts(1234)
                 .backoffCoefficient(3.0)
                 .initialInterval("test-initial")
                 .maximumInterval("maximum-interval")
@@ -138,7 +138,7 @@ class PreferencesServiceTest extends Specification {
         given: "Retry policy"
         def retryPolicy = RetryPolicy.builder()
                 .startToCloseTimeout("test-start-to-close")
-                .maximumAttempts("1234")
+                .maximumAttempts(1234)
                 .backoffCoefficient(3.0)
                 .initialInterval("test-initial")
                 .maximumInterval("maximum-interval")
@@ -187,7 +187,7 @@ class PreferencesServiceTest extends Specification {
         given: "Retry policy"
         def retryPolicy = RetryPolicy.builder()
                 .startToCloseTimeout("test-start-to-close")
-                .maximumAttempts("1234")
+                .maximumAttempts(1234)
                 .backoffCoefficient(3.0)
                 .initialInterval("test-initial")
                 .maximumInterval("maximum-interval")
@@ -239,7 +239,7 @@ class PreferencesServiceTest extends Specification {
         and: "Retry Policy"
         def retryPolicy = RetryPolicy.builder()
                 .startToCloseTimeout("test-start-to-close")
-                .maximumAttempts("1234")
+                .maximumAttempts(1234)
                 .backoffCoefficient(3.0)
                 .initialInterval("test-initial")
                 .maximumInterval("maximum-interval")
@@ -280,7 +280,7 @@ class PreferencesServiceTest extends Specification {
         and: "Retry Policy"
         def retryPolicy = RetryPolicy.builder()
                 .startToCloseTimeout("test-start-to-close")
-                .maximumAttempts("1234")
+                .maximumAttempts(1234)
                 .backoffCoefficient(3.0)
                 .initialInterval("test-initial")
                 .maximumInterval("maximum-interval")

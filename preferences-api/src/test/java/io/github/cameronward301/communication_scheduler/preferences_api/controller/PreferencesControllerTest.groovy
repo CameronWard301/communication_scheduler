@@ -17,7 +17,7 @@ class PreferencesControllerTest extends Specification {
     def retryPolicy = RetryPolicy.builder()
             .backoffCoefficient(2.0)
             .initialInterval("test-initial-interval")
-            .maximumAttempts("test-maximum")
+            .maximumAttempts(1234)
             .maximumInterval("test-max-interval")
             .startToCloseTimeout("test-start-to-close")
             .build()
