@@ -12,7 +12,7 @@ public class Preferences {
     @Data
     @Builder
     public static class RetryPolicy {
-        private String maximumAttempts;
+        private Integer maximumAttempts;
         private Float backoffCoefficient;
         private String initialInterval;
         private String maximumInterval;
