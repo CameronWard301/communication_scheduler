@@ -1,5 +1,6 @@
 import {RootStore} from "./RootStore.tsx";
 import {action, makeAutoObservable} from "mobx";
+import {Preferences} from "../models/Preferences.ts";
 
 export class PreferencesStore {
   rootStore: RootStore;
@@ -8,15 +9,56 @@ export class PreferencesStore {
   newBackoffCoefficient = 1;
   newInitialInterval = 0;
   newMaximumInterval = 0;
+  newGatewayTimeout = 0;
+  newGatewayTimeoutTime = "S";
   newStartToCloseTimeout = 0;
   newInitialIntervalTime = "S"
   newMaximumIntervalTime = "S"
   newStartToCloseTimeoutTime = "S"
+
   currentMaximumAttempts = 0;
+  currentBackoffCoefficient = 1;
+  currentInitialInterval = 0;
+  currentMaximumInterval = 0;
+  currentGatewayTimeout = 0;
+  currentGatewayTimeoutTime = "S";
+  currentStartToCloseTimeout = 0;
+  currentInitialIntervalTime = "S"
+  currentMaximumIntervalTime = "S"
+  currentStartToCloseTimeoutTime = "S"
+
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
+  }
+
+  setFromServer = (preferences: Preferences) => {
+    action(() => {
+      this.newMaximumAttempts = preferences.maximumAttempts;
+      this.newBackoffCoefficient = preferences.backoffCoefficient;
+      this.newInitialInterval = preferences.initialInterval.value;
+      this.newMaximumInterval = preferences.maximumInterval.value;
+      this.newStartToCloseTimeout = preferences.startToCloseTimeout.value;
+      this.newInitialIntervalTime = preferences.initialInterval.unit;
+      this.newMaximumIntervalTime = preferences.initialInterval.unit;
+      this.newStartToCloseTimeoutTime = preferences.initialInterval.unit;
+      this.newGatewayTimeout = preferences.gatewayTimeout.value;
+      this.newGatewayTimeoutTime = preferences.gatewayTimeout.unit;
+      this.currentGatewayTimeout = preferences.gatewayTimeout.value;
+      this.currentGatewayTimeoutTime = preferences.gatewayTimeout.unit;
+
+      this.currentMaximumAttempts = preferences.maximumAttempts;
+      this.currentBackoffCoefficient = preferences.backoffCoefficient;
+      this.currentInitialInterval = preferences.initialInterval.value;
+      this.currentMaximumInterval = preferences.maximumInterval.value;
+      this.currentStartToCloseTimeout = preferences.startToCloseTimeout.value;
+      this.currentInitialIntervalTime = preferences.initialInterval.unit;
+      this.currentMaximumIntervalTime = preferences.initialInterval.unit;
+      this.currentStartToCloseTimeoutTime = preferences.initialInterval.unit;
+      this.currentGatewayTimeout = preferences.gatewayTimeout.value;
+      this.currentGatewayTimeoutTime = preferences.gatewayTimeout.unit;
+    })();
   }
 
   setAdvancedMode = (mode: boolean) => {
@@ -48,6 +90,19 @@ export class PreferencesStore {
       this.newMaximumInterval = Number(interval);
     })();
   }
+
+  setGatewayTimeout = (timeout: string) => {
+    action(() => {
+      this.newGatewayTimeout = Number(timeout);
+    })();
+  }
+
+  setGatewayTimeoutTime = (time: string) => {
+    action(() => {
+      this.newGatewayTimeoutTime = time;
+    })();
+  }
+
   setStartToCloseTimeout = (timeout: string) => {
     action(() => {
       this.newStartToCloseTimeout = Number(timeout);

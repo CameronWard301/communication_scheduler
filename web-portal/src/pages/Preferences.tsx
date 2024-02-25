@@ -10,9 +10,17 @@ import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 import NotInterestedRoundedIcon from '@mui/icons-material/NotInterestedRounded';
 import TimeSelection from "../components/time_selection";
 import CustomTooltip from "../components/tooltip";
+import {usePreferencesService} from "../service/PreferencesService.ts";
+import {useEffect} from "react";
 
 const Preferences = observer(() => {
   const rootStore = useStore();
+  const preferencesService = usePreferencesService();
+
+  useEffect(() => {
+    preferencesService.getPreferences();
+  }, []);
+
   return (
     <>
       <Grid container spacing={4} justifyContent={"center"} alignItems={"center"} alignContent={"flex-start"}>
@@ -24,10 +32,6 @@ const Preferences = observer(() => {
         </Grid>
         <Grid xs={12}>
           <Box>
-            The maximum number of attempts to send the communication to
-            the
-            customer if
-            the system encounters an error, or select unlimited attempts.
             <Typography variant={"h4"} display={"inline-block"}>Maximum Attempts</Typography>
             <CustomTooltip
               message="The maximum number of attempts to send the communication to the customer if the system encounters an error, or select unlimited attempts."/>
@@ -41,6 +45,23 @@ const Preferences = observer(() => {
                     onClick={() => rootStore.preferencesStore.setMaximumAttempts("0")}
                     endIcon={<AllInclusiveRoundedIcon/>}
                     sx={{height: "56px", mt: 2, ml: 3}}>Unlimited Attempts</Button>
+          </Box>
+        </Grid>
+
+        <Grid xs={12}>
+          <Box>
+            <Typography variant={"h4"} display={"inline-block"}>Gateway Timeout</Typography>
+            <CustomTooltip
+              message="The time to wait for a gateway to respond back with a status before retrying the gateway"/>
+          </Box>
+          <Box>
+            <TextField label="Gateway Timeout" type="number" variant="outlined" margin={"normal"}
+                       value={rootStore.preferencesStore.newGatewayTimeout}
+                       onChange={(event) => rootStore.preferencesStore.setGatewayTimeout(event.target.value)}/>
+            <TimeSelection keyId={"gateway-timeout-time"}
+                           value={rootStore.preferencesStore.newGatewayTimeoutTime} onChange={(event) => {
+              rootStore.preferencesStore.setGatewayTimeoutTime(event.target.value)
+            }}/>
           </Box>
         </Grid>
         <Grid xs={12}>
@@ -92,7 +113,7 @@ const Preferences = observer(() => {
                   <TextField label="Initial Interval" type="number" variant="outlined" margin={"normal"}
                              value={rootStore.preferencesStore.newInitialInterval}
                              onChange={(event) => rootStore.preferencesStore.setInitialInterval(event.target.value)}/>
-                  <TimeSelection key={"initial-interval-time"}
+                  <TimeSelection keyId={"initial-interval-time"}
                                  value={rootStore.preferencesStore.newInitialIntervalTime} onChange={(event) => {
                     rootStore.preferencesStore.setInitialIntervalTime(event.target.value)
                   }}/>
@@ -109,7 +130,7 @@ const Preferences = observer(() => {
                   <TextField label="Maximum Interval" type="number" variant="outlined" margin={"normal"}
                              value={rootStore.preferencesStore.newStartToCloseTimeout}
                              onChange={(event) => rootStore.preferencesStore.setStartToCloseTimeout(event.target.value)}/>
-                  <TimeSelection key={"maximum-interval-time"}
+                  <TimeSelection keyId={"maximum-interval-time"}
                                  value={rootStore.preferencesStore.newStartToCloseTimeoutTime} onChange={(event) => {
                     rootStore.preferencesStore.setStartToCloseTimeoutTime(event.target.value)
                   }}/>
@@ -131,7 +152,7 @@ const Preferences = observer(() => {
                   <TextField label="Maximum Interval" type="number" variant="outlined" margin={"normal"}
                              value={rootStore.preferencesStore.newMaximumInterval}
                              onChange={(event) => rootStore.preferencesStore.setMaximumInterval(event.target.value)}/>
-                  <TimeSelection key={"maximum-interval-time"}
+                  <TimeSelection keyId={"start-to-close-timeout"}
                                  value={rootStore.preferencesStore.newMaximumIntervalTime} onChange={(event) => {
                     rootStore.preferencesStore.setMaximumIntervalTime(event.target.value)
                   }}/>

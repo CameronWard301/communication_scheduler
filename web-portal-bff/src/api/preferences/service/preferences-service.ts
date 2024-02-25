@@ -26,9 +26,9 @@ export const PreferencesService = () => {
       return {
         status: value.status,
         data: {
-          gatewayTimeoutSeconds: serverPreferences.gatewayTimeoutSeconds,
           maximumAttempts: serverPreferences.retryPolicy.maximumAttempts,
           backoffCoefficient: serverPreferences.retryPolicy.backoffCoefficient,
+          gatewayTimeout: getTimeUnit(serverPreferences.gatewayTimeoutSeconds + "S"),
           initialInterval: getTimeUnit(serverPreferences.retryPolicy.initialInterval),
           maximumInterval: getTimeUnit(serverPreferences.retryPolicy.maximumInterval),
           startToCloseTimeout: getTimeUnit(serverPreferences.retryPolicy.startToCloseTimeout),

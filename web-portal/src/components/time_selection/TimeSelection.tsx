@@ -1,7 +1,7 @@
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 
 interface TimeSelectionProps {
-  key: string;
+  keyId: string;
   value: string;
   onChange: (value: SelectChangeEvent) => void;
 
@@ -10,14 +10,16 @@ interface TimeSelectionProps {
 const TimeSelection = (props: TimeSelectionProps) => {
   return (
 
-    <FormControl key={props.key + "-key"} margin={"normal"} sx={{pl: 3, minWidth: 200}}>
-      <InputLabel id={props.key + "-label"} sx={{pl: 4}}>Time Period</InputLabel>
+    <FormControl key={props.keyId + "-key"} margin={"normal"} sx={{pl: 3, minWidth: 200}} id={props.keyId}>
+      <InputLabel htmlFor={props.keyId+"-input"} id={props.keyId + "-label"} sx={{pl: 4}}>Time Period</InputLabel>
       <Select
-        labelId={props.key + "-label"}
-        id={props.key}
+        labelId={props.keyId + "-label"}
+        id={props.keyId}
+        name={props.keyId + "-name"}
         value={props.value}
         label="Time Period"
         onChange={props.onChange}
+        inputProps={{id: props.keyId + "-input"}}
       >
         <MenuItem value={"S"}>Seconds</MenuItem>
         <MenuItem value={"M"}>Minutes</MenuItem>

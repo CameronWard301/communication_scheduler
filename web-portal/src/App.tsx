@@ -9,6 +9,8 @@ import {StoreProvider} from "./context/StoreContext.tsx";
 import {BrowserRouter} from 'react-router-dom';
 import NavigationBar from "./components/navigation_bar";
 import AppRouter from "./AppRouter.tsx";
+import useAxiosClient from "./client/AxiosClient.ts";
+import {AxiosContextProvider} from "./context/AxiosContext.tsx";
 
 const theme = createTheme({
   palette: {
@@ -28,6 +30,7 @@ const theme = createTheme({
 const store = new RootStore();
 
 function App() {
+  const client = useAxiosClient();
 
   return (
     <>
@@ -35,6 +38,7 @@ function App() {
         <ThemeProvider theme={theme}>
           <ConfigProvider>
             <SnackbarContextProvider>
+              <AxiosContextProvider client={client}>
               <BrowserRouter>
                 <Box sx={{display: 'flex'}}>
                   <CssBaseline/>
@@ -42,6 +46,7 @@ function App() {
                   <AppRouter/>
                 </Box>
               </BrowserRouter>
+              </AxiosContextProvider>
             </SnackbarContextProvider>
           </ConfigProvider>
         </ThemeProvider>
