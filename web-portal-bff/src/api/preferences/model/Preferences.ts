@@ -1,12 +1,19 @@
-export interface ServerPreferences {
+export interface RetryPolicy {
+  maximumAttempts: number,
+  backoffCoefficient: number
+  initialInterval: String
+  maximumInterval: String
+  startToCloseTimeout: String
+}
+
+export interface GatewayTimeout {
   gatewayTimeoutSeconds: number,
-  retryPolicy: {
-    maximumAttempts: number,
-    backoffCoefficient: number
-    initialInterval: String
-    maximumInterval: String
-    startToCloseTimeout: String
-  }
+
+}
+
+export interface ServerPreferences {
+  gatewayTimeoutSeconds: GatewayTimeout
+  retryPolicy: RetryPolicy
 }
 
 export interface TimeUnit {

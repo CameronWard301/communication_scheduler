@@ -1,4 +1,4 @@
-import {ClientPreferences, ServerPreferences, TimeUnit} from "../model/Preferences";
+import {ClientPreferences, GatewayTimeout, ServerPreferences, TimeUnit} from "../model/Preferences";
 import axiosClient from "../../../axios-client";
 import {BFFResponse} from "../../../model/BFFResponse";
 import extractAuthToken from "../../../helper/extract-auth-token";
@@ -13,6 +13,23 @@ const getTimeUnit = (value: String): TimeUnit => {
     value: parseInt(value.slice(0, -1)),
     unit: unit
   }
+}
+
+const convertToSeconds = (timeUnit: TimeUnit): number => {
+  timeUnit.unit = timeUnit.unit.toUpperCase();
+  switch (timeUnit.unit) {
+    case "S":
+      return timeUnit.value;
+    case "M":
+      return timeUnit.value * 60;
+    case "H":
+      return timeUnit.value * 3600;
+    case "D":
+      return timeUnit.value * 86400;
+    default:
+      return 0;
+  }
+
 }
 
 export const PreferencesService = () => {
@@ -40,5 +57,36 @@ export const PreferencesService = () => {
     });
   }
 
-  return {getPreferences};
+  const putPreferences = async (token:string | undefined, preferences:ClientPreferences): Promise<BFFResponse<ClientPreferences>> => {
+    const gatewayTimeout = await axiosClient.put(process.env.PREFERENCES_API_URL as string + "/gateway-timeout", {
+      gatewayTimeoutSeconds: convertToSeconds(preferences.gatewayTimeout)
+    }, {
+      headers: extractAuthToken(token)
+    })
+
+    const retryPolicy = await axiosClient.put(process.env.PREFERENCES_API_URL as string + "/retry-policy", {
+      maximumAttempts: preferences.maximumAttempts,
+      backoffCoefficient: preferences.backoffCoefficient,
+      initialInterval: "PT" + preferences.initialInterval.value + preferences.initialInterval.unit.toUpperCase(),
+      maximumInterval: "PT" + preferences.maximumInterval.value + preferences.maximumInterval.unit.toUpperCase(),
+      startToCloseTimeout: "PT" + preferences.startToCloseTimeout.value + preferences.startToCloseTimeout.unit.toUpperCase()
+    }, {
+      headers: extractAuthToken(token)
+    })
+
+    return {
+      status: 200,
+      data: {
+        maximumAttempts: retryPolicy.data.maximumAttempts,
+        backoffCoefficient: retryPolicy.data.backoffCoefficient,
+        gatewayTimeout: getTimeUnit((gatewayTimeout.data as GatewayTimeout).gatewayTimeoutSeconds + "S"),
+        initialInterval: getTimeUnit(retryPolicy.data.initialInterval),
+        maximumInterval: getTimeUnit(retryPolicy.data.maximumInterval),
+        startToCloseTimeout: getTimeUnit(retryPolicy.data.startToCloseTimeout),
+      } as ClientPreferences
+    };
+
+  }
+
+  return {getPreferences, putPreferences};
 }
