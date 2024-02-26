@@ -660,3 +660,40 @@ spec:
           envFrom:
              - secretRef:
                     name: {{ .Release.Name }}-web-portal-bff-env
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-web-portal
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-web-portal
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-web-portal
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-web-portal
+          image: "{{ .Values.web_portal.repository }}:{{ .Values.web_portal.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 3000
+          env:
+            - name: VITE_REACT_APP_ENVIRONMENT
+              value: "server"
+            - name: BFF_API_URL
+              value: "http://{{ .Release.Name }}-web-portal-bff-service.{{.Release.Namespace}}.svc.cluster.local:3000"
+          volumeMounts:
+            - mountPath: "/app/dist/config.json"
+              name: config
+              readOnly: true
+              subPath: "config.json"
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-web-portal-config

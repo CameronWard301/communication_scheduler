@@ -25,3 +25,16 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   {{ $configMapAuthKeyStoreData }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-web-portal-config
+  namespace: {{ .Release.Namespace }}
+data:
+  config.json: |
+    {
+      "bffBaseUrl": "{{ .Values.web_portal.bffUri }}",
+      "verifyHttps": "{{ .Values.web_portal.verifyHttps }}",
+      "environment": "{{ .Values.web_portal.environment }}"
+    }

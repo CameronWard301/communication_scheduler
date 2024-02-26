@@ -1,4 +1,5 @@
 {
   "bffBaseUrl": "http://localhost:9090/v1/bff",
-  "verifyHttps": false
+  "verifyHttps": false,
+  "environment": "local"
 }

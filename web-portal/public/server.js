@@ -1,9 +1,13 @@
-import express from 'express';
-import axios from 'axios';
+const express = require("express");
+const path = require("path");
+const axios = require("axios");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(express.static(__dirname));
+
 console.log(`BFF API URL ${process.env.BFF_API_URL}`);
+
 
 app.all("/v1/bff/*", async (req, res) => {
     let url = process.env.BFF_API_URL + req.url;
@@ -28,12 +32,12 @@ app.all("/v1/bff/*", async (req, res) => {
 
 app.get("/configuration", (req, res) => {
     console.log("Sending configuration");
-    res.sendFile(__dirname + "config.json");
+    res.sendFile(path.join(__dirname, "config.json"));
 })
 
 app.get("/*", (req, res) => {
     console.log("Sending index.html");
-    res.sendFile(__dirname + "index.html");
+    res.sendFile(path.join(__dirname, "index.html"));
 })
 
 app.listen(PORT, () => {

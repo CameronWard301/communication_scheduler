@@ -135,6 +135,12 @@ web_bff:
   port: "3000"
   sslVerification: "false"
 
+web_portal:
+  repository: cameronward/cs-web-portal
+  tag: latest
+  port: "3000"
+  sslVerification: "false"
+
 integration_tests:
   repository: cameronward/cs-integration-tests
   tag: latest

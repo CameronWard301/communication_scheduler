@@ -8,7 +8,7 @@ import {useAxiosClientContext} from "../context/AxiosContext.tsx";
 export function useToken(): Promise<AuthToken> {
   const [config] = useContext(ConfigContext);
   const client = useAxiosClientContext();
-  const token = Cookies.get(APP_VERSION + "-communication-scheduler-token");
+  const token = Cookies.get(`${APP_VERSION}-${config.environment}-communication-scheduler-token`);
 
   const authenticate = async (): Promise<AuthToken> => {
 

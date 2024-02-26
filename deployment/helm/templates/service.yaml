@@ -137,3 +137,17 @@ spec:
       port: 3000
       targetPort: 3000
   type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-web-portal-service
+spec:
+  selector:
+    app: {{ .Release.Name }}-web-portal
+    release: {{ .Release.Name }}
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
