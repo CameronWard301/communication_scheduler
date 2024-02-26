@@ -27,7 +27,7 @@ app.use("", authenticationController);
 app.use("", preferencesController);
 
 app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+  console.log(`[server]: Server v${process.env.npm_package_version} is running at http://localhost:${port}`);
   console.log("[server]: SSL Verification: " + process.env.SSL_VERIFICATION);
   console.log("[server]: Auth service at: " + process.env.AUTH_API_URL);
   console.log("[server]: Preferences service at: " + process.env.PREFERENCES_API_URL);
