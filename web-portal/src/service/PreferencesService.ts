@@ -26,7 +26,7 @@ export const usePreferencesService = () => {
         rootStore.preferencesStore.setFromServer(response.data as Preferences);
       })
         .catch(error => {
-          throw error;
+          handleError(error)
         })
         .finally(() => rootStore.preferencesStore.setLoading(false));
     }).catch(error => {
