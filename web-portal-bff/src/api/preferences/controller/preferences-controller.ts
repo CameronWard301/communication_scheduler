@@ -5,7 +5,7 @@ import {errorHandler} from "../../../helper/error-handler";
 
 const router = express.Router();
 
-router.get("/preferences", (req, res) => {
+router.get("/v1/bff/preferences", (req, res) => {
     // #swagger.tags = ["Preferences"]
     // #swagger.description = "Get preferences."
 
@@ -32,7 +32,7 @@ router.get("/preferences", (req, res) => {
 
 });
 
-router.put("/preferences", (req, res) => {
+router.put("/v1/bff/preferences", (req, res) => {
   // #swagger.tags = ["Preferences"]
   // #swagger.description = "Update preferences."
 

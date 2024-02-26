@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        container: ["web-portal-bff"]
+        container: ["web-portal-bff", "web-portal"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,7 +37,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.container }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/cs-${{ matrix.container }}
           tags: |
             type=schedule
             type=ref,event=branch

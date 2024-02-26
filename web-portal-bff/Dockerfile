@@ -1,4 +1,4 @@
-# Use node:18 to build the app:
+# Use node:20 to build the app:
 FROM node:20.11.1-slim AS build-env
 
 RUN npm install -g typescript@5.3.3 ts-node@10.9.2
@@ -26,4 +26,4 @@ EXPOSE 3000
 
 CMD ["build/app.js"]
 #docker buildx create --use
-#docker buildx build --platform linux/amd64,linux/arm64 -t cameronward/web-portal-bff:latest --push .
+#docker buildx build --platform linux/amd64,linux/arm64 -t cameronward/cs-web-portal-bff:latest --push .

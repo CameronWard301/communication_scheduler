@@ -24,7 +24,7 @@
     }
   ],
   "paths": {
-    "/preferences": {
+    "/v1/bff/preferences": {
       "get": {
         "tags": [
           "Preferences"
@@ -107,7 +107,7 @@
         }
       }
     },
-    "/auth": {
+    "/v1/bff/auth": {
       "post": {
         "tags": [
           "Auth"

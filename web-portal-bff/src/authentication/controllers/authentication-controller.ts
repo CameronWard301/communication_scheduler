@@ -5,7 +5,7 @@ import { AuthService } from "../service/auth-service";
 import {errorHandler} from "../../helper/error-handler";
 
 const router = express.Router();
-router.post("/auth", (req, res) => {
+router.post("/v1/bff/auth", (req, res) => {
   // #swagger.tags = ["Auth"]
   // #swagger.description = "Get the auth token with the required scopes."
   /*  #swagger.requestBody = {
