@@ -32,9 +32,10 @@ app.all("/v1/bff/*", async (req, res) => {
         });
         data.pipe(res);
     } catch (error) {
-        console.error(`Could not proxy to BFF API: ${error.message}`);
         if (error.response){
-            res.status(error.response.status).send(error.response.data);
+            console.log(`Passing error from server as response: ${error.message}`);
+            res.status(error.response.status)
+            error.response.data.pipe(res);
         } else {
             console.error(`Could not proxy to BFF API: ${error.message}`);
             res.status(500).send("Could not connect to BFF API proxy");

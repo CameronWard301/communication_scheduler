@@ -33,7 +33,7 @@ COPY --from=build-env /app/version ./version
 
 EXPOSE 3000
 
-CMD ["dist/server.js"]
+CMD ["dist/server.cjs"]
 
 #docker buildx create --use
 #docker buildx build --platform linux/amd64,linux/arm64 -t cameronward/cs-web-portal:latest --push .
