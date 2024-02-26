@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const axios = require("axios");
+const fs = require("fs");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -8,6 +9,12 @@ app.use(express.static(__dirname));
 
 console.log(`BFF API URL ${process.env.BFF_API_URL}`);
 
+let version;
+try {
+    version = fs.readFileSync('version', 'utf8');
+} catch (err) {
+    console.error('Error reading version from file:', err);
+}
 
 app.all("/v1/bff/*", async (req, res) => {
     let url = process.env.BFF_API_URL + req.url;
@@ -26,7 +33,12 @@ app.all("/v1/bff/*", async (req, res) => {
         data.pipe(res);
     } catch (error) {
         console.error(`Could not proxy to BFF API: ${error.message}`);
-        res.status(500).send("Could not connect to BFF API proxy");
+        if (error.response){
+            res.status(error.response.status).send(error.response.data);
+        } else {
+            console.error(`Could not proxy to BFF API: ${error.message}`);
+            res.status(500).send("Could not connect to BFF API proxy");
+        }
     }
 });
 
@@ -41,5 +53,5 @@ app.get("/*", (req, res) => {
 })
 
 app.listen(PORT, () => {
-    console.log(`Server v${process.env.npm_package_version} is running on port ${PORT}`);
+    console.log(`Server v${version.trim()} is running on port ${PORT}`);
 });

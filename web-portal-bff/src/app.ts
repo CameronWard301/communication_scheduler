@@ -5,12 +5,20 @@ import swaggerUi from "swagger-ui-express";
 import authenticationController from "./authentication/controllers/authentication-controller";
 import swaggerDocument from "./swagger_output.json";
 import preferencesController from "./api/preferences/controller/preferences-controller";
+import * as fs from "fs";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
 const router = require("express").Router();
+
+let version: string;
+try {
+  version = fs.readFileSync('version', 'utf8');
+} catch (err) {
+  console.error('Error reading version from file:', err);
+}
 
 router.use("/api-docs", swaggerUi.serve);
 router.get("/api-docs", swaggerUi.setup(swaggerDocument));
@@ -23,11 +31,11 @@ app.use(function (req, res, next)  {
 
   next();
 })
-app.use("", authenticationController);
-app.use("", preferencesController);
+app.use(authenticationController);
+app.use(preferencesController);
 
 app.listen(port, () => {
-  console.log(`[server]: Server v${process.env.npm_package_version} is running at http://localhost:${port}`);
+  console.log(`[server]: Server v${version.trim()} is running at http://localhost:${port}`);
   console.log("[server]: SSL Verification: " + process.env.SSL_VERIFICATION);
   console.log("[server]: Auth service at: " + process.env.AUTH_API_URL);
   console.log("[server]: Preferences service at: " + process.env.PREFERENCES_API_URL);

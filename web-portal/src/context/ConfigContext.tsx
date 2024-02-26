@@ -17,7 +17,7 @@ const ConfigProvider = ({children}: ConfigProviderProps) => {
   const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
-    if (import.meta.env.VITE_REACT_APP_ENVIRONMENT === "server") {
+    if (import.meta.env.PROD) {
       axios
         .get("/configuration")
         .then((result) => {

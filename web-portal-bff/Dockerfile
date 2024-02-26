@@ -2,11 +2,13 @@
 FROM node:20.11.1-slim AS build-env
 
 RUN npm install -g typescript@5.3.3 ts-node@10.9.2
+RUN apt-get update && apt-get install -y jq
 
 WORKDIR /app
 COPY package.json package-lock.json ./
 
 RUN npm install --production
+RUN echo $(jq -r .version package.json) > ./version
 
 COPY . .
 RUN npm run swagger-autogen
@@ -21,6 +23,7 @@ WORKDIR /app
 # Copy the built application to the distroless image
 COPY --from=build-env /app/build ./build
 COPY --from=build-env /app/node_modules ./node_modules
+COPY --from=build-env /app/version ./version
 
 EXPOSE 3000
 

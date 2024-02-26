@@ -130,7 +130,7 @@ history_api:
   verifyHostnames: false
 
 web_bff:
-  repository: cameronward/web-portal-bff
+  repository: cameronward/cs-web-portal-bff
   tag: latest
   port: "3000"
   sslVerification: "false"
@@ -139,7 +139,9 @@ web_portal:
   repository: cameronward/cs-web-portal
   tag: latest
   port: "3000"
-  sslVerification: "false"
+  verifyHttps: "false"
+  bffUri: "/v1/bff"
+  environment: "dev"
 
 integration_tests:
   repository: cameronward/cs-integration-tests
