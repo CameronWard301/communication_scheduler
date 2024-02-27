@@ -6,7 +6,7 @@
   "scripts": {
     "format": "prettier --write \"src/**/*.{js,json,ts}\"",
     "lint": "eslint src/**",
-    "build": "npx tsc",
+    "build": "npx tsc --project tsconfig.build.json",
     "start": "node build/index.js",
     "dev": "nodemon src/app.ts",
     "test": "jest",
