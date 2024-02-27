@@ -3,7 +3,7 @@ FROM node:20.11.1-slim AS test-env
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --include=dev
-RUN npn run test
+RUN npm run test
 
 FROM node:20.11.1-slim AS build-env
 RUN npm install -g typescript@5.3.3 ts-node@10.9.2
@@ -16,7 +16,6 @@ RUN npm install --production
 RUN echo $(jq -r .version package.json) > ./version
 
 COPY . .
-RUN npm run test
 RUN npm run swagger-autogen
 RUN npm run build
 
