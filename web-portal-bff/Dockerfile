@@ -1,6 +1,11 @@
-# Use node:20 to build the app:
-FROM node:20.11.1-slim AS build-env
+# Use node:20 to build and test the app:
+FROM node:20.11.1-slim AS test-env
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --include=dev
+RUN npn run test
 
+FROM node:20.11.1-slim AS build-env
 RUN npm install -g typescript@5.3.3 ts-node@10.9.2
 RUN apt-get update && apt-get install -y jq
 
