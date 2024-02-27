@@ -12,8 +12,8 @@ RUN npm install -g typescript@5.3.3 ts-node@10.9.2
 RUN apt-get update && apt-get install -y jq
 
 WORKDIR /app
-COPY --from=test-env /app/package.json ./app
-COPY --from=test-env /app/package-lock.json ./app
+COPY --from=test-env /app/package.json ./
+COPY --from=test-env /app/package-lock.json ./
 
 RUN npm install --production
 RUN echo $(jq -r .version package.json) > ./version
