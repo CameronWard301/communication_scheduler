@@ -3,6 +3,8 @@ FROM node:20.11.1-slim AS test-env
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --include=dev
+
+COPY . .
 RUN npm run test
 
 FROM node:20.11.1-slim AS build-env
@@ -10,7 +12,8 @@ RUN npm install -g typescript@5.3.3 ts-node@10.9.2
 RUN apt-get update && apt-get install -y jq
 
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY --from=test-env /app/package.json ./app
+COPY --from=test-env /app/package-lock.json ./app
 
 RUN npm install --production
 RUN echo $(jq -r .version package.json) > ./version

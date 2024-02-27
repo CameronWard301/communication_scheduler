@@ -69,7 +69,7 @@ describe('Preferences Controller', () => {
       .get('/v1/bff/preferences')
 
 
-    expect(res.status).toBe(41234);
+    expect(res.status).toBe(400);
     expect(res.text).toEqual('Bad Request');
   });
 

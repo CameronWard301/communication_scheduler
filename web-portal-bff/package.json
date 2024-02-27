@@ -9,7 +9,7 @@
     "build": "npx tsc --project tsconfig.build.json",
     "start": "node build/index.js",
     "dev": "nodemon src/app.ts",
-    "test": "jest",
+    "test": "jest --coverage",
     "swagger-autogen": "tsc src/swagger.ts && node src/swagger.js"
   },
   "repository": {
