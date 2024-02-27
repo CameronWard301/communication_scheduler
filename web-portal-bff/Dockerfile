@@ -11,6 +11,7 @@ RUN npm install --production
 RUN echo $(jq -r .version package.json) > ./version
 
 COPY . .
+RUN npm run test
 RUN npm run swagger-autogen
 RUN npm run build
 

@@ -31,3 +31,4 @@ bin/
 /swagger.js
 /node_modules/
 /build/
+/coverage/

@@ -26,10 +26,11 @@ const convertToSeconds = (timeUnit: TimeUnit): number => {
       return timeUnit.value * 3600;
     case "D":
       return timeUnit.value * 86400;
+    case "Y":
+    return timeUnit.value * 31536000;
     default:
-      return 0;
+      throw new Error("Invalid time unit");
   }
-
 }
 
 export const PreferencesService = () => {
