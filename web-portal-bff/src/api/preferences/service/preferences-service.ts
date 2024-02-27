@@ -27,7 +27,7 @@ const convertToSeconds = (timeUnit: TimeUnit): number => {
     case "D":
       return timeUnit.value * 86400;
     case "Y":
-    return timeUnit.value * 31536000;
+      return timeUnit.value * 31536000;
     default:
       throw new Error("Invalid time unit");
   }
@@ -35,7 +35,7 @@ const convertToSeconds = (timeUnit: TimeUnit): number => {
 
 export const PreferencesService = () => {
 
-  const getPreferences = async (token:string | undefined): Promise<BFFResponse<ClientPreferences>> => {
+  const getPreferences = async (token: string | undefined): Promise<BFFResponse<ClientPreferences>> => {
     return await axiosClient.get(process.env.PREFERENCES_API_URL as string, {
       headers: extractAuthToken(token)
 
@@ -58,7 +58,7 @@ export const PreferencesService = () => {
     });
   }
 
-  const putPreferences = async (token:string | undefined, preferences:ClientPreferences): Promise<BFFResponse<ClientPreferences>> => {
+  const putPreferences = async (token: string | undefined, preferences: ClientPreferences): Promise<BFFResponse<ClientPreferences>> => {
     const gatewayTimeout = await axiosClient.put(process.env.PREFERENCES_API_URL as string + "/gateway-timeout", {
       gatewayTimeoutSeconds: convertToSeconds(preferences.gatewayTimeout)
     }, {

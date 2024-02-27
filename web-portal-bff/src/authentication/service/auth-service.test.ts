@@ -30,7 +30,6 @@ describe('AuthService', () => {
     expect(mockAxios.post).toHaveBeenCalledWith(process.env.AUTH_API_URL + "/auth", scopes);
 
 
-
     expect(result.status).toBe(200);
     expect(result.data).toBeDefined();
     expect(result.data.token).toBe('test-token');
@@ -43,15 +42,13 @@ describe('AuthService', () => {
     const promise = authService.getAuthToken(scopes);
 
     mockAxios.mockResponse({
-      data: {
-      },
+      data: {},
       status: 400,
     })
 
     const result = await promise
 
     expect(mockAxios.post).toHaveBeenCalledWith(process.env.AUTH_API_URL + "/auth", scopes);
-
 
 
     expect(result.status).toBe(400);

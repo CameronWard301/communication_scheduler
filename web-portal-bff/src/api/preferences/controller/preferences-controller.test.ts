@@ -59,7 +59,7 @@ describe('Preferences Controller', () => {
       }
     };
 
-    (PreferencesService as jest.Mock).mockImplementation( () => {
+    (PreferencesService as jest.Mock).mockImplementation(() => {
       return {
         getPreferences: jest.fn().mockRejectedValue(mockError),
       };

@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", {value: true});
 var fs = require("fs");
 var path = require("path");
 var options = {
@@ -77,8 +77,7 @@ var GetControllerFilePaths = function (root) {
             var stats = fs.statSync(filePath);
             if (stats.isDirectory()) {
                 traverseDirectory(filePath);
-            }
-            else if (stats.isFile()) {
+            } else if (stats.isFile()) {
                 var fileName = path.basename(file);
                 if (fileName.endsWith('controller.ts')) {
                     var relativePath = path.relative(root, filePath);

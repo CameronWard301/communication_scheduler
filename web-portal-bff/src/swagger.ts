@@ -1,5 +1,4 @@
 // Adapted from https://swagger-autogen.github.io/docs/getting-started/quick-start
-import {TimeUnit} from "./api/preferences/model/Preferences";
 
 const fs = require("fs");
 const path = require("path");

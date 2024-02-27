@@ -1,5 +1,3 @@
-
-
 describe('Axios Client', () => {
   beforeEach(() => {
     jest.resetModules();

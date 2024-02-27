@@ -1,4 +1,4 @@
-import express, { type Express } from "express";
+import express, {type Express} from "express";
 import dotenv from "dotenv";
 
 import swaggerUi from "swagger-ui-express";
@@ -24,7 +24,7 @@ router.use("/api-docs", swaggerUi.serve);
 router.get("/api-docs", swaggerUi.setup(swaggerDocument));
 router.use(express.json());
 app.use(router);
-app.use(function (req, res, next)  {
+app.use(function (_req, res, next) {
   res.header("Access-Control-Allow-Origin", process.env.ALLOW_ORIGIN);
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");

@@ -6,29 +6,29 @@ import {errorHandler} from "../../../helper/error-handler";
 const router = express.Router();
 
 router.get("/v1/bff/preferences", (req, res) => {
-    // #swagger.tags = ["Preferences"]
-    // #swagger.description = "Get preferences."
+  // #swagger.tags = ["Preferences"]
+  // #swagger.description = "Get preferences."
 
-    /* #swagger.responses[200] = {
-              description: 'Generate the preferences from the server.',
-               content: {
-                  "application/json": {
-                      schema: { $ref: '#/components/schemas/Preferences' }
-                  }
-              }
-          }
-      #swagger.responses[401] = {
-              description: 'Unauthorized.'
-             }
-      }
-      #swagger.responses[403] = {
-              description: 'Forbidden.'
-      } */
-    PreferencesService().getPreferences(req.headers.authorization).then((value) => {
-            res.status(value.status).send(value.data as ClientPreferences);
-        }).catch((reason) => {
-            errorHandler(res, reason);
-        });
+  /* #swagger.responses[200] = {
+            description: 'Generate the preferences from the server.',
+             content: {
+                "application/json": {
+                    schema: { $ref: '#/components/schemas/Preferences' }
+                }
+            }
+        }
+    #swagger.responses[401] = {
+            description: 'Unauthorized.'
+           }
+    }
+    #swagger.responses[403] = {
+            description: 'Forbidden.'
+    } */
+  PreferencesService().getPreferences(req.headers.authorization).then((value) => {
+    res.status(value.status).send(value.data as ClientPreferences);
+  }).catch((reason) => {
+    errorHandler(res, reason);
+  });
 
 });
 

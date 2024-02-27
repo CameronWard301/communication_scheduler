@@ -18,40 +18,39 @@ describe('PreferencesService', () => {
 
 
     const expectedResponse = {
-        maximumAttempts: 100,
-        backoffCoefficient: 2,
-        gatewayTimeout: {
-          value: 60,
-          unit: "S"
-        },
-        initialInterval: {
-          value: 1,
-          unit: "S"
-        },
-        maximumInterval: {
-          value: 100,
-          unit: "S"
-        },
-        startToCloseTimeout: {
-          value: 10,
-          unit: "S"
-        }
+      maximumAttempts: 100,
+      backoffCoefficient: 2,
+      gatewayTimeout: {
+        value: 60,
+        unit: "S"
+      },
+      initialInterval: {
+        value: 1,
+        unit: "S"
+      },
+      maximumInterval: {
+        value: 100,
+        unit: "S"
+      },
+      startToCloseTimeout: {
+        value: 10,
+        unit: "S"
+      }
     } as ClientPreferences
 
     mockAxios.onGet(process.env.PREFERENCES_API_URL).reply(200, {
 
-        gatewayTimeoutSeconds: expectedResponse.gatewayTimeout.value,
-        retryPolicy: {
-          maximumAttempts: expectedResponse.maximumAttempts,
-          backoffCoefficient: expectedResponse.backoffCoefficient,
-          initialInterval: `PT${expectedResponse.initialInterval.value}${expectedResponse.initialInterval.unit}`,
-          maximumInterval: `PT${expectedResponse.maximumInterval.value}${expectedResponse.maximumInterval.unit}`,
-          startToCloseTimeout: `PT${expectedResponse.startToCloseTimeout.value}${expectedResponse.startToCloseTimeout.unit}`
-        }
+      gatewayTimeoutSeconds: expectedResponse.gatewayTimeout.value,
+      retryPolicy: {
+        maximumAttempts: expectedResponse.maximumAttempts,
+        backoffCoefficient: expectedResponse.backoffCoefficient,
+        initialInterval: `PT${expectedResponse.initialInterval.value}${expectedResponse.initialInterval.unit}`,
+        maximumInterval: `PT${expectedResponse.maximumInterval.value}${expectedResponse.maximumInterval.unit}`,
+        startToCloseTimeout: `PT${expectedResponse.startToCloseTimeout.value}${expectedResponse.startToCloseTimeout.unit}`
+      }
     })
 
-    const result= await preferencesService.getPreferences('test-token');
-
+    const result = await preferencesService.getPreferences('test-token');
 
 
     expect(result.status).toBe(200);
@@ -335,7 +334,7 @@ describe('PreferencesService', () => {
 
 })
 
-const verifyPutRequest = async (putRequest:ClientPreferences, putResponse:ClientPreferences, mockAxios: MockAdapter, preferencesService: ReturnType<typeof PreferencesService>)  => {
+const verifyPutRequest = async (putRequest: ClientPreferences, putResponse: ClientPreferences, mockAxios: MockAdapter, preferencesService: ReturnType<typeof PreferencesService>) => {
   mockAxios.onPut(process.env.PREFERENCES_API_URL + "/gateway-timeout").reply(200, {
     gatewayTimeoutSeconds: putResponse.gatewayTimeout.value
   });

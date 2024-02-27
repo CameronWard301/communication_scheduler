@@ -1,7 +1,7 @@
 import express from "express";
-import { AuthToken } from "../model/auth-models";
+import {AuthToken} from "../model/auth-models";
 
-import { AuthService } from "../service/auth-service";
+import {AuthService} from "../service/auth-service";
 import {errorHandler} from "../../helper/error-handler";
 
 const router = express.Router();
