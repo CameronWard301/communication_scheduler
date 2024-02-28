@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - web-portal-bff/**
+      - web-portal/**
       - .github/workflows/build-node-containers.yml
     branches:
       - "**"
