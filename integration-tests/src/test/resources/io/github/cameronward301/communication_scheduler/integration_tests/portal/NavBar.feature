@@ -1,4 +1,5 @@
 # Created by Cameron at 27/02/2024
+@WebPortal
 Feature: Navigation Bar
   Tests the functionality of the navigation bar
 

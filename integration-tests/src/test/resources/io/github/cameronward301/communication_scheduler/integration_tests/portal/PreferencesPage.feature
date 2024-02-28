@@ -1,4 +1,5 @@
 # Created by Cameron at 28/02/2024
+@WebPortal
 Feature: Preferences Page
   Tests preferences page functionality
 

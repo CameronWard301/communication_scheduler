@@ -75,6 +75,7 @@ const ConfirmModal = observer(
                   <Button
                     variant="outlined"
                     endIcon={cancelIcon}
+                    id={"cancel-modal-button"}
                     color={"info"}
                     fullWidth
                     sx={{height: 56}}
@@ -87,7 +88,7 @@ const ConfirmModal = observer(
                 </Grid>
                 <Grid xs={12} md={6} marginTop={"auto"}>
                   <Button onClick={onConfirm} endIcon={confirmIcon} variant="contained" fullWidth sx={{height: 56}}
-                          color={"primary"}>
+                          color={"primary"} id={"confirm-modal-button"}>
                     <span>{confirmText}</span>
                   </Button>
                 </Grid>

@@ -53,13 +53,14 @@ const SnackbarComponent = ({snackPack, setSnackPack}: SnackbarProps) => {
     <Stack spacing={2} sx={{width: "100%"}}>
       <Snackbar
         open={open}
+        id={"snackbar"}
         autoHideDuration={6000}
         onClose={handleClose}
         anchorOrigin={{vertical: "bottom", horizontal: "right"}}
         key={messageInfo?.key}
         TransitionProps={{onExited: handleExited}}
       >
-        <Alert onClose={handleClose} severity={messageInfo?.severity} sx={{width: "100%"}}>
+        <Alert onClose={handleClose} severity={messageInfo?.severity} sx={{width: "100%"}} id={"snackbar-message"}>
           {messageInfo?.message}
         </Alert>
       </Snackbar>
