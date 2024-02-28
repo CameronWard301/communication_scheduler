@@ -12,6 +12,8 @@ type Props = {
   disabled?: boolean;
   size: "small" | "large";
   selected?: boolean;
+  key: string;
+  componentName: string;
 };
 
 const sizes = {
@@ -27,7 +29,7 @@ const sizes = {
   },
 };
 
-export const ActionItem = ({title, subtitle, onClick, Icon, size, selected = false, disabled = false}: Props) => {
+export const ActionItem = ({title, subtitle, onClick, Icon, size, selected = false, disabled = false, componentName}: Props) => {
   const theme = useTheme();
 
   return (
@@ -36,6 +38,7 @@ export const ActionItem = ({title, subtitle, onClick, Icon, size, selected = fal
         {disabled && (
           <Card
             elevation={3}
+            id={componentName+"-card"}
             sx={{
               cursor: "pointer",
               height: "100%",
@@ -46,10 +49,10 @@ export const ActionItem = ({title, subtitle, onClick, Icon, size, selected = fal
           >
             <Grid sx={{display: "flex", flexDirection: "column", height: "100%"}}>
               <Typography variant={sizes[size].titleVariant as Variant} sx={{marginTop: 2, marginX: 0.5}}
-                          textAlign={"center"}>
+                          textAlign={"center"} id={componentName+"-title"}>
                 {title}
               </Typography>
-              <Typography variant={"subtitle1"} textAlign={"center"}>
+              <Typography variant={"subtitle1"} textAlign={"center"} id={componentName+"-subtitle"}>
                 {subtitle}
               </Typography>
               <Box
@@ -69,6 +72,7 @@ export const ActionItem = ({title, subtitle, onClick, Icon, size, selected = fal
         )}
         {!selected && !disabled && (
           <Card
+            id={componentName+"-card"}
             elevation={3}
             onClick={() => {
               onClick();
@@ -95,11 +99,11 @@ export const ActionItem = ({title, subtitle, onClick, Icon, size, selected = fal
                 {Icon && <Icon sx={{fontSize: sizes[size].iconSize}}/>}
               </Box>
               <Typography variant={sizes[size].titleVariant as Variant} sx={{marginY: 2, marginX: 0.5}}
-                          textAlign={"center"}>
+                          textAlign={"center"} id={componentName+"-title"}>
                 {title}
               </Typography>
 
-              <Typography variant={"subtitle1"} textAlign={"center"}>
+              <Typography variant={"subtitle1"} textAlign={"center"} id={componentName+"-subtitle"}>
                 {subtitle}
               </Typography>
 
@@ -108,6 +112,7 @@ export const ActionItem = ({title, subtitle, onClick, Icon, size, selected = fal
         )}
         {selected && (
           <Card
+            id={componentName+"-card"}
             elevation={3}
             onClick={() => {
               onClick();
@@ -122,10 +127,10 @@ export const ActionItem = ({title, subtitle, onClick, Icon, size, selected = fal
           >
             <Grid sx={{display: "flex", flexDirection: "column", height: "100%"}}>
               <Typography variant={sizes[size].titleVariant as Variant} sx={{marginTop: 2, marginX: 0.5}}
-                          color={"white"} textAlign={"center"}>
+                          color={"white"} textAlign={"center"} id={componentName+"-title"}>
                 {title}
               </Typography>
-              <Typography variant={"subtitle1"} textAlign={"center"} color={"white"}>
+              <Typography variant={"subtitle1"} textAlign={"center"} color={"white"} id={componentName+"-subtitle"}>
                 {subtitle}
               </Typography>
               <Box

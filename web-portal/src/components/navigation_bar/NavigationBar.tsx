@@ -92,21 +92,22 @@ export default function NavigationBar() {
 
   return <><Drawer variant="permanent" open={open}>
     <DrawerHeader style={{justifyContent: "flex-start"}}>
-      <img src={logo} alt="Platform Logo" style={{maxWidth: "48px", cursor: "pointer"}} onClick={() => navigate("/")}/>
+      <img id={"app-logo"} src={logo} alt="Platform Logo" style={{maxWidth: "48px", cursor: "pointer"}} onClick={() => navigate("/")}/>
     </DrawerHeader>
     <DrawerHeader
       sx={{
         justifyContent: open ? "flex-end" : "center",
       }}
     >
-      <IconButton onClick={toggleDrawer} title={"Expand menu"}>
+      <IconButton onClick={toggleDrawer} title={"Expand menu"} id={"navbar-expand"}>
         {!open ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
       </IconButton>
     </DrawerHeader>
     <Divider/>
     <List>
-      <ListItem disablePadding sx={{display: "block"}} key={"home"}>
+      <ListItem disablePadding sx={{display: "block"}} key={"home"} >
         <ListItemButton
+          id={"nav-home"}
           onClick={() => navigate("/")}
           sx={{
             minHeight: 48,
@@ -123,12 +124,13 @@ export default function NavigationBar() {
           >
             <HomeRoundIcon color={getColor("")}/>
           </ListItemIcon>
-          <ListItemText primary={"Home"} sx={{opacity: open ? 1 : 0}}/>
+          <ListItemText primary={"Home"} sx={{opacity: open ? 1 : 0}} id={"nav-home-label"}/>
         </ListItemButton>
       </ListItem>
 
       <ListItem disablePadding sx={{display: "block"}} key={"communication-history"}>
         <ListItemButton
+          id={"nav-history"}
           onClick={() => navigate("/history")}
           sx={{
             minHeight: 48,
@@ -145,12 +147,13 @@ export default function NavigationBar() {
           >
             <HistoryRoundIcon color={getColor("history")}/>
           </ListItemIcon>
-          <ListItemText primary={"Communication History"} sx={{opacity: open ? 1 : 0}}/>
+          <ListItemText primary={"Communication History"} sx={{opacity: open ? 1 : 0}} id={"nav-history-label"}/>
         </ListItemButton>
       </ListItem>
 
       <ListItem disablePadding sx={{display: "block"}} key={"communication-schedules"}>
         <ListItemButton
+          id={"nav-schedules"}
           onClick={() => navigate("/schedules")}
           sx={{
             minHeight: 48,
@@ -167,12 +170,13 @@ export default function NavigationBar() {
           >
             <ScheduleSendRoundIcon color={getColor("schedules")}/>
           </ListItemIcon>
-          <ListItemText primary={"Communication Schedules"} sx={{opacity: open ? 1 : 0}}/>
+          <ListItemText primary={"Communication Schedules"} sx={{opacity: open ? 1 : 0}} id={"nav-schedules-label"}/>
         </ListItemButton>
       </ListItem>
 
       <ListItem disablePadding sx={{display: "block"}} key={"communication-gateways"}>
         <ListItemButton
+          id={"nav-gateways"}
           onClick={() => navigate("/gateways")}
           sx={{
             minHeight: 48,
@@ -189,12 +193,13 @@ export default function NavigationBar() {
           >
             <StorageRoundedIcon color={getColor("gateways")}/>
           </ListItemIcon>
-          <ListItemText primary={"Communication Gateways"} sx={{opacity: open ? 1 : 0}}/>
+          <ListItemText primary={"Communication Gateways"} sx={{opacity: open ? 1 : 0}} id={"nav-gateways-label"}/>
         </ListItemButton>
       </ListItem>
 
       <ListItem disablePadding sx={{display: "block"}} key={"platform-preferences"}>
         <ListItemButton
+          id={"nav-preferences"}
           onClick={() => navigate("/preferences")}
           sx={{
             minHeight: 48,
@@ -211,12 +216,13 @@ export default function NavigationBar() {
           >
             <SettingsRoundedIcon color={getColor("preferences")}/>
           </ListItemIcon>
-          <ListItemText primary={"Platform Preferences"} sx={{opacity: open ? 1 : 0}}/>
+          <ListItemText primary={"Platform Preferences"} sx={{opacity: open ? 1 : 0}} id={"nav-preferences-label"}/>
         </ListItemButton>
       </ListItem>
 
       <ListItem disablePadding sx={{display: "block"}} key={"platform-monitoring"}>
         <ListItemButton
+          id={"nav-stats"}
           onClick={() => navigate("/stats")}
           sx={{
             minHeight: 48,
@@ -233,7 +239,7 @@ export default function NavigationBar() {
           >
             <MonitorHeartRoundedIcon color={getColor("stats")}/>
           </ListItemIcon>
-          <ListItemText primary={"Platform Monitoring"} sx={{opacity: open ? 1 : 0}}/>
+          <ListItemText primary={"Platform Monitoring"} sx={{opacity: open ? 1 : 0}} id={"nav-monitoring-label"}/>
         </ListItemButton>
       </ListItem>
     </List>
@@ -275,7 +281,7 @@ export default function NavigationBar() {
           >
             <LogoutIcon/>
           </ListItemIcon>
-          <ListItemText primary="Log out" sx={{opacity: open ? 1 : 0}}/>
+          <ListItemText primary="Log out" sx={{opacity: open ? 1 : 0}} id={"nav-logout-label"}/>
         </ListItemButton>
       </ListItem>
     </List>
