@@ -3,7 +3,6 @@ package io.github.cameronward301.communication_scheduler.integration_tests.confi
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,6 +28,7 @@ public class WebDriverConfiguration {
         ChromeOptions options = new ChromeOptions();
         //options.addArguments("--headless");
         options.addArguments("--no-sandbox");
+        options.addArguments("--ignore-certificate-errors");
         return options;
     }
 
