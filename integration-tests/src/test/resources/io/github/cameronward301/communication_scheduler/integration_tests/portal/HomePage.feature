@@ -1,5 +1,6 @@
 # Created by Cameron at 27/02/2024
 @WebPortal
+@CloseBrowserAfterScenario
 Feature: Home Page
   Test home page functionalities
 

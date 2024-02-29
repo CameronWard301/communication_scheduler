@@ -78,7 +78,7 @@ public class ScheduleAPIStepDefinitions {
         }
         if (schedule.asMaps().get(0).get("scheduleId") != null) {
             if (!Objects.equals(schedule.asMaps().get(0).get("scheduleId"), "null")) {
-                createScheduleRequest.setScheduleId(schedule.asMaps().get(0).get("scheduleId"));
+                createScheduleRequest.setScheduleId("integration-test-" + schedule.asMaps().get(0).get("scheduleId"));
             }
         } else {
             createScheduleRequest.setScheduleId(scheduleEntity.getScheduleId());

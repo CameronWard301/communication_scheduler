@@ -8,6 +8,7 @@ Feature: Schedule API Scenarios
 #  # GET ALL SCHEDULES
 #  #########################
 #
+  @RemoveExistingSchedules
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Get all schedules with no filters
@@ -15,6 +16,7 @@ Feature: Schedule API Scenarios
     When I get all schedules
     Then I receive a page of schedules with 3 items with status code 200
 
+  @RemoveExistingSchedules
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Get all schedules with no filters adjusting page size
@@ -24,6 +26,7 @@ Feature: Schedule API Scenarios
     When I get all schedules
     Then I receive a page of schedules with 1 items with status code 200
 
+  @RemoveExistingSchedules
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Get all schedules with userId filter
@@ -47,6 +50,7 @@ Feature: Schedule API Scenarios
   # GET SCHEDULE
   #########################
 
+  @RemoveExistingSchedules
   @CreateScheduleWithInterval
   @RemoveSchedule
   Scenario: User gets a schedule by id
@@ -149,6 +153,7 @@ Feature: Schedule API Scenarios
 #  # UPDATE SCHEDULE
 #  #########################
 #
+  @RemoveExistingSchedules
   @CreateScheduleWithInterval
   @RemoveSchedule
   Scenario: User updates an existing schedule with calendar and pauses
@@ -159,6 +164,7 @@ Feature: Schedule API Scenarios
     When I update the schedule
     Then the new or updated schedule is returned with status code of 200
 
+  @RemoveExistingSchedules
   @CreateScheduleWithInterval
   @RemoveSchedule
   Scenario: User updates an existing schedule with cron string
@@ -169,6 +175,7 @@ Feature: Schedule API Scenarios
     When I update the schedule
     Then the new or updated schedule is returned with status code of 200
 
+  @RemoveExistingSchedules
   @CreateScheduleWithInterval
   @RemoveSchedule
   Scenario: User updates a schedule with invalid cron
@@ -211,15 +218,16 @@ Feature: Schedule API Scenarios
     When I update the schedule
     Then the response code is 400 and message: "400 : \"Please provide a 'scheduleId' in the request body to update a schedule\""
 
+  @RemoveExistingSchedules
   @CreateScheduleWithInterval
   @RemoveSchedule
   Scenario: User updates an existing schedule with an unknown id
     Given I have a schedule with the following details:
       | scheduleId | gatewayId  | userId  | paused | cron         |
-      | test-123   | my gateway | my user | true   | * * 10 * MON |
+      | 123        | my gateway | my user | true   | * * 10 * MON |
     And I have a bearer token with the "SCHEDULE:WRITE" scope
     When I update the schedule
-    Then the response code is 404 and message: "404 : \"Could not find Schedule with Id: test-123\""
+    Then the response code is 404 and message: "404 : \"Could not find Schedule with Id: integration-test-123\""
 
   Scenario: User updates a schedule with wrong scope
     Given I have a schedule with the following details:
@@ -238,6 +246,7 @@ Feature: Schedule API Scenarios
 #  # BATCH UPDATE SCHEDULE
 #  #########################
 #
+  @RemoveExistingSchedules
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: User pauses multiple schedules matching the userId filter
@@ -249,7 +258,7 @@ Feature: Schedule API Scenarios
     When I batch update existing schedules
     Then a modified DTO is returned with status 200 and message "Completed" and totalModified is 1
 
-
+  @RemoveExistingSchedules
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: User updates multiple schedules matching the gateway filter
@@ -261,6 +270,7 @@ Feature: Schedule API Scenarios
     When I batch update existing schedules
     Then a modified DTO is returned with status 200 and message "Completed" and totalModified is 1
 
+  @RemoveExistingSchedules
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: User updates multiple schedules matching the gateway and user filter
@@ -299,6 +309,7 @@ Feature: Schedule API Scenarios
 #  # BATCH DELETE SCHEDULES
 #  #########################
 
+  @RemoveExistingSchedules
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Delete all schedules matching the gatewayId
@@ -307,6 +318,7 @@ Feature: Schedule API Scenarios
     When I batch delete schedules
     Then a modified DTO is returned with status 200 and message "Successfully Deleted" and totalModified is 1
 
+  @RemoveExistingSchedules
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Delete all schedules matching the userId
@@ -315,6 +327,7 @@ Feature: Schedule API Scenarios
     When I batch delete schedules
     Then a modified DTO is returned with status 200 and message "Successfully Deleted" and totalModified is 2
 
+  @RemoveExistingSchedules
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Delete all schedules matching the userId and gatewayId
@@ -343,6 +356,7 @@ Feature: Schedule API Scenarios
 #  #########################
 #  # GET SCHEDULE COUNT
 #  #########################
+  @RemoveExistingSchedules
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Get the number of schedules matching the userId and gatewayId
@@ -352,6 +366,7 @@ Feature: Schedule API Scenarios
     When I get the schedule count
     Then a CountDTO is returned with total: 1 and status code 200
 
+  @RemoveExistingSchedules
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Get the number of schedules matching an empty filter
@@ -372,6 +387,7 @@ Feature: Schedule API Scenarios
 #  #########################
 #  # DELETE BY ID
 #  #########################
+  @RemoveExistingSchedules
   @CreateScheduleWithInterval
   Scenario: User deletes an existing schedule by id
     Given I have a bearer token with the "SCHEDULE:DELETE" scope

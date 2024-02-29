@@ -58,7 +58,7 @@ public class TemporalConfiguration {
         for (int i = 0; i < 3; i++) {
             String userId;
             String gatewayId;
-            String scheduleId = UUID.randomUUID().toString();
+            String scheduleId = "integration-test-" + UUID.randomUUID();
             if (i < 1) {
                 userId = "user1";
             } else {
@@ -111,7 +111,7 @@ public class TemporalConfiguration {
     public ScheduleEntity scheduleEntity() {
         String userId = "user1";
         String gatewayId = "gateway1";
-        String scheduleId = UUID.randomUUID().toString();
+        String scheduleId = "integration-test-" + UUID.randomUUID();
         return ScheduleEntity.builder()
                 .scheduleId(scheduleId)
                 .schedule(Schedule.newBuilder()

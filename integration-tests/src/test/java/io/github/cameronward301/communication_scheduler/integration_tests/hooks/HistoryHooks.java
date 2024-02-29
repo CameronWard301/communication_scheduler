@@ -21,11 +21,28 @@ import java.util.Map;
 public class HistoryHooks {
     private final WorkflowClient workflowClient;
     private final World world;
+    private static boolean completedBeforeAll = false;
     List<String> workflowIds = new ArrayList<>();
 
     public HistoryHooks(WorkflowClient workflowClient, World world) {
         this.workflowClient = workflowClient;
         this.world = world;
+    }
+
+    @Before("@TerminateExistingWorkflows")
+    public void terminateExistingWorkflowsBeforeAll() {
+        if (!completedBeforeAll) {
+            workflowClient.listExecutions("").filter(workflowExecution -> workflowExecution.getExecution().getWorkflowId().contains("integration-test")).forEach(workflowExecution -> {
+                try {
+                    WorkflowStub workflow = workflowClient.newUntypedWorkflowStub(workflowExecution.getExecution().getWorkflowId());
+                    workflow.terminate("test-termination");
+                } catch (Exception e) {
+                    log.debug(e.getMessage());
+                }
+            });
+            completedBeforeAll = true;
+        }
+
     }
 
     @SneakyThrows

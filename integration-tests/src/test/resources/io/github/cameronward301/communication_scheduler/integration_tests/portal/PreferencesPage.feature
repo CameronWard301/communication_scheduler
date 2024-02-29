@@ -1,5 +1,6 @@
 # Created by Cameron at 28/02/2024
 @WebPortal
+@CloseBrowserAfterScenario
 Feature: Preferences Page
   Tests preferences page functionality
 

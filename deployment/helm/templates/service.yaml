@@ -151,3 +151,47 @@ spec:
       port: 3000
       targetPort: 3000
   type: ClusterIP
+---
+# Adapted from https://github.com/kubernetes/examples/blob/master/staging/selenium/selenium-hub-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-selenium-hub
+  labels:
+    app: {{ .Release.Name }}-selenium-hub
+spec:
+  ports:
+    - port: 4444
+      targetPort: 4444
+      name: port0
+    - port: 4443
+      targetPort: 4443
+      name: port1
+    - port: 4442
+      targetPort: 4442
+      name: port2
+  selector:
+    app: {{ .Release.Name }}-selenium-hub
+  type: NodePort
+  sessionAffinity: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-selenium-hub-service
+  labels:
+    app: {{ .Release.Name }}-selenium-hub-service
+spec:
+  ports:
+    - port: 4444
+      targetPort: 4444
+      name: port0
+    - port: 4443
+      targetPort: 4443
+      name: port1
+    - port: 4442
+      targetPort: 4442
+      name: port2
+  selector:
+    app: {{ .Release.Name }}-selenium-hub
+  type: ClusterIP

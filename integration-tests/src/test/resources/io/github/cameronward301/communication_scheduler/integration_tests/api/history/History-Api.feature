@@ -7,6 +7,7 @@ Feature: History API Scenarios
 #  # GET ALL WORKFLOWS
 #  #########################
 #
+  @TerminateExistingWorkflows
   @CreateTestWorkflows
   @RemoveTestWorkflows
   Scenario: Should get workflows by no filter
@@ -14,6 +15,7 @@ Feature: History API Scenarios
     When I get all workflows
     Then the I receive a page of history workflows with a size greater than or equal to 10 and status code 200
 
+  @TerminateExistingWorkflows
   @CreateTestWorkflows
   @RemoveTestWorkflows
   Scenario: Should get workflows by filter
@@ -28,6 +30,7 @@ Feature: History API Scenarios
     Then the I receive a page of history workflows with a size of 1 and status code 200
     And the total number of workflows matching the filter is 10
 
+  @TerminateExistingWorkflows
   @CreateTestWorkflows
   @RemoveTestWorkflows
   Scenario: Should get workflows by filter and have 0 results on the third page
@@ -42,6 +45,7 @@ Feature: History API Scenarios
     Then the I receive a page of history workflows with a size of 0 and status code 200
     And the total number of workflows matching the filter is 10
 
+  @TerminateExistingWorkflows
   @CreateTestWorkflows
   @RemoveTestWorkflows
   Scenario: Should get workflows by invalid filter produces an empty page
@@ -70,6 +74,7 @@ Feature: History API Scenarios
 #  # GET WORKFLOW BY ID
 #  #########################
 #
+  @TerminateExistingWorkflows
   @CreateTestWorkflow
   @RemoveTestWorkflows
   Scenario: Should get workflow by id
@@ -101,6 +106,7 @@ Feature: History API Scenarios
 #  # TERMINATE WORKFLOW BY ID
 #  #########################
 #
+  @TerminateExistingWorkflows
   @CreateTestWorkflow
   Scenario: Should terminate workflow by id
     Given I have a bearer token with the "WORKFLOW:TERMINATE" scope
@@ -108,6 +114,7 @@ Feature: History API Scenarios
     When I terminate the workflow by id
     Then the workflow is deleted with response code 204
 
+  @TerminateExistingWorkflows
   @CreateTestWorkflow
   Scenario: Should get 404 if workflow is already terminated
     Given I have a bearer token with the "WORKFLOW:TERMINATE" scope
@@ -134,7 +141,7 @@ Feature: History API Scenarios
 #  # GET WORKFLOW TOTAL BY FILTER
 #  #########################
 #
-
+  @TerminateExistingWorkflows
   @CreateTestWorkflows
   @RemoveTestWorkflows
   Scenario: Should get total workflows by filter
@@ -147,6 +154,7 @@ Feature: History API Scenarios
     When I get total workflows
     Then the I receive a total number of 10 and status code 200
 
+  @TerminateExistingWorkflows
   @CreateTestWorkflows
   @RemoveTestWorkflows
   Scenario: Should get total workflows by filter with no results

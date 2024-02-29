@@ -20,6 +20,8 @@ public class ScheduleHooks {
     private final List<ScheduleEntity> createdSchedules;
     private final ScheduleEntity scheduleEntity;
 
+    private static boolean completedBeforeAll = false;
+
     List<String> scheduleIds = new ArrayList<>();
 
     public ScheduleHooks(ScheduleClient scheduleClient,
@@ -29,6 +31,22 @@ public class ScheduleHooks {
         this.scheduleClient = scheduleClient;
         this.createdSchedules = createdSchedules;
         this.scheduleEntity = scheduleEntity;
+    }
+
+    @Before("@RemoveExistingSchedules")
+    public void removeExistingSchedulesBeforeAll() {
+        if (!completedBeforeAll) {
+            List<String> scheduleIds = new ArrayList<>();
+            scheduleClient.listSchedules().filter(scheduleListDescription -> scheduleListDescription.getScheduleId().contains("integration-test")).forEach(schedule -> scheduleIds.add(schedule.getScheduleId()));
+            for (String scheduleId : scheduleIds) {
+                try {
+                    scheduleClient.getHandle(scheduleId).delete();
+                } catch (ScheduleException e) {
+                    log.debug(e.getMessage());
+                }
+            }
+            completedBeforeAll = true;
+        }
     }
 
     @Before("@CreateMultipleSchedules")
