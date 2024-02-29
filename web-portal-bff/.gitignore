@@ -32,3 +32,5 @@ bin/
 /node_modules/
 /build/
 /coverage/
+/public.crt
+/private.key

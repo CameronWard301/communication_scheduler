@@ -6,6 +6,7 @@ import authenticationController from "./authentication/controllers/authenticatio
 import swaggerDocument from "./swagger_output.json";
 import preferencesController from "./api/preferences/controller/preferences-controller";
 import * as fs from "fs";
+import * as https from "https";
 
 dotenv.config();
 
@@ -14,8 +15,17 @@ const port = process.env.PORT || 3000;
 const router = require("express").Router();
 
 let version: string;
+let options = {};
 try {
   version = fs.readFileSync('version', 'utf8');
+  console.log('private key: \n' + process.env.PRIVATE_KEY);
+  console.log('certificate: \n' + process.env.CERTIFICATE);
+  let key = process.env.PRIVATE_KEY;
+  let cert = process.env.CERTIFICATE;
+  options = {
+    key: key,
+    cert: cert
+  };
 } catch (err) {
   console.error('Error reading version from file:', err);
 }
@@ -34,8 +44,10 @@ app.use(function (_req, res, next) {
 app.use(authenticationController);
 app.use(preferencesController);
 
-app.listen(port, () => {
-  console.log(`[server]: Server v${version.trim()} is running at http://localhost:${port}`);
+let server = https.createServer(options, app);
+
+server.listen(port, () => {
+  console.log(`[server]: Server v${version.trim()} is running at https://localhost:${port}`);
   console.log("[server]: SSL Verification: " + process.env.SSL_VERIFICATION);
   console.log("[server]: Auth service at: " + process.env.AUTH_API_URL);
   console.log("[server]: Preferences service at: " + process.env.PREFERENCES_API_URL);

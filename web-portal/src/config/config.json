@@ -1,5 +1,5 @@
 {
-  "bffBaseUrl": "http://localhost:9090/v1/bff",
+  "bffBaseUrl": "https://localhost:9090/v1/bff",
   "verifyHttps": false,
   "environment": "local"
 }

@@ -660,6 +660,19 @@ spec:
           envFrom:
              - secretRef:
                     name: {{ .Release.Name }}-web-portal-bff-env
+          volumeMounts:
+            - mountPath: "/app/build/private.key"
+              name: ssl-keys
+              readOnly: true
+              subPath: "private.key"
+            - mountPath: "/app/build/public.crt"
+              name: ssl-keys
+              readOnly: true
+              subPath: "public.crt"
+      volumes:
+        - name: ssl-keys
+          secret:
+            secretName: {{ .Release.Name }}-web-portal-bff-ssl
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -687,7 +700,12 @@ spec:
             - name: VITE_REACT_APP_ENVIRONMENT
               value: "server"
             - name: BFF_API_URL
-              value: "http://{{ .Release.Name }}-web-portal-bff-service.{{.Release.Namespace}}.svc.cluster.local:3000"
+              value: "https://{{ .Release.Name }}-web-portal-bff-service.{{.Release.Namespace}}.svc.cluster.local:3000"
+            - name: SSL_VERIFICATION
+              value: "{{ .Values.web_portal.verifyHttps }}"
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-web-portal-env
           volumeMounts:
             - mountPath: "/app/dist/config.json"
               name: config

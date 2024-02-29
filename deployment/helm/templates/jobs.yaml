@@ -15,7 +15,7 @@ spec:
             - containerPort: 8080
           env:
             - name: "WEB_PORTAL_ADDRESS"
-              value: "http://{{ .Release.Name}}-web-portal-service.{{.Release.Namespace }}.svc.cluster.local:3000"
+              value: "https://{{ .Release.Name}}-web-portal-service.{{.Release.Namespace }}.svc.cluster.local:3000"
             - name: "WEB_PORTAL_REMOTE_WEB_DRIVER_URL"
               value: "http://{{ .Release.Name}}-selenium-hub-service.{{.Release.Namespace }}.svc.cluster.local:4444/wd/hub"
             - name: "WEB_PORTAL_ENVIRONMENT"
