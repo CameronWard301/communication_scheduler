@@ -67,7 +67,7 @@ public class PreferencesAPIStepDefinitions {
     public void iHaveARetryPolicyWithTheFollowingData(DataTable retryPolicy) {
         preferencesRequest = Preferences.builder()
                 .retryPolicy(Preferences.RetryPolicy.builder()
-                        .maximumAttempts(retryPolicy.asMaps().get(0).get("maximumAttempts"))
+                        .maximumAttempts(Integer.parseInt(retryPolicy.asMaps().get(0).get("maximumAttempts")))
                         .backoffCoefficient(Float.parseFloat(retryPolicy.asMaps().get(0).get("backoffCoefficient")))
                         .initialInterval(retryPolicy.asMaps().get(0).get("initialInterval"))
                         .maximumInterval(retryPolicy.asMaps().get(0).get("maximumInterval"))

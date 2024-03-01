@@ -14,6 +14,16 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: "WEB_PORTAL_ADDRESS"
+              value: "https://{{ .Release.Name}}-web-portal-service.{{.Release.Namespace }}.svc.cluster.local:3000"
+            - name: "WEB_PORTAL_REMOTE_WEB_DRIVER_URL"
+              value: "http://{{ .Release.Name}}-selenium-hub-service.{{.Release.Namespace }}.svc.cluster.local:4444/wd/hub"
+            - name: "WEB_PORTAL_ENVIRONMENT"
+              value: "server"
+            - name: "WEB_PORTAL_IMPLICIT_WAIT"
+              value: "{{ .Values.integration_tests.selenium.implicitWait }}"
+            - name: "WEB_PORTAL_EXPLICIT_WAIT"
+              value: "{{ .Values.integration_tests.selenium.explicitWait }}"
             - name: "TEST_FILTER_EXPRESSION"
               value: "{{ .Values.integration_tests.filterExpression }}"
             - name: "HISTORY_API_ADDRESS"
@@ -81,6 +91,12 @@ spec:
           command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-schedule-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for schedule api; sleep 2; done;' ]
         - name: wait-for-history-api
           image: busybox
-          command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-history-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for schedule api; sleep 2; done;' ]
+          command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-history-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for history api; sleep 2; done;' ]
+        - name: wait-for-web-portal-bff
+          image: busybox
+          command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-web-portal-bff-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for web-portal-bff api; sleep 2; done;' ]
+        - name: wait-for-web-portal
+          image: busybox
+          command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-web-portal-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for web-portal; sleep 2; done;' ]
       restartPolicy: Never
   backoffLimit: 0

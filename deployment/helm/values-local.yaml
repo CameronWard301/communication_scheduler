@@ -129,13 +129,30 @@ history_api:
   temporalNamespace: default
   verifyHostnames: false
 
+web_bff:
+  repository: cameronward/cs-web-portal-bff
+  tag: latest
+  port: "3000"
+  sslVerification: "false"
+
+web_portal:
+  repository: cameronward/cs-web-portal
+  tag: latest
+  port: "3000"
+  verifyHttps: "false"
+  bffUri: "/v1/bff"
+  environment: "dev"
 
 integration_tests:
   repository: cameronward/cs-integration-tests
   tag: latest
   temporalNamespace: default
   kubernetesNamespace: default
-  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI or @MockGateway or @ScheduleAPI or @HistoryAPI"
+  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI or @MockGateway or @ScheduleAPI or @HistoryAPI or @WebPortal"
+  #filterExpression: "@WebPortal"
+  selenium:
+    implicitWait: 5
+    explicitWait: 10
 
 PreferencesDefaults:
   GatewayTimeoutSeconds: "60"

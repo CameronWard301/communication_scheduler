@@ -37,6 +37,13 @@ schedule-api:
 history-api:
   address: ${HISTORY_API_ADDRESS:https://localhost:50387/workflow}
 
+web-portal:
+  address: ${WEB_PORTAL_ADDRESS:https://localhost:51918:3000}
+  environment: ${WEB_PORTAL_ENVIRONMENT:server}
+  remote-web-driver-url: ${WEB_PORTAL_REMOTE_WEB_DRIVER_URL:http://localhost:53034/wd/hub}
+  implicit-wait: ${WEB_PORTAL_IMPLICIT_WAIT:5}
+  explicit-wait: ${WEB_PORTAL_EXPLICIT_WAIT:10}
+
 gateway-api:
   address: ${GATEWAY_API_ADDRESS:https://localhost:64854/gateway}
   entity:

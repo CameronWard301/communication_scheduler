@@ -1,11 +1,10 @@
 package io.github.cameronward301.communication_scheduler.preferences_api.model;
 
-import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import jakarta.validation.constraints.NotBlank;
 import lombok.NoArgsConstructor;
 
 
@@ -14,8 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RetryPolicy {
-    @NotBlank(message = "'maximumAttempts' cannot be empty")
-    private String maximumAttempts;
+    @NotNull(message = "'maximumAttempts' cannot be empty")
+    private Integer maximumAttempts;
 
     @NotNull(message = "'backoffCoefficient' cannot be empty")
     private Float backoffCoefficient;

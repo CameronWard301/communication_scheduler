@@ -16,7 +16,7 @@
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>gateway-library</artifactId>
-    <version>0.3.3</version>
+    <version>0.3.4</version>
     <name>gateway-library</name>
     <description>Gateway library for developing custom communication gateways</description>
     <url>https://github.com/CameronWard301/communication_scheduler/tree/main/gateway-library</url>
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>6.1.1</version>
+            <version>6.1.4</version>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
@@ -68,6 +68,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>6.2.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

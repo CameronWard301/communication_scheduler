@@ -28,6 +28,7 @@ public class PreferencesService {
 
     /**
      * Get the preferences from the kubernetes cluster using the client
+     *
      * @return the Preferences object containing the platforms configuration
      */
     public Preferences getPreferences() {
@@ -52,7 +53,7 @@ public class PreferencesService {
             return Preferences.builder()
                     .retryPolicy(RetryPolicy.builder()
                             .startToCloseTimeout(retryConfigMap.get("startToCloseTimeout"))
-                            .maximumAttempts(retryConfigMap.get("maximumAttempts"))
+                            .maximumAttempts(Integer.parseInt(retryConfigMap.get("maximumAttempts")))
                             .backoffCoefficient(Float.parseFloat(retryConfigMap.get("backoffCoefficient")))
                             .initialInterval(retryConfigMap.get("initialInterval"))
                             .maximumInterval(retryConfigMap.get("maximumInterval"))
@@ -68,6 +69,7 @@ public class PreferencesService {
 
     /**
      * Update the retry policy in the preferences config map to the provided retry policy. All values will be overwritten in the existing retry policy
+     *
      * @param retryPolicy to set
      * @return the updated policy
      */
@@ -92,6 +94,7 @@ public class PreferencesService {
 
     /**
      * Update the gateway timeout setting to the value provided
+     *
      * @param gatewayTimeout - the new value to set
      * @return the updated value
      */
