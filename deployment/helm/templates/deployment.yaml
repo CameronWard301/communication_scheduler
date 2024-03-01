@@ -634,3 +634,166 @@ spec:
         - name: keystore
           secret:
             secretName: {{ .Release.Name }}-history-api-ssl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-web-portal-bff-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-web-portal-bff-api
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-web-portal-bff-api
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-web-portal-bff-api
+          image: "{{ .Values.web_bff.repository }}:{{ .Values.web_bff.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 3000
+          envFrom:
+             - secretRef:
+                    name: {{ .Release.Name }}-web-portal-bff-env
+          volumeMounts:
+            - mountPath: "/app/build/private.key"
+              name: ssl-keys
+              readOnly: true
+              subPath: "private.key"
+            - mountPath: "/app/build/public.crt"
+              name: ssl-keys
+              readOnly: true
+              subPath: "public.crt"
+      volumes:
+        - name: ssl-keys
+          secret:
+            secretName: {{ .Release.Name }}-web-portal-bff-ssl
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-web-portal
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-web-portal
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-web-portal
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-web-portal
+          image: "{{ .Values.web_portal.repository }}:{{ .Values.web_portal.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 3000
+          env:
+            - name: VITE_REACT_APP_ENVIRONMENT
+              value: "server"
+            - name: BFF_API_URL
+              value: "https://{{ .Release.Name }}-web-portal-bff-service.{{.Release.Namespace}}.svc.cluster.local:3000"
+            - name: SSL_VERIFICATION
+              value: "{{ .Values.web_portal.verifyHttps }}"
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-web-portal-env
+          volumeMounts:
+            - mountPath: "/app/dist/config.json"
+              name: config
+              readOnly: true
+              subPath: "config.json"
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-web-portal-config
+---
+# Adapted from: https://github.com/kubernetes/examples/blob/master/staging/selenium/selenium-hub-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-selenium-hub
+  labels:
+    app: {{ .Release.Name }}-selenium-hub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-selenium-hub
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-selenium-hub
+    spec:
+      containers:
+        - name: selenium-hub
+          image: seleniarm/hub:4.18
+          ports:
+            - containerPort: 4444
+            - containerPort: 4443
+            - containerPort: 4442
+          resources:
+            limits:
+              memory: "1000Mi"
+              cpu: ".5"
+          livenessProbe:
+            httpGet:
+              path: /wd/hub/status
+              port: 4444
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /wd/hub/status
+              port: 4444
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+---
+# Adapted from: https://github.com/kubernetes/examples/blob/master/staging/selenium/selenium-node-chrome-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-selenium-node-chrome
+  labels:
+    app: {{ .Release.Name }}-selenium-node-chrome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-selenium-node-chrome
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-selenium-node-chrome
+    spec:
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+      containers:
+        - name: selenium-node-chrome
+          image: seleniarm/node-chromium:121.0
+          ports:
+            - containerPort: 5555
+          volumeMounts:
+            - mountPath: /dev/shm
+              name: dshm
+          env:
+            - name: SE_EVENT_BUS_HOST
+              value: "{{ .Release.Name }}-selenium-hub"
+            - name: SE_EVENT_BUS_SUBSCRIBE_PORT
+              value: "4443"
+            - name: SE_EVENT_BUS_PUBLISH_PORT
+              value: "4442"
+          resources:
+            limits:
+              memory: "1000Mi"
+              cpu: ".5"

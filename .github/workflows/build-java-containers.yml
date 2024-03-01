@@ -1,5 +1,5 @@
 # Using buildx action from: https://docs.docker.com/build/ci/github-actions/multi-platform/ and https://docs.docker.com/build/ci/github-actions/manage-tags-labels/
-name: 'Build & Push Containers'
+name: 'Build & Push Java Containers'
 on:
   workflow_dispatch:
   push:
@@ -14,7 +14,7 @@ on:
       - data-converter-api/**
       - mock-gateway/**
       - schedule-api/**
-      - .github/workflows/build-containers.yml
+      - .github/workflows/build-java-containers.yml
     branches:
       - "**"
     tags:
