@@ -6,62 +6,61 @@ package "Communication Gateway" as communicationGateway {
     }
 
 
-    class GatewayHelper {
+    class HashHelper {
         + String messageHash(String workflowRunId, String messageContents)
     }
 
 
-    interface GatewayService {
-        + ResponseEntity sendCommunication(GatewayProperties gatewayProperties)
+    interface GatewayService <TUser, TContent>{
+            + ResponseEntity<GatewayResponse> sendCommunication(GatewayProperties<TUser, TContent> gatewayProperties)
     }
 
-    class CommunicationGatewayService implements GatewayService{
-        + ResponseEntity sendCommunication(GatewayProperties gatewayProperties))
-    }
-    interface GetUserWithContent <TUser, TContent> {
-        + UserAndContent<TUser, TContent> getUserWithContent(userId)
-    }
-    note top of GetUserWithContent
-            This interface is for when using a JOIN when
-            accessing the database to retrieve the results
-            with one query.
-        end note
-
-    interface GetUserAndContent <TUser, TContent> {
-        + TUser getUser(userId)
-        + TContent getContent(userId)
+    class CommunicationGatewayService<TUser, TContent extends Content> implements GatewayService {
+        + ResponseEntity sendCommunication(GatewayProperties<TUser, TContent> gatewayProperties))
     }
 
-    class UserAndContent <TUser, TContent> {
+    abstract class GetUserAndContent <TUser, TContent> {
+        # TUser getUser(String userId)
+        # TContent getContent(String userId)
+    }
+
+    interface Content {
+        + String getContentString()
+    }
+
+    class UserAndContent <TUser, TContent extends Content> {
         - TUser user
         - TContent content
     }
 
-    interface UserContentService <TUser, TContent> {
-        + UserAndContent<TUser, TContent> getUserAndContent(userId)
+    interface UserContentService <TUser, TContent extends Content> {
+            + UserAndContent<TUser, TContent> getUserAndContent(String userId)
     }
 
-    class EmailUserContentService <TUser, TContent> implements UserContentService, GetUserWithContent, GetUserAndContent {
-        + UserAndContent<TUser, TContent> getUserAndContent(userId)
+    class EmailUserContentService <EmailUser, EmailContent> extends GetUserAndContent implements UserContentService {
+        + UserAndContent<EmailUser, EmailContent> getUserAndContent(String userId)
+        + EmailUser getUser(String userId)
+        + EmailContent getContent(String userId)
     }
 
     interface ContentDeliveryService <TUser, TContent> {
         + void sendContent(TUser user, TContent content)
     }
 
-    class EmailContentDeliveryService <TUser, TContent> implements ContentDeliveryService {
-        + void sendContent(TUser user, TContent content)
+    class EmailContentDeliveryService<EmailUser, EmailContent> implements ContentDeliveryService {
+        + void sendContent(EmailUser user, EmailContent content)
     }
 
    note left of EmailUserContentService
-        This interface extends either
-        GetUserWithContent or GetUserAndContent
+        This class can extend GetUserAndContent when not using a
+        JOIN operation to get the user with the message contents and
+        you want to get the entities in separate database calls
    end note
 
 
     CommunicationGatewayService -u-> EmailContentDeliveryService: uses
     CommunicationGatewayService -u---> EmailUserContentService: uses
-    CommunicationGatewayService --> GatewayHelper: uses
+    CommunicationGatewayService --> HashHelper: uses
     EmailUserContentService --> UserAndContent: returns
 }
 

@@ -8,37 +8,43 @@ package "Communication Gateway" as communicationGateway {
     }
 
 
-    class GatewayHelper {
+    class HashHelper {
         + String messageHash(String workflowRunId, String messageContents)
     }
 
     interface CommunicationHistoryAccessProvider {
-        + Communication getPreviousCommunicationMessageHash(String messageHash)
+        + CommunicationHistory getPreviousCommunicationMessageHash(String messageHash)
+        + void removeCommunicationHistoryByMessageHash(String messageHash)
         + void storeCommunication(String workflowRunId, String userId, String messageHash)
     }
 
     class DefaultCommunicationHistoryAccessProvider implements CommunicationHistoryAccessProvider {
+        - DynamoDbAsyncClient dynamoDbAsyncClient
+        - DefaultCommunicationHistoryAccessProviderProperties historyAccessProviderProperties
         + Communication getPreviousCommunicationMessageHash(String messageHash)
         + void storeCommunication(String workflowRunId, String userId, String messageHash)
+        + void removeCommunicationHistoryByMessageHash(String messageHash)
     }
 
-
-
-
-
-    interface GatewayService {
-        + ResponseEntity sendCommunication(GatewayProperties gatewayProperties)
+    interface GatewayService <TUser, TContent>{
+        + ResponseEntity<GatewayResponse> sendCommunication(GatewayProperties<TUser, TContent> gatewayProperties)
     }
 
-    class CommunicationGatewayService implements GatewayService{
-        + ResponseEntity sendCommunication(GatewayProperties gatewayProperties))
+    class GatewayResponse {
+        - String userId
+        - String messageHash
+        - String errorMessage
+        + Standard Getters and Setters()
     }
 
-
+    class CommunicationGatewayService<TUser, TContent extends Content> implements GatewayService {
+        + ResponseEntity sendCommunication(GatewayProperties<TUser, TContent> gatewayProperties))
+    }
 
 
     CommunicationGatewayService --> DefaultCommunicationHistoryAccessProvider: uses
-    CommunicationGatewayService --> GatewayHelper: uses
+    CommunicationGatewayService --> HashHelper: uses
+    CommunicationGatewayService --> GatewayResponse: returns
 }
 
 

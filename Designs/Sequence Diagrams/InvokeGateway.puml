@@ -22,14 +22,14 @@ gateway -> gateway: Hash the message contents with the workflowRunId
 gateway -> historyDB: Check for previous message by messageHash
 
 historyDB --> gateway: Returns result
-gateway -> gateway: Check that message does not exist in result
+gateway -> gateway: Check that messageHash result is null
+gateway -> historyDB: Write workflowRunId, userId and messageHash to
+historyDB --> gateway: Successful write
 
 gateway -> gateway: Gets user's phone number
 gateway -> sms: Send message to phone number
 sms --> gateway: Returns result
 gateway -> gateway: Check result
-gateway -> historyDB: Write workflowRunId, userId and messageHash to
-historyDB --> gateway: Successful write
 gateway --> worker: Return 200 success,\nmessageHash and userId
 
 

@@ -16,24 +16,25 @@ end note
 
 
 interface CommunicationWorkflow extends WorkflowInterface {
-    + String sendCommunication(Map<String, String> payload)
+    + Map<String, String> sendCommunication(Map<String, String> payload)
 }
 
 class CommunicationWorkflowImpl implements CommunicationWorkflow{
-    - ActivityOptions activityOptions
-    - GetGatewayFromDbActivity getGatewayFromDbActivity
-    - SendMessageToGatewayActivity sendMessageToGatewayActivity
-    + String sendCommunication(Map<String, String> payload)
+    - String taskQueue
+    - GetPreferencesActivity getSettingsActivity
+    + Map<String, String> sendCommunication(Map<String, String> payload)
 
 }
 
-interface GetSettingsActivity extends ActivityInterface{
-    + Map<String, String> getSettings()
+interface GetPreferencesActivity extends ActivityInterface{
+    + Preferences getPreferences()
 }
 
-class GetSettingsActivityImpl implements GetSettingsActivity {
-    + Map<String, String> settings
-    + Map<String, String> getSettings()
+class GetPreferencesActivityImpl implements GetPreferencesActivity {
+    - KubernetesClient client
+    - TemporalProperties temporalProperties
+    - ObjectMapper objectMapper
+    + Preferences getPreferences
 }
 
 
@@ -43,18 +44,19 @@ interface GetGatewayFromDbActivity extends ActivityInterface{
 
 class GetGatewayFromDbActivityImpl implements GetGatewayFromDbActivity{
     - GatewayRepository gatewayRepository
-    - Map<String, String> settings
     + String getGatewayEndpointURL(String gatewayId)
 }
 
 interface SendMessageToGatewayActivity extends ActivityInterface {
-    + Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl)
+    + Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl, Preferences preferences)
 }
 
 class SendMessageToGatewayActivityImpl implements SendMessageToGatewayActivity {
-    - RestTemplate restTemplate
-    - Map<String, String> settings
-    + Map<String, String> invokeGateway(String gatewayUrl)
+    - {static} String HEADER_KEY
+    - WebClient webClient
+    - String apiKey
+    + SendMessageToGatewayActivityImpl(WebClient webClient, String apiKey)
+    + Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl, Preferences preferences)
 }
 
 

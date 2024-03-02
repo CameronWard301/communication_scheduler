@@ -11,8 +11,8 @@ autonumber
 worker -> temporal: Polls task queue
 temporal -> temporal: Schedules workflow
 worker -> worker: Starts workflow
-temporal -> worker: Schedules GetSettingsActivity
-worker -> worker: Get Settings
+temporal -> worker: Schedules GetPreferencesActivity
+worker -> worker: Get Preferences
 worker --> temporal: Activity completed
 temporal -> worker: Schedules GetGatewayActivity
 worker -> gwdb: Get gateway by id
