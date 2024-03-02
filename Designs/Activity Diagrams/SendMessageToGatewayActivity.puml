@@ -22,18 +22,21 @@ endif
 :Generate Message Contents;
 :Hash message contents with workflowRunId;
 
-:Check if messageHash exists in communication DB;
+:Check if messageHash exists in communication history DB;
 if (message already exists) is (yes) then
 :return delivered status 200;
 else (no)
 
-:Sends Communication To User;
+:Stores workflowRunId, userId,
+ messageHash in communication history DB;
+:Send Communication To User;
 
     if (message delivered?) is (yes) then
-    :Stores workflowRunId, userId,
-    messageHash in communication DB;
+
     :return delivered status 200;
     else (error)
+    :Remove message hash
+    from communication DB;
     :return error 500;
     endif
 

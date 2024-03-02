@@ -52,7 +52,7 @@ package "Communication Gateway" as communicationGateway {
     }
 
    note left of EmailUserContentService
-        This interface can extend GetUserAndContent when not using a
+        This class can extend GetUserAndContent when not using a
         JOIN operation to get the user with the message contents and
         you want to get the entities in separate database calls
    end note

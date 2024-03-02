@@ -39,7 +39,7 @@ package "Communication APIs" as communicationApis {
 
 
 
-    interface PagingAndSortingRepository {
+    interface MongoRepository {
         + Page<T> findAll(Pageable pageable)
         + Iterable<T> findAll(Sort sort)
         + T findById(String id)

@@ -33,8 +33,8 @@
 6. [Send Communication Workflow](Designs/Activity%20Diagrams/SendCommunicationWorkflow.puml)  
     ![Send Communication Workflow](Designs/Images/Activity%20Diagrams/SendCommunicationWorkflow.svg)
 
-7. [GetSettingsActivity](Designs/Activity%20Diagrams/GetSettingsActivity.puml)  
-    ![GetSettingsActivity](Designs/Images/Activity%20Diagrams/GetSettingsActivity.svg)
+7. [GetPreferencesActivity](Designs/Activity%20Diagrams/GetPreferencesActivity.puml)  
+    ![GetPreferencesActivity](Designs/Images/Activity%20Diagrams/GetPreferencesActivity.svg)
 
 8. [GetGatewayActivity](Designs/Activity%20Diagrams/GetGatewayActivity.puml)  
     ![GatGatewayActivity](Designs/Images/Activity%20Diagrams/GetGatewayActivity.svg)

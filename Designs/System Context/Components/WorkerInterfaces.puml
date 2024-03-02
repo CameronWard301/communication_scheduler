@@ -21,7 +21,7 @@ package "worker" as workerGroup {
         + Map<String, String> sendCommunication(Map<String, String> payload)
     }
 
-    interface GetSettingsActivity {
+    interface GetPreferencesActivity {
         + Preferences getPreferences()
     }
 
@@ -34,7 +34,7 @@ package "worker" as workerGroup {
     }
 
     worker --|> CommunicationWorkflow
-    CommunicationWorkflow --> GetSettingsActivity
+    CommunicationWorkflow --> GetPreferencesActivity
     CommunicationWorkflow --> SendMessageToGatewayActivity
     CommunicationWorkflow --> GetGatewayByIdActivity
 }

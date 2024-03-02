@@ -8,8 +8,8 @@ start
 partition CommunicationWorkflow {
     
     repeat
-        :getSettingsActivity;
-        floating note: See GetSettingsActivity.puml
+        :getPreferencesActivity;
+        floating note: See GetPreferencesActivity.puml
 
 
     backward: Retry Activity;

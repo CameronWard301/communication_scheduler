@@ -1,10 +1,11 @@
 @startuml Gateway Database Schema
 
 entity GatewayDb {
-    * PK - id
+    * PK - _id
     --
-    * String - endpoint_url
-    * String - friendly_name
+    * String - endpointUrl
+    * String - friendlyName
+    String - dateCreated (optional)
     String - description (optional)
 }
 

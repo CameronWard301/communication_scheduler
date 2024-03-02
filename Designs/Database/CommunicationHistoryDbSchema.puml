@@ -1,0 +1,10 @@
+@startuml Gateway Database Schema
+
+entity CommunicationHistoryDb {
+    * PK - message_hash
+    --
+    * String - workflow_run_id
+    * String - user_id
+}
+
+@enduml

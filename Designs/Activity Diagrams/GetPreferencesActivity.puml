@@ -1,16 +1,16 @@
-@startuml GetSettingsActivity;
+@startuml GetPreferencesActivity;
 |Worker|
 
 start
 
-:GetSettingsFromConfigMap;
+:GetPreferencesFromConfigMap;
 
 |Kubernetes Cluster|
 :Returns Config Map;
 
 |Worker|
 if (Config Map?) is (ok) then
-:return settings object;
+:return Preferences object;
 else (error)
 :return error;
 endif

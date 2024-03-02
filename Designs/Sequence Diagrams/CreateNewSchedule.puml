@@ -15,9 +15,6 @@ pbff -> cAPI: Create Schedule Request
 cAPI -> aAPI: Get public JWK
 aAPI --> cAPI: return JWK
 cAPI -> cAPI: Verify JWT with JWK
-rnote over cAPI
-    Checks that gatewayID is valid
-endrnote
 cAPI -> temporal: Create Schedule
 temporal --> cAPI: Creation Result
 cAPI --> pbff: Creation Result
