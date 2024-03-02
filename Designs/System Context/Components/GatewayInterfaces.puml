@@ -3,8 +3,8 @@
 component Worker {
 }
 
-interface SendMessageToGateway {
-    + Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl)
+interface SendMessageToGatewayActivity {
+    + Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl, Preferences preferences)
 }
 
 package "Communication Gateway" as communicationGateway {
@@ -12,99 +12,115 @@ package "Communication Gateway" as communicationGateway {
 
     }
 
+    interface Content {
+        + String getContentString()
+    }
 
-    class GatewayHelper {
+
+    class HashHelper {
         + String messageHash(String workflowRunId, String messageContents)
     }
 
     interface CommunicationHistoryAccessProvider {
-        + Communication getPreviousCommunicationMessageHash(String messageHash)
+        + CommunicationHistory getPreviousCommunicationMessageHash(String messageHash)
+        + void removeCommunicationHistoryByMessageHash(String messageHash)
         + void storeCommunication(String workflowRunId, String userId, String messageHash)
     }
 
     class DefaultCommunicationHistoryAccessProvider implements CommunicationHistoryAccessProvider {
+        - DynamoDbAsyncClient dynamoDbAsyncClient
+        - DefaultCommunicationHistoryAccessProviderProperties historyAccessProviderProperties
         + Communication getPreviousCommunicationMessageHash(String messageHash)
         + void storeCommunication(String workflowRunId, String userId, String messageHash)
+        + void removeCommunicationHistoryByMessageHash(String messageHash)
     }
 
-    interface GatewayController {
-        + ResponseEntity sendCommunication(userId, workflowRunId)
+    class GatewayRequest {
+        - String userId
+        - String workflowRunId
+        + Standard Getters and Setters()
+    }
+
+    class GatewayResponse {
+        - String userId
+        - String messageHash
+        - String errorMessage
+        + Standard Getters and Setters()
+    }
+
+    interface GatewayController <TUser, TContent extends Content>{
+        + {static} ResponseEntity<GatewayResponse sendCommunication(GatewayRequest gatewayRequest, GatewayProperties<TUser, TContent> gatewayProperties, CommunicationGatewayService<TUser, TContent> communicationGatewayService)
+        + ResponseEntity<GatewayResponse> processGatewayRequest(GatewayRequest gatewayRequest)
     }
 
     class EmailGatewayController implements GatewayController {
-        + ResponseEntity sendCommunication(userId, workflowRunId)
+        + ResponseEntity<GatewayResponse> processGatewayRequest(GatewayRequest gatewayRequest)
     }
 
-    class GatewayProperties {
+    abstract class GatewayProperties <TUser, TContent extends Content> {
         - String userId
         - String workflowRunId
-        - ContentDeliveryService contentDeliveryService
-        - UserContentService<?, ?> userContentService
+        - ContentDeliveryService<TUser, TContent> contentDeliveryService
+        - UserContentService<TUser, TContent?> userContentService
         - CommunicationHistoryAccessProvider communicationHistoryAccessProvider
-        + Standard Getters() & Setters()
+        + Standard Getters() & Setters() & SuperBuilder()
     }
 
-    interface GatewayService {
-        + ResponseEntity sendCommunication(GatewayProperties gatewayProperties)
+    interface GatewayService <TUser, TContent>{
+        + ResponseEntity<GatewayResponse> sendCommunication(GatewayProperties<TUser, TContent> gatewayProperties)
     }
 
-    class CommunicationGatewayService implements GatewayService{
-        + ResponseEntity sendCommunication(GatewayProperties gatewayProperties))
+    class CommunicationGatewayService<TUser, TContent extends Content> implements GatewayService {
+        + ResponseEntity sendCommunication(GatewayProperties<TUser, TContent> gatewayProperties))
     }
     note right of CommunicationGatewayService
         GatewayProperties object can be created by a
         builder and passed to this method.
     end note
 
-    interface GetUserWithContent <TUser, TContent> {
-        + UserAndContent<TUser, TContent> getUserWithContent(userId)
-    }
-    note top of GetUserWithContent
-            This interface is for when using a JOIN when
-            accessing the database to retrieve the results
-            with one query.
-        end note
-
-    interface GetUserAndContent <TUser, TContent> {
-        + TUser getUser(userId)
-        + TContent getContent(userId)
+    abstract class GetUserAndContent <TUser, TContent> {
+        # TUser getUser(String userId)
+        # TContent getContent(String userId)
     }
 
-    class UserAndContent <TUser, TContent> {
+    class UserAndContent <TUser, TContent extends Content> {
         - TUser user
         - TContent content
     }
 
-    interface UserContentService <TUser, TContent> {
-        + UserAndContent<TUser, TContent> getUserAndContent(userId)
+    interface UserContentService <TUser, TContent extends Content> {
+        + UserAndContent<TUser, TContent> getUserAndContent(String userId)
     }
 
-    class EmailUserContentService <TUser, TContent> implements UserContentService, GetUserWithContent, GetUserAndContent {
-        + UserAndContent<TUser, TContent> getUserAndContent(userId)
+    class EmailUserContentService <EmailUser, EmailContent> extends GetUserAndContent implements UserContentService {
+        + UserAndContent<EmailUser, EmailContent> getUserAndContent(String userId)
+        + EmailUser getUser(String userId)
+        + EmailContent getContent(String userId)
     }
 
     interface ContentDeliveryService <TUser, TContent> {
         + void sendContent(TUser user, TContent content)
     }
 
-    class EmailContentDeliveryService <TUser, TContent> implements ContentDeliveryService {
-        + void sendContent(TUser user, TContent content)
+    class EmailContentDeliveryService<EmailUser, EmailContent> implements ContentDeliveryService {
+        + void sendContent(EmailUser user, EmailContent content)
     }
 
    note left of EmailUserContentService
-        This interface extends either
-        GetUserWithContent or GetUserAndContent
+        This class can extend GetUserAndContent when not using a
+        JOIN operation to get the user with the message contents and
+        you want to get the entities in separate database calls
    end note
 
 
     CommunicationGatewayService --> EmailContentDeliveryService: uses
     CommunicationGatewayService --> EmailUserContentService: uses
     CommunicationGatewayService --> DefaultCommunicationHistoryAccessProvider: uses
-    CommunicationGatewayService --> GatewayHelper: uses
+    CommunicationGatewayService --> HashHelper: uses
     EmailGatewayController --> CommunicationGatewayService: uses
     EmailGatewayController -> GatewayProperties: uses
-    Worker --|> SendMessageToGateway
-    SendMessageToGateway --> GatewayController: uses
+    Worker --|> SendMessageToGatewayActivity
+    SendMessageToGatewayActivity --> GatewayController: uses
     EmailUserContentService --> UserAndContent: returns
 }
 

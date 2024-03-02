@@ -22,16 +22,16 @@ package "Communication APIs" as communicationApis {
     }
 
     interface gatewayController {
-        + List<Gateways> getGateways(Optional<int> pageNumber, Optional<int> pageSize)
-        + Gateway createGateway(String endpointUrl, String friendlyName, Optional<String> description)
-        + Gateway updateGateway(Gateway gateway)
-        + Gateway getGatewayById(String id)
-        + void deleteGatewayById(String id)
+        + ResponseEntity<Page<Gateways>> getAllGateways(String pageNumber, String pageSize, String friendlyName, String endpointUrl, String description, String sortField, String sortDirection)
+        + ResponseEntity<Gateway> createGateway(Gateway gateway, BindingResult bindingResult)
+        + ResponseEntity<Gateway> getGatewayById(String id)
+        + ResponseEntity<String> deleteGatewayById(String id)
+        + Gateway updateGateway(Gateway gateway, BindingResult bindingResult)
     }
 
     interface gatewayService {
-        + List<Gateways> getGateways(int pageNumber, int pageSize)
-        + Gateway createGateway(String endpointUrl, String friendlyName, Optional<String> description)
+        + Page<Gateways> getGateways(String pageNumber, String pageSize, String friendlyName, String endpointUrl, String description, String sortField, String sortDirection)
+        + Gateway createGateway(Gateway gateway)
         + Gateway updateGateway(Gateway gateway)
         + Gateway getGatewayById(String id)
         + void deleteGatewayById(String id)
@@ -39,11 +39,17 @@ package "Communication APIs" as communicationApis {
 
 
 
-    interface gatewayRepository extends PagingAndSortingRepository {
-        + Gateway save(Gateway)
-        + List<Gateway> getAll(pageNumber, pageSize)
-        + Gateway findById(String gatewayId)
-        + void deleteById(String gatewayId)
+    interface MongoRepository {
+        + Page<T> findAll(Pageable pageable)
+        + Iterable<T> findAll(Sort sort)
+        + T findById(String id)
+        + void deleteById(String id)
+    }
+
+
+    interface gatewayRepository extends MongoRepository {
+        + Page<Gateway> findAll(Pageable pageable)
+        + Page<Gateway> findByFriendlyNameRegexAndEndpointUrlRegexAndDescriptionRegex(String friendlyName, String dateCreated, String description, Pageable pageable)
     }
 
     gatewayApi --|> gatewayService
@@ -57,32 +63,26 @@ package "Communication APIs" as communicationApis {
     }
 
     interface scheduleController{
-        + Schedule createSchedule(String endpointUrl, String userId, CalendarSpec calendarSpec, boolean paused)
-        + Schedule updateSchedule(Schedule schedule)
-        + List<Schedule> getSchedules(Optional<int> pageNumber, Optional<int> pageSize)
-        + List<Schedule> getSchedules(Optional<int> pageNumber, Optional<int> pageSize)
-        + void deleteScheduleById(String id)
-        + Schedule schedule getScheduleById(String id)
-        + List<Schedule> getSchedulesByGatewayId(String gatewayId, Optional<int> pageNumber, Optional<int> pageSize)
-        + List<Schedule> updateSchedulesByGatewayId(String gatewayId, Schedule schedule)
-        + void deleteSchedulesByGatewayId(String gatewayId)
-        + List<Schedule> getSchedulesByUserId(String userId)
-        + List<Schedule> updateSchedulesByUserId(String userId, Schedule schedule)
-        + void deleteSchedulesByUserId(String userId)
+        + ResponseEntity<ScheduleDescriptionDTO> createSchedule(CreateScheduleDTO createScheduleDTO, BindingResult bindingResult)
+        + ResponseEntity<ScheduleDescriptionDTO> updateSchedule(CreateScheduleDTO createScheduleDTO, BindingResult bindingResult)
+        + ResponseEntity<ModifiedDTO> batchUpdateSchedules(Optional<String> userId, Optional<String> gatewayId, SchedulePatchDTO schedulePatchDTO, BindingResult bindingResult)
+        + ResponseEntity<Page<ScheduleListDescription>> getSchedules(String pageNumber, String pageSize, Optional<String> userId, Optional<String> gatewayId)
+        + ResponseEntity<ModifiedDTO> batchDeleteSchedules(Optional<String> userId, Optional<String> gatewayId)
+        + ResponseEntity<CountDTO> getScheduleNumber(Optional<String> userId, Optional<String> gatewayId)
+        + ResponseEntity<String> deleteById(String id)
+        + ResponseEntity<ScheduleDescriptionDTO> getScheduleById(String id)
     }
 
     interface scheduleService {
-        + Schedule createSchedule(String endpointUrl, String userId, CalendarSpec calendarSpec, boolean paused)
-        + Schedule updateSchedule(String id, String endpointUrl, String userId, CalendarSpec calendarSpec, boolean paused)
-        + List<Schedule> getSchedules(int pageNumber, int pageSize)
-        + void deleteScheduleById(String id)
-        + Schedule schedule getScheduleById(String id)
-        + List<Schedule> getSchedulesByGatewayId(String gatewayId, int pageNumber, int pageSize)
-        + void deleteSchedulesByGatewayId(String gatewayId)
-        + List<Schedule> updateSchedulesByGatewayId(String gatewayId, String endpointUrl, String userId, CalendarSpec calendarSpec, boolean paused)
-        + List<Schedule> getSchedulesByUserId(String userId)
-        + void deleteSchedulesByUserId(String userId)
-        + List<Schedule> updateSchedulesByUserId(String userId, String endpointUrl, String userId, CalendarSpec calendarSpec, boolean paused)
+        + Page<ScheduleListDescription> getAllSchedules(String pageNumber, String pageSize, Optional<String> userId, Optional<String> gatewayId)
+        + ScheduleDescriptionDTO createSchedule(CreateScheduleDTO createScheduleDTO)
+        + ScheduleDescriptionDTO updateSchedule(CreateScheduleDTO scheduleDTO)
+        + ModifiedDTO batchUpdateSchedules(Optional<String> userId, Optional<String> gatewayId, SchedulePatchDTO schedulePatchDTO)
+        + ScheduleDescriptionDTO getScheduleById(String scheduleId)
+        + void deleteScheduleById(String scheduleId)
+        + CountDTO getScheduleCount (Optional<String> userId, Optional<String> gatewayId)
+        + ModifiedDTO deleteSchedulesByFilter(Optional<String> userId, Optional<String> gatewayId)
+        - RuntimeException handleScheduleException(ScheduleException e, String scheduleId)
     }
 
 
@@ -95,16 +95,19 @@ package "Communication APIs" as communicationApis {
     }
 
     interface historyController {
-        + List<CommunicationWorkflow> getWorkflows(Optional<String> userId, Optional<String> gatewayId, Optional<int> status, Optional<int> PageNumber, Optional<int> pageSize)
-        + int getWorkflowNumber(Optional<String> userId, Optional<String> gatewayId, Optional<int> status)
-        + CommunicationWorkflow getWorkflowById(String id)
+        + ResponseEntity<Page<WorkflowExecutionDTO>> getWorkflows(Optional<String> userId, Optional<String> gatewayId, Integer status, String PageNumber, String pageSize)
+        + ResponseEntity<WorkflowExecutionDTO> getWorkflow(String workflowId, String runId)
+        + ResponseEntity<Void> terminateWorkflow(String workflowId, String runId)
+        + ResponseEntity<TotalDTO> getTotalWorkflows(Optional<String> userId, Optional<String> gatewayId, Optional<String> scheduleId, Integer status)
     }
 
 
     interface historyService {
-        + List<CommunicationWorkflow> getWorkflows(Optional<String> userId, Optional<String> gatewayId, int status, int PageNumber, int pageSize)
-        + int getWorkflowNumber(Optional<String> userId, Optional<String> gatewayId, int status)
-        + CommunicationWorkflow getWorkflowById(String id)
+        + Page<WorkflowExecutionDTO> getWorkflows(Optional<String> userId, Optional<String> gatewayId, Optional<String> scheduleId, Integer status, String PageNumber, String pageSize)
+        + WorkflowExecutionDTO getWorkflowById(String id, String runId)
+        + void terminateWorkflow(String id, String runId)
+        + TotalDTO getTotalWorkflows(Optional<String> userId, Optional<String> gatewayId, Optional<String> scheduleId, Integer status)
+        - String getWorkflowQueryString(Optional<String> userId, Optional<String> gatewayId, Optional<String> scheduleId, Integer status)
     }
 
     historyApi --|> historyService
@@ -116,13 +119,15 @@ package "Communication APIs" as communicationApis {
     }
 
     interface preferencesController {
-        + RetryPolicy getRetryPolicy()
-        + RetryPolicy setRetryPolicy(RetryPolicy retryPolicy)
+        + ResponseEntity<Preferences> getPreferences()
+        + ResponseEntity<RetryPolicy> setRetryPolicy(RetryPolicy retryPolicy, BindingResult bindingResult)
+        + ResponseEntity<GatewayTimeout> setGatewayTimeout(GatewayTimeout gatewayTimeout, BindingResult bindingResult)
     }
 
     interface preferencesService {
-        + RetryPolicy getRetryPolicy()
+        + Preferences getPreferences()
         + RetryPolicy setRetryPolicy(RetryPolicy retryPolicy)
+        + GatewayTimeout setGatewayTimeoutSeconds(GatewayTimeout gatewayTimeout)
     }
 
     preferencesApi --|> preferencesService
@@ -134,26 +139,22 @@ package "Communication APIs" as communicationApis {
     }
 
     interface authController {
-        + String generateJWT(List<String> scopes)
+        + ResponseEntity<JwtDTO> getJwt(List<String> scopes)
+        + ResponseEntity<Mao<String, Object>> getKey()
     }
 
     interface authService {
-        + String generateJWT(List<String> scopes)
+        + JwtDTO generateJWT(List<String> scopes)
+        + Map<String, Object> getJwks()
     }
 
     authApi --|> authService
     authApi --|> authController
     authController --> authService
 
-    
 }
 
 
-'webportalBFFApi ---> gatewayController
-'webportalBFFApi ---> historyController
-'webportalBFFApi ---> preferencesController
-'webportalBFFApi ---> scheduleController
-'webportalBFFApi ---> authController
 scheduleClient <-- scheduleApi
 workflowClient <-- historyApi
 @enduml

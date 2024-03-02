@@ -18,26 +18,23 @@ package "worker" as workerGroup {
     }
 
     interface CommunicationWorkflow {
-        + String sendCommunication(Map<String, String> payload)
-
+        + Map<String, String> sendCommunication(Map<String, String> payload)
     }
 
-    interface GetSettingsActivity {
-        + Map<String, String> getSettings()
-
+    interface GetPreferencesActivity {
+        + Preferences getPreferences()
     }
 
     interface GetGatewayByIdActivity {
         + String getGatewayEndpointURL(String gatewayId)
-
     }
 
     interface SendMessageToGatewayActivity {
-        + Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl)
+        + Map<String, String> invokeGateway(String userId, String workflowRunId, String gatewayUrl, Preferences preferences)
     }
 
     worker --|> CommunicationWorkflow
-    CommunicationWorkflow --> GetSettingsActivity
+    CommunicationWorkflow --> GetPreferencesActivity
     CommunicationWorkflow --> SendMessageToGatewayActivity
     CommunicationWorkflow --> GetGatewayByIdActivity
 }

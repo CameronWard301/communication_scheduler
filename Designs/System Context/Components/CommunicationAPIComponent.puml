@@ -41,6 +41,14 @@ System_Boundary(component, "Communication APIs") {
         Component(authComponent, "Auth Component", "Component: Spring Bean", "Provides functionality related to generating JWT tokens from the given scope.")
     }
 }
+Container_Boundary(dataConverterApi, "Data Converter API") {
+        Component(dataConverterController, "Data Converter Controller", "Component: Spring MVC Rest Controller")
+        Component(dataConverterComponent, "Data Converter Service", "Component: Spring Bean", "Provides functionality related to encrypting and decrypting Temporal payloads")
+    }
+
+Rel(dataConverterController, dataConverterComponent, "Uses")
+Rel(historyComponent, dataConverterController, "Uses")
+Rel(scheduleComponent, dataConverterController, "Uses")
 
 Rel(webBFF, gatewayController, "Makes API Calls to", "JSON/HTTPS")
 Rel(webBFF, scheduleController, "Makes API Calls to", "JSON/HTTPS")
@@ -61,5 +69,7 @@ Rel(historyController, historyComponent, "Uses")
 Rel(historyComponent, temporal, "Queries previous workflows", "Temporal SDK")
 
 Rel(authController, authComponent, "Uses")
+
+
 
 @enduml

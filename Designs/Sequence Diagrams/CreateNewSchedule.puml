@@ -1,0 +1,24 @@
+@startuml Create New Schedule
+
+actor "Business User" as bu
+participant "Web Management Portal" as wmp
+participant "Portal BFF" as pbff
+participant "Schedule API" as cAPI
+participant "Auth API" as aAPI
+participant "Temporal" as temporal
+
+autonumber
+
+bu -> wmp: Clicks create new Schedule
+wmp -> pbff: Create Schedule Request
+pbff -> cAPI: Create Schedule Request
+cAPI -> aAPI: Get public JWK
+aAPI --> cAPI: return JWK
+cAPI -> cAPI: Verify JWT with JWK
+cAPI -> temporal: Create Schedule
+temporal --> cAPI: Creation Result
+cAPI --> pbff: Creation Result
+pbff --> wmp: Creation Result
+wmp --> bu: Creation Result Displayed
+
+@enduml

@@ -11,32 +11,32 @@ package "Communication APIs" as communicationApis {
     }
 
     interface gatewayController {
-        + List<Gateways> getGateways(Optional<int> pageNumber, Optional<int> pageSize)
-        + Gateway createGateway(String endpointUrl, String friendlyName, Optional<String> description)
-        + Gateway updateGateway(Gateway gateway)
-        + Gateway getGatewayById(String id)
-        + void deleteGatewayById(String id)
-    }
+            + ResponseEntity<Page<Gateways>> getAllGateways(String pageNumber, String pageSize, String friendlyName, String endpointUrl, String description, String sortField, String sortDirection)
+            + ResponseEntity<Gateway> createGateway(Gateway gateway, BindingResult bindingResult)
+            + ResponseEntity<Gateway> getGatewayById(String id)
+            + ResponseEntity<String> deleteGatewayById(String id)
+            + Gateway updateGateway(Gateway gateway, BindingResult bindingResult)
+        }
 
     interface gatewayService {
-        + List<Gateways> getGateways(int pageNumber, int pageSize)
-        + Gateway createGateway(String endpointUrl, String friendlyName, Optional<String> description)
+        + Page<Gateways> getGateways(String pageNumber, String pageSize, String friendlyName, String endpointUrl, String description, String sortField, String sortDirection)
+        + Gateway createGateway(Gateway gateway)
         + Gateway updateGateway(Gateway gateway)
         + Gateway getGatewayById(String id)
         + void deleteGatewayById(String id)
     }
 
-    interface PagingAndSortingRepository {
-        Page<T> findAll(Pageable pageable)
-        Iterable<T> findAll(Sort sort)
+    interface MongoRepository {
+        + Page<T> findAll(Pageable pageable)
+        + Iterable<T> findAll(Sort sort)
+        + T findById(String id)
+        + void deleteById(String id)
     }
 
 
-    interface gatewayRepository extends PagingAndSortingRepository {
-        + Gateway save(Gateway)
-        + List<Gateway> getAll(pageNumber, pageSize)
-        + Gateway findById(String gatewayId)
-        + void deleteById(String gatewayId)
+    interface gatewayRepository extends MongoRepository {
+        + Page<Gateway> findAll(Pageable pageable)
+        + Page<Gateway> findByFriendlyNameRegexAndEndpointUrlRegexAndDescriptionRegex(String friendlyName, String dateCreated, String description, Pageable pageable)
     }
 
     gatewayApi --|> gatewayService
@@ -50,13 +50,15 @@ package "Communication APIs" as communicationApis {
     }
 
     interface preferencesController {
-        + RetryPolicy getRetryPolicy()
-        + RetryPolicy setRetryPolicy(RetryPolicy retryPolicy)
+        + ResponseEntity<Preferences> getPreferences()
+        + ResponseEntity<RetryPolicy> setRetryPolicy(RetryPolicy retryPolicy, BindingResult bindingResult)
+        + ResponseEntity<GatewayTimeout> setGatewayTimeout(GatewayTimeout gatewayTimeout, BindingResult bindingResult)
     }
 
     interface preferencesService {
-        + RetryPolicy getRetryPolicy()
+        + Preferences getPreferences()
         + RetryPolicy setRetryPolicy(RetryPolicy retryPolicy)
+        + GatewayTimeout setGatewayTimeoutSeconds(GatewayTimeout gatewayTimeout)
     }
 
     preferencesApi --|> preferencesService
@@ -68,26 +70,24 @@ package "Communication APIs" as communicationApis {
     }
 
     interface authController {
-        + String generateJWT(List<String> scopes)
+        + ResponseEntity<JwtDTO> getJwt(List<String> scopes)
+        + ResponseEntity<Mao<String, Object>> getKey()
     }
 
     interface authService {
-        + String generateJWT(List<String> scopes)
+        + JwtDTO generateJWT(List<String> scopes)
+        + Map<String, Object> getJwks()
     }
 
     authApi --|> authService
     authApi --|> authController
     authController --> authService
 
-    
+
 }
 
 
 webportalBFFApi -d--> gatewayController
-'webportalBFFApi ---> historyController
 webportalBFFApi -d---> preferencesController
-'webportalBFFApi ---> scheduleController
 webportalBFFApi -d---> authController
-'scheduleClient <-- scheduleApi
-'workflowClient <-- historyApi
 @enduml
