@@ -3,3 +3,7 @@
     padding: 2rem;
     text-align: left;
 }
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #121212 inset !important;
+}

@@ -1,0 +1,89 @@
+import Grid from "@mui/material/Unstable_Grid2/Grid2";
+import Box from "@mui/material/Box";
+import {Badge, Button, InputAdornment, Paper, SvgIconTypeMap, TextField} from "@mui/material";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
+import {observer} from "mobx-react-lite";
+import {OverridableComponent} from "@mui/material/OverridableComponent";
+
+export interface TextFieldFilterProps {
+  fieldValue: string;
+  setFieldValue: (value: string) => void;
+
+  isFieldFocused: boolean;
+  setIsFieldFocused: (value: boolean) => void;
+
+  idPrefix: string;
+  label: string;
+
+  fetchResults: () => void;
+
+  InputIcon: OverridableComponent<SvgIconTypeMap>;
+}
+
+const TextFieldFilter = observer(({isFieldFocused, setIsFieldFocused, setFieldValue, fieldValue, InputIcon, label, idPrefix, fetchResults}: TextFieldFilterProps) => {
+
+  return (
+    <Grid container direction={"column"}>
+      <Grid xs={12}>
+        <Box sx={{alignItems: 'center'}}>
+          <TextField
+            fullWidth
+            value={fieldValue}
+            onChange={(event) => {setFieldValue(event.target.value)}}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start" sx={{color: 'action.active', mr: 2.5, my: 1}}>
+                  <Badge color={"primary"} variant={"dot"} invisible={fieldValue == ""}>
+                    {InputIcon && <InputIcon sx={{color: 'action.active', mr: -0.5, my: -0.5}} fontSize="large"/>}
+                  </Badge>
+                </InputAdornment>
+              ),
+            }}
+            id={`${idPrefix}-filter-input`} label={label} variant="outlined"
+            onBlur={() => {
+              setIsFieldFocused(false)
+              fetchResults()
+            }}
+            onFocus={() => {
+              setIsFieldFocused(true)
+            }}/>
+        </Box>
+      </Grid>
+      {
+        isFieldFocused && (
+          <Grid xs={12} sx={{position: "absolute",
+            mt: "56px",
+            zIndex: 1,
+            width: "22%",
+          }}>
+            <Paper sx={{p: 2}}>
+              <Grid container spacing={2}>
+                <Grid xs={6}>
+                  <Button id={`${idPrefix}-filter-reset-button`} aria-haspopup="true" aria-controls={`${idPrefix}-filter-menu-reset`}
+                          aria-label={`${label} Filter Reset`} variant="contained" color="info" size="large"
+                          endIcon={<CloseRoundedIcon/>} fullWidth onMouseDown={() => setFieldValue("")}>
+                    Reset Filter
+                  </Button>
+                </Grid>
+                <Grid xs={6}>
+                  <Button id={`${idPrefix}-filter-apply-button`} aria-haspopup="true" aria-controls={`${idPrefix}-filter-menu-apply`}
+                          aria-label={`${label} Filter Apply`} variant="contained" color="primary" size="large"
+                          endIcon={<DoneRoundedIcon/>} fullWidth>
+                    Apply Filter
+                  </Button>
+                </Grid>
+
+              </Grid>
+
+
+            </Paper>
+          </Grid>
+        )
+      }
+
+    </Grid>
+  )
+})
+
+export default TextFieldFilter;
