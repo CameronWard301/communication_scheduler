@@ -47,10 +47,10 @@ public class GatewayService {
         if (friendlyName == null && endpointUrl == null) {
             return gatewayRepository.findAll(pageRequest);
         } else {
-            return gatewayRepository.findByFriendlyNameRegexAndEndpointUrlRegexAndDescriptionRegex(
-                    Objects.requireNonNull(friendlyName).toLowerCase(),
-                    endpointUrl.toLowerCase(),
-                    description.toLowerCase(),
+            return gatewayRepository.findByFriendlyNameRegexAndEndpointUrlRegexAndDescriptionRegexIgnoreCase(
+                    Objects.requireNonNull(friendlyName),
+                    endpointUrl,
+                    description,
                     pageRequest
             );
         }
@@ -59,11 +59,11 @@ public class GatewayService {
     public Gateway createGateway(Gateway gateway) {
         gateway.setId(UUID.randomUUID().toString());
         gateway.setDateCreated(Instant.now().toString());
-        gateway.setFriendlyName(gateway.getFriendlyName().toLowerCase());
+        gateway.setFriendlyName(gateway.getFriendlyName());
         if (gateway.getDescription() == null) {
             gateway.setDescription("");
         }
-        gateway.setDescription(gateway.getDescription().toLowerCase());
+        gateway.setDescription(gateway.getDescription());
         gatewayRepository.insert(gateway);
         return gateway;
     }
@@ -82,9 +82,9 @@ public class GatewayService {
             throw new RequestException("Please provide a gateway 'id' in the request body", HttpStatus.BAD_REQUEST);
         }
         Gateway existingGateway = getGatewayById(gateway.getId());
-        existingGateway.setFriendlyName(gateway.getFriendlyName().toLowerCase());
+        existingGateway.setFriendlyName(gateway.getFriendlyName());
         existingGateway.setEndpointUrl(gateway.getEndpointUrl());
-        existingGateway.setDescription(gateway.getDescription().toLowerCase());
+        existingGateway.setDescription(gateway.getDescription());
         return gatewayRepository.save(existingGateway);
     }
 }
