@@ -2,7 +2,7 @@ import express, {type Express} from "express";
 import dotenv from "dotenv";
 
 import swaggerUi from "swagger-ui-express";
-import authenticationController from "./authentication/controllers/authentication-controller";
+import authenticationController from "./api/authentication/controllers/authentication-controller";
 import swaggerDocument from "./swagger_output.json";
 import preferencesController from "./api/preferences/controller/preferences-controller";
 import * as fs from "fs";
