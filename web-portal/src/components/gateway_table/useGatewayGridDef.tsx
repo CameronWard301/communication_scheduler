@@ -6,9 +6,11 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import {DeleteRounded} from "@mui/icons-material";
+import {useStore} from "../../context/StoreContext.tsx";
 
 const useGatewayGridDef = () => {
   const navigate = useNavigate();
+  const rootStore = useStore();
   const theme = useTheme();
 
   const columns: GridColDef[] = [
@@ -32,7 +34,10 @@ const useGatewayGridDef = () => {
             >
               Modify
             </Button>
-            <IconButton sx={{ "&:hover": { color: theme.palette.error.main } }}>
+            <IconButton sx={{ "&:hover": { color: theme.palette.error.main } }} onClick={()=>{
+              rootStore.gatewayTableStore.setSelectedGateway(params.row);
+              rootStore.gatewayTableStore.setDeleteModalOpen(true);
+            }}>
               <DeleteRounded />
             </IconButton>
           </Stack>

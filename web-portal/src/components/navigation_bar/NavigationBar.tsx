@@ -22,6 +22,7 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import {SnackbarContext} from "../../context/SnackbarContext";
 import logo from "../../assets/logo.png";
+import {ConfigContext} from "../../context/ConfigContext.tsx";
 
 const drawerWidth = 340;
 
@@ -77,6 +78,7 @@ export default function NavigationBar() {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const {addSnackbar} = useContext(SnackbarContext);
+  const [config] = useContext(ConfigContext);
 
   const toggleDrawer = () => {
     if (open) {
@@ -268,7 +270,7 @@ export default function NavigationBar() {
             px: 2.5,
           }}
           onClick={() => {
-            localStorage.clear();
+            window.localStorage.removeItem(`${APP_VERSION}-${config.environment}-communication-scheduler-token`);
             addSnackbar("Removed authentication cookie", "success");
           }}
         >

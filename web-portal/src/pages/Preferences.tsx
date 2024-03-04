@@ -12,7 +12,7 @@ import TimeSelection from "../components/time_selection";
 import CustomTooltip from "../components/tooltip";
 import {usePreferencesService} from "../service/PreferencesService.ts";
 import {useContext, useEffect} from "react";
-import ConfirmModal from "../components/modal";
+import {ConfirmModal} from "../components/modal";
 import {PreferenceChanges} from "../components/preference_changes";
 import {SnackbarContext} from "../context/SnackbarContext.tsx";
 import LoadingButton from '@mui/lab/LoadingButton';

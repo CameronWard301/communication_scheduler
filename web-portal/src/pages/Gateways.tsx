@@ -10,16 +10,18 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import WebhookRoundedIcon from '@mui/icons-material/WebhookRounded';
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
+import DeleteRounded from '@mui/icons-material/DeleteRounded';
 import {useEffect} from "react";
 import {useGatewayService} from "../service/GatewayService.ts";
 import TagRoundedIcon from '@mui/icons-material/TagRounded';
 import TextFieldFilter from "../components/text_field_filter";
 import LoadingButton from "@mui/lab/LoadingButton";
+import {GatewayModal} from "../components/modal";
 
 const Gateways = observer(() => {
   const rootStore = useStore();
   const {columns} = useGatewayGridDef();
-  const {getGateways} = useGatewayService();
+  const {getGateways, deleteGatewayById} = useGatewayService();
 
   useEffect(() => {
     getGateways();
@@ -28,6 +30,16 @@ const Gateways = observer(() => {
 
   return (
     <>
+      <GatewayModal confirmIcon={<DeleteRounded/>}
+                    gateway={rootStore.gatewayTableStore.selectedGateway}
+                    open={rootStore.gatewayTableStore.deleteModalOpen}
+                    setOpen={rootStore.gatewayTableStore.setDeleteModalOpen}
+                    heading={"Delete Gateway"}
+                    confirmText={"Delete"}
+                    onConfirm={() => {
+                      deleteGatewayById(rootStore.gatewayTableStore.selectedGateway);
+                    }}
+                    affectedScheduleTooltip={"Deleting this gateway will cause the number of schedules shown to stop working, its best to update the schedules to use a new gateway first by viewing the affected schedules and performing a bulk action."}/>
       <Grid container spacing={4} justifyContent={"left"} alignItems={"center"} alignContent={"flex-start"}
             width={"100%"}>
         <Grid xs={12} mb={2}>
@@ -100,7 +112,8 @@ const Gateways = observer(() => {
             >Reset Filters</Button>
           </Grid>
           <Grid xs={6} sx={{pl: 1}}>
-            <LoadingButton loading={rootStore.gatewayTableStore.isLoading} variant="contained" fullWidth color="secondary" endIcon={<RefreshRoundedIcon/>}
+            <LoadingButton loading={rootStore.gatewayTableStore.isLoading} variant="contained" fullWidth
+                           color="secondary" endIcon={<RefreshRoundedIcon/>}
                            onClick={() => getGateways()} loadingPosition="end"
             >Refresh</LoadingButton>
           </Grid>

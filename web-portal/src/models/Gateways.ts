@@ -12,3 +12,7 @@ export interface GatewayPage {
   pageNumber: number;
   pageSize: number;
 }
+
+export interface TotalMatches {
+  total: number;
+}

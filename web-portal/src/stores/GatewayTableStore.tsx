@@ -26,6 +26,16 @@ export class GatewayTableStore {
   gatewayEndpointUrlFocus = false;
   gatewayEndpointUrlFilter = "";
 
+  deleteModalOpen = false;
+  selectedGateway: Gateway = {
+    id: "",
+    friendlyName: "",
+    description: "",
+    endpointUrl: "",
+    dateCreated: new Date().toLocaleString(),
+  }
+  affectedSchedules = 0;
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
@@ -117,6 +127,24 @@ export class GatewayTableStore {
       this.gatewayNameFilter = "";
       this.gatewayDescriptionFilter = "";
       this.gatewayEndpointUrlFilter = "";
+    })();
+  }
+
+  setDeleteModalOpen = (open: boolean) => {
+    action(() => {
+      this.deleteModalOpen = open;
+    })();
+  }
+
+  setSelectedGateway = (gateway: Gateway) => {
+    action(() => {
+      this.selectedGateway = gateway;
+    })();
+  }
+
+  setAffectedSchedules = (schedules: number) => {
+    action(() => {
+      this.affectedSchedules = schedules;
     })();
   }
 }

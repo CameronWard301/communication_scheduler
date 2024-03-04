@@ -4,7 +4,8 @@ import {useStore} from "../context/StoreContext.tsx";
 import {useContext} from "react";
 import {ConfigContext} from "../context/ConfigContext.tsx";
 import {useErrorHandling} from "../helper/UseErrorHandling.ts";
-import {GatewayPage} from "../models/Gateways.ts";
+import {Gateway, GatewayPage, TotalMatches} from "../models/Gateways.ts";
+import {SnackbarContext} from "../context/SnackbarContext.tsx";
 
 export const useGatewayService = () => {
   const client = useAxiosClientContext();
@@ -12,6 +13,7 @@ export const useGatewayService = () => {
   const rootStore = useStore();
   const [config] = useContext(ConfigContext);
   const {handleError} = useErrorHandling();
+  const snackbar = useContext(SnackbarContext);
   const getGateways = () => {
     rootStore.gatewayTableStore.setLoading(true);
     const params = new URLSearchParams({
@@ -57,5 +59,49 @@ export const useGatewayService = () => {
     })
   }
 
-  return {getGateways}
+  const getAffectedSchedules = (gatewayId: string) => {
+    if (gatewayId === "") {
+      return;
+    }
+    authToken.then((token) => {
+      client.get(`${config.bffBaseUrl}/gateway/${gatewayId}/schedule/count`, {
+        headers: {
+          "Authorization": "Bearer " + token.token,
+        },
+      }).then(response => {
+        const gatewayPage = response.data as TotalMatches;
+        rootStore.gatewayTableStore.setAffectedSchedules(gatewayPage.total);
+      })
+        .catch(error => {
+          handleError(error)
+        })
+        .finally(() => rootStore.gatewayTableStore.setLoading(false));
+    }).catch(error => {
+      handleError(error)
+      rootStore.gatewayTableStore.setLoading(false)
+    })
+  }
+
+  const deleteGatewayById = (gateway: Gateway) => {
+    authToken.then((token) => {
+      client.delete(`${config.bffBaseUrl}/gateway/${gateway.id}`, {
+        headers: {
+          "Authorization": "Bearer " + token.token,
+        },
+      }).then(_ => {
+        snackbar.addSnackbar("Gateway deleted", "success");
+        rootStore.gatewayTableStore.setDeleteModalOpen(false);
+        getGateways();
+      })
+        .catch(error => {
+          handleError(error)
+        })
+        .finally(() => rootStore.gatewayTableStore.setLoading(false));
+    }).catch(error => {
+      handleError(error)
+      rootStore.gatewayTableStore.setLoading(false)
+    })
+  }
+
+  return {getGateways, getAffectedSchedules, deleteGatewayById}
 }
