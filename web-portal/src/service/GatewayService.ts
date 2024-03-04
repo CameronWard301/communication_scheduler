@@ -63,6 +63,7 @@ export const useGatewayService = () => {
     if (gatewayId === "") {
       return;
     }
+    rootStore.gatewayTableStore.setLoading(true);
     authToken.then((token) => {
       client.get(`${config.bffBaseUrl}/gateway/${gatewayId}/schedule/count`, {
         headers: {
@@ -71,6 +72,7 @@ export const useGatewayService = () => {
       }).then(response => {
         const gatewayPage = response.data as TotalMatches;
         rootStore.gatewayTableStore.setAffectedSchedules(gatewayPage.total);
+        rootStore.gatewayEditStore.setAffectedSchedules(gatewayPage.total);
       })
         .catch(error => {
           handleError(error)
@@ -82,26 +84,77 @@ export const useGatewayService = () => {
     })
   }
 
+  const getGatewayById = (gatewayId: string) => {
+    rootStore.gatewayEditStore.setIsLoading(true);
+    authToken.then((token) => {
+      client.get(`${config.bffBaseUrl}/gateway/${gatewayId}`, {
+        headers: {
+          "Authorization": "Bearer " + token.token,
+        },
+      }).then((response) => {
+        rootStore.gatewayEditStore.setGateway(response.data as Gateway)
+        rootStore.gatewayEditStore.setUpdatedGateway(response.data as Gateway)
+      })
+        .catch(error => {
+          handleError(error)
+        })
+        .finally(() => rootStore.gatewayEditStore.setIsLoading(false));
+    }).catch(error => {
+      handleError(error)
+      rootStore.gatewayEditStore.setIsLoading(false)
+    })
+  }
+
+  const updateGateway = (gateway: Gateway) => {
+    rootStore.gatewayEditStore.setIsLoading(true);
+    authToken.then((token) => {
+      client.put(`${config.bffBaseUrl}/gateway`, gateway,{
+        headers: {
+          "Authorization": "Bearer " + token.token,
+        },
+      }).then((response) => {
+        rootStore.gatewayEditStore.setGateway(response.data as Gateway)
+        rootStore.gatewayEditStore.setConfirmModalOpen(false)
+        snackbar.addSnackbar("Gateway updated", "success");
+      })
+        .catch(error => {
+          handleError(error)
+        })
+        .finally(() => rootStore.gatewayEditStore.setIsLoading(false));
+    }).catch(error => {
+      handleError(error)
+      rootStore.gatewayEditStore.setIsLoading(false)
+    })
+  }
+
   const deleteGatewayById = (gateway: Gateway) => {
+    rootStore.gatewayTableStore.setLoading(true);
     authToken.then((token) => {
       client.delete(`${config.bffBaseUrl}/gateway/${gateway.id}`, {
         headers: {
           "Authorization": "Bearer " + token.token,
         },
-      }).then(_ => {
+      }).then(() => {
         snackbar.addSnackbar("Gateway deleted", "success");
         rootStore.gatewayTableStore.setDeleteModalOpen(false);
+        rootStore.gatewayEditStore.setDeleteModalOpen(false);
         getGateways();
       })
         .catch(error => {
           handleError(error)
         })
-        .finally(() => rootStore.gatewayTableStore.setLoading(false));
+        .finally(() => {
+          rootStore.gatewayTableStore.setLoading(false)
+          rootStore.gatewayEditStore.setIsLoading(false)
+        });
     }).catch(error => {
       handleError(error)
       rootStore.gatewayTableStore.setLoading(false)
+      rootStore.gatewayEditStore.setIsLoading(false)
+
+
     })
   }
 
-  return {getGateways, getAffectedSchedules, deleteGatewayById}
+  return {getGateways, getAffectedSchedules, deleteGatewayById, getGatewayById, updateGateway}
 }

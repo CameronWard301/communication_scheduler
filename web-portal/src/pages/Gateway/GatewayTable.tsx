@@ -3,8 +3,8 @@ import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import {Button, Typography} from "@mui/material";
 import {DataGrid} from '@mui/x-data-grid';
 import {observer} from "mobx-react-lite";
-import {useStore} from "../context/StoreContext.tsx";
-import useGatewayGridDef from "../components/gateway_table/useGatewayGridDef.tsx";
+import {useStore} from "../../context/StoreContext.tsx";
+import useGatewayGridDef from "../../components/gateway_table/useGatewayGridDef.tsx";
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import WebhookRoundedIcon from '@mui/icons-material/WebhookRounded';
@@ -12,13 +12,14 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import DeleteRounded from '@mui/icons-material/DeleteRounded';
 import {useEffect} from "react";
-import {useGatewayService} from "../service/GatewayService.ts";
+import {useGatewayService} from "../../service/GatewayService.ts";
 import TagRoundedIcon from '@mui/icons-material/TagRounded';
-import TextFieldFilter from "../components/text_field_filter";
+import TextFieldFilter from "../../components/text_field_filter";
 import LoadingButton from "@mui/lab/LoadingButton";
-import {GatewayModal} from "../components/modal";
+import {GatewayModal} from "../../components/modal";
+import {ConfirmGatewayTable} from "../../components/modal/gateway";
 
-const Gateways = observer(() => {
+const GatewayTable = observer(() => {
   const rootStore = useStore();
   const {columns} = useGatewayGridDef();
   const {getGateways, deleteGatewayById} = useGatewayService();
@@ -34,12 +35,16 @@ const Gateways = observer(() => {
                     gateway={rootStore.gatewayTableStore.selectedGateway}
                     open={rootStore.gatewayTableStore.deleteModalOpen}
                     setOpen={rootStore.gatewayTableStore.setDeleteModalOpen}
+                    affectedSchedules={rootStore.gatewayTableStore.affectedSchedules}
+                    isLoading={rootStore.gatewayTableStore.isLoading}
                     heading={"Delete Gateway"}
                     confirmText={"Delete"}
                     onConfirm={() => {
                       deleteGatewayById(rootStore.gatewayTableStore.selectedGateway);
                     }}
-                    affectedScheduleTooltip={"Deleting this gateway will cause the number of schedules shown to stop working, its best to update the schedules to use a new gateway first by viewing the affected schedules and performing a bulk action."}/>
+                    affectedScheduleTooltip={"Deleting this gateway will cause the number of schedules shown to stop working, its best to update the schedules to use a new gateway first by viewing the affected schedules and performing a bulk action."}
+                    description={<ConfirmGatewayTable gateway={rootStore.gatewayTableStore.selectedGateway}/>}
+      />
       <Grid container spacing={4} justifyContent={"left"} alignItems={"center"} alignContent={"flex-start"}
             width={"100%"}>
         <Grid xs={12} mb={2}>
@@ -149,4 +154,4 @@ const Gateways = observer(() => {
   )
 })
 
-export default Gateways
+export default GatewayTable
