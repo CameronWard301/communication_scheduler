@@ -24,7 +24,7 @@ export interface TextFieldFilterProps {
 const TextFieldFilter = observer(({isFieldFocused, setIsFieldFocused, setFieldValue, fieldValue, InputIcon, label, idPrefix, fetchResults}: TextFieldFilterProps) => {
 
   return (
-    <Grid container direction={"column"}>
+    <Grid container direction={"column"} position={"relative"}>
       <Grid xs={12}>
         <Box sx={{alignItems: 'center'}}>
           <TextField
@@ -47,26 +47,32 @@ const TextFieldFilter = observer(({isFieldFocused, setIsFieldFocused, setFieldVa
             }}
             onFocus={() => {
               setIsFieldFocused(true)
-            }}/>
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur()
+              }}
+            }
+          />
         </Box>
       </Grid>
       {
         isFieldFocused && (
-          <Grid xs={12} sx={{position: "absolute",
+          <Grid xs={3} sx={{position: "absolute",
             mt: "56px",
             zIndex: 1,
-            width: "22%",
+            width: "100%",
           }}>
             <Paper sx={{p: 2}}>
               <Grid container spacing={2}>
-                <Grid xs={6}>
+                <Grid xs={12} md={6}>
                   <Button id={`${idPrefix}-filter-reset-button`} aria-haspopup="true" aria-controls={`${idPrefix}-filter-menu-reset`}
                           aria-label={`${label} Filter Reset`} variant="contained" color="info" size="large"
                           endIcon={<CloseRoundedIcon/>} fullWidth onMouseDown={() => setFieldValue("")}>
                     Reset Filter
                   </Button>
                 </Grid>
-                <Grid xs={6}>
+                <Grid xs={12} md={6}>
                   <Button id={`${idPrefix}-filter-apply-button`} aria-haspopup="true" aria-controls={`${idPrefix}-filter-menu-apply`}
                           aria-label={`${label} Filter Apply`} variant="contained" color="primary" size="large"
                           endIcon={<DoneRoundedIcon/>} fullWidth>

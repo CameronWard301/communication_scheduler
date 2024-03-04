@@ -17,6 +17,15 @@ export class GatewayTableStore {
   gatewayIdFocus = false;
   gatewayIdFilter = "";
 
+  gatewayNameFocus = false;
+  gatewayNameFilter = "";
+
+  gatewayDescriptionFocus = false;
+  gatewayDescriptionFilter = "";
+
+  gatewayEndpointUrlFocus = false;
+  gatewayEndpointUrlFilter = "";
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
@@ -63,6 +72,51 @@ export class GatewayTableStore {
     action(() => {
       console.log(filter);
       this.gatewayIdFilter = filter;
+    })();
+  }
+
+  setGatewayNameFocus = (focus: boolean) => {
+    action(() => {
+      this.gatewayNameFocus = focus;
+    })();
+  }
+
+  setGatewayNameFilter = (filter: string) => {
+    action(() => {
+      this.gatewayNameFilter = filter;
+    })();
+  }
+
+  setGatewayDescriptionFocus = (focus: boolean) => {
+    action(() => {
+      this.gatewayDescriptionFocus = focus;
+    })();
+  }
+
+  setGatewayDescriptionFilter = (filter: string) => {
+    action(() => {
+      this.gatewayDescriptionFilter = filter;
+    })();
+  }
+
+  setGatewayEndpointUrlFocus = (focus: boolean) => {
+    action(() => {
+      this.gatewayEndpointUrlFocus = focus;
+    })();
+  }
+
+  setGatewayEndpointUrlFilter = (filter: string) => {
+    action(() => {
+      this.gatewayEndpointUrlFilter = filter;
+    })();
+  }
+
+  resetFilters = () => {
+    action(() => {
+      this.gatewayIdFilter = "";
+      this.gatewayNameFilter = "";
+      this.gatewayDescriptionFilter = "";
+      this.gatewayEndpointUrlFilter = "";
     })();
   }
 }

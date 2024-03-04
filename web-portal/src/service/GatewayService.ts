@@ -26,7 +26,15 @@ export const useGatewayService = () => {
     }
     if (rootStore.gatewayTableStore.gatewayIdFilter !== ""){
       params.append("gatewayId", rootStore.gatewayTableStore.gatewayIdFilter);
-
+    }
+    if (rootStore.gatewayTableStore.gatewayNameFilter !== ""){
+      params.append("friendlyName", rootStore.gatewayTableStore.gatewayNameFilter);
+    }
+    if (rootStore.gatewayTableStore.gatewayDescriptionFilter !== "") {
+      params.append("description", rootStore.gatewayTableStore.gatewayDescriptionFilter);
+    }
+    if (rootStore.gatewayTableStore.gatewayEndpointUrlFilter !== "") {
+      params.append("endpointUrl", rootStore.gatewayTableStore.gatewayEndpointUrlFilter);
     }
     authToken.then((token) => {
       client.get(config.bffBaseUrl + "/gateway", {

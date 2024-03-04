@@ -6,10 +6,15 @@ import {observer} from "mobx-react-lite";
 import {useStore} from "../context/StoreContext.tsx";
 import useGatewayGridDef from "../components/gateway_table/useGatewayGridDef.tsx";
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import WebhookRoundedIcon from '@mui/icons-material/WebhookRounded';
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import {useEffect} from "react";
 import {useGatewayService} from "../service/GatewayService.ts";
 import TagRoundedIcon from '@mui/icons-material/TagRounded';
 import TextFieldFilter from "../components/text_field_filter";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const Gateways = observer(() => {
   const rootStore = useStore();
@@ -28,9 +33,12 @@ const Gateways = observer(() => {
         <Grid xs={12} mb={2}>
           <Typography variant="h1" fontSize={"4rem"} id={"preferences-page-heading"}>Communication Gateways</Typography>
         </Grid>
-        <Grid xsOffset={6} mdOffset={9} xs={12} mb={2}>
-          <Button variant="contained" fullWidth color="primary" endIcon={<AddCircleOutlineRoundedIcon/>}>Add
-            Gateway</Button>
+
+        <Grid xs={12} container>
+          <Grid xsOffset={6} mdOffset={9} xs={12} mb={0}>
+            <Button variant="contained" fullWidth color="primary" endIcon={<AddCircleOutlineRoundedIcon/>}>Add
+              Gateway</Button>
+          </Grid>
         </Grid>
 
         <Grid xs={3}>
@@ -43,6 +51,59 @@ const Gateways = observer(() => {
                            InputIcon={TagRoundedIcon}
                            fetchResults={getGateways}
           />
+        </Grid>
+
+        <Grid xs={3}>
+          <TextFieldFilter fieldValue={rootStore.gatewayTableStore.gatewayNameFilter}
+                           setFieldValue={rootStore.gatewayTableStore.setGatewayNameFilter}
+                           isFieldFocused={rootStore.gatewayTableStore.gatewayNameFocus}
+                           setIsFieldFocused={rootStore.gatewayTableStore.setGatewayNameFocus}
+                           idPrefix={"gateway-name"}
+                           label={"Gateway Name"}
+                           InputIcon={SearchRoundedIcon}
+                           fetchResults={getGateways}
+          />
+        </Grid>
+
+        <Grid xs={3}>
+          <TextFieldFilter fieldValue={rootStore.gatewayTableStore.gatewayDescriptionFilter}
+                           setFieldValue={rootStore.gatewayTableStore.setGatewayDescriptionFilter}
+                           isFieldFocused={rootStore.gatewayTableStore.gatewayDescriptionFocus}
+                           setIsFieldFocused={rootStore.gatewayTableStore.setGatewayDescriptionFocus}
+                           idPrefix={"gateway-description"}
+                           label={"Description"}
+                           InputIcon={SearchRoundedIcon}
+                           fetchResults={getGateways}
+          />
+        </Grid>
+
+        <Grid xs={3}>
+          <TextFieldFilter fieldValue={rootStore.gatewayTableStore.gatewayEndpointUrlFilter}
+                           setFieldValue={rootStore.gatewayTableStore.setGatewayEndpointUrlFilter}
+                           isFieldFocused={rootStore.gatewayTableStore.gatewayEndpointUrlFocus}
+                           setIsFieldFocused={rootStore.gatewayTableStore.setGatewayEndpointUrlFocus}
+                           idPrefix={"gateway-url"}
+                           label={"Endpoint URL"}
+                           InputIcon={WebhookRoundedIcon}
+                           fetchResults={getGateways}
+          />
+        </Grid>
+
+
+        <Grid mdOffset={9} xs={12} container spacing={0} mb={0}>
+          <Grid xs={6} sx={{pr: 1}}>
+            <Button variant="contained" fullWidth color="info" endIcon={<CloseRoundedIcon/>}
+                    onClick={() => {
+                      rootStore.gatewayTableStore.resetFilters();
+                      getGateways();
+                    }}
+            >Reset Filters</Button>
+          </Grid>
+          <Grid xs={6} sx={{pl: 1}}>
+            <LoadingButton loading={rootStore.gatewayTableStore.isLoading} variant="contained" fullWidth color="secondary" endIcon={<RefreshRoundedIcon/>}
+                           onClick={() => getGateways()} loadingPosition="end"
+            >Refresh</LoadingButton>
+          </Grid>
         </Grid>
 
         <Grid xs={12}>
