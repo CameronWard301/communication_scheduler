@@ -303,7 +303,7 @@ describe('PreferencesService', () => {
 
   });
 
-  it('should throw an error if time unit is wrong for gateway seconds', async () => {
+  it('should throw an error if time unit is wrong for gateways seconds', async () => {
 
     const putRequest = {
       maximumAttempts: 100,
@@ -335,7 +335,7 @@ describe('PreferencesService', () => {
 })
 
 const verifyPutRequest = async (putRequest: ClientPreferences, putResponse: ClientPreferences, mockAxios: MockAdapter, preferencesService: ReturnType<typeof PreferencesService>) => {
-  mockAxios.onPut(process.env.PREFERENCES_API_URL + "/gateway-timeout").reply(200, {
+  mockAxios.onPut(process.env.PREFERENCES_API_URL + "/gateways-timeout").reply(200, {
     gatewayTimeoutSeconds: putResponse.gatewayTimeout.value
   });
 
