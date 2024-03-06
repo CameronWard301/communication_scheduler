@@ -51,6 +51,11 @@ const EditGateway = observer(() => {
           <Typography variant="h1" fontSize={"4rem"} id={"preferences-page-heading"}>Edit Communication
             Gateway</Typography>
         </Grid>
+        {rootStore.gatewayEditStore.storedGateway === null && (
+          <Grid xs={12}>
+            <Typography variant={"h6"}>Could not find gateway with id: {params.id}</Typography>
+          </Grid>
+        )}
         {rootStore.gatewayEditStore.storedGateway !== null &&  rootStore.gatewayEditStore.updatedGateway !== null && (
           <>
             <GatewayModal confirmIcon={<DeleteRounded/>}
