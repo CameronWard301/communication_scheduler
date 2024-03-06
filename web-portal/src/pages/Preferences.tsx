@@ -39,12 +39,12 @@ const Preferences = observer(() => {
 
   const handleSave = () => {
     preferencesService.setPreferences();
-    rootStore.preferencesStore.setModalOpen(false)
   }
 
   return (
     <>
       <ConfirmModal
+        loading={rootStore.preferencesStore.isLoading}
         open={rootStore.preferencesStore.modalOpen}
         confirmText={"Save Changes"}
         description={<PreferenceChanges/>}

@@ -18,11 +18,38 @@ import TextFieldFilter from "../../components/text_field_filter";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {GatewayModal} from "../../components/modal";
 import {ConfirmGatewayTable} from "../../components/modal/gateway";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import useQuery from "../../helper/UseQuery.ts";
 
 const GatewayTable = observer(() => {
   const rootStore = useStore();
   const {columns} = useGatewayGridDef();
   const {getGateways, deleteGatewayById} = useGatewayService();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+
+
+  const query = useQuery();
+  useEffect(() => {
+    const gatewayId = query.get("gatewayId");
+    const gatewayName = query.get("gatewayName");
+    const gatewayDescription = query.get("gatewayDescription");
+    const gatewayEndpointUrl = query.get("gatewayEndpointUrl");
+    if (gatewayId !== null) {
+      rootStore.gatewayTableStore.setGatewayIdFilter(gatewayId);
+    }
+    if (gatewayName !== null) {
+      rootStore.gatewayTableStore.setGatewayNameFilter(gatewayName);
+    }
+    if (gatewayDescription !== null) {
+      rootStore.gatewayTableStore.setGatewayDescriptionFilter(gatewayDescription);
+    }
+    if (gatewayEndpointUrl !== null) {
+      rootStore.gatewayTableStore.setGatewayEndpointUrlFilter(gatewayEndpointUrl);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     getGateways();
@@ -53,7 +80,7 @@ const GatewayTable = observer(() => {
 
         <Grid xs={12} container>
           <Grid xsOffset={6} mdOffset={9} xs={12} mb={0}>
-            <Button variant="contained" fullWidth color="primary" endIcon={<AddCircleOutlineRoundedIcon/>}>Add
+            <Button variant="contained" fullWidth color="primary" endIcon={<AddCircleOutlineRoundedIcon/>} onClick={() => navigate("/add-gateway")}>Add
               Gateway</Button>
           </Grid>
         </Grid>
@@ -64,6 +91,7 @@ const GatewayTable = observer(() => {
                            isFieldFocused={rootStore.gatewayTableStore.gatewayIdFocus}
                            setIsFieldFocused={rootStore.gatewayTableStore.setGatewayIdFocus}
                            idPrefix={"gateway-id"}
+                           queryParam={"gatewayId"}
                            label={"Gateway ID"}
                            InputIcon={TagRoundedIcon}
                            fetchResults={getGateways}
@@ -76,6 +104,7 @@ const GatewayTable = observer(() => {
                            isFieldFocused={rootStore.gatewayTableStore.gatewayNameFocus}
                            setIsFieldFocused={rootStore.gatewayTableStore.setGatewayNameFocus}
                            idPrefix={"gateway-name"}
+                           queryParam={"gatewayName"}
                            label={"Gateway Name"}
                            InputIcon={SearchRoundedIcon}
                            fetchResults={getGateways}
@@ -88,6 +117,7 @@ const GatewayTable = observer(() => {
                            isFieldFocused={rootStore.gatewayTableStore.gatewayDescriptionFocus}
                            setIsFieldFocused={rootStore.gatewayTableStore.setGatewayDescriptionFocus}
                            idPrefix={"gateway-description"}
+                           queryParam={"gatewayDescription"}
                            label={"Description"}
                            InputIcon={SearchRoundedIcon}
                            fetchResults={getGateways}
@@ -100,6 +130,7 @@ const GatewayTable = observer(() => {
                            isFieldFocused={rootStore.gatewayTableStore.gatewayEndpointUrlFocus}
                            setIsFieldFocused={rootStore.gatewayTableStore.setGatewayEndpointUrlFocus}
                            idPrefix={"gateway-url"}
+                           queryParam={"gatewayEndpointUrl"}
                            label={"Endpoint URL"}
                            InputIcon={WebhookRoundedIcon}
                            fetchResults={getGateways}
@@ -112,6 +143,7 @@ const GatewayTable = observer(() => {
             <Button variant="contained" fullWidth color="info" endIcon={<CloseRoundedIcon/>}
                     onClick={() => {
                       rootStore.gatewayTableStore.resetFilters();
+                      setSearchParams(new URLSearchParams());
                       getGateways();
                     }}
             >Reset Filters</Button>

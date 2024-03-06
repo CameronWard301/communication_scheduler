@@ -18,13 +18,17 @@ const ConfirmGatewayTable = ({gateway}: ConfirmGatewayTableProps) => {
         </TableHead>
         <TableBody>
 
-          <TableRow>
-            <TableCell component="th" scope="row">
-              <strong>ID:</strong>
-            </TableCell>
-            <TableCell
-              align="left" id={"gateway-id"}>{gateway.id}</TableCell>
-          </TableRow>
+          {
+            gateway.id !== "0" && (
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  <strong>ID:</strong>
+                </TableCell>
+                <TableCell
+                  align="left" id={"gateway-id"}>{gateway.id}</TableCell>
+              </TableRow>
+            )
+          }
 
           <TableRow>
             <TableCell component="th" scope="row">
@@ -41,14 +45,24 @@ const ConfirmGatewayTable = ({gateway}: ConfirmGatewayTableProps) => {
             <TableCell
               align="left" id={"gateway-endpoint-url"}>{gateway.endpointUrl}</TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell component="th" scope="row">
-              <strong>Date created:</strong>
+              <strong>Description:</strong>
             </TableCell>
             <TableCell
-              align="left" id={"gateway-date-created"}>{gateway.dateCreated}</TableCell>
+              align="left" id={"gateway-description"}>{gateway.description}</TableCell>
           </TableRow>
+
+          {gateway.dateCreated != "" && (
+            <TableRow>
+              <TableCell component="th" scope="row">
+                <strong>Date created:</strong>
+              </TableCell>
+              <TableCell
+                align="left" id={"gateway-date-created"}>{gateway.dateCreated}</TableCell>
+            </TableRow>
+          )}
+
 
 
 

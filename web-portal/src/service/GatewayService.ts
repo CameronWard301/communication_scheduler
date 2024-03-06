@@ -6,6 +6,7 @@ import {ConfigContext} from "../context/ConfigContext.tsx";
 import {useErrorHandling} from "../helper/UseErrorHandling.ts";
 import {Gateway, GatewayPage, TotalMatches} from "../models/Gateways.ts";
 import {SnackbarContext} from "../context/SnackbarContext.tsx";
+import {useNavigate} from "react-router-dom";
 
 export const useGatewayService = () => {
   const client = useAxiosClientContext();
@@ -14,6 +15,7 @@ export const useGatewayService = () => {
   const [config] = useContext(ConfigContext);
   const {handleError} = useErrorHandling();
   const snackbar = useContext(SnackbarContext);
+  const navigate = useNavigate();
   const getGateways = () => {
     rootStore.gatewayTableStore.setLoading(true);
     const params = new URLSearchParams({
@@ -105,6 +107,29 @@ export const useGatewayService = () => {
     })
   }
 
+  const createGateway = (gateway: Gateway) => {
+    rootStore.gatewayAddStore.setLoading(true);
+    authToken.then((token) => {
+      client.post(`${config.bffBaseUrl}/gateway`, gateway,{
+        headers: {
+          "Authorization": "Bearer " + token.token,
+        },
+      }).then((response) => {
+        navigate("/gateways/?gatewayId=" + (response.data as Gateway).id)
+        snackbar.addSnackbar("Gateway Added", "success");
+        rootStore.gatewayAddStore.setConfirmModalOpen(false)
+      })
+        .catch(error => {
+          handleError(error)
+        })
+        .finally(() => rootStore.gatewayAddStore.setLoading(false));
+    }).catch(error => {
+      handleError(error)
+      rootStore.gatewayAddStore.setLoading(false)
+    })
+
+  }
+
   const updateGateway = (gateway: Gateway) => {
     rootStore.gatewayEditStore.setIsLoading(true);
     authToken.then((token) => {
@@ -156,5 +181,5 @@ export const useGatewayService = () => {
     })
   }
 
-  return {getGateways, getAffectedSchedules, deleteGatewayById, getGatewayById, updateGateway}
+  return {getGateways, getAffectedSchedules, deleteGatewayById, getGatewayById, updateGateway, createGateway}
 }

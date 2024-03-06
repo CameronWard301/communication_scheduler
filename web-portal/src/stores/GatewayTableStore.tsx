@@ -49,7 +49,6 @@ export class GatewayTableStore {
 
   setSortModel = (sortModel: GridSortModel) => {
     action(() => {
-      console.log(sortModel);
       this.sortModel = sortModel;
     })();
   }
@@ -80,7 +79,6 @@ export class GatewayTableStore {
 
   setGatewayIdFilter = (filter: string) => {
     action(() => {
-      console.log(filter);
       this.gatewayIdFilter = filter;
     })();
   }
