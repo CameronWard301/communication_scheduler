@@ -79,7 +79,8 @@ const GatewayTable = observer(() => {
 
         <Grid xs={12} container>
           <Grid xsOffset={6} mdOffset={9} xs={12} mb={0}>
-            <Button variant="contained" fullWidth color="primary" endIcon={<AddCircleOutlineRoundedIcon/>} id={"add-gateway-button"} onClick={() => navigate("/add-gateway")}>Add
+            <Button variant="contained" fullWidth color="primary" endIcon={<AddCircleOutlineRoundedIcon/>}
+                    id={"add-gateway-button"} onClick={() => navigate("/add-gateway")}>Add
               Gateway</Button>
           </Grid>
         </Grid>

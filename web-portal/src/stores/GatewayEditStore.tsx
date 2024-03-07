@@ -87,6 +87,7 @@ export class GatewayEditStore {
   hasGatewayChanged() {
     return this.hasFriendlyNameChanged() || this.hasDescriptionChanged() || this.hasEndpointUrlChanged();
   }
+
   setAffectedSchedules = (schedules: number) => {
     action(() => {
       this.affectedSchedules = schedules;

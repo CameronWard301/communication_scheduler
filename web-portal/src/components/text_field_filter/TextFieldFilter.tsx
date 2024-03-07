@@ -23,7 +23,17 @@ export interface TextFieldFilterProps {
   InputIcon: OverridableComponent<SvgIconTypeMap>;
 }
 
-const TextFieldFilter = observer(({isFieldFocused, setIsFieldFocused, setFieldValue, fieldValue, InputIcon, label, idPrefix, queryParam, fetchResults}: TextFieldFilterProps) => {
+const TextFieldFilter = observer(({
+                                    isFieldFocused,
+                                    setIsFieldFocused,
+                                    setFieldValue,
+                                    fieldValue,
+                                    InputIcon,
+                                    label,
+                                    idPrefix,
+                                    queryParam,
+                                    fetchResults
+                                  }: TextFieldFilterProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const setTextField = (value: string, queryParam: string) => {
@@ -45,7 +55,9 @@ const TextFieldFilter = observer(({isFieldFocused, setIsFieldFocused, setFieldVa
           <TextField
             fullWidth
             value={fieldValue}
-            onChange={(event) => {setTextField(event.target.value, queryParam)}}
+            onChange={(event) => {
+              setTextField(event.target.value, queryParam)
+            }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{color: 'action.active', mr: 2.5, my: 1}}>
@@ -66,14 +78,16 @@ const TextFieldFilter = observer(({isFieldFocused, setIsFieldFocused, setFieldVa
             onKeyDown={(event) => {
               if (event.key === "Enter" && document.activeElement instanceof HTMLElement) {
                 document.activeElement.blur()
-              }}
+              }
+            }
             }
           />
         </Box>
       </Grid>
       {
         isFieldFocused && (
-          <Grid xs={3} sx={{position: "absolute",
+          <Grid xs={3} sx={{
+            position: "absolute",
             mt: "56px",
             zIndex: 1,
             width: "100%",
@@ -81,14 +95,16 @@ const TextFieldFilter = observer(({isFieldFocused, setIsFieldFocused, setFieldVa
             <Paper sx={{p: 2}}>
               <Grid container spacing={2}>
                 <Grid xs={12} md={6}>
-                  <Button id={`${idPrefix}-filter-reset-button`} aria-haspopup="true" aria-controls={`${idPrefix}-filter-menu-reset`}
+                  <Button id={`${idPrefix}-filter-reset-button`} aria-haspopup="true"
+                          aria-controls={`${idPrefix}-filter-menu-reset`}
                           aria-label={`${label} Filter Reset`} variant="contained" color="info" size="large"
                           endIcon={<CloseRoundedIcon/>} fullWidth onMouseDown={() => setTextField("", queryParam)}>
                     Reset Filter
                   </Button>
                 </Grid>
                 <Grid xs={12} md={6}>
-                  <Button id={`${idPrefix}-filter-apply-button`} aria-haspopup="true" aria-controls={`${idPrefix}-filter-menu-apply`}
+                  <Button id={`${idPrefix}-filter-apply-button`} aria-haspopup="true"
+                          aria-controls={`${idPrefix}-filter-menu-apply`}
                           aria-label={`${label} Filter Apply`} variant="contained" color="primary" size="large"
                           endIcon={<DoneRoundedIcon/>} fullWidth>
                     Apply Filter

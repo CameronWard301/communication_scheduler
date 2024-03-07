@@ -1,13 +1,7 @@
 import React, {useEffect} from "react";
 import {observer} from "mobx-react-lite";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Button,
-  Fade,
-  Modal,
-  Typography,
-  useTheme
-} from "@mui/material";
+import {Button, Fade, Modal, Typography, useTheme} from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import ScheduleSendRoundIcon from '@mui/icons-material/ScheduleSend';
@@ -166,8 +160,9 @@ const GatewayModal = observer(
                 </Grid>
 
                 <Grid xs={12} lg={4} marginTop={"auto"}>
-                  <LoadingButton loading={isLoading} onClick={onConfirm} endIcon={confirmIcon} variant="contained" fullWidth sx={{height: 56}}
-                          color={"primary"} id={"confirm-modal-button"}>
+                  <LoadingButton loading={isLoading} onClick={onConfirm} endIcon={confirmIcon} variant="contained"
+                                 fullWidth sx={{height: 56}}
+                                 color={"primary"} id={"confirm-modal-button"}>
                     <span>{confirmText}</span>
                   </LoadingButton>
                 </Grid>

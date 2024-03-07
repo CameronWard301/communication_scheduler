@@ -1,7 +1,7 @@
 import {PreferencesStore} from "./PreferencesStore.tsx";
 import {GatewayTableStore} from "./GatewayTableStore.tsx";
 import {GatewayEditStore} from "./GatewayEditStore.tsx";
-import { GatewayAddStore } from "./GatewayAddStore.tsx";
+import {GatewayAddStore} from "./GatewayAddStore.tsx";
 
 export class RootStore {
   preferencesStore: PreferencesStore;

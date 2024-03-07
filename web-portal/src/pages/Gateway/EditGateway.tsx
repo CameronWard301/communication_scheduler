@@ -57,7 +57,7 @@ const EditGateway = observer(() => {
             <Typography variant={"h6"}>Could not find gateway with id: {params.id}</Typography>
           </Grid>
         )}
-        {rootStore.gatewayEditStore.storedGateway !== null &&  rootStore.gatewayEditStore.updatedGateway !== null && (
+        {rootStore.gatewayEditStore.storedGateway !== null && rootStore.gatewayEditStore.updatedGateway !== null && (
           <>
             <GatewayModal confirmIcon={<DeleteRounded/>}
                           gateway={rootStore.gatewayEditStore.storedGateway}
@@ -86,11 +86,13 @@ const EditGateway = observer(() => {
                           }}
                           description={<GatewayChangesTable/>}
                           affectedScheduleTooltip={"Updating this gateway will affect the number of schedules shown here, make sure that your new gateway details are correct."}
-                          />
+            />
 
             <Grid xs={12}>
-              <Typography variant={"body1"}><strong>ID: </strong>{rootStore.gatewayEditStore.updatedGateway.id}</Typography>
-              <Typography variant={"body1"}><strong>Date Created: </strong>{rootStore.gatewayEditStore.updatedGateway.dateCreated}</Typography>
+              <Typography variant={"body1"}><strong>ID: </strong>{rootStore.gatewayEditStore.updatedGateway.id}
+              </Typography>
+              <Typography variant={"body1"}><strong>Date
+                Created: </strong>{rootStore.gatewayEditStore.updatedGateway.dateCreated}</Typography>
 
             </Grid>
             <Grid xs={12} container spacing={2}>
@@ -128,7 +130,8 @@ const EditGateway = observer(() => {
               </Grid>
               <Grid xs={12} lg={6} m={1} ml={2}>
                 <Box>
-                  <Typography variant={"h4"} display={"inline-block"} id={"initial-interval-title"}>Description</Typography>
+                  <Typography variant={"h4"} display={"inline-block"}
+                              id={"initial-interval-title"}>Description</Typography>
                   <CustomTooltip message="An optional description of this gateway"/>
                 </Box>
                 <Box>
@@ -136,7 +139,8 @@ const EditGateway = observer(() => {
                              multiline
                              fullWidth
                              rows={4}
-                             value={rootStore.gatewayEditStore.updatedGateway.description} id={"gateway-description-input"}
+                             value={rootStore.gatewayEditStore.updatedGateway.description}
+                             id={"gateway-description-input"}
                              onChange={(event) => rootStore.gatewayEditStore.setGatewayDescription(event.target.value)}/>
 
                 </Box>
@@ -159,7 +163,7 @@ const EditGateway = observer(() => {
                 </Button>
               </Grid>
 
-              <Grid xs={12} lg={3} >
+              <Grid xs={12} lg={3}>
                 <Button
                   variant="contained"
                   endIcon={<DeleteRounded/>}
@@ -175,17 +179,17 @@ const EditGateway = observer(() => {
                 </Button>
               </Grid>
 
-              <Grid xs={12} lg={3} marginTop={"auto"} >
-                <LoadingButton loading={rootStore.gatewayTableStore.isLoading} variant="contained" fullWidth sx={{height: 56}} disabled={!rootStore.gatewayEditStore.fieldsAreValid()}
-                               color={"primary"} id={"confirm-edit-button"} endIcon={<SaveRoundedIcon/>} onClick={() => handleGatewayUpdate()}>
+              <Grid xs={12} lg={3} marginTop={"auto"}>
+                <LoadingButton loading={rootStore.gatewayTableStore.isLoading} variant="contained" fullWidth
+                               sx={{height: 56}} disabled={!rootStore.gatewayEditStore.fieldsAreValid()}
+                               color={"primary"} id={"confirm-edit-button"} endIcon={<SaveRoundedIcon/>}
+                               onClick={() => handleGatewayUpdate()}>
                   Modify
                 </LoadingButton>
               </Grid>
             </Grid>
 
           </>
-
-
 
 
         )}

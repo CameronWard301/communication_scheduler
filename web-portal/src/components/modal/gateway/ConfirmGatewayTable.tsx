@@ -5,6 +5,7 @@ import {Gateway} from "../../../models/Gateways.ts";
 export interface ConfirmGatewayTableProps {
   gateway: Gateway;
 }
+
 const ConfirmGatewayTable = ({gateway}: ConfirmGatewayTableProps) => {
 
   return (
@@ -62,8 +63,6 @@ const ConfirmGatewayTable = ({gateway}: ConfirmGatewayTableProps) => {
                 align="left" id={"gateway-date-created"}>{gateway.dateCreated}</TableCell>
             </TableRow>
           )}
-
-
 
 
         </TableBody>

@@ -90,8 +90,9 @@ const ConfirmModal = observer(
                   </Button>
                 </Grid>
                 <Grid xs={12} md={6} marginTop={"auto"}>
-                  <LoadingButton loading={loading} onClick={onConfirm} endIcon={confirmIcon} variant="contained" fullWidth sx={{height: 56}}
-                          color={"primary"} id={"confirm-modal-button"}>
+                  <LoadingButton loading={loading} onClick={onConfirm} endIcon={confirmIcon} variant="contained"
+                                 fullWidth sx={{height: 56}}
+                                 color={"primary"} id={"confirm-modal-button"}>
                     <span>{confirmText}</span>
                   </LoadingButton>
                 </Grid>

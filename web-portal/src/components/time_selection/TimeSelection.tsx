@@ -21,10 +21,10 @@ const TimeSelection = (props: TimeSelectionProps) => {
         onChange={props.onChange}
         inputProps={{id: props.keyId + "-input"}}
       >
-        <MenuItem value={"S"} id={props.keyId+"-seconds-item"}>Seconds</MenuItem>
-        <MenuItem value={"M"} id={props.keyId+"-minutes-item"}>Minutes</MenuItem>
-        <MenuItem value={"H"} id={props.keyId+"-hours-item"}>Hours</MenuItem>
-        <MenuItem value={"D"} id={props.keyId+"-days-item"}>Days</MenuItem>
+        <MenuItem value={"S"} id={props.keyId + "-seconds-item"}>Seconds</MenuItem>
+        <MenuItem value={"M"} id={props.keyId + "-minutes-item"}>Minutes</MenuItem>
+        <MenuItem value={"H"} id={props.keyId + "-hours-item"}>Hours</MenuItem>
+        <MenuItem value={"D"} id={props.keyId + "-days-item"}>Days</MenuItem>
       </Select>
     </FormControl>
   )

@@ -1,16 +1,6 @@
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography
-} from "@mui/material";
+import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
 import {observer} from "mobx-react-lite";
-import { useStore } from "../../../context/StoreContext";
-
+import {useStore} from "../../../context/StoreContext";
 
 
 const GatewayChangesTable = observer(() => {
@@ -38,7 +28,7 @@ const GatewayChangesTable = observer(() => {
                 <TableCell
                   align="right">{rootStore.gatewayEditStore.storedGateway?.friendlyName}</TableCell>
                 <TableCell id={"friendly-name-new-value"}
-                  align="right">{rootStore.gatewayEditStore.updatedGateway?.friendlyName}</TableCell>
+                           align="right">{rootStore.gatewayEditStore.updatedGateway?.friendlyName}</TableCell>
               </TableRow>
             )}
             {rootStore.gatewayEditStore.hasEndpointUrlChanged() && (
@@ -49,7 +39,7 @@ const GatewayChangesTable = observer(() => {
                 <TableCell
                   align="right">{rootStore.gatewayEditStore.storedGateway?.endpointUrl}</TableCell>
                 <TableCell id={"endpoint-url-new-value"}
-                  align="right">{rootStore.gatewayEditStore.updatedGateway?.endpointUrl}</TableCell>
+                           align="right">{rootStore.gatewayEditStore.updatedGateway?.endpointUrl}</TableCell>
               </TableRow>
             )}
             {rootStore.gatewayEditStore.hasDescriptionChanged() && (
@@ -60,16 +50,14 @@ const GatewayChangesTable = observer(() => {
                 <TableCell
                   align="right">{rootStore.gatewayEditStore.storedGateway?.description}</TableCell>
                 <TableCell id={"description-new-value"}
-                  align="right">{rootStore.gatewayEditStore.updatedGateway?.description}</TableCell>
+                           align="right">{rootStore.gatewayEditStore.updatedGateway?.description}</TableCell>
               </TableRow>
             )}
-
 
 
           </TableBody>
         </Table>
       </TableContainer>
-
 
 
     </>

@@ -28,10 +28,10 @@ export const useGatewayService = () => {
         params.append("sortDirection", `${sortModel.sort as string}`);
       })
     }
-    if (rootStore.gatewayTableStore.gatewayIdFilter !== ""){
+    if (rootStore.gatewayTableStore.gatewayIdFilter !== "") {
       params.append("gatewayId", rootStore.gatewayTableStore.gatewayIdFilter);
     }
-    if (rootStore.gatewayTableStore.gatewayNameFilter !== ""){
+    if (rootStore.gatewayTableStore.gatewayNameFilter !== "") {
       params.append("friendlyName", rootStore.gatewayTableStore.gatewayNameFilter);
     }
     if (rootStore.gatewayTableStore.gatewayDescriptionFilter !== "") {
@@ -110,7 +110,7 @@ export const useGatewayService = () => {
   const createGateway = (gateway: Gateway) => {
     rootStore.gatewayAddStore.setLoading(true);
     authToken.then((token) => {
-      client.post(`${config.bffBaseUrl}/gateway`, gateway,{
+      client.post(`${config.bffBaseUrl}/gateway`, gateway, {
         headers: {
           "Authorization": "Bearer " + token.token,
         },
@@ -133,7 +133,7 @@ export const useGatewayService = () => {
   const updateGateway = (gateway: Gateway) => {
     rootStore.gatewayEditStore.setIsLoading(true);
     authToken.then((token) => {
-      client.put(`${config.bffBaseUrl}/gateway`, gateway,{
+      client.put(`${config.bffBaseUrl}/gateway`, gateway, {
         headers: {
           "Authorization": "Bearer " + token.token,
         },

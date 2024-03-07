@@ -35,12 +35,12 @@ const useGatewayGridDef = () => {
             >
               Modify
             </Button>
-            <IconButton sx={{ "&:hover": { color: theme.palette.error.main } }} onClick={()=>{
+            <IconButton sx={{"&:hover": {color: theme.palette.error.main}}} onClick={() => {
               rootStore.gatewayTableStore.setSelectedGateway(params.row);
               rootStore.gatewayTableStore.setDeleteModalOpen(true);
             }}
-              id={`delete-gateway-${params.row.id}`}>
-              <DeleteRounded />
+                        id={`delete-gateway-${params.row.id}`}>
+              <DeleteRounded/>
             </IconButton>
           </Stack>
 

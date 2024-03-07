@@ -13,6 +13,7 @@ export class GatewayAddStore {
   };
   isLoading = false;
   confirmModalOpen = false;
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
