@@ -56,6 +56,7 @@ public class GatewayAPIStepDefinitions {
         gateway.setEndpointUrl(gatewayData.asMaps().get(0).get("endpointUrl"));
         gateway.setFriendlyName(gatewayData.asMaps().get(0).get("friendlyName"));
         gateway.setDescription(gatewayData.asMaps().get(0).get("description"));
+        world.setGateway(gateway);
     }
 
     @When("I create the gateway")

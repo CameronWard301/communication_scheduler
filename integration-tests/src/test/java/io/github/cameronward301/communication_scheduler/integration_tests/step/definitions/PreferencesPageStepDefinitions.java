@@ -5,9 +5,9 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import lombok.AllArgsConstructor;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 
+import static io.github.cameronward301.communication_scheduler.integration_tests.step.definitions.SharedWebPortalStepDefinitions.setNumericField;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -58,12 +58,12 @@ public class PreferencesPageStepDefinitions {
 
     @And("preference fields are set to:")
     public void preferenceFieldsAreSetTo(DataTable fields) {
-        setNumericField("max-attempts-input", fields.asMaps().get(0).get("maximumAttempts"));
-        setNumericField("gateway-timeout-input", fields.asMaps().get(0).get("gatewayTimeout"));
-        setNumericField("backoff-coefficient-input", fields.asMaps().get(0).get("backoffCoefficient"));
-        setNumericField("initial-interval-input", fields.asMaps().get(0).get("initialInterval"));
-        setNumericField("maximum-interval-input", fields.asMaps().get(0).get("maximumInterval"));
-        setNumericField("start-to-close-timeout-input", fields.asMaps().get(0).get("startToCloseTimeout"));
+        setNumericField(driver, "max-attempts-input", fields.asMaps().get(0).get("maximumAttempts"));
+        setNumericField(driver, "gateway-timeout-input", fields.asMaps().get(0).get("gatewayTimeout"));
+        setNumericField(driver, "backoff-coefficient-input", fields.asMaps().get(0).get("backoffCoefficient"));
+        setNumericField(driver, "initial-interval-input", fields.asMaps().get(0).get("initialInterval"));
+        setNumericField(driver, "maximum-interval-input", fields.asMaps().get(0).get("maximumInterval"));
+        setNumericField(driver, "start-to-close-timeout-input", fields.asMaps().get(0).get("startToCloseTimeout"));
     }
 
     @Then("I should see the preference confirmation modal with new values:")
@@ -97,17 +97,7 @@ public class PreferencesPageStepDefinitions {
     }
 
 
-    private void clearTextField(String id) {
-        driver.findElement(By.id(id)).sendKeys(Keys.CONTROL + "a");
-        driver.findElement(By.id(id)).sendKeys(Keys.BACK_SPACE);
-    }
 
-    private void setNumericField(String id, String value) {
-        clearTextField(id);
-        driver.findElement(By.id(id)).sendKeys(value);
-        driver.findElement(By.id(id)).sendKeys(Keys.HOME);
-        driver.findElement(By.id(id)).sendKeys(Keys.DELETE);
-    }
 
     private void setTimePeriod(String id, String key, String timePeriod) {
         driver.findElement(By.id(id)).click();

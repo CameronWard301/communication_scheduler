@@ -1,5 +1,6 @@
 package io.github.cameronward301.communication_scheduler.integration_tests.world;
 
+import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Gateway;
 import lombok.Data;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -13,4 +14,5 @@ public class World {
     private HttpClientErrorException httpClientErrorException;
     private String workflowId;
     private String workflowRunId;
+    private Gateway gateway;
 }
