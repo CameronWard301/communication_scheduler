@@ -3,19 +3,27 @@ package io.github.cameronward301.communication_scheduler.integration_tests.step.
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
-import lombok.AllArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.springframework.beans.factory.annotation.Value;
+
+import java.time.Duration;
 
 import static io.github.cameronward301.communication_scheduler.integration_tests.step.definitions.SharedWebPortalStepDefinitions.setNumericField;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@AllArgsConstructor
 public class PreferencesPageStepDefinitions {
 
     private final WebDriver driver;
+
+    @Value("${web-portal.implicit-wait}")
+    private int implicitWait;
+
+    public PreferencesPageStepDefinitions(WebDriver driver) {
+        this.driver = driver;
+    }
 
     @Then("I should see the preferences page")
     public void iShouldSeeThePreferencesPage() {
@@ -30,10 +38,12 @@ public class PreferencesPageStepDefinitions {
 
     @Then("I should not see the advanced preference options")
     public void iShouldNotSeeTheAdvancedPreferenceOptions() {
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(0));
         assertTrue(driver.findElements(By.id("backoff-coefficient-title")).isEmpty());
         assertTrue(driver.findElements(By.id("initial-interval-title")).isEmpty());
         assertTrue(driver.findElements(By.id("maximum-interval-title")).isEmpty());
         assertTrue(driver.findElements(By.id("start-to-close-timout-title")).isEmpty());
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
     }
 
     @Then("I should see the advanced preference options")
@@ -95,8 +105,6 @@ public class PreferencesPageStepDefinitions {
         setTimePeriod("maximum-interval-time", "maximum-interval-time", timePeriods.asMaps().get(0).get("maximumInterval"));
         setTimePeriod("start-to-close-timeout-time", "start-to-close-timeout-time", timePeriods.asMaps().get(0).get("startToCloseTimeout"));
     }
-
-
 
 
     private void setTimePeriod(String id, String key, String timePeriod) {

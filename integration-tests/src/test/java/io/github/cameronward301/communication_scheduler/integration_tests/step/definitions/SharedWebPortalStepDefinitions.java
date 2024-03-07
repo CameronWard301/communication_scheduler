@@ -28,6 +28,23 @@ public class SharedWebPortalStepDefinitions {
     @Value("${web-portal.explicit-wait}")
     private int explicitWait;
 
+    private static void clearTextField(WebDriver driver, String id) {
+        driver.findElement(By.id(id)).sendKeys(Keys.CONTROL + "a");
+        driver.findElement(By.id(id)).sendKeys(Keys.BACK_SPACE);
+    }
+
+    public static void setTextField(WebDriver webDriver, String id, String value) {
+        clearTextField(webDriver, id);
+        webDriver.findElement(By.id(id)).sendKeys(value);
+    }
+
+    public static void setNumericField(WebDriver webDriver, String id, String value) {
+        clearTextField(webDriver, id);
+        webDriver.findElement(By.id(id)).sendKeys(value);
+        webDriver.findElement(By.id(id)).sendKeys(Keys.HOME);
+        webDriver.findElement(By.id(id)).sendKeys(Keys.DELETE);
+    }
+
     @When("I navigate to {string}")
     public void iNavigateTo(String uri) {
         webDriver.get(webDriverUrl + uri);
@@ -73,7 +90,6 @@ public class SharedWebPortalStepDefinitions {
         setTextField(webDriver, id, value);
     }
 
-
     @Then("Wait for snackbar to disappear")
     public void waitForSnackbarToDisappear() {
         WebElement element = webDriver.findElement(By.id("snackbar-message"));
@@ -93,23 +109,6 @@ public class SharedWebPortalStepDefinitions {
         WebElement element = webDriver.findElement(By.id(id));
         Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
         wait.until(driver -> element.isEnabled());
-    }
-
-    private static void clearTextField(WebDriver driver, String id) {
-        driver.findElement(By.id(id)).sendKeys(Keys.CONTROL + "a");
-        driver.findElement(By.id(id)).sendKeys(Keys.BACK_SPACE);
-    }
-
-    public static void setTextField(WebDriver webDriver, String id, String value) {
-        clearTextField(webDriver, id);
-        webDriver.findElement(By.id(id)).sendKeys(value);
-    }
-
-    public static void setNumericField(WebDriver webDriver, String id, String value) {
-        clearTextField(webDriver, id);
-        webDriver.findElement(By.id(id)).sendKeys(value);
-        webDriver.findElement(By.id(id)).sendKeys(Keys.HOME);
-        webDriver.findElement(By.id(id)).sendKeys(Keys.DELETE);
     }
 
 

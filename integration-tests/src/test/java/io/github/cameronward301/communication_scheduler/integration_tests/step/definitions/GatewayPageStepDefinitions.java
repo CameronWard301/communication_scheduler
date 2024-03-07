@@ -4,7 +4,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Gateway;
-import io.github.cameronward301.communication_scheduler.integration_tests.repository.GatewayRepository;
 import io.github.cameronward301.communication_scheduler.integration_tests.world.World;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -23,7 +22,8 @@ import static io.github.cameronward301.communication_scheduler.integration_tests
 import static java.lang.String.format;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GatewayPageStepDefinitions {
 
@@ -32,17 +32,16 @@ public class GatewayPageStepDefinitions {
     private final Gateway existingGateway;
     private final World world;
 
-    private final GatewayRepository gatewayRepository;
 
     @Value("${web-portal.explicit-wait}")
     private int explicitWait;
 
-    public GatewayPageStepDefinitions(WebDriver webDriver, Gateway gateway, World world, GatewayRepository gatewayRepository) {
+    public GatewayPageStepDefinitions(WebDriver webDriver, Gateway gateway, World world) {
         this.webDriver = webDriver;
         this.existingGatewayId = gateway.getId();
         this.existingGateway = gateway;
         this.world = world;
-        this.gatewayRepository = gatewayRepository;
+
     }
 
 

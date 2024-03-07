@@ -19,9 +19,9 @@ import java.util.Map;
 
 @Slf4j
 public class HistoryHooks {
+    private static boolean completedBeforeAll = false;
     private final WorkflowClient workflowClient;
     private final World world;
-    private static boolean completedBeforeAll = false;
     List<String> workflowIds = new ArrayList<>();
 
     public HistoryHooks(WorkflowClient workflowClient, World world) {
