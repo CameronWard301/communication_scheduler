@@ -132,7 +132,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Get the gateways from the server.",
+            "description": "Get the gateways from the server matching the filters.",
             "content": {
               "application/json": {
                 "schema": {
@@ -262,7 +262,7 @@
         "tags": [
           "Gateways"
         ],
-        "description": "Get gateways.",
+        "description": "Delete gateway by id.",
         "parameters": [
           {
             "name": "id",

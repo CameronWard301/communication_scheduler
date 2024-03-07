@@ -46,7 +46,7 @@ router.get("/v1/bff/gateway", (req, res) => {
    */
 
   /* #swagger.responses[200] = {
-            description: 'Get the gateways from the server.',
+            description: 'Get the gateways from the server matching the filters.',
              content: {
                 "application/json": {
                     schema: { $ref: '#/components/schemas/GatewayPage' }
@@ -177,7 +177,7 @@ router.put("/v1/bff/gateway", (req, res) => {
 
 router.delete("/v1/bff/gateway/:id", (req, res) => {
   // #swagger.tags = ["Gateways"]
-  // #swagger.description = "Get gateways."
+  // #swagger.description = "Delete gateway by id."
 
   /* #swagger.responses[204] = {
             description: 'Delete was successful.'

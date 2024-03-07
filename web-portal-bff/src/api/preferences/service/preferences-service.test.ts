@@ -9,6 +9,7 @@ describe('PreferencesService', () => {
   let mockAxios = new MockAdapter(axiosClient);
 
   beforeEach(() => {
+    mockAxios.reset();
     preferencesService = PreferencesService();
 
   });
@@ -51,8 +52,6 @@ describe('PreferencesService', () => {
     })
 
     const result = await preferencesService.getPreferences('test-token');
-
-
     expect(result.status).toBe(200);
     expect(result.data).toBeDefined();
     expect(result.data).toEqual(expectedResponse);
@@ -335,7 +334,7 @@ describe('PreferencesService', () => {
 })
 
 const verifyPutRequest = async (putRequest: ClientPreferences, putResponse: ClientPreferences, mockAxios: MockAdapter, preferencesService: ReturnType<typeof PreferencesService>) => {
-  mockAxios.onPut(process.env.PREFERENCES_API_URL + "/gateways-timeout").reply(200, {
+  mockAxios.onPut(process.env.PREFERENCES_API_URL + "/gateway-timeout").reply(200, {
     gatewayTimeoutSeconds: putResponse.gatewayTimeout.value
   });
 
