@@ -3,7 +3,7 @@ export interface ScheduleQueryParams {
   gatewayId?: string;
 }
 
-export interface SchedulePageQueryParams  extends ScheduleQueryParams{
+export interface SchedulePageQueryParams extends ScheduleQueryParams {
   page: string;
   pageSize: string;
 }

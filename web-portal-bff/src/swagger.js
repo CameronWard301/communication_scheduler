@@ -49,12 +49,12 @@ var doc = {
             },
             GatewayPage: {
                 gateways: [{
-                        id: 'string',
-                        endpointUrl: "https://example.com/email",
-                        friendlyName: "My Email Gateway",
-                        description: "This is a gateway for sending emails",
-                        dateCreated: "03/03/2024 16:45:12"
-                    }],
+                    id: 'string',
+                    endpointUrl: "https://example.com/email",
+                    friendlyName: "My Email Gateway",
+                    description: "This is a gateway for sending emails",
+                    dateCreated: "03/03/2024 16:45:12"
+                }],
                 totalElements: 1,
                 pageSize: 5,
                 pageNumber: 0,
@@ -98,8 +98,7 @@ var GetControllerFilePaths = function (root) {
             var stats = fs.statSync(filePath);
             if (stats.isDirectory()) {
                 traverseDirectory(filePath);
-            }
-            else if (stats.isFile()) {
+            } else if (stats.isFile()) {
                 var fileName = path.basename(file);
                 if (fileName.endsWith('controller.ts')) {
                     var relativePath = path.relative(root, filePath);
