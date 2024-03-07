@@ -116,7 +116,7 @@ export const useGatewayService = () => {
         },
       }).then((response) => {
         navigate("/gateways/?gatewayId=" + (response.data as Gateway).id)
-        snackbar.addSnackbar("Gateway Added", "success");
+        snackbar.addSnackbar("Gateway added", "success");
         rootStore.gatewayAddStore.setConfirmModalOpen(false)
       })
         .catch(error => {

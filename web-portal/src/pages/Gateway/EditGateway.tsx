@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import {Button, TextField, Typography} from "@mui/material";
+import {Button, TextField, Typography, useTheme} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {useStore} from "../../context/StoreContext.tsx";
@@ -20,6 +20,7 @@ import {SnackbarContext} from "../../context/SnackbarContext.tsx";
 const EditGateway = observer(() => {
   const navigate = useNavigate();
   const rootStore = useStore();
+  const theme = useTheme();
   const params = useParams();
   const {getGatewayById, deleteGatewayById, updateGateway} = useGatewayService();
   const snackbar = useContext(SnackbarContext);
@@ -95,26 +96,32 @@ const EditGateway = observer(() => {
             <Grid xs={12} container spacing={2}>
               <Grid xs={12} lg={6} m={1} ml={2}>
                 <Box>
-                  <Typography variant={"h4"} display={"inline-block"} id={"initial-interval-title"}>Gateway Name</Typography>
+                  <Typography variant={"h4"} display={"inline-block"} id={"initial-interval-title"}>Gateway Name<span
+                    style={{color: theme.palette.error.main}}>*</span></Typography>
                   <CustomTooltip message="A friendly name to identify the gateway"/>
                 </Box>
                 <Box>
                   <TextField label="Gateway Name" type="text" variant="outlined" margin={"normal"}
                              fullWidth
                              required
+                             error={!rootStore.gatewayEditStore.isFriendlyNameValid()}
+                             helperText={!rootStore.gatewayEditStore.isFriendlyNameValid() ? "Please enter a name" : ""}
                              value={rootStore.gatewayEditStore.updatedGateway.friendlyName} id={"gateway-name-input"}
                              onChange={(event) => rootStore.gatewayEditStore.setGatewayName(event.target.value)}/>
                 </Box>
               </Grid>
               <Grid xs={12} lg={6} m={1} ml={2}>
                 <Box>
-                  <Typography variant={"h4"} display={"inline-block"} id={"initial-interval-title"}>Endpoint URL</Typography>
+                  <Typography variant={"h4"} display={"inline-block"} id={"initial-interval-title"}>Endpoint URL<span
+                    style={{color: theme.palette.error.main}}>*</span></Typography>
                   <CustomTooltip message="The URL to connect to the gateway"/>
                 </Box>
                 <Box>
                   <TextField label="Gateway Name" type="text" variant="outlined" margin={"normal"}
                              fullWidth
                              required
+                             helperText={!rootStore.gatewayEditStore.isEndpointUrlValid() ? "Please enter a URL" : ""}
+                             error={!rootStore.gatewayEditStore.isEndpointUrlValid()}
                              value={rootStore.gatewayEditStore.updatedGateway.endpointUrl} id={"gateway-url-input"}
                              onChange={(event) => rootStore.gatewayEditStore.setGatewayEndpointUrl(event.target.value)}/>
                 </Box>
@@ -156,7 +163,7 @@ const EditGateway = observer(() => {
                 <Button
                   variant="contained"
                   endIcon={<DeleteRounded/>}
-                  id={"view-affected-schedules-modal-button"}
+                  id={"delete-gateway-button"}
                   color={"secondary"}
                   fullWidth
                   sx={{height: 56}}
@@ -169,8 +176,8 @@ const EditGateway = observer(() => {
               </Grid>
 
               <Grid xs={12} lg={3} marginTop={"auto"} >
-                <LoadingButton loading={rootStore.gatewayTableStore.isLoading} variant="contained" fullWidth sx={{height: 56}}
-                               color={"primary"} id={"confirm-modal-button"} endIcon={<SaveRoundedIcon/>} onClick={() => handleGatewayUpdate()}>
+                <LoadingButton loading={rootStore.gatewayTableStore.isLoading} variant="contained" fullWidth sx={{height: 56}} disabled={!rootStore.gatewayEditStore.fieldsAreValid()}
+                               color={"primary"} id={"confirm-edit-button"} endIcon={<SaveRoundedIcon/>} onClick={() => handleGatewayUpdate()}>
                   Modify
                 </LoadingButton>
               </Grid>

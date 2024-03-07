@@ -29,6 +29,7 @@ const useGatewayGridDef = () => {
               variant="contained"
               color="primary"
               size="small"
+              id={`modify-gateway-${params.row.id}`}
               endIcon={<EditRoundedIcon/>}
               onClick={() => navigate(`/gateway/${params.row.id}`)}
             >
@@ -37,7 +38,8 @@ const useGatewayGridDef = () => {
             <IconButton sx={{ "&:hover": { color: theme.palette.error.main } }} onClick={()=>{
               rootStore.gatewayTableStore.setSelectedGateway(params.row);
               rootStore.gatewayTableStore.setDeleteModalOpen(true);
-            }}>
+            }}
+              id={`delete-gateway-${params.row.id}`}>
               <DeleteRounded />
             </IconButton>
           </Stack>

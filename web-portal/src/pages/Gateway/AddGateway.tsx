@@ -130,7 +130,7 @@ const EditGateway = observer(() => {
               <Grid xs={12} lg={3} marginTop={"auto"} >
                 <LoadingButton loading={rootStore.gatewayAddStore.isLoading} variant="contained" fullWidth sx={{height: 56}}
                                disabled={!rootStore.gatewayAddStore.fieldsAreValid()}
-                               color={"primary"} id={"confirm-modal-button"} endIcon={<SaveRoundedIcon/>} onClick={() => handleGatewaySave()}>
+                               color={"primary"} id={"confirm-add-button"} endIcon={<SaveRoundedIcon/>} onClick={() => handleGatewaySave()}>
                   Add Gateway
                 </LoadingButton>
               </Grid>

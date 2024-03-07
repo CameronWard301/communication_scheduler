@@ -120,7 +120,7 @@ const GatewayModal = observer(
                       ml={4}
                       fontWeight={"bold"}
                       display={"inline-block"}
-                      align="left" id={"gateway-date-created"}
+                      align="left" id={"affected-schedules-count"}
                       sx={{color: affectedSchedules > 0 ? theme.palette.warning.main : theme.palette.success.main}}>
                       {affectedSchedules}
                     </Typography>

@@ -64,6 +64,14 @@ export class GatewayEditStore {
     })();
   }
 
+  isFriendlyNameValid() {
+    return this.updatedGateway!.friendlyName.length > 0;
+  }
+
+  isEndpointUrlValid() {
+    return this.updatedGateway!.endpointUrl.length > 0;
+  }
+
   hasFriendlyNameChanged() {
     return this.storedGateway!.friendlyName !== this.updatedGateway!.friendlyName;
   }
@@ -83,5 +91,9 @@ export class GatewayEditStore {
     action(() => {
       this.affectedSchedules = schedules;
     })();
+  }
+
+  fieldsAreValid() {
+    return this.isFriendlyNameValid() && this.isEndpointUrlValid();
   }
 }

@@ -26,8 +26,7 @@ const GatewayTable = observer(() => {
   const {columns} = useGatewayGridDef();
   const {getGateways, deleteGatewayById} = useGatewayService();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-
+  const [, setSearchParams] = useSearchParams();
 
 
   const query = useQuery();
@@ -80,7 +79,7 @@ const GatewayTable = observer(() => {
 
         <Grid xs={12} container>
           <Grid xsOffset={6} mdOffset={9} xs={12} mb={0}>
-            <Button variant="contained" fullWidth color="primary" endIcon={<AddCircleOutlineRoundedIcon/>} onClick={() => navigate("/add-gateway")}>Add
+            <Button variant="contained" fullWidth color="primary" endIcon={<AddCircleOutlineRoundedIcon/>} id={"add-gateway-button"} onClick={() => navigate("/add-gateway")}>Add
               Gateway</Button>
           </Grid>
         </Grid>
@@ -146,6 +145,7 @@ const GatewayTable = observer(() => {
                       setSearchParams(new URLSearchParams());
                       getGateways();
                     }}
+                    id={"reset-filters-button"}
             >Reset Filters</Button>
           </Grid>
           <Grid xs={6} sx={{pl: 1}}>
