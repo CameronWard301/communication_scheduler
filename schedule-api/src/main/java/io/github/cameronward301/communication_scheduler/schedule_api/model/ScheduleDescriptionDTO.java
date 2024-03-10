@@ -14,7 +14,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 public class ScheduleDescriptionDTO {
-    private String id;
+    private String scheduleId;
     private ScheduleInfo info;
     private ScheduleDTO schedule;
     private Map<String, List<?>> searchAttributes;

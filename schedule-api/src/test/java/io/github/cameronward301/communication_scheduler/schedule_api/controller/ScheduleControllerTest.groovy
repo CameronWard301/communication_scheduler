@@ -283,7 +283,7 @@ class ScheduleControllerTest extends Specification {
         given:
         def id = "123"
         def dto = new ScheduleDescriptionDTO()
-        dto.setId("123")
+        dto.setScheduleId("123")
         dto.setSchedule(
                 ScheduleDescriptionDTO.ScheduleDTO.builder()
                         .state(ScheduleState.newBuilder()

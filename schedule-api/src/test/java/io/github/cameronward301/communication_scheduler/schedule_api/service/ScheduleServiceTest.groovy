@@ -119,7 +119,7 @@ class ScheduleServiceTest extends Specification {
         def response = scheduleService.createSchedule(createDTO)
 
         then:
-        response.getId() == id
+        response.getScheduleId() == id
         response.getSchedule().getSpec().getCronExpressions().get(0) == createDTO.getCronExpression()
         response.getSearchAttributes().get("userId").get(0) == createDTO.getUserId()
         response.getSearchAttributes().get("gatewayId").get(0) == createDTO.getGatewayId()
@@ -148,7 +148,7 @@ class ScheduleServiceTest extends Specification {
 
 
         then:
-        response.getId() == id
+        response.getScheduleId() == id
         response.getSchedule().getSpec().getCronExpressions().get(0) == scheduleDto.getCronExpression()
         response.getSearchAttributes().get("userId").get(0) == scheduleDto.getUserId()
         response.getSearchAttributes().get("gatewayId").get(0) == scheduleDto.getGatewayId()
