@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import CloseIcon from "@mui/icons-material/Close";
 import {observer} from "mobx-react-lite";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 type Props = {
   open: boolean;
@@ -15,6 +16,7 @@ type Props = {
   cancelIcon?: React.ReactNode;
   cancelText?: string;
   onConfirm: () => void;
+  loading: boolean;
 };
 
 const ConfirmModal = observer(
@@ -27,7 +29,8 @@ const ConfirmModal = observer(
      confirmText,
      cancelIcon = <CloseIcon/>,
      cancelText = "Cancel",
-     onConfirm
+     onConfirm,
+     loading
    }: Props) => {
     const theme = useTheme();
     const style = {
@@ -73,7 +76,7 @@ const ConfirmModal = observer(
 
                 <Grid xs={12} md={6}>
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     endIcon={cancelIcon}
                     id={"cancel-modal-button"}
                     color={"info"}
@@ -87,10 +90,11 @@ const ConfirmModal = observer(
                   </Button>
                 </Grid>
                 <Grid xs={12} md={6} marginTop={"auto"}>
-                  <Button onClick={onConfirm} endIcon={confirmIcon} variant="contained" fullWidth sx={{height: 56}}
-                          color={"primary"} id={"confirm-modal-button"}>
+                  <LoadingButton loading={loading} onClick={onConfirm} endIcon={confirmIcon} variant="contained"
+                                 fullWidth sx={{height: 56}}
+                                 color={"primary"} id={"confirm-modal-button"}>
                     <span>{confirmText}</span>
-                  </Button>
+                  </LoadingButton>
                 </Grid>
               </Grid>
             </Box>

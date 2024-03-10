@@ -1,6 +1,6 @@
 {
   "name": "web-portal-bff",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "description": "BFF for the platforms desktop web portal",
   "main": "index.js",
   "scripts": {

@@ -1,6 +1,6 @@
 import {AuthToken} from "../model/auth-models";
-import axiosClient from "../../axios-client";
-import {BFFResponse} from "../../model/BFFResponse";
+import axiosClient from "../../../axios-client";
+import {BFFResponse} from "../../../model/BFFResponse";
 
 
 export const AuthService = () => {

@@ -58,7 +58,7 @@ app.all("/v1/bff/*", async (req, res) => {
         });
         data.pipe(res);
     } catch (error) {
-        if (error.response){
+        if (error.response) {
             console.log(`Passing error from server as response: ${error.message}`);
             res.status(error.response.status)
             error.response.data.pipe(res);

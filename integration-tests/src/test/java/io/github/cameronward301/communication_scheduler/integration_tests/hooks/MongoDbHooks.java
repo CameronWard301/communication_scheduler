@@ -5,6 +5,7 @@ import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Gateway;
 import io.github.cameronward301.communication_scheduler.integration_tests.repository.GatewayRepository;
+import io.github.cameronward301.communication_scheduler.integration_tests.world.World;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
@@ -14,13 +15,16 @@ public class MongoDbHooks {
     private final GatewayRepository gatewayRepository;
     private final Gateway gateway;
     private final List<Gateway> gateways;
+    private final World world;
 
     public MongoDbHooks(GatewayRepository gatewayRepository,
                         @Qualifier("gatewayDbModel") Gateway gateway,
-                        @Qualifier("gatewayDbModels") List<Gateway> gateways) {
+                        @Qualifier("gatewayDbModels") List<Gateway> gateways,
+                        World world) {
         this.gatewayRepository = gatewayRepository;
         this.gateways = gateways;
         this.gateway = gateway;
+        this.world = world;
     }
 
     @Before("@MongoDbSetupEntity")
@@ -45,6 +49,13 @@ public class MongoDbHooks {
     public void removeMongoDBEntity() {
         if (doesEntityExist(gateway.getId())) {
             gatewayRepository.deleteById(gateway.getId());
+        }
+    }
+
+    @After("MongoDbRemoveEntityFromWorld")
+    public void removeMongoDBEntityFromWorld() {
+        if (doesEntityExist(world.getGateway().getId())) {
+            gatewayRepository.deleteById(world.getGateway().getId());
         }
     }
 

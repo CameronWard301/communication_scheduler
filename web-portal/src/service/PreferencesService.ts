@@ -44,6 +44,7 @@ export const usePreferencesService = () => {
         },
       }).then(response => {
         rootStore.preferencesStore.setFromServer(response.data as Preferences);
+        rootStore.preferencesStore.setModalOpen(false)
         addSnackbar("Preferences updated", "success");
       }).catch(error => handleError(error))
         .finally(() => rootStore.preferencesStore.setLoading(false));

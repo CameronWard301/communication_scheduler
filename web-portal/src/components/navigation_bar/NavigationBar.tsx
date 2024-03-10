@@ -22,6 +22,7 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import {SnackbarContext} from "../../context/SnackbarContext";
 import logo from "../../assets/logo.png";
+import {ConfigContext} from "../../context/ConfigContext.tsx";
 
 const drawerWidth = 340;
 
@@ -77,6 +78,7 @@ export default function NavigationBar() {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const {addSnackbar} = useContext(SnackbarContext);
+  const [config] = useContext(ConfigContext);
 
   const toggleDrawer = () => {
     if (open) {
@@ -92,7 +94,8 @@ export default function NavigationBar() {
 
   return <><Drawer variant="permanent" open={open}>
     <DrawerHeader style={{justifyContent: "flex-start"}}>
-      <img id={"app-logo"} src={logo} alt="Platform Logo" style={{maxWidth: "48px", cursor: "pointer"}} onClick={() => navigate("/")}/>
+      <img id={"app-logo"} src={logo} alt="Platform Logo" style={{maxWidth: "48px", cursor: "pointer"}}
+           onClick={() => navigate("/")}/>
     </DrawerHeader>
     <DrawerHeader
       sx={{
@@ -105,7 +108,7 @@ export default function NavigationBar() {
     </DrawerHeader>
     <Divider/>
     <List>
-      <ListItem disablePadding sx={{display: "block"}} key={"home"} >
+      <ListItem disablePadding sx={{display: "block"}} key={"home"}>
         <ListItemButton
           id={"nav-home"}
           onClick={() => navigate("/")}
@@ -268,7 +271,7 @@ export default function NavigationBar() {
             px: 2.5,
           }}
           onClick={() => {
-            localStorage.clear();
+            window.localStorage.removeItem(`${APP_VERSION}-${config.environment}-communication-scheduler-token`);
             addSnackbar("Removed authentication cookie", "success");
           }}
         >
