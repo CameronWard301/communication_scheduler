@@ -12,7 +12,7 @@ import TimeSelection from "../components/time_selection";
 import CustomTooltip from "../components/tooltip";
 import {usePreferencesService} from "../service/PreferencesService.ts";
 import {useContext, useEffect} from "react";
-import ConfirmModal from "../components/modal";
+import {ConfirmModal} from "../components/modal";
 import {PreferenceChanges} from "../components/preference_changes";
 import {SnackbarContext} from "../context/SnackbarContext.tsx";
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -39,12 +39,12 @@ const Preferences = observer(() => {
 
   const handleSave = () => {
     preferencesService.setPreferences();
-    rootStore.preferencesStore.setModalOpen(false)
   }
 
   return (
     <>
       <ConfirmModal
+        loading={rootStore.preferencesStore.isLoading}
         open={rootStore.preferencesStore.modalOpen}
         confirmText={"Save Changes"}
         description={<PreferenceChanges/>}
@@ -64,7 +64,8 @@ const Preferences = observer(() => {
         </Grid>
         <Grid xs={12}>
           <Box>
-            <Typography variant={"h4"} display={"inline-block"} id={"maximum-attempts-title"}>Maximum Attempts</Typography>
+            <Typography variant={"h4"} display={"inline-block"} id={"maximum-attempts-title"}>Maximum
+              Attempts</Typography>
             <CustomTooltip
               message="The maximum number of attempts to send the communication to the customer if the system encounters an error, or select unlimited attempts."/>
           </Box>
@@ -83,7 +84,8 @@ const Preferences = observer(() => {
 
         <Grid xs={12}>
           <Box>
-            <Typography variant={"h4"} display={"inline-block"} id={"gateway-timeout-title"}>Gateway Timeout</Typography>
+            <Typography variant={"h4"} display={"inline-block"} id={"gateway-timeout-title"}>Gateway
+              Timeout</Typography>
             <CustomTooltip
               message="The time to wait for a gateway to respond back with a status before retrying the gateway"/>
           </Box>
@@ -110,7 +112,8 @@ const Preferences = observer(() => {
           rootStore.preferencesStore.isAdvancedMode && (
             <>
               <Grid>
-                <Typography variant={"body1"} id={"advanced-description"}>Below you can configure the retry policy. The backoff coefficient is a
+                <Typography variant={"body1"} id={"advanced-description"}>Below you can configure the retry policy. The
+                  backoff coefficient is a
                   multiplier for the time it takes to retry the next attempt.
                   For example if the backoff coefficient is 2 the time between each retry doubles.
                   If the initial interval is 2, the platform will wait 2 seconds before retrying, then 4 seconds then 8
@@ -121,7 +124,8 @@ const Preferences = observer(() => {
 
               <Grid xs={12}>
                 <Box>
-                  <Typography variant={"h4"} display={"inline-block"} id={"backoff-coefficient-title"}>Backoff Coefficient</Typography>
+                  <Typography variant={"h4"} display={"inline-block"} id={"backoff-coefficient-title"}>Backoff
+                    Coefficient</Typography>
                   <CustomTooltip message="The backoff coefficient to use for exponential backoff. To disable backoff, enter 1.0,
                                      the system will then use the initial interval to determine when the next retry should be."/>
                 </Box>
@@ -140,7 +144,8 @@ const Preferences = observer(() => {
 
               <Grid xs={12}>
                 <Box>
-                  <Typography variant={"h4"} display={"inline-block"} id={"initial-interval-title"}>Initial Interval</Typography>
+                  <Typography variant={"h4"} display={"inline-block"} id={"initial-interval-title"}>Initial
+                    Interval</Typography>
                   <CustomTooltip message="How soon should the system retry the failed step after encountering a failure.
                                      Subsequent retries will also be at this value if the backoff coefficient is set to 1 or less."/>
                 </Box>
@@ -157,14 +162,15 @@ const Preferences = observer(() => {
 
               <Grid xs={12}>
                 <Box>
-                  <Typography variant={"h4"} display={"inline-block"} id={"maximum-interval-title"}>Maximum Interval</Typography>
+                  <Typography variant={"h4"} display={"inline-block"} id={"maximum-interval-title"}>Maximum
+                    Interval</Typography>
                   <CustomTooltip message="The maximum amount of time between a retried communication. Set this value to set
                                      a limit to the exponential backoff coefficient, setting this to 0 means no limit."/>
                 </Box>
                 <Box>
                   <TextField label="Maximum Interval" type="number" variant="outlined" margin={"normal"}
                              value={rootStore.preferencesStore.newMaximumInterval}
-                              id={"maximum-interval-input"}
+                             id={"maximum-interval-input"}
                              onChange={(event) => rootStore.preferencesStore.setMaximumInterval(event.target.value)}/>
                   <TimeSelection keyId={"maximum-interval-time"}
                                  value={rootStore.preferencesStore.newMaximumIntervalTime} onChange={(event) => {
@@ -180,7 +186,8 @@ const Preferences = observer(() => {
 
               <Grid xs={12}>
                 <Box>
-                  <Typography variant={"h4"} display={"inline-block"} id={"start-to-close-timout-title"}>Start To Close Timeout</Typography>
+                  <Typography variant={"h4"} display={"inline-block"} id={"start-to-close-timout-title"}>Start To Close
+                    Timeout</Typography>
                   <CustomTooltip
                     message="The maximum amount of time it should take to send a communication, if the communication execution exceeds this limit then there are no more retries. Set to 0 to disable"/>
                 </Box>

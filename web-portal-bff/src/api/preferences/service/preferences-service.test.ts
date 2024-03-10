@@ -9,6 +9,7 @@ describe('PreferencesService', () => {
   let mockAxios = new MockAdapter(axiosClient);
 
   beforeEach(() => {
+    mockAxios.reset();
     preferencesService = PreferencesService();
 
   });
@@ -51,8 +52,6 @@ describe('PreferencesService', () => {
     })
 
     const result = await preferencesService.getPreferences('test-token');
-
-
     expect(result.status).toBe(200);
     expect(result.data).toBeDefined();
     expect(result.data).toEqual(expectedResponse);
@@ -303,7 +302,7 @@ describe('PreferencesService', () => {
 
   });
 
-  it('should throw an error if time unit is wrong for gateway seconds', async () => {
+  it('should throw an error if time unit is wrong for gateways seconds', async () => {
 
     const putRequest = {
       maximumAttempts: 100,

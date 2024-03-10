@@ -15,6 +15,17 @@ export const useErrorHandling = () => {
             return;
           }
       }
+      switch (error.response?.status) {
+        case 401:
+          addSnackbar("401 Unauthorized, could not complete request", "error");
+          return;
+        case 403:
+          addSnackbar("403 Forbidden, could not complete request", "error");
+          return;
+        case 404:
+          addSnackbar("404 Not found, could not find the given entity", "error");
+          return;
+      }
       addSnackbar("No response from server", "error");
       return
     }

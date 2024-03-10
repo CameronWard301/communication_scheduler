@@ -14,10 +14,10 @@ export function useToken(): Promise<AuthToken> {
 
     return await client
       .post(config.bffBaseUrl + "/auth",
-        JSON.stringify(["GATEWAY:WRITE", "GATEWAY:READ", "PREFERENCES:READ", "PREFERENCES:WRITE", "SCHEDULE:READ", "SCHEDULE:WRITE", "SCHEDULE:DELETE", "WORKFLOW:TERMINATE", "HISTORY:READ"]))
+        JSON.stringify(["GATEWAY:WRITE", "GATEWAY:READ", "GATEWAY:DELETE", "PREFERENCES:READ", "PREFERENCES:WRITE", "SCHEDULE:READ", "SCHEDULE:WRITE", "SCHEDULE:DELETE", "WORKFLOW:TERMINATE", "HISTORY:READ"]))
       .then((response) => {
         const token = response.data as AuthToken;
-        Cookies.set(APP_VERSION + "-communication-scheduler-token", JSON.stringify(token), {expires: new Date(token.expires)});
+        Cookies.set(`${APP_VERSION}-${config.environment}-communication-scheduler-token`, JSON.stringify(token), {expires: new Date(token.expires)});
         return token;
       })
       .catch((reason) => {

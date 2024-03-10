@@ -1,5 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", {value: true});
+// Adapted from https://swagger-autogen.github.io/docs/getting-started/quick-start
 var fs = require("fs");
 var path = require("path");
 var options = {
@@ -41,6 +40,28 @@ var doc = {
                 expires: 'string'
             },
             AuthScopes: ['GATEWAY:READ', 'GATEWAY:WRITE'],
+            Gateway: {
+                id: 'string',
+                endpointUrl: "https://example.com/email",
+                friendlyName: "My Email Gateway",
+                description: "This is a gateway for sending emails",
+                dateCreated: "03/03/2024 16:45:12"
+            },
+            GatewayPage: {
+                gateways: [{
+                    id: 'string',
+                    endpointUrl: "https://example.com/email",
+                    friendlyName: "My Email Gateway",
+                    description: "This is a gateway for sending emails",
+                    dateCreated: "03/03/2024 16:45:12"
+                }],
+                totalElements: 1,
+                pageSize: 5,
+                pageNumber: 0,
+            },
+            TotalMatches: {
+                total: 1
+            },
             Preferences: {
                 gatewayTimeoutSeconds: 100,
                 maximumAttempts: 200,

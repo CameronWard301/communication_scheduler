@@ -1,6 +1,7 @@
 import {ComponentPreview, Previews} from "@react-buddy/ide-toolbox";
 import {PaletteTree} from "./palette";
 import Preferences from "../pages/Preferences.tsx";
+import GatewayTable from "../pages/Gateway/GatewayTable.tsx";
 
 const ComponentPreviews = () => {
   return (
@@ -10,6 +11,9 @@ const ComponentPreviews = () => {
       </ComponentPreview>
       <ComponentPreview path="/Preferences">
         <Preferences/>
+      </ComponentPreview>
+      <ComponentPreview path="/GatewayTable">
+        <GatewayTable/>
       </ComponentPreview>
     </Previews>
   );

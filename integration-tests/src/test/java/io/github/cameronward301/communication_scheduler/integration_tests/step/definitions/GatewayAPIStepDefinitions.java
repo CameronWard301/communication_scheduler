@@ -56,6 +56,7 @@ public class GatewayAPIStepDefinitions {
         gateway.setEndpointUrl(gatewayData.asMaps().get(0).get("endpointUrl"));
         gateway.setFriendlyName(gatewayData.asMaps().get(0).get("friendlyName"));
         gateway.setDescription(gatewayData.asMaps().get(0).get("description"));
+        world.setGateway(gateway);
     }
 
     @When("I create the gateway")
@@ -74,8 +75,8 @@ public class GatewayAPIStepDefinitions {
         assertNotEquals(null, Objects.requireNonNull(responseEntity.getBody()).getId());
         assertNotEquals(null, Objects.requireNonNull(responseEntity.getBody()).getDateCreated());
         assertEquals(gateway.getEndpointUrl(), responseEntity.getBody().getEndpointUrl());
-        assertEquals(gateway.getFriendlyName().toLowerCase(), responseEntity.getBody().getFriendlyName());
-        assertEquals(gateway.getDescription() != null ? gateway.getDescription().toLowerCase() : "", responseEntity.getBody().getDescription());
+        assertEquals(gateway.getFriendlyName(), responseEntity.getBody().getFriendlyName());
+        assertEquals(gateway.getDescription() != null ? gateway.getDescription() : "", responseEntity.getBody().getDescription());
     }
 
     @And("the test framework removes the gateway")

@@ -24,7 +24,319 @@
     }
   ],
   "paths": {
-    "/preferences": {
+    "/v1/bff/auth": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Get the auth token with the required scopes.",
+        "responses": {
+          "200": {
+            "description": "Generate an auth token with the required scopes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthToken"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthScopes"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthScopes"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/bff/gateway": {
+      "get": {
+        "tags": [
+          "Gateways"
+        ],
+        "description": "Get gateways.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page Number to get",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Page Size to get",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "friendlyName",
+            "in": "query",
+            "description": "Friendly name to filter results by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endpointUrl",
+            "in": "query",
+            "description": "Endpoint url to filter results by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "description": "Description to filter results by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "The field to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "Either asc or desc",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get the gateways from the server matching the filters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Gateways"
+        ],
+        "description": "Create gateway.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The created gateway from the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Gateway"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Gateways"
+        ],
+        "description": "Update gateway.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The updated gateway from the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Gateway"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        }
+      }
+    },
+    "/v1/bff/gateway/{id}": {
+      "get": {
+        "tags": [
+          "Gateways"
+        ],
+        "description": "Get gateways.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The found gateway from the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Gateway"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Gateways"
+        ],
+        "description": "Delete gateway by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Delete was successful."
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        }
+      }
+    },
+    "/v1/bff/gateway/{id}/schedule/count": {
+      "get": {
+        "tags": [
+          "Gateways"
+        ],
+        "description": "Get the number of schedules that use this gateway.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The total matching the filter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotalMatches"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        }
+      }
+    },
+    "/v1/bff/preferences": {
       "get": {
         "tags": [
           "Preferences"
@@ -106,41 +418,6 @@
           }
         }
       }
-    },
-    "/auth": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "description": "Get the auth token with the required scopes.",
-        "responses": {
-          "200": {
-            "description": "Generate an auth token with the required scopes",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthToken"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AuthScopes"
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "$ref": "#/components/schemas/AuthScopes"
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
@@ -172,6 +449,94 @@
         },
         "xml": {
           "name": "AuthScopes"
+        }
+      },
+      "Gateway": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "string"
+          },
+          "endpointUrl": {
+            "type": "string",
+            "example": "https://example.com/email"
+          },
+          "friendlyName": {
+            "type": "string",
+            "example": "My Email Gateway"
+          },
+          "description": {
+            "type": "string",
+            "example": "This is a gateway for sending emails"
+          },
+          "dateCreated": {
+            "type": "string",
+            "example": "03/03/2024 16:45:12"
+          }
+        },
+        "xml": {
+          "name": "Gateway"
+        }
+      },
+      "GatewayPage": {
+        "type": "object",
+        "properties": {
+          "gateways": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "endpointUrl": {
+                  "type": "string",
+                  "example": "https://example.com/email"
+                },
+                "friendlyName": {
+                  "type": "string",
+                  "example": "My Email Gateway"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "This is a gateway for sending emails"
+                },
+                "dateCreated": {
+                  "type": "string",
+                  "example": "03/03/2024 16:45:12"
+                }
+              }
+            }
+          },
+          "totalElements": {
+            "type": "number",
+            "example": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "example": 5
+          },
+          "pageNumber": {
+            "type": "number",
+            "example": 0
+          }
+        },
+        "xml": {
+          "name": "GatewayPage"
+        }
+      },
+      "TotalMatches": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "xml": {
+          "name": "TotalMatches"
         }
       },
       "Preferences": {

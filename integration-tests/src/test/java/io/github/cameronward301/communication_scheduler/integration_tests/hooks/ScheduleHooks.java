@@ -15,13 +15,10 @@ import java.util.UUID;
 
 @Slf4j
 public class ScheduleHooks {
+    private static boolean completedBeforeAll = false;
     private final ScheduleClient scheduleClient;
-
     private final List<ScheduleEntity> createdSchedules;
     private final ScheduleEntity scheduleEntity;
-
-    private static boolean completedBeforeAll = false;
-
     List<String> scheduleIds = new ArrayList<>();
 
     public ScheduleHooks(ScheduleClient scheduleClient,

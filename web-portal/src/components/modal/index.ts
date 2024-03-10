@@ -1,3 +1,5 @@
 import ConfirmModal from "./ConfirmModal.tsx";
+import GatewayModal from "./gateway/GatewayModal.tsx";
+import {GatewayChangesTable} from "./gateway";
 
-export default ConfirmModal;
+export {ConfirmModal, GatewayModal, GatewayChangesTable};

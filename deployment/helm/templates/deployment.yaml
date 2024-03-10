@@ -660,19 +660,6 @@ spec:
           envFrom:
              - secretRef:
                     name: {{ .Release.Name }}-web-portal-bff-env
-          volumeMounts:
-            - mountPath: "/app/build/private.key"
-              name: ssl-keys
-              readOnly: true
-              subPath: "private.key"
-            - mountPath: "/app/build/public.crt"
-              name: ssl-keys
-              readOnly: true
-              subPath: "public.crt"
-      volumes:
-        - name: ssl-keys
-          secret:
-            secretName: {{ .Release.Name }}-web-portal-bff-ssl
 ---
 apiVersion: apps/v1
 kind: Deployment

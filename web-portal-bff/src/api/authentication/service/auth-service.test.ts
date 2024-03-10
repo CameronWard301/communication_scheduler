@@ -1,7 +1,7 @@
 import {AuthService} from "./auth-service";
 import mockAxios from 'jest-mock-axios';
 
-jest.mock('../../axios-client', () => {
+jest.mock('../../../axios-client', () => {
   return jest.requireActual('jest-mock-axios');
 });
 describe('AuthService', () => {

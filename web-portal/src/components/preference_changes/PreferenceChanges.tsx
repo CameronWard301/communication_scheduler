@@ -41,7 +41,7 @@ export const PreferenceChanges = observer(() => {
                 <TableCell
                   align="right">{rootStore.preferencesStore.currentMaximumAttempts == 0 ? "Unlimited" : rootStore.preferencesStore.currentMaximumAttempts}</TableCell>
                 <TableCell id={"max-attempts-new-value"}
-                  align="right">{rootStore.preferencesStore.newMaximumAttempts == 0 ? "Unlimited" : rootStore.preferencesStore.newMaximumAttempts}</TableCell>
+                           align="right">{rootStore.preferencesStore.newMaximumAttempts == 0 ? "Unlimited" : rootStore.preferencesStore.newMaximumAttempts}</TableCell>
               </TableRow>
             )}
             {rootStore.preferencesStore.hasGatewayTimeoutChanged() && (
@@ -52,7 +52,7 @@ export const PreferenceChanges = observer(() => {
                 <TableCell
                   align="right">{rootStore.preferencesStore.currentGatewayTimeout} {getTimeUnitString(rootStore.preferencesStore.currentGatewayTimeoutTime)}</TableCell>
                 <TableCell id={"gateway-timeout-new-value"}
-                  align="right">{rootStore.preferencesStore.newGatewayTimeout} {getTimeUnitString(rootStore.preferencesStore.newGatewayTimeoutTime)}</TableCell>
+                           align="right">{rootStore.preferencesStore.newGatewayTimeout} {getTimeUnitString(rootStore.preferencesStore.newGatewayTimeoutTime)}</TableCell>
               </TableRow>
             )}
             {rootStore.preferencesStore.hasBackoffCoefficientChanged() && (
@@ -63,7 +63,7 @@ export const PreferenceChanges = observer(() => {
                 <TableCell
                   align="right">{rootStore.preferencesStore.currentBackoffCoefficient == 1 ? "Disabled" : rootStore.preferencesStore.currentBackoffCoefficient}</TableCell>
                 <TableCell id={"backoff-coefficient-new-value"}
-                  align="right">{rootStore.preferencesStore.newBackoffCoefficient == 1 ? "Disabled" : rootStore.preferencesStore.newBackoffCoefficient}</TableCell>
+                           align="right">{rootStore.preferencesStore.newBackoffCoefficient == 1 ? "Disabled" : rootStore.preferencesStore.newBackoffCoefficient}</TableCell>
               </TableRow>
             )}
             {rootStore.preferencesStore.hasInitialIntervalChanged() && (
@@ -74,7 +74,7 @@ export const PreferenceChanges = observer(() => {
                 <TableCell
                   align="right">{rootStore.preferencesStore.currentInitialInterval} {getTimeUnitString(rootStore.preferencesStore.currentInitialIntervalTime)}</TableCell>
                 <TableCell id={"initial-interval-new-value"}
-                  align="right">{rootStore.preferencesStore.newInitialInterval} {getTimeUnitString(rootStore.preferencesStore.newInitialIntervalTime)}</TableCell>
+                           align="right">{rootStore.preferencesStore.newInitialInterval} {getTimeUnitString(rootStore.preferencesStore.newInitialIntervalTime)}</TableCell>
               </TableRow>
             )}
 
@@ -86,7 +86,7 @@ export const PreferenceChanges = observer(() => {
                 <TableCell
                   align="right">{rootStore.preferencesStore.currentMaximumInterval == 0 ? "No Limit" : rootStore.preferencesStore.currentMaximumInterval as unknown as string + " " + getTimeUnitString(rootStore.preferencesStore.currentMaximumIntervalTime)}</TableCell>
                 <TableCell id={"maximum-interval-new-value"}
-                  align="right">{rootStore.preferencesStore.newMaximumInterval == 0 ? "No Limit" : rootStore.preferencesStore.newMaximumInterval as unknown as string + " " + getTimeUnitString(rootStore.preferencesStore.newMaximumIntervalTime)}</TableCell>
+                           align="right">{rootStore.preferencesStore.newMaximumInterval == 0 ? "No Limit" : rootStore.preferencesStore.newMaximumInterval as unknown as string + " " + getTimeUnitString(rootStore.preferencesStore.newMaximumIntervalTime)}</TableCell>
               </TableRow>
             )}
 
@@ -98,7 +98,7 @@ export const PreferenceChanges = observer(() => {
                 <TableCell
                   align="right">{rootStore.preferencesStore.currentStartToCloseTimeout == 0 ? "No Limit" : rootStore.preferencesStore.currentStartToCloseTimeout as unknown as string + " " + getTimeUnitString(rootStore.preferencesStore.currentStartToCloseTimeoutTime)}</TableCell>
                 <TableCell id={"start-to-close-new-value"}
-                  align="right">{rootStore.preferencesStore.newStartToCloseTimeout == 0 ? "No Limit" : rootStore.preferencesStore.newStartToCloseTimeout as unknown as string + " " + getTimeUnitString(rootStore.preferencesStore.newStartToCloseTimeoutTime)}</TableCell>
+                           align="right">{rootStore.preferencesStore.newStartToCloseTimeout == 0 ? "No Limit" : rootStore.preferencesStore.newStartToCloseTimeout as unknown as string + " " + getTimeUnitString(rootStore.preferencesStore.newStartToCloseTimeoutTime)}</TableCell>
               </TableRow>
             )}
 

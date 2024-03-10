@@ -99,7 +99,7 @@ class GatewayServiceTest extends Specification {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField)
 
         and: "GatewayRepository returns a list of gateways"
-        gatewayRepository.findByFriendlyNameRegexAndEndpointUrlRegexAndDescriptionRegex(
+        gatewayRepository.findByFriendlyNameRegexAndEndpointUrlRegexAndDescriptionRegexIgnoreCase(
                 friendlyName, endpointUrl, description, PageRequest.of(
                 pageNumber == null ? 0 : Integer.parseInt(pageNumber),
                 pageSize == null ? 0 : Integer.parseInt(pageSize),
@@ -131,8 +131,8 @@ class GatewayServiceTest extends Specification {
         then:
         response.dateCreated != null
         response.id != null
-        response.friendlyName == gatewayRequest.friendlyName.toLowerCase()
-        response.description == gatewayRequest.description.toLowerCase()
+        response.friendlyName == gatewayRequest.friendlyName
+        response.description == gatewayRequest.description
     }
 
     def "create gateway without description should set field to empty string"() {
@@ -151,7 +151,7 @@ class GatewayServiceTest extends Specification {
         then:
         response.dateCreated != null
         response.id != null
-        response.friendlyName == gatewayRequest.friendlyName.toLowerCase()
+        response.friendlyName == gatewayRequest.friendlyName
         response.description == ""
     }
 
