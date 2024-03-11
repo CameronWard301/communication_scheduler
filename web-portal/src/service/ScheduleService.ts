@@ -4,7 +4,8 @@ import {useToken} from "./AuthenticationService.ts";
 import {useErrorHandling} from "../helper/UseErrorHandling.ts";
 import {ConfigContext} from "../context/ConfigContext.tsx";
 import {useContext} from "react";
-import {SchedulePage} from "../models/Schedules.ts";
+import {Schedule, SchedulePage} from "../models/Schedules.ts";
+import {SnackbarContext} from "../context/SnackbarContext.tsx";
 
 export const useScheduleService = () => {
   const rootStore = useStore();
@@ -12,6 +13,7 @@ export const useScheduleService = () => {
   const authToken = useToken();
   const {handleError} = useErrorHandling();
   const [config] = useContext(ConfigContext);
+  const snackbar = useContext(SnackbarContext);
 
   const getScheduleTable = () => {
     rootStore.scheduleTableStore.setLoading(true);
@@ -57,5 +59,84 @@ export const useScheduleService = () => {
 
   }
 
-  return {getScheduleTable}
+  const getScheduleById = (id: string) => {
+    rootStore.scheduleTableStore.setLoading(true);
+    rootStore.scheduleEditStore.setLoading(true);
+    authToken.then((token) => {
+      client.get(`${config.bffBaseUrl}/schedule/${id}`, {
+        headers: {
+          "Authorization": "Bearer " + token.token,
+        },
+      }).then(response => {
+        const schedule = response.data as Schedule;
+        rootStore.scheduleEditStore.setServerSchedule(schedule);
+      })
+        .catch(error => {
+          handleError(error)
+        })
+        .finally(() => {
+          rootStore.scheduleEditStore.setLoading(false)
+          rootStore.scheduleTableStore.setLoading(false)
+        });
+    }).catch(error => {
+        handleError(error)
+        rootStore.scheduleEditStore.setLoading(false)
+        rootStore.scheduleTableStore.setLoading(false)
+      })
+  }
+
+  const pauseSchedule = (id: string) => {
+    rootStore.scheduleTableStore.setLoading(true);
+    rootStore.scheduleEditStore.setLoading(true);
+    authToken.then((token) => {
+      client.patch(`${config.bffBaseUrl}/schedule/${id}/pause`, {}, {
+        headers: {
+          "Authorization": "Bearer " + token.token,
+        },
+      }).then((result) => {
+        snackbar.addSnackbar("Schedule paused", "success");
+        rootStore.scheduleTableStore.updateScheduleById(result.data as Schedule)
+        rootStore.scheduleTableStore.setLoading(false)
+        rootStore.scheduleTableStore.setConfirmPauseModalOpen(false);
+      })
+        .catch(error => {
+          handleError(error)
+        })
+        .finally(() => {
+          rootStore.scheduleEditStore.setLoading(false)
+        });
+    }).catch(error => {
+      handleError(error)
+      rootStore.scheduleTableStore.setLoading(false)
+      rootStore.scheduleEditStore.setLoading(false)
+    })
+  }
+  const resumeSchedule = (id: string) => {
+    rootStore.scheduleTableStore.setLoading(true);
+    rootStore.scheduleEditStore.setLoading(true);
+    authToken.then((token) => {
+      client.patch(`${config.bffBaseUrl}/schedule/${id}/resume`, {}, {
+        headers: {
+          "Authorization": "Bearer " + token.token,
+        },
+      }).then((result) => {
+        snackbar.addSnackbar("Schedule Running", "success");
+        rootStore.scheduleTableStore.updateScheduleById(result.data as Schedule)
+        rootStore.scheduleTableStore.setLoading(false)
+        rootStore.scheduleTableStore.setConfirmResumeModalOpen(false);
+      })
+        .catch(error => {
+          handleError(error)
+        })
+        .finally(() => {
+          rootStore.scheduleEditStore.setLoading(false)
+        });
+    }).catch(error => {
+      handleError(error)
+      rootStore.scheduleTableStore.setLoading(false)
+      rootStore.scheduleEditStore.setLoading(false)
+    })
+  }
+
+  return {getScheduleTable, pauseSchedule, getScheduleById, resumeSchedule}
 }

@@ -1,5 +1,5 @@
 import {GridColDef, GridRenderCellParams} from "@mui/x-data-grid";
-import {ScheduleStatus, ScheduleTableItem} from "../../models/Schedules.ts";
+import {Schedule, ScheduleStatus, ScheduleTableItem} from "../../models/Schedules.ts";
 import Stack from "@mui/material/Stack";
 import {Button, Typography, useTheme} from "@mui/material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
@@ -8,10 +8,12 @@ import {DeleteRounded} from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import PauseCircleFilledRoundedIcon from '@mui/icons-material/PauseCircleFilledRounded';
 import PlayCircleFilledRoundedIcon from '@mui/icons-material/PlayCircleFilledRounded';
+import {useStore} from "../../context/StoreContext.tsx";
 
 const useScheduleGridDef = () => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const rootStore = useStore();
 
   const columns: GridColDef[] = [
     {field: 'id', headerName: 'Schedule ID', flex: 0.5, minWidth: 300, filterable: false},
@@ -48,8 +50,8 @@ const useScheduleGridDef = () => {
             {
               params.row.status === ScheduleStatus.Paused && (
                 <IconButton sx={{"&:hover": {color: theme.palette.success.main}}} onClick={() => {
-                  // rootStore.gatewayTableStore.setSelectedGateway(params.row);
-                  // rootStore.gatewayTableStore.setDeleteModalOpen(true);
+                  rootStore.scheduleTableStore.setSelectedSchedule(params.row as Schedule);
+                  rootStore.scheduleTableStore.setConfirmResumeModalOpen(true);
                 }}
                             id={`resume-schedule-${params.row.id}`}>
                   <PlayCircleFilledRoundedIcon/>
@@ -59,8 +61,8 @@ const useScheduleGridDef = () => {
             {
               params.row.status === ScheduleStatus.Running && (
                 <IconButton sx={{"&:hover": {color: theme.palette.warning.main}}} onClick={() => {
-                  // rootStore.gatewayTableStore.setSelectedGateway(params.row);
-                  // rootStore.gatewayTableStore.setDeleteModalOpen(true);
+                  rootStore.scheduleTableStore.setSelectedSchedule(params.row as Schedule);
+                  rootStore.scheduleTableStore.setConfirmPauseModalOpen(true);
                 }}
                             id={`pause-schedule-${params.row.id}`}>
                   <PauseCircleFilledRoundedIcon/>
@@ -68,8 +70,7 @@ const useScheduleGridDef = () => {
               )
             }
             <IconButton sx={{"&:hover": {color: theme.palette.error.main}}} onClick={() => {
-              // rootStore.gatewayTableStore.setSelectedGateway(params.row);
-              // rootStore.gatewayTableStore.setDeleteModalOpen(true);
+
             }}
                         id={`delete-schedule-${params.row.id}`}>
               <DeleteRounded/>

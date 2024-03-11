@@ -1,7 +1,7 @@
 import {RootStore} from "./RootStore.tsx";
 import {GridPaginationModel, GridRowSelectionModel, GridSortModel} from "@mui/x-data-grid";
 import {action, makeAutoObservable} from "mobx";
-import {ScheduleTableItem} from "../models/Schedules.ts";
+import {Schedule, ScheduleStatus, ScheduleTableItem} from "../models/Schedules.ts";
 
 export class ScheduleTableStore {
   rootStore: RootStore;
@@ -24,6 +24,22 @@ export class ScheduleTableStore {
 
   userIdFilter = "";
   userIdFocus = false;
+
+  confirmPauseModalOpen = false;
+  confirmResumeModalOpen = false;
+
+  selectedSchedule: Schedule = {
+    id: "",
+    gatewayId: "",
+    userId: "",
+    nextRun: "",
+    lastRun: "",
+    status: ScheduleStatus.Running,
+    gatewayName: "",
+    createdAt: "",
+    updatedAt: "",
+    nextActionTimes: [],
+  }
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -117,6 +133,42 @@ export class ScheduleTableStore {
       this.userIdFocus = false;
       this.gatewayIdFilter = "";
       this.gatewayIdFocus = false;
+    })();
+  }
+
+  updateScheduleById = (schedule: Schedule) => {
+    const index = this.scheduleTableData.findIndex((s) => s.id === schedule.id);
+    if (index !== -1) {
+      action(() => {
+        this.scheduleTableData[index] = {
+          id: schedule.id,
+          gatewayId: schedule.gatewayId,
+          userId: schedule.userId,
+          nextRun: schedule.nextRun,
+          lastRun: schedule.lastRun,
+          status: schedule.status,
+          gatewayName: schedule.gatewayName,
+        }
+      })();
+    }
+  }
+
+
+  setConfirmPauseModalOpen = (open: boolean) => {
+    action(() => {
+      this.confirmPauseModalOpen = open;
+    })();
+  }
+
+  setSelectedSchedule = (schedule: Schedule) => {
+    action(() => {
+      this.selectedSchedule = schedule;
+    })();
+  }
+
+  setConfirmResumeModalOpen = (open: boolean) => {
+    action(() => {
+      this.confirmResumeModalOpen = open;
     })();
   }
 

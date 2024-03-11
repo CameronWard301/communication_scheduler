@@ -13,15 +13,18 @@ import {useSearchParams} from "react-router-dom";
 import TextFieldFilter from "../../components/text_field_filter";
 import ScheduleSendRoundIcon from "@mui/icons-material/ScheduleSend";
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
-
+import PauseCircleFilledRoundedIcon from '@mui/icons-material/PauseCircleFilledRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import PlayCircleFilledRoundedIcon from '@mui/icons-material/PlayCircleFilledRounded';
 import GatewayFilter from "../../components/gateway_filter/GatewayFilter.tsx";
 import {useGatewayService} from "../../service/GatewayService.ts";
+import {ConfirmModal} from "../../components/modal";
+import {ConfirmPauseResumeSchedule} from "../../components/modal/schedule";
 
 const ScheduleTable = observer(() => {
   const rootStore = useStore();
   const {columns} = useScheduleGridDef();
-  const {getScheduleTable} = useScheduleService();
+  const {getScheduleTable, pauseSchedule, resumeSchedule} = useScheduleService();
   const {getGatewaysForScheduleFilter} = useGatewayService();
   const apiRef = useGridApiRef();
   const [, setSearchParams] = useSearchParams();
@@ -43,8 +46,33 @@ const ScheduleTable = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiRef]);
 
+  const pauseScheduleAction = () =>{
+    pauseSchedule(rootStore.scheduleTableStore.selectedSchedule.id);
+  }
+
+  const resumeScheduleAction = () =>{
+    resumeSchedule(rootStore.scheduleTableStore.selectedSchedule.id);
+  }
+
   return (
     <>
+      <ConfirmModal open={rootStore.scheduleTableStore.confirmPauseModalOpen}
+                    setOpen={rootStore.scheduleTableStore.setConfirmPauseModalOpen}
+                    heading={"Are you sure you want to pause this schedule?"}
+                    description={<ConfirmPauseResumeSchedule scheduleId={rootStore.scheduleTableStore.selectedSchedule.id}/>}
+                    confirmIcon={<PauseCircleFilledRoundedIcon/>}
+                    confirmText={"Pause Schedule"}
+                    onConfirm={pauseScheduleAction}
+                    loading={rootStore.scheduleTableStore.isLoading}/>
+      <ConfirmModal open={rootStore.scheduleTableStore.confirmResumeModalOpen}
+                    setOpen={rootStore.scheduleTableStore.setConfirmResumeModalOpen}
+                    heading={"Are you sure you want to run this schedule?"}
+                    description={<ConfirmPauseResumeSchedule scheduleId={rootStore.scheduleTableStore.selectedSchedule.id}/>}
+                    confirmIcon={<PlayCircleFilledRoundedIcon/>}
+                    confirmText={"Run Schedule"}
+                    onConfirm={resumeScheduleAction}
+                    loading={rootStore.scheduleTableStore.isLoading}/>
+
       <Grid container spacing={4} justifyContent={"left"} alignItems={"center"} alignContent={"flex-start"}
             width={"100%"}>
         <Grid xs={12} mb={2}>
@@ -110,7 +138,7 @@ const ScheduleTable = observer(() => {
         </Grid>
 
         <Grid xs={12}>
-          <DataGrid columns={columns} rows={rootStore.scheduleTableStore.scheduleTableData}
+          <DataGrid columns={columns} rows={rootStore.scheduleTableStore.scheduleTableData.slice()}
                     autoHeight
                     initialState={{
                       pagination: {
