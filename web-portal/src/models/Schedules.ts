@@ -4,16 +4,30 @@ export enum ScheduleStatus {
   Running = "Running"
 }
 
-export interface ScheduleTableItem {
+export interface BaseSchedule {
   id: string;
   status: ScheduleStatus;
   gatewayName: string
   gatewayId: string;
   userId: string;
-  createdAt: string;
-  updatedAt: string;
   nextRun: string;
   lastRun: string;
+}
+
+export interface ScheduleTableItem extends BaseSchedule {
+  id: string;
+  status: ScheduleStatus;
+  gatewayName: string
+  gatewayId: string;
+  userId: string;
+  nextRun: string;
+  lastRun: string;
+}
+
+export interface Schedule extends BaseSchedule {
+  createdAt: string;
+  updatedAt: string;
+  nextActionTimes: string[];
 }
 
 export interface SchedulePage {
