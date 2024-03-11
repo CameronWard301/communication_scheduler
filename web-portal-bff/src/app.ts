@@ -8,6 +8,7 @@ import preferencesController from "./api/preferences/controller/preferences-cont
 import * as fs from "fs";
 import * as https from "https";
 import gatewayController from "./api/gateways/controller/gateway-controller";
+import scheduleController from "./api/schedule/controller/schedule-controller";
 
 dotenv.config();
 
@@ -43,7 +44,7 @@ app.use(function (_req, res, next) {
 app.use(authenticationController);
 app.use(preferencesController);
 app.use(gatewayController);
-
+app.use(scheduleController);
 
 const printConfig = () => {
   console.log("[server]: SSL Verification: " + process.env.SSL_VERIFICATION);

@@ -15,7 +15,7 @@
     "@mui/icons-material": "5.15.10",
     "@mui/lab": "5.0.0-alpha.166",
     "@mui/material": "5.15.10",
-    "@mui/x-data-grid": "6.19.6",
+    "@mui/x-data-grid": "7.0.0-beta.6",
     "@react-buddy/ide-toolbox": "2.4.0",
     "@react-buddy/palette-mui": "5.0.2",
     "@types/js-cookie": "3.0.6",

@@ -23,7 +23,8 @@ const theme = createTheme({
     },
     info: {
       main: '#6e7180'
-    }
+    },
+
   }
 })
 
