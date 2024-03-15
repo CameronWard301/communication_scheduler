@@ -9,7 +9,7 @@ import {useEffect} from "react";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
 import RefreshRoundedIcon from "@mui/icons-material/RefreshRounded";
-import {useSearchParams} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import TextFieldFilter from "../../components/text_field_filter";
 import ScheduleSendRoundIcon from "@mui/icons-material/ScheduleSend";
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
@@ -20,6 +20,8 @@ import GatewayFilter from "../../components/gateway_filter/GatewayFilter.tsx";
 import {useGatewayService} from "../../service/GatewayService.ts";
 import {ConfirmModal} from "../../components/modal";
 import {ConfirmPauseResumeSchedule} from "../../components/modal/schedule";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import useQuery from "../../helper/UseQuery.ts";
 
 const ScheduleTable = observer(() => {
   const rootStore = useStore();
@@ -28,6 +30,24 @@ const ScheduleTable = observer(() => {
   const {getGatewaysForScheduleFilter} = useGatewayService();
   const apiRef = useGridApiRef();
   const [, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const query = useQuery();
+  useEffect(() => {
+    const gatewayId = query.get("gatewayId");
+    const scheduleId = query.get("scheduleId");
+    const userId = query.get("userId");
+    if (gatewayId !== null) {
+      rootStore.scheduleTableStore.setGatewayIdFilter(gatewayId);
+    }
+    if (scheduleId !== null) {
+      rootStore.scheduleTableStore.setScheduleIdFilter(scheduleId);
+    }
+    if (userId !== null) {
+      rootStore.scheduleTableStore.setUserIdFilter(userId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   useEffect(() => {
@@ -75,8 +95,15 @@ const ScheduleTable = observer(() => {
 
       <Grid container spacing={4} justifyContent={"left"} alignItems={"center"} alignContent={"flex-start"}
             width={"100%"}>
-        <Grid xs={12} mb={2}>
+        <Grid xs={12}>
           <Typography variant="h1" fontSize={"4rem"} id={"schedule-page-heading"}>Communication Schedules</Typography>
+        </Grid>
+        <Grid xs={12} mdOffset={9} md={3} >
+          <Button id={"create-new-schedule"} variant={"contained"}
+                  fullWidth
+                  endIcon={<AddCircleOutlineRoundedIcon/>}
+                  onClick={() => navigate("/add-schedule")}
+          >Add New Schedule</Button>
         </Grid>
 
         <Grid xs={3}>
@@ -121,6 +148,7 @@ const ScheduleTable = observer(() => {
         <Grid mdOffset={9} xs={12} container spacing={0} mb={0}>
           <Grid xs={6} sx={{pr: 1}}>
             <Button variant="contained" fullWidth color="info" endIcon={<CloseRoundedIcon/>}
+                    disabled={rootStore.scheduleTableStore.userIdFilter === "" && rootStore.scheduleTableStore.gatewayIdFilter === "" && rootStore.scheduleTableStore.scheduleIdFilter === ""}
                     onClick={() => {
                       rootStore.scheduleTableStore.resetFilters();
                       setSearchParams(new URLSearchParams());

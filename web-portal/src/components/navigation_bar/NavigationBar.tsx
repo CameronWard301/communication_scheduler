@@ -1,3 +1,4 @@
+// Adapted from https://mui.com/material-ui/react-drawer/
 import * as React from "react";
 import {useContext} from "react";
 import {CSSObject, styled, Theme} from "@mui/material/styles";

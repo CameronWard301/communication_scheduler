@@ -5,6 +5,8 @@ import {GatewayAddStore} from "./GatewayAddStore.tsx";
 import {ScheduleTableStore} from "./ScheduleTableStore.tsx";
 import {GatewayFilterStore} from "./GatewayFilterStore.tsx";
 import { ScheduleEditStore } from "./ScheduleEditStore.tsx";
+import {ScheduleAddStore} from "./ScheduleAddStore.tsx";
+import {CreateScheduleStore} from "./CreateScheduleStore.tsx";
 
 export class RootStore {
   preferencesStore: PreferencesStore;
@@ -14,6 +16,8 @@ export class RootStore {
   gatewayFilterStore: GatewayFilterStore;
   scheduleTableStore: ScheduleTableStore;
   scheduleEditStore: ScheduleEditStore;
+  scheduleAddStore: ScheduleAddStore;
+  createScheduleStore: CreateScheduleStore;
 
   constructor() {
     this.preferencesStore = new PreferencesStore(this);
@@ -23,5 +27,7 @@ export class RootStore {
     this.scheduleTableStore = new ScheduleTableStore(this);
     this.gatewayFilterStore = new GatewayFilterStore(this);
     this.scheduleEditStore = new ScheduleEditStore(this);
+    this.scheduleAddStore = new ScheduleAddStore(this);
+    this.createScheduleStore = new CreateScheduleStore(this);
   }
 }

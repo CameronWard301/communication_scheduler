@@ -1,5 +1,5 @@
 import {RootStore} from "./RootStore.tsx";
-import {action, makeAutoObservable, makeObservable, observable} from "mobx";
+import {action,  makeObservable, observable} from "mobx";
 import {Gateway} from "../models/Gateways.ts";
 import {GatewayPageStore} from "./GatewayPageStore.tsx";
 

@@ -4,8 +4,9 @@ import {useToken} from "./AuthenticationService.ts";
 import {useErrorHandling} from "../helper/UseErrorHandling.ts";
 import {ConfigContext} from "../context/ConfigContext.tsx";
 import {useContext} from "react";
-import {Schedule, SchedulePage} from "../models/Schedules.ts";
+import {CreateScheduleRequest, Schedule, SchedulePage} from "../models/Schedules.ts";
 import {SnackbarContext} from "../context/SnackbarContext.tsx";
+import {useNavigate} from "react-router-dom";
 
 export const useScheduleService = () => {
   const rootStore = useStore();
@@ -14,6 +15,7 @@ export const useScheduleService = () => {
   const {handleError} = useErrorHandling();
   const [config] = useContext(ConfigContext);
   const snackbar = useContext(SnackbarContext);
+  const navigate = useNavigate();
 
   const getScheduleTable = () => {
     rootStore.scheduleTableStore.setLoading(true);
@@ -138,5 +140,27 @@ export const useScheduleService = () => {
     })
   }
 
-  return {getScheduleTable, pauseSchedule, getScheduleById, resumeSchedule}
+  const createSchedule = (createScheduleRequest: CreateScheduleRequest) => {
+    rootStore.scheduleAddStore.setLoading(true);
+    authToken.then((token) => {
+      client.post(`${config.bffBaseUrl}/schedule`, createScheduleRequest, {
+        headers: {
+          "Authorization": "Bearer " + token.token,
+        },
+      }).then((response) => {
+        snackbar.addSnackbar("Schedule created", "success");
+        getScheduleTable();
+        navigate("/schedules/?scheduleId=" + (response.data as Schedule).id)
+      })
+        .catch(error => {
+          handleError(error)
+        })
+        .finally(() => rootStore.scheduleAddStore.setLoading(false));
+    }).catch(error => {
+      handleError(error)
+      rootStore.scheduleAddStore.setLoading(false)
+    })
+  }
+
+  return {getScheduleTable, pauseSchedule, getScheduleById, resumeSchedule, createSchedule}
 }

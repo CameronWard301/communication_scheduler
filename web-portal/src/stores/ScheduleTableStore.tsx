@@ -137,7 +137,7 @@ export class ScheduleTableStore {
   }
 
   updateScheduleById = (schedule: Schedule) => {
-    const index = this.scheduleTableData.findIndex((s) => s.id === schedule.id);
+    const index = this.scheduleTableData.findIndex((scheduleTable) => scheduleTable.id === schedule.id);
     if (index !== -1) {
       action(() => {
         this.scheduleTableData[index] = {

@@ -14,6 +14,7 @@ const ConfirmPauseResumeSchedule = observer(({scheduleId} : ConfirmPauseResumeSc
 
   useEffect(() => {
     getScheduleById(scheduleId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

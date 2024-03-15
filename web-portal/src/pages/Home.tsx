@@ -30,7 +30,7 @@ const Home = () => {
                       subtitle={"View the status of previous communications sent through the platform"}>
 
           </ActionItem>
-          <ActionItem title={"Communication ScheduleTable"}
+          <ActionItem title={"Communication Schedules"}
                       onClick={() => navigate("/schedules")}
                       size={"large"}
                       Icon={ScheduleSendRoundIcon}
