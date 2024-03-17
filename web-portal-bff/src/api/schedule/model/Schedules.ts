@@ -19,7 +19,7 @@ export interface ActionRun {
   runId: string;
 }
 
-export interface IntervalSpec {
+export interface ServerIntervalSpec {
   every: string
   offset: string
 }
@@ -36,7 +36,7 @@ export interface CalendarSpec {
   hour: CalendarPeriod[]
   dayOfMonth: CalendarPeriod[]
   month: CalendarPeriod[],
-  year: CalendarPeriod[]
+  year: CalendarPeriod[] | []
   dayOfWeek: CalendarPeriod[]
   comment: string
 }
@@ -61,7 +61,7 @@ export interface Schedule {
       remainingActions: number
     },
     spec: {
-      intervals: IntervalSpec[],
+      intervals: ServerIntervalSpec[],
       calendars: CalendarSpec[],
       cronExpressions: string[]
     }
@@ -82,6 +82,67 @@ export interface BaseClientSchedule {
   userId: string;
   nextRun: string;
   lastRun: string;
+}
+
+export enum ScheduleType {
+  Interval = "Interval",
+  CalendarWeek = "CalendarWeek",
+  CalendarMonth = "CalendarMonth",
+  Cron = "Cron"
+}
+
+export enum Period {
+  S = "S",
+  M = "M",
+  H = "H",
+  D = "D"
+}
+
+export enum DayOfWeek {
+  EveryDay = "EveryDay",
+  Weekdays = "Weekdays",
+  Weekend = "Weekend",
+  Monday = "Monday",
+  Tuesday = "Tuesday",
+  Wednesday = "Wednesday",
+  Thursday = "Thursday",
+  Friday = "Friday",
+  Saturday = "Saturday",
+  Sunday = "Sunday",
+}
+
+export interface ClientIntervalSpec {
+  days: string;
+  hours: string;
+  minutes: string;
+  seconds: string;
+  offset: string;
+  offsetPeriod: Period;
+}
+
+export interface ClientCalendarWeekSpec {
+  dayOfWeek: DayOfWeek;
+  hours: string;
+  minutes: string;
+}
+
+
+export interface ClientScheduleCreateRequest {
+  gatewayId: string;
+  userId: string;
+  scheduleType: ScheduleType;
+  intervalSpec?: ClientIntervalSpec;
+  calendarWeekSpec?: ClientCalendarWeekSpec;
+  cronSpec?: string;
+}
+
+export interface ServerScheduleCreateRequest {
+  gatewayId: string;
+  userId: string;
+  paused: boolean;
+  interval?: ServerIntervalSpec;
+  calendar?: CalendarSpec;
+  cronExpression?: string;
 }
 
 export interface ScheduleTableItem extends BaseClientSchedule {
@@ -114,7 +175,7 @@ export interface ServerScheduleCreateEdit {
   userId: string;
   paused: boolean;
   calendar: CalendarSpec;
-  interval: IntervalSpec;
+  interval: ServerIntervalSpec;
   cronExpression: string;
 }
 
@@ -125,7 +186,7 @@ export interface ClientScheduleCreateEdit {
   userId: string;
   gatewayName: string;
   calendar: CalendarSpec;
-  interval: IntervalSpec;
+  interval: ServerIntervalSpec;
   cronExpression: string;
   nextRun: string;
   lastRun: string;

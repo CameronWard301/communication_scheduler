@@ -12,6 +12,15 @@ router.get("/v1/bff/schedule", (req, res) => {
   })
 })
 
+router.post("/v1/bff/schedule", (req, res) => {
+  ScheduleService().createSchedule(req.headers.authorization, req.body).then((response) => {
+    res.status(response.status).send(response.data);
+  }).catch((reason) => {
+    errorHandler(res, reason);
+  })
+
+})
+
 router.get("/v1/bff/schedule/:id", (req, res) => {
   ScheduleService().getScheduleById(req.headers.authorization, req.params.id).then((response) => {
     res.status(response.status).send(response.data);

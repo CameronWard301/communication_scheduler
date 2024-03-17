@@ -1,10 +1,10 @@
 import {
   BaseClientSchedule,
-  ClientSchedule, ClientScheduleCreateEdit,
+  ClientSchedule, ClientScheduleCreateEdit, ClientScheduleCreateRequest,
   ClientSchedulePage,
   Schedule,
   ScheduleQueryParams,
-  ScheduleStatus, ServerScheduleCreateEdit,
+  ScheduleStatus, ServerScheduleCreateEdit, ServerScheduleCreateRequest,
   ServerSchedulePage
 } from "../model/Schedules";
 import axiosClient from "../../../axios-client";
@@ -13,6 +13,7 @@ import {TotalMatches} from "../../../model/Shared";
 import {BFFResponse} from "../../../model/BFFResponse";
 import GatewayService from "../../gateways/service/gateway-service";
 import {Gateway} from "../../gateways/model/Gateways";
+import {ScheduleSpecService} from "./schedule-spec-service";
 
 export const ScheduleService = () => {
 
@@ -32,8 +33,8 @@ export const ScheduleService = () => {
       id: schedule.scheduleId,
       status: schedule.schedule.state.paused ? ScheduleStatus.Paused : ScheduleStatus.Running,
       gatewayName: gateway.friendlyName,
-      gatewayId: schedule.searchAttributes.gatewayId[0],
-      userId: schedule.searchAttributes.userId[0],
+      gatewayId: schedule.searchAttributes.gatewayId? schedule.searchAttributes.gatewayId[0]: "0",
+      userId: schedule.searchAttributes.userId? schedule.searchAttributes.userId[0]: "0",
       nextRun: formattedNextRunDate,
       lastRun: formattedLastRunDate
     };
@@ -142,8 +143,8 @@ export const ScheduleService = () => {
 
       let scheduleUpdate = {
         scheduleId: serverSchedule.scheduleId,
-        gatewayId: serverSchedule.searchAttributes.gatewayId[0],
-        userId: serverSchedule.searchAttributes.userId[0],
+        gatewayId: serverSchedule.searchAttributes.gatewayId? serverSchedule.searchAttributes.gatewayId[0]: "0",
+        userId: serverSchedule.searchAttributes.userId? serverSchedule.searchAttributes.userId[0] : "0",
         paused: paused,
       } as ServerScheduleCreateEdit;
 
@@ -221,5 +222,49 @@ export const ScheduleService = () => {
       throw reason;
     });
   }
-  return {getScheduleCount, getSchedules, pauseSchedule, resumeSchedule, getScheduleById}
+
+  const createSchedule = async (authorization: string | undefined, schedule: ClientScheduleCreateRequest)  => {
+    let scheduleRequest: ServerScheduleCreateRequest = {
+      gatewayId: schedule.gatewayId,
+      userId: schedule.userId,
+      paused: false,
+    }
+
+    switch (schedule.scheduleType) {
+      case "Interval":
+        scheduleRequest.interval = ScheduleSpecService().getIntervalSpec(schedule.intervalSpec!)
+        break;
+      case "CalendarWeek":
+        scheduleRequest.calendar = ScheduleSpecService().getCalendarWeekSpec(schedule.calendarWeekSpec!)
+        break;
+      case "CalendarMonth":
+      case "Cron":
+        break;
+    }
+
+    return axiosClient.post(`${process.env.SCHEDULE_API_URL as string}`, scheduleRequest, {
+      headers: extractAuthToken(authorization),
+    }).then((value) => {
+      const schedule = value.data as Schedule;
+      return {
+        status: value.status,
+        data: {
+          id: schedule.scheduleId,
+          status: schedule.schedule.state.paused? ScheduleStatus.Paused : ScheduleStatus.Running,
+          userId: schedule.searchAttributes.userId[0],
+          createdAt: new Date(schedule.info.createdAt).toLocaleString(),
+          updatedAt: new Date(schedule.info.updatedAt).toLocaleString(),
+          nextRun: new Date(schedule.info.nextActionTimes[0]).toLocaleString(),
+          lastRun: schedule.info.recentActions.length > 0 ? new Date(value.data.info.recentActions[0].scheduledAt).toLocaleString() : "",
+          gatewayId: schedule.searchAttributes.gatewayId[0],
+          nextActionTimes: schedule.info.nextActionTimes.map((action) => new Date(action).toLocaleString()),
+          recentActions: schedule.info.recentActions.map((action) => new Date(action.scheduledAt).toLocaleString())
+        } as ClientSchedule
+      } as BFFResponse<ClientSchedule>;
+    }).catch((reason) => {
+      throw reason;
+    });
+  }
+
+  return {getScheduleCount, getSchedules, pauseSchedule, resumeSchedule, getScheduleById, createSchedule}
 }
