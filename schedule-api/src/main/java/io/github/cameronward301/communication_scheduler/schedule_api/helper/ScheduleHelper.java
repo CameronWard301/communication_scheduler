@@ -80,6 +80,15 @@ public class ScheduleHelper {
      */
     public ScheduleSpec getScheduleSpec(CreateScheduleDTO createScheduleDTO) {
         if (createScheduleDTO.getCalendar() != null) {
+            if (createScheduleDTO.getCalendar().getDayOfMonth() == null
+                    || createScheduleDTO.getCalendar().getDayOfWeek() == null
+                    || createScheduleDTO.getCalendar().getMonth() == null
+                    || createScheduleDTO.getCalendar().getYear() == null
+                    || createScheduleDTO.getCalendar().getHour() == null
+                    || createScheduleDTO.getCalendar().getMinutes() == null
+                    || createScheduleDTO.getCalendar().getSeconds() == null) {
+                throw new RequestException("Invalid calendar format, all fields must be present or empty array: dayOfMonth, dayOfWeek, month, year, hour, minutes and seconds", HttpStatus.BAD_REQUEST);
+            }
             return ScheduleSpec.newBuilder()
                     .setCalendars(List.of(dtoConverter.getCalendar(createScheduleDTO.getCalendar())))
                     .build();

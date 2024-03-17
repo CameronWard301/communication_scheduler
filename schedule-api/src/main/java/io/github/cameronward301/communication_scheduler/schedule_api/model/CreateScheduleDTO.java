@@ -43,6 +43,7 @@ public class CreateScheduleDTO {
 
     @Getter
     @AllArgsConstructor
+    @Builder
     public static class ScheduleCalendarSpecDTO {
         private List<ScheduleRangeDTO> seconds;
         private List<ScheduleRangeDTO> minutes;

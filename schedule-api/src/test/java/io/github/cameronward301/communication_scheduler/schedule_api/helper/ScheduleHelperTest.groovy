@@ -63,4 +63,21 @@ class ScheduleHelperTest extends Specification {
         exception.getMessage() == "Please provide exactly one schedule configuration, either: 'calendar', 'interval' or 'cronExpression'"
         exception.getHttpStatus() == HttpStatus.BAD_REQUEST
     }
+
+    def "Should throw exception if one of the calendar fields are null"() {
+        given:
+        def scheduleDto = CreateScheduleDTO.builder()
+                .scheduleId("123")
+                .gatewayId("1234")
+                .userId("12345")
+                .calendar(CreateScheduleDTO.ScheduleCalendarSpecDTO.builder().build()).build()
+
+        when:
+        helper.getScheduleSpec(scheduleDto)
+
+        then:
+        def exception = thrown(RequestException)
+        exception.getMessage() == "Invalid calendar format, all fields must be present or empty array: dayOfMonth, dayOfWeek, month, year, hour, minutes and seconds"
+        exception.getHttpStatus() == HttpStatus.BAD_REQUEST
+    }
 }
