@@ -4,9 +4,10 @@ import {Gateway} from "../../../models/Gateways.ts";
 
 export interface ConfirmGatewayTableProps {
   gateway: Gateway;
+  idPrefix?: string;
 }
 
-const ConfirmGatewayTable = ({gateway}: ConfirmGatewayTableProps) => {
+const ReviewGatewayTable = ({gateway, idPrefix = ""}: ConfirmGatewayTableProps) => {
 
   return (
     <TableContainer component={Paper}>
@@ -26,7 +27,7 @@ const ConfirmGatewayTable = ({gateway}: ConfirmGatewayTableProps) => {
                   <strong>ID:</strong>
                 </TableCell>
                 <TableCell
-                  align="left" id={"gateway-id"}>{gateway.id}</TableCell>
+                  align="left" id={idPrefix + "gateway-id"}>{gateway.id}</TableCell>
               </TableRow>
             )
           }
@@ -36,7 +37,7 @@ const ConfirmGatewayTable = ({gateway}: ConfirmGatewayTableProps) => {
               <strong>Friendly Name:</strong>
             </TableCell>
             <TableCell
-              align="left" id={"gateway-friendly-name"}>{gateway.friendlyName}</TableCell>
+              align="left" id={idPrefix + "gateway-friendly-name"}>{gateway.friendlyName}</TableCell>
           </TableRow>
 
           <TableRow>
@@ -44,14 +45,14 @@ const ConfirmGatewayTable = ({gateway}: ConfirmGatewayTableProps) => {
               <strong>Endpoint URL:</strong>
             </TableCell>
             <TableCell
-              align="left" id={"gateway-endpoint-url"}>{gateway.endpointUrl}</TableCell>
+              align="left" id={idPrefix + "gateway-endpoint-url"}>{gateway.endpointUrl}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row">
               <strong>Description:</strong>
             </TableCell>
             <TableCell
-              align="left" id={"gateway-description"}>{gateway.description}</TableCell>
+              align="left" id={idPrefix + "gateway-description"}>{gateway.description}</TableCell>
           </TableRow>
 
           {gateway.dateCreated != "" && (
@@ -60,7 +61,7 @@ const ConfirmGatewayTable = ({gateway}: ConfirmGatewayTableProps) => {
                 <strong>Date created:</strong>
               </TableCell>
               <TableCell
-                align="left" id={"gateway-date-created"}>{gateway.dateCreated}</TableCell>
+                align="left" id={idPrefix + "gateway-date-created"}>{gateway.dateCreated}</TableCell>
             </TableRow>
           )}
 
@@ -72,4 +73,4 @@ const ConfirmGatewayTable = ({gateway}: ConfirmGatewayTableProps) => {
 
 }
 
-export default ConfirmGatewayTable;
+export default ReviewGatewayTable;

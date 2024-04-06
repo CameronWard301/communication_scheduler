@@ -174,6 +174,9 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request."
+          },
           "401": {
             "description": "Unauthorized."
           },
@@ -207,11 +210,17 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request."
+          },
           "401": {
             "description": "Unauthorized."
           },
           "403": {
             "description": "Forbidden."
+          },
+          "404": {
+            "description": "Not Found."
           }
         }
       }
@@ -289,6 +298,9 @@
           },
           "403": {
             "description": "Forbidden."
+          },
+          "404": {
+            "description": "Not Found."
           }
         }
       }
@@ -415,6 +427,536 @@
                 "$ref": "#/components/schemas/Preferences"
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/bff/schedule": {
+      "get": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Get schedules.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page Number to get",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Page Size to get",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gatewayId",
+            "in": "query",
+            "description": "Gateway ID to filter results by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scheduleId",
+            "in": "query",
+            "description": "Schedule ID to filter results by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "User ID to filter results by",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get the schedules from the server matching the filters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientSchedulePage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Create a schedule. Please provide one of interval, calendar, or cronExpression.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The schedule to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ClientScheduleCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The created schedule from the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientSchedule"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Update a schedule.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The schedule to update",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ClientScheduleEditRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The updated schedule from the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientScheduleCreateEdit"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Not Found."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Bulk update schedules.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scheduleIds",
+            "in": "query",
+            "description": "The JSON URL-ENCODED list of schedule IDs to update",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "selectionType",
+            "in": "query",
+            "description": "The type of selection to filter results by, either 'IDs' or 'QUERY'. If set to query one of userId, gatewayId or scheduleIds should be set",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The user ID to select schedules by if selectionType is set to query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gatewayId",
+            "in": "query",
+            "description": "The gateway ID to select schedules by if selectionType is set to query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The properties of the schedules to update, action type can be Pause, Resume, Delete or Gateway. If action type is Gateway, gatewayId is required.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ClientBulkUpdateScheduleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The updated schedules from the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkActionResult"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Some schedules were updated but some failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkActionResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        }
+      }
+    },
+    "/v1/bff/schedule/review": {
+      "get": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Get schedules for bulk action.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page Number to get",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Page Size to get",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gatewayId",
+            "in": "query",
+            "description": "Gateway ID to filter results by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scheduleId",
+            "in": "query",
+            "description": "Schedule ID to filter results by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "User ID to filter results by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scheduleIds",
+            "in": "query",
+            "description": "a JSON-URL-ENCODED list of schedule ids to filter results by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "selectionType",
+            "in": "query",
+            "description": "The type of selection to filter results by, either 'IDs' or 'QUERY'",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get the schedules from the server matching the filters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientSchedulePage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        }
+      }
+    },
+    "/v1/bff/schedule/{id}": {
+      "get": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Get a schedule by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The schedule from the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientSchedule"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Not Found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Delete a schedule by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Delete was successful."
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Not Found."
+          }
+        }
+      }
+    },
+    "/v1/bff/schedule/{id}/pause": {
+      "patch": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Pause a schedule by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The gateway name to be returned back in the same object",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/GatewayName"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Schedule was paused successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientScheduleCreateEdit"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Not Found."
+          }
+        }
+      }
+    },
+    "/v1/bff/schedule/{id}/resume": {
+      "patch": {
+        "tags": [
+          "Schedules"
+        ],
+        "description": "Resume a schedule by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Schedule was resumed successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientScheduleCreateEdit"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Not Found."
           }
         }
       }
@@ -596,6 +1138,581 @@
         },
         "xml": {
           "name": "Preferences"
+        }
+      },
+      "ClientSchedulePage": {
+        "type": "object",
+        "properties": {
+          "schedules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "1234"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "Paused"
+                },
+                "gatewayName": {
+                  "type": "string",
+                  "example": "myGateway"
+                },
+                "gatewayId": {
+                  "type": "string",
+                  "example": "1234"
+                },
+                "gateway": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "string"
+                    },
+                    "endpointUrl": {
+                      "type": "string",
+                      "example": "https://example.com/email"
+                    },
+                    "friendlyName": {
+                      "type": "string",
+                      "example": "My Email Gateway"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "This is a gateway for sending emails"
+                    },
+                    "dateCreated": {
+                      "type": "string",
+                      "example": "03/03/2024 16:45:12"
+                    }
+                  }
+                },
+                "userId": {
+                  "type": "string",
+                  "example": "1234"
+                },
+                "nextRun": {
+                  "type": "string",
+                  "example": "03/03/2024 16:45:12"
+                },
+                "lastRun": {
+                  "type": "string",
+                  "example": "03/03/2024 16:45:12"
+                }
+              }
+            }
+          },
+          "totalElements": {
+            "type": "number",
+            "example": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "example": 25
+          },
+          "pageNumber": {
+            "type": "number",
+            "example": 0
+          }
+        },
+        "xml": {
+          "name": "ClientSchedulePage"
+        }
+      },
+      "ClientScheduleCreateRequest": {
+        "type": "object",
+        "properties": {
+          "gatewayId": {
+            "type": "string",
+            "example": "1234"
+          },
+          "userId": {
+            "type": "string",
+            "example": "54653"
+          },
+          "scheduleType": {
+            "type": "string",
+            "example": "Interval"
+          },
+          "intervalSpec": {
+            "type": "object",
+            "properties": {
+              "days": {
+                "type": "string",
+                "example": "1"
+              },
+              "hours": {
+                "type": "string",
+                "example": "0"
+              },
+              "minutes": {
+                "type": "string",
+                "example": "0"
+              },
+              "seconds": {
+                "type": "string",
+                "example": "0"
+              },
+              "offset": {
+                "type": "string",
+                "example": "0"
+              },
+              "offsetPeriod": {
+                "type": "string",
+                "example": "S"
+              }
+            }
+          },
+          "calendarWeekSpec": {
+            "type": "object",
+            "properties": {
+              "dayOfWeek": {
+                "type": "string",
+                "example": "Monday"
+              },
+              "hours": {
+                "type": "string",
+                "example": "0"
+              },
+              "minutes": {
+                "type": "string",
+                "example": "0"
+              }
+            }
+          },
+          "calendarMonthSpec": {
+            "type": "object",
+            "properties": {
+              "dayOfMonth": {
+                "type": "number",
+                "example": 1
+              },
+              "month": {
+                "type": "string",
+                "example": "January"
+              },
+              "hours": {
+                "type": "number",
+                "example": 0
+              },
+              "minutes": {
+                "type": "number",
+                "example": 0
+              }
+            }
+          },
+          "cronSpec": {
+            "type": "string",
+            "example": "0 0 0 0 0"
+          }
+        },
+        "required": [
+          "gatewayId",
+          "userId",
+          "scheduleType"
+        ],
+        "xml": {
+          "name": "ClientScheduleCreateRequest"
+        }
+      },
+      "ClientScheduleEditRequest": {
+        "type": "object",
+        "properties": {
+          "scheduleId": {
+            "type": "string",
+            "example": "1234"
+          },
+          "gatewayId": {
+            "type": "string",
+            "example": "1234"
+          },
+          "userId": {
+            "type": "string",
+            "example": "54653"
+          },
+          "scheduleType": {
+            "type": "string",
+            "example": "Interval"
+          },
+          "intervalSpec": {
+            "type": "object",
+            "properties": {
+              "days": {
+                "type": "string",
+                "example": "1"
+              },
+              "hours": {
+                "type": "string",
+                "example": "0"
+              },
+              "minutes": {
+                "type": "string",
+                "example": "0"
+              },
+              "seconds": {
+                "type": "string",
+                "example": "0"
+              },
+              "offset": {
+                "type": "string",
+                "example": "0"
+              },
+              "offsetPeriod": {
+                "type": "string",
+                "example": "S"
+              }
+            }
+          },
+          "calendarWeekSpec": {
+            "type": "object",
+            "properties": {
+              "dayOfWeek": {
+                "type": "string",
+                "example": "Monday"
+              },
+              "hours": {
+                "type": "string",
+                "example": "0"
+              },
+              "minutes": {
+                "type": "string",
+                "example": "0"
+              }
+            }
+          },
+          "calendarMonthSpec": {
+            "type": "object",
+            "properties": {
+              "dayOfMonth": {
+                "type": "number",
+                "example": 1
+              },
+              "month": {
+                "type": "string",
+                "example": "January"
+              },
+              "hours": {
+                "type": "number",
+                "example": 0
+              },
+              "minutes": {
+                "type": "number",
+                "example": 0
+              }
+            }
+          },
+          "cronSpec": {
+            "type": "string",
+            "example": "0 0 0 0 0"
+          }
+        },
+        "required": [
+          "scheduleId"
+        ],
+        "xml": {
+          "name": "ClientScheduleEditRequest"
+        }
+      },
+      "ClientSchedule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "1234"
+          },
+          "status": {
+            "type": "string",
+            "example": "Paused"
+          },
+          "gatewayName": {
+            "type": "string",
+            "example": "myGateway"
+          },
+          "gatewayId": {
+            "type": "string",
+            "example": "1234"
+          },
+          "gateway": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "string"
+              },
+              "endpointUrl": {
+                "type": "string",
+                "example": "https://example.com/email"
+              },
+              "friendlyName": {
+                "type": "string",
+                "example": "My Email Gateway"
+              },
+              "description": {
+                "type": "string",
+                "example": "This is a gateway for sending emails"
+              },
+              "dateCreated": {
+                "type": "string",
+                "example": "03/03/2024 16:45:12"
+              }
+            }
+          },
+          "userId": {
+            "type": "string",
+            "example": "1234"
+          },
+          "nextRun": {
+            "type": "string",
+            "example": "03/03/2024 16:45:12"
+          },
+          "lastRun": {
+            "type": "string",
+            "example": "03/03/2024 16:45:12"
+          }
+        },
+        "xml": {
+          "name": "ClientSchedule"
+        }
+      },
+      "ClientScheduleCreateEdit": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "1234"
+          },
+          "status": {
+            "type": "string",
+            "example": "Paused"
+          },
+          "gatewayName": {
+            "type": "string",
+            "example": "myGateway"
+          },
+          "gatewayId": {
+            "type": "string",
+            "example": "1234"
+          },
+          "userId": {
+            "type": "string",
+            "example": "1234"
+          },
+          "cronExpression": {
+            "type": "string",
+            "example": "0 0 0 0 0"
+          },
+          "interval": {
+            "type": "object",
+            "properties": {
+              "days": {
+                "type": "string",
+                "example": "1"
+              },
+              "hours": {
+                "type": "string",
+                "example": "0"
+              },
+              "minutes": {
+                "type": "string",
+                "example": "0"
+              },
+              "seconds": {
+                "type": "string",
+                "example": "0"
+              },
+              "offset": {
+                "type": "string",
+                "example": "0"
+              },
+              "offsetPeriod": {
+                "type": "string",
+                "example": "S"
+              }
+            }
+          },
+          "calendar": {
+            "type": "object",
+            "properties": {
+              "comment": {
+                "type": "string",
+                "example": ""
+              },
+              "seconds": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "example": "0"
+                    },
+                    "end": {
+                      "type": "string",
+                      "example": "0"
+                    },
+                    "step": {
+                      "type": "string",
+                      "example": "1"
+                    }
+                  }
+                }
+              },
+              "minutes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "example": "0"
+                    },
+                    "end": {
+                      "type": "string",
+                      "example": "0"
+                    },
+                    "step": {
+                      "type": "string",
+                      "example": "1"
+                    }
+                  }
+                }
+              },
+              "hour": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "example": "0"
+                    },
+                    "end": {
+                      "type": "string",
+                      "example": "0"
+                    },
+                    "step": {
+                      "type": "string",
+                      "example": "1"
+                    }
+                  }
+                }
+              },
+              "dayOfMonth": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "example": "0"
+                    },
+                    "end": {
+                      "type": "string",
+                      "example": "0"
+                    },
+                    "step": {
+                      "type": "string",
+                      "example": "1"
+                    }
+                  }
+                }
+              },
+              "dayOfWeek": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "example": "0"
+                    },
+                    "end": {
+                      "type": "string",
+                      "example": "0"
+                    },
+                    "step": {
+                      "type": "string",
+                      "example": "1"
+                    }
+                  }
+                }
+              },
+              "year": {
+                "type": "array",
+                "example": [],
+                "items": {}
+              }
+            }
+          },
+          "nextRun": {
+            "type": "string",
+            "example": "03/03/2024 16:45:12"
+          },
+          "lastRun": {
+            "type": "string",
+            "example": "03/03/2024 16:45:12"
+          }
+        },
+        "xml": {
+          "name": "ClientScheduleCreateEdit"
+        }
+      },
+      "ClientBulkUpdateScheduleRequest": {
+        "type": "object",
+        "properties": {
+          "paused": {
+            "type": "boolean",
+            "example": false
+          },
+          "gatewayId": {
+            "type": "string",
+            "example": "1234"
+          },
+          "actionType": {
+            "type": "string",
+            "example": "Pause"
+          }
+        },
+        "required": [
+          "actionType"
+        ],
+        "xml": {
+          "name": "ClientBulkUpdateScheduleRequest"
+        }
+      },
+      "BulkActionResult": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "failureReasons": {
+            "type": "array",
+            "example": [],
+            "items": {}
+          },
+          "totalModified": {
+            "type": "number",
+            "example": 10
+          }
+        },
+        "xml": {
+          "name": "BulkActionResult"
+        }
+      },
+      "GatewayName": {
+        "type": "object",
+        "properties": {
+          "friendlyName": {
+            "type": "string",
+            "example": "My Gateway Name"
+          }
+        },
+        "xml": {
+          "name": "GatewayName"
         }
       }
     },

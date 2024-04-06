@@ -12,8 +12,8 @@ export interface GatewayTimeout {
 }
 
 export interface ServerPreferences {
-  gatewayTimeoutSeconds: GatewayTimeout
-  retryPolicy: RetryPolicy
+  gatewayTimeoutSeconds: GatewayTimeout;
+  retryPolicy: RetryPolicy;
 }
 
 export interface TimeUnit {

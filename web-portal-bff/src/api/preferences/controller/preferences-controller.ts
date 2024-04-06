@@ -1,7 +1,7 @@
 import express from "express";
-import {PreferencesService} from "../service/preferences-service";
-import {ClientPreferences} from "../model/Preferences";
-import {errorHandler} from "../../../helper/error-handler";
+import { PreferencesService } from "../service/preferences-service";
+import { ClientPreferences } from "../model/Preferences";
+import { errorHandler } from "../../../helper/error-handler";
 
 const router = express.Router();
 

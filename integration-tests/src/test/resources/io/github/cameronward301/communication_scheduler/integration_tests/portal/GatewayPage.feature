@@ -8,6 +8,7 @@ Feature: Gateway Web portal page
     Given I navigate to "/gateways"
     When I set the "gateway-id-filter-input" to be the gateway id
     And I press enter on the field with id "gateway-id-filter-input"
+    And I click by id on "refresh-gateways-button"
     Then I should see the gateway with the id
     And the total gateway results should be 1
 

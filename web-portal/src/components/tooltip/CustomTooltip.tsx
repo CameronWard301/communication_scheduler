@@ -30,7 +30,7 @@ const CustomTooltip = (props: CustomTooltipProps) => {
                      <Typography variant={"body1"}>{props.message}</Typography>
                    </React.Fragment>
                  }>
-      <IconButton>
+      <IconButton sx={{mb: 3}}>
         <HelpRoundedIcon/>
       </IconButton>
     </HtmlTooltip>

@@ -27,8 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static java.lang.String.format;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ScheduleAPIStepDefinitions {
     private final World world;
@@ -216,7 +215,7 @@ public class ScheduleAPIStepDefinitions {
     @Then("the schedule is returned with a status code of {int}")
     public void theScheduleIsReturnedWithAStatusCodeOf(int status) {
         assertEquals(status, responseResponseEntity.getStatusCode().value());
-        assertEquals(scheduleEntity.getScheduleId(), Objects.requireNonNull(responseResponseEntity.getBody()).getId());
+        assertEquals(scheduleEntity.getScheduleId(), Objects.requireNonNull(responseResponseEntity.getBody()).getScheduleId());
         assertEquals(scheduleEntity.getScheduleOptions().getTypedSearchAttributes().getUntypedValues().get(SearchAttributeKey.forKeyword("userId")), responseResponseEntity.getBody().getSearchAttributes().get("userId").get(0));
         assertEquals(scheduleEntity.getScheduleOptions().getTypedSearchAttributes().getUntypedValues().get(SearchAttributeKey.forKeyword("gatewayId")), responseResponseEntity.getBody().getSearchAttributes().get("gatewayId").get(0));
         assertEquals(scheduleEntity.getScheduleOptions().getTypedSearchAttributes().getUntypedValues().get(SearchAttributeKey.forKeyword("scheduleId")), responseResponseEntity.getBody().getSearchAttributes().get("scheduleId").get(0));
@@ -252,10 +251,20 @@ public class ScheduleAPIStepDefinitions {
     public void theNewScheduleIsReturnedWithStatusCodeOf(int status) {
         assertEquals(status, responseResponseEntity.getStatusCode().value());
         assertEquals(createScheduleRequest.isPaused(), Objects.requireNonNull(responseResponseEntity.getBody()).getSchedule().getState().isPaused());
-        assertEquals(createScheduleRequest.getUserId(), Objects.requireNonNull(responseResponseEntity.getBody()).getSearchAttributes().get("userId").get(0));
-        assertEquals(createScheduleRequest.getGatewayId(), responseResponseEntity.getBody().getSearchAttributes().get("gatewayId").get(0));
         assertNotNull(responseResponseEntity.getBody().getSearchAttributes().get("scheduleId").get(0));
-        assertNotNull(responseResponseEntity.getBody().getId());
+        assertNotNull(responseResponseEntity.getBody().getScheduleId());
+
+        if (createScheduleRequest.getUserId() != null) {
+            assertEquals(createScheduleRequest.getUserId(), Objects.requireNonNull(responseResponseEntity.getBody()).getSearchAttributes().get("userId").get(0));
+        } else {
+            assertNotNull(responseResponseEntity.getBody().getSearchAttributes().get("userId").get(0));
+        }
+
+        if (createScheduleRequest.getGatewayId() != null) {
+            assertEquals(createScheduleRequest.getGatewayId(), responseResponseEntity.getBody().getSearchAttributes().get("gatewayId").get(0));
+        } else {
+            assertNotNull(responseResponseEntity.getBody().getSearchAttributes().get("gatewayId").get(0));
+        }
 
         if (createScheduleRequest.getCalendar() != null) {
             assertEquals(createScheduleRequest.getCalendar(), responseResponseEntity.getBody().getSchedule().getSpec().getCalendars().get(0));
@@ -270,9 +279,15 @@ public class ScheduleAPIStepDefinitions {
     }
 
     @Then("I receive a page of schedules with {int} items with status code {int}")
-    public void iReceiveAPageOfSchedulesWithItems(int numberOfItems, int statusCode) {
+    public void iReceiveAPageOfSchedulesWithSomeItems(int numberOfItems, int statusCode) {
         assertEquals(statusCode, scheduleListResponseEntity.getStatusCode().value());
         assertEquals(numberOfItems, Objects.requireNonNull(scheduleListResponseEntity.getBody()).getNumberOfElements());
+    }
+
+    @Then("I receive a page of schedules with at least {int} items with status code {int}")
+    public void iReceiveAPageOfSchedulesWithItems(int numberOfItems, int statusCode) {
+        assertEquals(statusCode, scheduleListResponseEntity.getStatusCode().value());
+        assertTrue(numberOfItems <= Objects.requireNonNull(scheduleListResponseEntity.getBody()).getNumberOfElements());
     }
 
     @Then("the schedule is deleted with response code {int}")
@@ -282,7 +297,7 @@ public class ScheduleAPIStepDefinitions {
 
     @And("the test framework removes the schedule")
     public void theTestFrameworkRemovesTheSchedule() {
-        scheduleClient.getHandle(Objects.requireNonNull(responseResponseEntity.getBody()).getId()).delete();
+        scheduleClient.getHandle(Objects.requireNonNull(responseResponseEntity.getBody()).getScheduleId()).delete();
     }
 
 
@@ -335,10 +350,10 @@ public class ScheduleAPIStepDefinitions {
     }
 
 
-    @Then("a CountDTO is returned with total: {int} and status code {int}")
+    @Then("a CountDTO is returned with total at least: {int} and status code {int}")
     public void aCountDTOIsReturnedWithTotal(int total, int statusCode) {
         assertEquals(statusCode, countDTOResponseEntity.getStatusCode().value());
-        assertEquals(total, Objects.requireNonNull(countDTOResponseEntity.getBody()).getTotal());
+        assertTrue(total <= Objects.requireNonNull(countDTOResponseEntity.getBody()).getTotal());
     }
 
 

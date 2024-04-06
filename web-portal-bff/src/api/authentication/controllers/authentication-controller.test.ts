@@ -1,10 +1,10 @@
 import express from "express";
 import router from "./authentication-controller";
-import {AuthToken} from "../model/auth-models";
-import {BFFResponse} from "../../../model/BFFResponse";
+import { AuthToken } from "../model/auth-models";
+import { BFFResponse } from "../../../model/BFFResponse";
 import request from "supertest";
-import {AuthService} from "../service/auth-service";
-import {AxiosError} from "axios";
+import { AuthService } from "../service/auth-service";
+import { AxiosError } from "axios";
 
 jest.mock("../service/auth-service");
 
@@ -12,15 +12,15 @@ const app = express();
 app.use(express.json());
 app.use(router);
 
-describe('Authentication Controller', () => {
-  it('should get auth token', async () => {
+describe("Authentication Controller", () => {
+  it("should get auth token", async () => {
     const mockAuthResponse = {
       status: 200,
       data: {
-        token: 'test-token',
-        expires: '2023-01-01T00:00:00Z',
+        token: "test-token",
+        expires: "2023-01-01T00:00:00Z"
       } as AuthToken
-    } as BFFResponse<AuthToken>
+    } as BFFResponse<AuthToken>;
 
     (AuthService as jest.Mock).mockImplementation(() => {
       return {
@@ -29,36 +29,36 @@ describe('Authentication Controller', () => {
     });
 
     const res = await request(app)
-      .post('/v1/bff/auth')
-      .send(['scope1', 'scope2'])
+      .post("/v1/bff/auth")
+      .send(["scope1", "scope2"]);
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual(mockAuthResponse.data);
-  })
+  });
 
-  it('should handle error with response', async () => {
+  it("should handle error with response", async () => {
     const mockError = {
       response: {
         status: 400,
-        data: 'Bad Request',
-      },
+        data: "Bad Request"
+      }
     };
 
     (AuthService as jest.Mock).mockImplementation(() => {
       return {
-        getAuthToken: jest.fn().mockRejectedValue(mockError),
+        getAuthToken: jest.fn().mockRejectedValue(mockError)
       };
     });
 
     const res = await request(app)
-      .post('/v1/bff/auth')
-      .send(['scope1', 'scope2']);
+      .post("/v1/bff/auth")
+      .send(["scope1", "scope2"]);
 
     expect(res.status).toBe(400);
-    expect(res.text).toEqual('Bad Request');
+    expect(res.text).toEqual("Bad Request");
   });
 
-  it('should 500 error for generic exception', async () => {
+  it("should 500 error for generic exception", async () => {
     const mockError = new AxiosError("test", "test");
 
     (AuthService as jest.Mock).mockImplementation(() => {
@@ -68,31 +68,31 @@ describe('Authentication Controller', () => {
     });
 
     const res = await request(app)
-      .post('/v1/bff/auth')
-      .send(['scope1', 'scope2'])
+      .post("/v1/bff/auth")
+      .send(["scope1", "scope2"]);
 
     expect(res.status).toBe(500);
-    expect(res.body).toMatchObject({})
+    expect(res.body).toMatchObject({});
     expect(res.text).toEqual("Internal Server Error");
-  })
+  });
 
-  it('should handle error with request but no response', async () => {
+  it("should handle error with request but no response", async () => {
     const mockError = {
-      request: {},
+      request: {}
     };
 
     (AuthService as jest.Mock).mockImplementation(() => {
       return {
-        getAuthToken: jest.fn().mockRejectedValue(mockError),
+        getAuthToken: jest.fn().mockRejectedValue(mockError)
       };
     });
 
     const res = await request(app)
-      .post('/v1/bff/auth')
-      .send(['scope1', 'scope2']);
+      .post("/v1/bff/auth")
+      .send(["scope1", "scope2"]);
 
     expect(res.status).toBe(500);
-    expect(res.text).toEqual('No response from server');
+    expect(res.text).toEqual("No response from server");
   });
 
 });

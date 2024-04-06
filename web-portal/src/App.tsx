@@ -11,6 +11,8 @@ import NavigationBar from "./components/navigation_bar";
 import AppRouter from "./AppRouter.tsx";
 import useAxiosClient from "./client/AxiosClient.ts";
 import {AxiosContextProvider} from "./context/AxiosContext.tsx";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {LocalizationProvider} from "@mui/x-date-pickers";
 
 const theme = createTheme({
   palette: {
@@ -23,7 +25,8 @@ const theme = createTheme({
     },
     info: {
       main: '#6e7180'
-    }
+    },
+
   }
 })
 
@@ -40,11 +43,13 @@ function App() {
             <SnackbarContextProvider>
               <AxiosContextProvider client={client}>
                 <BrowserRouter>
-                  <Box sx={{display: 'flex'}}>
-                    <CssBaseline/>
-                    <NavigationBar/>
-                    <AppRouter/>
-                  </Box>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Box sx={{display: 'flex'}}>
+                      <CssBaseline/>
+                      <NavigationBar/>
+                      <AppRouter/>
+                    </Box>
+                  </LocalizationProvider>
                 </BrowserRouter>
               </AxiosContextProvider>
             </SnackbarContextProvider>

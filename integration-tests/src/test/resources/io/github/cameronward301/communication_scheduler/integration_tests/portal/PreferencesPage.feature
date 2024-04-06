@@ -64,6 +64,6 @@ Feature: Preferences Page
     When I click by id on "save-preferences-btn"
     And I click by id on "confirm-modal-button"
     Then I should see a snackbar message with the text "Preferences updated"
-    Then Wait for snackbar to disappear
+    Then I close the snackbar
     When I click by id on "save-preferences-btn"
     Then I should see a snackbar message with the text "You haven't made any changes to save"

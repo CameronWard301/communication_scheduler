@@ -13,7 +13,7 @@ const useGatewayGridDef = () => {
   const rootStore = useStore();
   const theme = useTheme();
 
-  const columns: GridColDef[] = [
+  const gatewayTablePageColumns: GridColDef[] = [
     {field: 'id', headerName: 'Gateway ID', flex: 0.5, minWidth: 130, filterable: false},
     {field: 'friendlyName', headerName: 'Gateway Name', flex: 0.5, minWidth: 130, filterable: false},
     {field: 'description', headerName: 'Description', flex: 0.7, minWidth: 130, filterable: false},
@@ -23,7 +23,7 @@ const useGatewayGridDef = () => {
       field: 'actions', headerName: 'Actions', flex: 0.3, minWidth: 180, filterable: false,
       renderCell: (params: GridRenderCellParams<Gateway>) => {
         return (
-          <Stack direction={"row"} spacing={3}>
+          <Stack direction={"row"} spacing={3} sx={{display: 'flex', height: "100%", py: 1}}>
             <Button
               aria-label={"Modify Gateway " + params.row.friendlyName}
               variant="contained"
@@ -49,7 +49,15 @@ const useGatewayGridDef = () => {
     },
   ];
 
-  return {columns};
+  const gatewayFilterColumns: GridColDef[] = [
+    {field: 'id', headerName: 'Gateway ID', flex: 0.5, minWidth: 300, filterable: false},
+    {field: 'friendlyName', headerName: 'Gateway Name', flex: 0.5, minWidth: 130, filterable: false},
+    {field: 'description', headerName: 'Description', flex: 0.7, minWidth: 130, filterable: false},
+    {field: 'endpointUrl', headerName: 'Endpoint Url', flex: 0.7, minWidth: 130, filterable: false},
+    {field: 'dateCreated', headerName: 'Date Created', flex: 0.2, minWidth: 180, filterable: false},
+  ];
+
+  return {gatewayTablePageColumns, gatewayFilterColumns};
 
 }
 

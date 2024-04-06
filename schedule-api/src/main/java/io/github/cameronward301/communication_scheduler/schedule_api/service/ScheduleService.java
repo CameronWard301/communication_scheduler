@@ -7,6 +7,7 @@ import io.github.cameronward301.communication_scheduler.schedule_api.model.*;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.temporal.client.schedules.*;
+import io.temporal.common.SearchAttributeKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -66,19 +67,19 @@ public class ScheduleService {
      * Schedule will create workflows with the id: GATEWAY_ID:USER_ID:SCHEDULE_ID:<scheduleTime>
      * Note that the scheduleSpec must not be null and contain at least one specification
      *
-     * @param createScheduleDTO to create the schedule from
+     * @param createPutScheduleDTO to create the schedule from
      * @return the created schedule DTO
      */
-    public ScheduleDescriptionDTO createSchedule(CreateScheduleDTO createScheduleDTO) {
-        createScheduleDTO.setScheduleId(UUID.randomUUID().toString());
-        return modelMapper.map(scheduleClient.createSchedule(createScheduleDTO.getScheduleId(),
+    public ScheduleDescriptionDTO createSchedule(CreatePutScheduleDTO createPutScheduleDTO) {
+        createPutScheduleDTO.setScheduleId(UUID.randomUUID().toString());
+        return modelMapper.map(scheduleClient.createSchedule(createPutScheduleDTO.getScheduleId(),
                 Schedule.newBuilder()
-                        .setState(scheduleHelper.getScheduleState(createScheduleDTO.isPaused()))
-                        .setSpec(scheduleHelper.getScheduleSpec(createScheduleDTO))
-                        .setAction(scheduleHelper.getScheduleAction(createScheduleDTO))
+                        .setState(scheduleHelper.getScheduleState(createPutScheduleDTO.isPaused()))
+                        .setSpec(scheduleHelper.getScheduleSpec(createPutScheduleDTO))
+                        .setAction(scheduleHelper.getScheduleAction(createPutScheduleDTO))
                         .build(),
                 ScheduleOptions.newBuilder()
-                        .setTypedSearchAttributes(scheduleHelper.getSearchAttributes(createScheduleDTO))
+                        .setTypedSearchAttributes(scheduleHelper.getSearchAttributes(createPutScheduleDTO))
                         .build()
         ).describe(), ScheduleDescriptionDTO.class);
     }
@@ -90,26 +91,34 @@ public class ScheduleService {
      * @param scheduleDTO to update (contains the existing schedule ID)
      * @return the updated schedule result
      */
-    public ScheduleDescriptionDTO updateSchedule(CreateScheduleDTO scheduleDTO) {
-        if (scheduleDTO.getScheduleId() == null || scheduleDTO.getScheduleId().isBlank()) {
-            throw new RequestException("Please provide a 'scheduleId' in the request body to update a schedule", HttpStatus.BAD_REQUEST);
-        }
+    public ScheduleDescriptionDTO updateSchedule(CreatePutScheduleDTO scheduleDTO) {
         try {
             ScheduleDescription schedule = scheduleClient.getHandle(scheduleDTO.getScheduleId()).describe();
+
+            String existingUserId = schedule.getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("userId"));
+            String existingGatewayId = schedule.getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("gatewayId"));
+
 
             Schedule.Builder updatedSchedule = Schedule.newBuilder(schedule.getSchedule());
 
             updatedSchedule.setState(scheduleHelper.getScheduleState(scheduleDTO.isPaused()));
 
+            //Make updates if provided
             if (scheduleDTO.getCalendar() != null || scheduleDTO.getInterval() != null || scheduleDTO.getCronExpression() != null) {
                 updatedSchedule.setSpec(scheduleHelper.getScheduleSpec(scheduleDTO));
+            }
+            if (scheduleDTO.getGatewayId() == null) {
+                scheduleDTO.setGatewayId(existingGatewayId);
+            }
+            if (scheduleDTO.getUserId() == null) {
+                scheduleDTO.setUserId(existingUserId);
             }
 
             updatedSchedule.setAction(scheduleHelper.getScheduleAction(scheduleDTO));
 
 
             //Check that the new schedule is valid and then delete it
-            scheduleClient.createSchedule(schedule.getId()+"temp",
+            scheduleClient.createSchedule(schedule.getId() + "temp",
                     updatedSchedule.build(), ScheduleOptions.newBuilder()
                             .setTypedSearchAttributes(scheduleHelper.getSearchAttributes(scheduleDTO))
                             .build()).delete();
@@ -147,7 +156,7 @@ public class ScheduleService {
             String existingUserId = (String) ((List<?>) schedule.getSearchAttributes().get("userId")).get(0);
             String existingGatewayId = (String) ((List<?>) schedule.getSearchAttributes().get("gatewayId")).get(0);
 
-            CreateScheduleDTO scheduleDetails = CreateScheduleDTO.builder()
+            CreatePutScheduleDTO scheduleDetails = CreatePutScheduleDTO.builder()
                     .scheduleId(schedule.getScheduleId())
                     .userId(existingUserId)
                     .gatewayId(existingGatewayId)

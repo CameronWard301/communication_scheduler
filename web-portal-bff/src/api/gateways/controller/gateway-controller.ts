@@ -1,8 +1,8 @@
-import {errorHandler} from "../../../helper/error-handler";
+import { errorHandler } from "../../../helper/error-handler";
 import GatewayService from "../service/gateway-service";
 import express from "express";
-import {BaseGateway, ClientGatewayPage, Gateway, GatewayPageQuery, GatewayUpdateRequest} from "../model/Gateways";
-import {ScheduleService} from "../../schedule/service/schedule-service";
+import { BaseGateway, ClientGatewayPage, Gateway, GatewayPageQuery, GatewayUpdateRequest } from "../model/Gateways";
+import { ScheduleService } from "../../schedule/service/schedule-service";
 
 const router = express.Router();
 router.get("/v1/bff/gateway", (req, res) => {
@@ -134,9 +134,12 @@ router.post("/v1/bff/gateway", (req, res) => {
                 }
             }
         }
+    #swagger.responses[400] = {
+            description: 'Bad Request.'
+    }
     #swagger.responses[401] = {
             description: 'Unauthorized.'
-           }
+
     }
     #swagger.responses[403] = {
             description: 'Forbidden.'
@@ -146,7 +149,7 @@ router.post("/v1/bff/gateway", (req, res) => {
   }).catch((reason) => {
     errorHandler(res, reason);
   });
-})
+});
 
 
 router.put("/v1/bff/gateway", (req, res) => {
@@ -161,19 +164,24 @@ router.put("/v1/bff/gateway", (req, res) => {
                 }
             }
         }
+    #swagger.responses[400] = {
+            description: 'Bad Request.'
+    }
     #swagger.responses[401] = {
             description: 'Unauthorized.'
-           }
     }
     #swagger.responses[403] = {
             description: 'Forbidden.'
+    }
+    #swagger.responses[404] = {
+            description: 'Not Found.'
     } */
   GatewayService().updateGateway(req.headers.authorization, req.body as unknown as GatewayUpdateRequest).then((value) => {
     res.status(value.status).send(value.data as Gateway);
   }).catch((reason) => {
     errorHandler(res, reason);
   });
-})
+});
 
 router.delete("/v1/bff/gateway/:id", (req, res) => {
   // #swagger.tags = ["Gateways"]
@@ -189,6 +197,9 @@ router.delete("/v1/bff/gateway/:id", (req, res) => {
     }
     #swagger.responses[403] = {
             description: 'Forbidden.'
+    }
+    #swagger.responses[404] = {
+            description: 'Not Found.'
     } */
   GatewayService().deleteGatewayById(req.headers.authorization, req.params.id).then((value) => {
     res.status(value.status).send();

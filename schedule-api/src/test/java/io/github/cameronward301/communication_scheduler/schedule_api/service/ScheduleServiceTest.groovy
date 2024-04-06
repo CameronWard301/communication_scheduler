@@ -4,7 +4,7 @@ package io.github.cameronward301.communication_scheduler.schedule_api.service
 import io.github.cameronward301.communication_scheduler.schedule_api.exception.RequestException
 import io.github.cameronward301.communication_scheduler.schedule_api.helper.DtoConverter
 import io.github.cameronward301.communication_scheduler.schedule_api.helper.ScheduleHelper
-import io.github.cameronward301.communication_scheduler.schedule_api.model.CreateScheduleDTO
+import io.github.cameronward301.communication_scheduler.schedule_api.model.CreatePutScheduleDTO
 import io.github.cameronward301.communication_scheduler.schedule_api.model.SchedulePatchDTO
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
@@ -95,7 +95,7 @@ class ScheduleServiceTest extends Specification {
 
     def "Should createSchedule"() {
         given:
-        def createDTO = CreateScheduleDTO.builder()
+        def createDTO = CreatePutScheduleDTO.builder()
                 .gatewayId("123")
                 .userId("1234")
                 .paused(true)
@@ -109,9 +109,9 @@ class ScheduleServiceTest extends Specification {
 
         and:
         handle.describe() >> createScheduleDescription(id, [], [], [createDTO.getCronExpression()], SearchAttributes.newBuilder()
-                .set(SearchAttributeKey.forText("userId"), createDTO.getUserId())
-                .set(SearchAttributeKey.forText("gatewayId"), createDTO.getGatewayId())
-                .set(SearchAttributeKey.forText("scheduleId"), id)
+                .set(SearchAttributeKey.forKeyword("userId"), createDTO.getUserId())
+                .set(SearchAttributeKey.forKeyword("gatewayId"), createDTO.getGatewayId())
+                .set(SearchAttributeKey.forKeyword("scheduleId"), id)
                 .build()
         )
 
@@ -119,39 +119,97 @@ class ScheduleServiceTest extends Specification {
         def response = scheduleService.createSchedule(createDTO)
 
         then:
-        response.getId() == id
+        response.getScheduleId() == id
         response.getSchedule().getSpec().getCronExpressions().get(0) == createDTO.getCronExpression()
         response.getSearchAttributes().get("userId").get(0) == createDTO.getUserId()
         response.getSearchAttributes().get("gatewayId").get(0) == createDTO.getGatewayId()
         response.getSearchAttributes().get("scheduleId").get(0) == id
     }
 
-    def "should update schedule"() {
+    def "should update schedule and keep existing userId and GatewayId"() {
         given: "Schedule DTO"
         def id = UUID.randomUUID().toString()
-        def scheduleDto = CreateScheduleDTO.builder()
+        def existingScheduleDto = CreatePutScheduleDTO.builder()
                 .scheduleId(id)
                 .gatewayId("123")
                 .userId("1234")
                 .paused(true)
                 .cronExpression("1 * * * MON")
                 .build()
+        def updateDto = CreatePutScheduleDTO.builder()
+                .scheduleId(id)
+                .paused(true)
+                .cronExpression("2 * * * MON")
+                .build()
+        def updatedScheduleDto = CreatePutScheduleDTO.builder()
+                .scheduleId(existingScheduleDto.getScheduleId())
+                .gatewayId(existingScheduleDto.getGatewayId())
+                .userId(existingScheduleDto.getUserId())
+                .paused(updateDto.isPaused())
+                .cronExpression("2 * * * MON")
+                .build()
 
         and: "Schedule handle"
-        def scheduleHandle = getScheduleHandle(scheduleDto)
+        def scheduleHandle = getScheduleHandle(existingScheduleDto)
+        def updatedHandle = getScheduleHandle(updatedScheduleDto)
         scheduleClient.getHandle(id) >> scheduleHandle
-        scheduleClient.createSchedule(_ as String, _ as Schedule, _ as ScheduleOptions) >> scheduleHandle
+        scheduleClient.createSchedule(_ as String, _ as Schedule, _ as ScheduleOptions) >> updatedHandle
 
 
         when: "Calling update"
-        def response = scheduleService.updateSchedule(scheduleDto)
+        def response = scheduleService.updateSchedule(updateDto)
 
 
         then:
-        response.getId() == id
-        response.getSchedule().getSpec().getCronExpressions().get(0) == scheduleDto.getCronExpression()
-        response.getSearchAttributes().get("userId").get(0) == scheduleDto.getUserId()
-        response.getSearchAttributes().get("gatewayId").get(0) == scheduleDto.getGatewayId()
+        response.getScheduleId() == id
+        response.getSchedule().getSpec().getCronExpressions().get(0) == updateDto.getCronExpression()
+        response.getSearchAttributes().get("userId").get(0) == existingScheduleDto.getUserId()
+        response.getSearchAttributes().get("gatewayId").get(0) == existingScheduleDto.getGatewayId()
+        response.getSearchAttributes().get("scheduleId").get(0) == id
+    }
+
+
+    def "should update schedule and update userId and GatewayId"() {
+        given: "Schedule DTO"
+        def id = UUID.randomUUID().toString()
+        def existingScheduleDto = CreatePutScheduleDTO.builder()
+                .scheduleId(id)
+                .gatewayId("123")
+                .userId("1234")
+                .paused(true)
+                .cronExpression("1 * * * MON")
+                .build()
+        def updateDto = CreatePutScheduleDTO.builder()
+                .scheduleId(id)
+                .gatewayId("updated-gw-id")
+                .userId("updated-user-id")
+                .paused(true)
+                .cronExpression("2 * * * MON")
+                .build()
+        def updatedScheduleDto = CreatePutScheduleDTO.builder()
+                .scheduleId(existingScheduleDto.getScheduleId())
+                .gatewayId(updateDto.getGatewayId())
+                .userId(updateDto.getUserId())
+                .paused(updateDto.isPaused())
+                .cronExpression("2 * * * MON")
+                .build()
+
+        and: "Schedule handle"
+        def scheduleHandle = getScheduleHandle(existingScheduleDto)
+        def updatedHandle = getScheduleHandle(updatedScheduleDto)
+        scheduleClient.getHandle(id) >> scheduleHandle
+        scheduleClient.createSchedule(_ as String, _ as Schedule, _ as ScheduleOptions) >> updatedHandle
+
+
+        when: "Calling update"
+        def response = scheduleService.updateSchedule(updateDto)
+
+
+        then:
+        response.getScheduleId() == id
+        response.getSchedule().getSpec().getCronExpressions().get(0) == updateDto.getCronExpression()
+        response.getSearchAttributes().get("userId").get(0) == updateDto.getUserId()
+        response.getSearchAttributes().get("gatewayId").get(0) == updateDto.getGatewayId()
         response.getSearchAttributes().get("scheduleId").get(0) == id
     }
 
@@ -187,31 +245,18 @@ class ScheduleServiceTest extends Specification {
                         )
                         .build(),
                 Map.of(
-                        "userId", [searchAttributes.getUntypedValues().get(SearchAttributeKey.forText("userId"))],
-                        "gatewayId", [searchAttributes.getUntypedValues().get(SearchAttributeKey.forText("gatewayId"))],
-                        "scheduleId", [searchAttributes.getUntypedValues().get(SearchAttributeKey.forText("scheduleId"))]
+                        "userId", [searchAttributes.get(SearchAttributeKey.forKeyword("userId"))],
+                        "gatewayId", [searchAttributes.get(SearchAttributeKey.forKeyword("gatewayId"))],
+                        "scheduleId", [searchAttributes.get(SearchAttributeKey.forKeyword("scheduleId"))]
                 ),
                 searchAttributes,
                 Map.of(),
                 Mock(DataConverter))
     }
 
-    def "Should throw exception when updating schedule with no schedule id"() {
-        given: "update request"
-        def update = CreateScheduleDTO.builder().build()
-
-        when:
-        scheduleService.updateSchedule(update)
-
-        then:
-        def exception = thrown(RequestException)
-        exception.getMessage() == "Please provide a 'scheduleId' in the request body to update a schedule"
-        exception.getHttpStatus() == HttpStatus.BAD_REQUEST
-    }
-
     def "Should throw exception if id is not valid when updating a schedule"() {
         given: "update request"
-        def update = CreateScheduleDTO.builder()
+        def update = CreatePutScheduleDTO.builder()
                 .scheduleId("123")
                 .build()
 
@@ -229,7 +274,7 @@ class ScheduleServiceTest extends Specification {
 
     def "Should throw runtime exception when updating schedule encounters an error"() {
         given: "update request"
-        def update = CreateScheduleDTO.builder()
+        def update = CreatePutScheduleDTO.builder()
                 .scheduleId("123")
                 .build()
 
@@ -303,7 +348,7 @@ class ScheduleServiceTest extends Specification {
 
 
         and:
-        scheduleClient.getHandle(id) >> getScheduleHandle(CreateScheduleDTO.builder()
+        scheduleClient.getHandle(id) >> getScheduleHandle(CreatePutScheduleDTO.builder()
                 .scheduleId(id)
                 .gatewayId(gatewayId)
                 .userId(userId)
@@ -340,7 +385,7 @@ class ScheduleServiceTest extends Specification {
         def id = "123"
 
         and:
-        scheduleClient.getHandle(id) >> getScheduleHandle(CreateScheduleDTO.builder().scheduleId(id).build())
+        scheduleClient.getHandle(id) >> getScheduleHandle(CreatePutScheduleDTO.builder().scheduleId(id).build())
 
         when:
         scheduleService.deleteScheduleById(id)
@@ -421,7 +466,7 @@ class ScheduleServiceTest extends Specification {
 
         and:
         scheduleClient.listSchedules() >> Stream.of(schedule)
-        scheduleClient.getHandle(scheduleId) >> getScheduleHandle(CreateScheduleDTO.builder().scheduleId(scheduleId).build())
+        scheduleClient.getHandle(scheduleId) >> getScheduleHandle(CreatePutScheduleDTO.builder().scheduleId(scheduleId).build())
 
         when:
         def response = scheduleService.deleteSchedulesByFilter(userId, gatewayId)
@@ -441,7 +486,7 @@ class ScheduleServiceTest extends Specification {
         exception.getHttpStatus() == HttpStatus.BAD_REQUEST
     }
 
-    private ScheduleHandle getScheduleHandle(CreateScheduleDTO createDTO) {
+    private ScheduleHandle getScheduleHandle(CreatePutScheduleDTO createDTO) {
         return new ScheduleHandle() {
             @Override
             String getId() {
@@ -461,9 +506,9 @@ class ScheduleServiceTest extends Specification {
             @Override
             ScheduleDescription describe() {
                 return createScheduleDescription(createDTO.getScheduleId(), [], [], [createDTO.getCronExpression()], SearchAttributes.newBuilder()
-                        .set(SearchAttributeKey.forText("userId"), createDTO.getUserId())
-                        .set(SearchAttributeKey.forText("gatewayId"), createDTO.getGatewayId())
-                        .set(SearchAttributeKey.forText("scheduleId"), createDTO.getScheduleId())
+                        .set(SearchAttributeKey.forKeyword("userId"), createDTO.getUserId())
+                        .set(SearchAttributeKey.forKeyword("gatewayId"), createDTO.getGatewayId())
+                        .set(SearchAttributeKey.forKeyword("scheduleId"), createDTO.getScheduleId())
                         .build())
             }
 

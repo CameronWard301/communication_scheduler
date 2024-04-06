@@ -1,7 +1,7 @@
 package io.github.cameronward301.communication_scheduler.schedule_api.helper;
 
 import io.github.cameronward301.communication_scheduler.schedule_api.exception.RequestException;
-import io.github.cameronward301.communication_scheduler.schedule_api.model.CreateScheduleDTO;
+import io.github.cameronward301.communication_scheduler.schedule_api.model.CreatePutScheduleDTO;
 import io.temporal.client.schedules.ScheduleCalendarSpec;
 import io.temporal.client.schedules.ScheduleIntervalSpec;
 import io.temporal.client.schedules.ScheduleRange;
@@ -25,7 +25,7 @@ public class DtoConverter {
      * @param calendarSpecDTO to convert
      * @return Temporal's Schedule Calendar spec
      */
-    public ScheduleCalendarSpec getCalendar(CreateScheduleDTO.ScheduleCalendarSpecDTO calendarSpecDTO) {
+    public ScheduleCalendarSpec getCalendar(CreatePutScheduleDTO.ScheduleCalendarSpecDTO calendarSpecDTO) {
         return ScheduleCalendarSpec.newBuilder()
                 .setSeconds(getScheduleRange(calendarSpecDTO.getSeconds()))
                 .setHour(getScheduleRange(calendarSpecDTO.getHour()))
@@ -45,7 +45,7 @@ public class DtoConverter {
      * @return ScheduleIntervalSpec
      * @throws RequestException if the string in the DTO cannot be converted to a Duration object
      */
-    public ScheduleIntervalSpec getInterval(CreateScheduleDTO.ScheduleIntervalSpecDTO intervalSpecDTO) {
+    public ScheduleIntervalSpec getInterval(CreatePutScheduleDTO.ScheduleIntervalSpecDTO intervalSpecDTO) {
         try {
             return new ScheduleIntervalSpec(Duration.parse(intervalSpecDTO.getEvery()), Duration.parse(intervalSpecDTO.getOffset()));
 
@@ -60,7 +60,7 @@ public class DtoConverter {
      * @param scheduleRangeDTOs to convert
      * @return a list of Temporal ScheduleRange
      */
-    private List<ScheduleRange> getScheduleRange(List<CreateScheduleDTO.ScheduleRangeDTO> scheduleRangeDTOs) {
+    private List<ScheduleRange> getScheduleRange(List<CreatePutScheduleDTO.ScheduleRangeDTO> scheduleRangeDTOs) {
         return scheduleRangeDTOs.stream().map(scheduleRangeDTO ->
                         new ScheduleRange(scheduleRangeDTO.getStart(), scheduleRangeDTO.getEnd(), scheduleRangeDTO.getStep()))
                 .collect(Collectors.toList());

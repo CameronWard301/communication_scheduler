@@ -18,6 +18,7 @@ import java.time.Duration;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 @RequiredArgsConstructor
 public class SharedWebPortalStepDefinitions {
@@ -52,12 +53,15 @@ public class SharedWebPortalStepDefinitions {
 
     @And("I click by id on {string}")
     public void iClickByIdOn(String element) {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.elementToBeClickable(By.id(element)));
         webDriver.findElement(By.id(element)).click();
     }
 
     @Then("The URI is now {string}")
     public void theURIIsNow(String uri) {
-        assertEquals(webDriverUrl + uri, webDriver.getCurrentUrl());
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.urlToBe(webDriverUrl + uri));
     }
 
     @And("I press enter on the field with id {string}")
@@ -73,28 +77,22 @@ public class SharedWebPortalStepDefinitions {
 
     @Then("the element with id {string} should be set to: {string}")
     public void theElementWithIdShouldBeSetTo(String fieldId, String value) {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.textToBe(By.id(fieldId), (value)));
         assertEquals(value, webDriver.findElement(By.id(fieldId)).getText());
-
     }
 
     @Then("I should see a snackbar message with the text {string}")
     public void iShouldSeeASnackbarMessageWithTheText(String message) {
         WebElement element = webDriver.findElement(By.id("snackbar-message"));
         Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
-        wait.until(driver -> element.isDisplayed());
+        wait.until(ExpectedConditions.textToBe(By.id("snackbar-message"), message));
         assertThat(element.getText(), is(message));
     }
 
     @When("I set the {string} field to be {string}")
     public void iSetTheFieldToBe(String id, String value) {
         setTextField(webDriver, id, value);
-    }
-
-    @Then("Wait for snackbar to disappear")
-    public void waitForSnackbarToDisappear() {
-        WebElement element = webDriver.findElement(By.id("snackbar-message"));
-        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait * 10L));
-        wait.until(ExpectedConditions.invisibilityOf(element));
     }
 
     @Then("the button with id {string} should be disabled")
@@ -112,4 +110,37 @@ public class SharedWebPortalStepDefinitions {
     }
 
 
+    @And("I wait {int} second")
+    public void iWaitSecond(int time) {
+        try {
+            Thread.sleep(time * 1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Then("I close the snackbar")
+    public void iCloseTheSnackbar() {
+        webDriver.findElement(By.cssSelector("#snackbar-message > .MuiAlert-action > .MuiIconButton-colorInherit")).click();
+    }
+
+    @And("the field with id {string} is not: {string}")
+    public void theFieldWithIdIsNot(String elementId, String value) {
+        assertNotSame(webDriver.findElement(By.id(elementId)).getText(), value);
+    }
+
+    @When("I press DEL by name on {string}")
+    public void iClickByInputNameOn(String identifier) {
+        WebElement element = webDriver.findElement(By.name(identifier));
+        element.click();
+        element.sendKeys(Keys.DELETE);
+    }
+
+    @When("I send the keys {string} to the field with name {string}")
+    public void iSendTheKeysToTheFieldWithId(String keys, String element) {
+        WebElement webElement = webDriver.findElement(By.name(element));
+        webElement.sendKeys(keys);
+    }
+
+    // Write code here that turns the phrase above into concrete actions    throw new cucumber.api.PendingException();}
 }

@@ -37,6 +37,7 @@ public class WebDriverConfiguration {
     public WebDriver webDriverLocal() {
         WebDriver driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(Integer.parseInt(implicitWait)));
+        driver.manage().window().maximize();
         return driver;
     }
 
