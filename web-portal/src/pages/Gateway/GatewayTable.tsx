@@ -17,14 +17,14 @@ import TagRoundedIcon from '@mui/icons-material/TagRounded';
 import TextFieldFilter from "../../components/text_field_filter";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {GatewayModal} from "../../components/modal";
-import {ConfirmGatewayTable} from "../../components/modal/gateway";
+import {ReviewGatewayTable} from "../../components/modal/gateway";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import useQuery from "../../helper/UseQuery.ts";
 
 const GatewayTable = observer(() => {
   const rootStore = useStore();
-  const {columns} = useGatewayGridDef();
-  const {getGateways, deleteGatewayById} = useGatewayService();
+  const {gatewayTablePageColumns} = useGatewayGridDef();
+  const {getGatewaysForTable, deleteGatewayById} = useGatewayService();
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
 
@@ -51,7 +51,7 @@ const GatewayTable = observer(() => {
   }, []);
 
   useEffect(() => {
-    getGateways();
+    getGatewaysForTable();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rootStore.gatewayTableStore.paginationModel, rootStore.gatewayTableStore.sortModel]);
 
@@ -69,12 +69,12 @@ const GatewayTable = observer(() => {
                       deleteGatewayById(rootStore.gatewayTableStore.selectedGateway);
                     }}
                     affectedScheduleTooltip={"Deleting this gateway will cause the number of schedules shown to stop working, its best to update the schedules to use a new gateway first by viewing the affected schedules and performing a bulk action."}
-                    description={<ConfirmGatewayTable gateway={rootStore.gatewayTableStore.selectedGateway}/>}
+                    description={<ReviewGatewayTable gateway={rootStore.gatewayTableStore.selectedGateway}/>}
       />
       <Grid container spacing={4} justifyContent={"left"} alignItems={"center"} alignContent={"flex-start"}
             width={"100%"}>
         <Grid xs={12} mb={2}>
-          <Typography variant="h1" fontSize={"4rem"} id={"preferences-page-heading"}>Communication Gateways</Typography>
+          <Typography variant="h1" fontSize={"4rem"} id={"gateway-page-heading"}>Communication Gateways</Typography>
         </Grid>
 
         <Grid xs={12} container>
@@ -94,7 +94,7 @@ const GatewayTable = observer(() => {
                            queryParam={"gatewayId"}
                            label={"Gateway ID"}
                            InputIcon={TagRoundedIcon}
-                           fetchResults={getGateways}
+                           fetchResults={getGatewaysForTable}
           />
         </Grid>
 
@@ -107,7 +107,7 @@ const GatewayTable = observer(() => {
                            queryParam={"gatewayName"}
                            label={"Gateway Name"}
                            InputIcon={SearchRoundedIcon}
-                           fetchResults={getGateways}
+                           fetchResults={getGatewaysForTable}
           />
         </Grid>
 
@@ -120,7 +120,7 @@ const GatewayTable = observer(() => {
                            queryParam={"gatewayDescription"}
                            label={"Description"}
                            InputIcon={SearchRoundedIcon}
-                           fetchResults={getGateways}
+                           fetchResults={getGatewaysForTable}
           />
         </Grid>
 
@@ -133,7 +133,7 @@ const GatewayTable = observer(() => {
                            queryParam={"gatewayEndpointUrl"}
                            label={"Endpoint URL"}
                            InputIcon={WebhookRoundedIcon}
-                           fetchResults={getGateways}
+                           fetchResults={getGatewaysForTable}
           />
         </Grid>
 
@@ -144,7 +144,7 @@ const GatewayTable = observer(() => {
                     onClick={() => {
                       rootStore.gatewayTableStore.resetFilters();
                       setSearchParams(new URLSearchParams());
-                      getGateways();
+                      getGatewaysForTable();
                     }}
                     id={"reset-filters-button"}
             >Reset Filters</Button>
@@ -152,13 +152,14 @@ const GatewayTable = observer(() => {
           <Grid xs={6} sx={{pl: 1}}>
             <LoadingButton loading={rootStore.gatewayTableStore.isLoading} variant="contained" fullWidth
                            color="secondary" endIcon={<RefreshRoundedIcon/>}
-                           onClick={() => getGateways()} loadingPosition="end"
+                           id={"refresh-gateways-button"}
+                           onClick={() => getGatewaysForTable()} loadingPosition="end"
             >Refresh</LoadingButton>
           </Grid>
         </Grid>
 
         <Grid xs={12}>
-          <DataGrid columns={columns} rows={rootStore.gatewayTableStore.gatewayTableData}
+          <DataGrid columns={gatewayTablePageColumns} rows={rootStore.gatewayTableStore.gatewayTableData}
                     autoHeight
                     initialState={{
                       pagination: {

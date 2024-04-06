@@ -30,44 +30,53 @@ public class ScheduleController {
     /**
      * Create a new schedule
      *
-     * @param createScheduleDTO the schedule to create
-     * @param bindingResult     validation errors of the request body
+     * @param createPutScheduleDTO the schedule to create
+     * @param bindingResult        validation errors of the request body
      * @return the created schedule
      */
     @PreAuthorize("hasAuthority('SCOPE_SCHEDULE:WRITE')")
     @PostMapping
     public ResponseEntity<ScheduleDescriptionDTO> createSchedule(
-            @Valid @RequestBody CreateScheduleDTO createScheduleDTO,
+            @Valid @RequestBody CreatePutScheduleDTO createPutScheduleDTO,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new RequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
-        if (createScheduleDTO.isInvalid()) {
+        if (createPutScheduleDTO.getNumberOfSpecifications() != 1) {
             throw new RequestException("Please provide exactly one schedule configuration, either: 'calendar', 'interval' or 'cronExpression'", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(scheduleService.createSchedule(createScheduleDTO), HttpStatus.CREATED);
+        if (createPutScheduleDTO.getGatewayId() == null || createPutScheduleDTO.getGatewayId().isBlank()) {
+            throw new RequestException("'gatewayId' cannot be empty", HttpStatus.BAD_REQUEST);
+        }
+        if (createPutScheduleDTO.getUserId() == null || createPutScheduleDTO.getUserId().isBlank()) {
+            throw new RequestException("'userId' cannot be empty", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(scheduleService.createSchedule(createPutScheduleDTO), HttpStatus.CREATED);
     }
 
     /**
      * Update an existing schedule
      *
-     * @param createScheduleDTO the new schedule parameters
-     * @param bindingResult     validation errors of the DTO
+     * @param createPutScheduleDTO the new schedule parameters
+     * @param bindingResult        validation errors of the DTO
      * @return the updated schedule
      */
     @PreAuthorize("hasAuthority('SCOPE_SCHEDULE:WRITE')")
     @PutMapping
     public ResponseEntity<ScheduleDescriptionDTO> updateSchedule(
-            @Valid @RequestBody CreateScheduleDTO createScheduleDTO,
+            @Valid @RequestBody CreatePutScheduleDTO createPutScheduleDTO,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             throw new RequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
-        if (createScheduleDTO.isInvalid()) {
-            throw new RequestException("Please provide exactly one schedule configuration, either: 'calendar', 'interval' or 'cronExpression'", HttpStatus.BAD_REQUEST);
+        if (createPutScheduleDTO.getScheduleId() == null || createPutScheduleDTO.getScheduleId().isBlank()) {
+            throw new RequestException("Please provide a 'scheduleId' in the request body to update a schedule", HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(scheduleService.updateSchedule(createScheduleDTO));
+        if (createPutScheduleDTO.getNumberOfSpecifications() > 1) {
+            throw new RequestException("Please only provide zero or one schedule configurations, either: 'calendar', 'interval' or 'cronExpression'", HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(scheduleService.updateSchedule(createPutScheduleDTO));
     }
 
     /**

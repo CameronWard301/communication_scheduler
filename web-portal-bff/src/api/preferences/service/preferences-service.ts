@@ -1,6 +1,6 @@
-import {ClientPreferences, GatewayTimeout, ServerPreferences, TimeUnit} from "../model/Preferences";
+import { ClientPreferences, GatewayTimeout, ServerPreferences, TimeUnit } from "../model/Preferences";
 import axiosClient from "../../../axios-client";
-import {BFFResponse} from "../../../model/BFFResponse";
+import { BFFResponse } from "../../../model/BFFResponse";
 import extractAuthToken from "../../../helper/extract-auth-token";
 
 const getTimeUnit = (value: String): TimeUnit => {
@@ -12,8 +12,8 @@ const getTimeUnit = (value: String): TimeUnit => {
   return {
     value: parseInt(value.slice(0, -1)),
     unit: unit
-  }
-}
+  };
+};
 
 const convertToSeconds = (timeUnit: TimeUnit): number => {
   timeUnit.unit = timeUnit.unit.toUpperCase();
@@ -31,7 +31,7 @@ const convertToSeconds = (timeUnit: TimeUnit): number => {
     default:
       throw new Error("Invalid time unit");
   }
-}
+};
 
 export const PreferencesService = () => {
 
@@ -49,21 +49,21 @@ export const PreferencesService = () => {
           gatewayTimeout: getTimeUnit(serverPreferences.gatewayTimeoutSeconds + "S"),
           initialInterval: getTimeUnit(serverPreferences.retryPolicy.initialInterval),
           maximumInterval: getTimeUnit(serverPreferences.retryPolicy.maximumInterval),
-          startToCloseTimeout: getTimeUnit(serverPreferences.retryPolicy.startToCloseTimeout),
+          startToCloseTimeout: getTimeUnit(serverPreferences.retryPolicy.startToCloseTimeout)
         } as ClientPreferences
       };
 
     }).catch((reason) => {
       throw reason;
     });
-  }
+  };
 
   const putPreferences = async (token: string | undefined, preferences: ClientPreferences): Promise<BFFResponse<ClientPreferences>> => {
     const gatewayTimeout = await axiosClient.put(process.env.PREFERENCES_API_URL as string + "/gateway-timeout", {
       gatewayTimeoutSeconds: convertToSeconds(preferences.gatewayTimeout)
     }, {
       headers: extractAuthToken(token)
-    })
+    });
 
     const retryPolicy = await axiosClient.put(process.env.PREFERENCES_API_URL as string + "/retry-policy", {
       maximumAttempts: preferences.maximumAttempts,
@@ -73,7 +73,7 @@ export const PreferencesService = () => {
       startToCloseTimeout: "PT" + preferences.startToCloseTimeout.value + preferences.startToCloseTimeout.unit.toUpperCase()
     }, {
       headers: extractAuthToken(token)
-    })
+    });
 
     return {
       status: 200,
@@ -83,11 +83,11 @@ export const PreferencesService = () => {
         gatewayTimeout: getTimeUnit((gatewayTimeout.data as GatewayTimeout).gatewayTimeoutSeconds + "S"),
         initialInterval: getTimeUnit(retryPolicy.data.initialInterval),
         maximumInterval: getTimeUnit(retryPolicy.data.maximumInterval),
-        startToCloseTimeout: getTimeUnit(retryPolicy.data.startToCloseTimeout),
+        startToCloseTimeout: getTimeUnit(retryPolicy.data.startToCloseTimeout)
       } as ClientPreferences
     };
 
-  }
+  };
 
-  return {getPreferences, putPreferences};
-}
+  return { getPreferences, putPreferences };
+};

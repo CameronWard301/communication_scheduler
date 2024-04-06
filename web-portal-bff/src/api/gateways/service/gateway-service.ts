@@ -1,4 +1,4 @@
-import {BFFResponse} from "../../../model/BFFResponse";
+import { BFFResponse } from "../../../model/BFFResponse";
 import axiosClient from "../../../axios-client";
 import extractAuthToken from "../../../helper/extract-auth-token";
 import {
@@ -64,29 +64,29 @@ export const GatewayService = () => {
       }
       throw reason;
     });
-  }
+  };
 
   const getGatewayById = async (token: string | undefined, gatewayId: string): Promise<BFFResponse<Gateway>> => {
     return await axiosClient.get(`${process.env.GATEWAY_API_URL as string}/${gatewayId}`, {
-      headers: extractAuthToken(token),
+      headers: extractAuthToken(token)
     }).then((value) => {
       const serverGateway = value.data as Gateway;
       return {
         status: value.status,
         data: {
           ...serverGateway,
-          dateCreated: new Date(serverGateway.dateCreated).toLocaleString(),
+          dateCreated: new Date(serverGateway.dateCreated).toLocaleString()
         } as Gateway
       };
 
     }).catch((reason) => {
       throw reason;
     });
-  }
+  };
 
   const deleteGatewayById = async (token: string | undefined, gatewayId: string): Promise<BFFResponse<undefined>> => {
     return await axiosClient.delete(`${process.env.GATEWAY_API_URL as string}/${gatewayId}`, {
-      headers: extractAuthToken(token),
+      headers: extractAuthToken(token)
     }).then((value) => {
       return {
         status: value.status,
@@ -95,43 +95,43 @@ export const GatewayService = () => {
     }).catch((reason) => {
       throw reason;
     });
-  }
+  };
 
   const updateGateway = async (token: string | undefined, gateway: GatewayUpdateRequest): Promise<BFFResponse<Gateway>> => {
     return await axiosClient.put(`${process.env.GATEWAY_API_URL as string}`, gateway, {
-      headers: extractAuthToken(token),
+      headers: extractAuthToken(token)
     }).then((value) => {
       const serverGateway = value.data as Gateway;
       return {
         status: value.status,
         data: {
           ...serverGateway,
-          dateCreated: new Date(serverGateway.dateCreated).toLocaleString(),
+          dateCreated: new Date(serverGateway.dateCreated).toLocaleString()
         } as Gateway
       };
     }).catch((reason) => {
       throw reason;
     });
-  }
+  };
 
   const createGateway = async (token: string | undefined, gateway: BaseGateway): Promise<BFFResponse<Gateway>> => {
     return await axiosClient.post(`${process.env.GATEWAY_API_URL as string}`, gateway, {
-      headers: extractAuthToken(token),
+      headers: extractAuthToken(token)
     }).then((value) => {
       const serverGateway = value.data as Gateway;
       return {
         status: value.status,
         data: {
           ...serverGateway,
-          dateCreated: new Date(serverGateway.dateCreated).toLocaleString(),
+          dateCreated: new Date(serverGateway.dateCreated).toLocaleString()
         } as Gateway
       };
     }).catch((reason) => {
       throw reason;
     });
-  }
+  };
 
-  return {getGateways, getGatewayById, deleteGatewayById, updateGateway, createGateway};
-}
+  return { getGateways, getGatewayById, deleteGatewayById, updateGateway, createGateway };
+};
 
 export default GatewayService;

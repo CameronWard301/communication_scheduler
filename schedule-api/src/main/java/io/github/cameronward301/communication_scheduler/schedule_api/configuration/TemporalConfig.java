@@ -30,7 +30,7 @@ public class TemporalConfig {
     @Bean
     WorkflowServiceStubs workflowServiceStubs(@Value("${temporal-properties.endpoint}") String endpoint) {
         return WorkflowServiceStubs.newServiceStubs(WorkflowServiceStubsOptions.newBuilder()
-                        .setTarget(endpoint)
+                .setTarget(endpoint)
                 .build());
     }
 

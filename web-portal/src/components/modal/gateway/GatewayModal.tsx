@@ -8,7 +8,6 @@ import ScheduleSendRoundIcon from '@mui/icons-material/ScheduleSend';
 import {Gateway} from "../../../models/Gateways.ts";
 import {useGatewayService} from "../../../service/GatewayService.ts";
 import LoadingButton from "@mui/lab/LoadingButton";
-import {useNavigate} from "react-router-dom";
 import CustomTooltip from "../../tooltip";
 
 
@@ -42,7 +41,6 @@ const GatewayModal = observer(
    }: Props) => {
     const theme = useTheme();
     const {getAffectedSchedules} = useGatewayService();
-    const navigate = useNavigate();
     const style = {
       maxWidth: "60%",
       maxHeight: "93vh",
@@ -151,8 +149,7 @@ const GatewayModal = observer(
                     fullWidth
                     sx={{height: 56}}
                     onClick={() => {
-                      navigate("/schedules?gatewayId=" + gateway.id);
-                      setOpen(false);
+                      window.open("/schedules?gatewayId=" + gateway.id + "&strict=true", "_blank")
                     }}
                   >
                     View Affected Schedules

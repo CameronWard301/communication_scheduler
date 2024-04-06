@@ -130,30 +130,33 @@ export const ActionItem = ({
               cursor: "pointer",
               height: "100%",
               ":hover": {boxShadow: 10},
+              backgroundColor: theme.palette.primary.main,
               border: 1,
-              borderColor: theme.palette.primary.main
+              borderColor: theme.palette.primary.main,
+              p: 2
             }}
           >
             <Grid sx={{display: "flex", flexDirection: "column", height: "100%"}}>
-              <Typography variant={sizes[size].titleVariant as Variant} sx={{marginTop: 2, marginX: 0.5}}
-                          color={"white"} textAlign={"center"} id={componentName + "-title"}>
-                {title}
-              </Typography>
-              <Typography variant={"subtitle1"} textAlign={"center"} color={"white"} id={componentName + "-subtitle"}>
-                {subtitle}
-              </Typography>
               <Box
                 sx={{
-                  my: 3,
                   flexGrow: 1,
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "flex-end",
+                  justifyContent: "flex-start",
                   alignItems: "center",
                 }}
               >
-                {Icon && <Icon sx={{color: "white", fontSize: sizes[size].iconSize}}/>}
+                {Icon && <Icon sx={{fontSize: sizes[size].iconSize}}/>}
               </Box>
+              <Typography variant={sizes[size].titleVariant as Variant} sx={{marginY: 2, marginX: 0.5}}
+                          textAlign={"center"} id={componentName + "-title"}>
+                {title}
+              </Typography>
+
+              <Typography variant={"subtitle1"} textAlign={"center"} id={componentName + "-subtitle"}>
+                {subtitle}
+              </Typography>
+
             </Grid>
           </Card>
         )}

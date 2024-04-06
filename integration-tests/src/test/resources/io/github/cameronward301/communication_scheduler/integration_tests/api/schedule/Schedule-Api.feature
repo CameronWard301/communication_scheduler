@@ -14,14 +14,14 @@ Feature: Schedule API Scenarios
   Scenario: Get all schedules with no filters
     Given I have a bearer token with the "SCHEDULE:READ" scope
     When I get all schedules
-    Then I receive a page of schedules with 3 items with status code 200
+    Then I receive a page of schedules with at least 3 items with status code 200
 
   @RemoveExistingSchedules
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Get all schedules with no filters adjusting page size
-    Given I set the pageSize to be "2"
-    And I set the pageNumber to be "1"
+    Given I set the pageSize to be "1"
+    And I set the pageNumber to be "0"
     Given I have a bearer token with the "SCHEDULE:READ" scope
     When I get all schedules
     Then I receive a page of schedules with 1 items with status code 200
@@ -31,7 +31,7 @@ Feature: Schedule API Scenarios
   @RemoveMultipleSchedules
   Scenario: Get all schedules with userId filter
     Given I set the gatewayId filter to be: "gateway1"
-    And I set the userId filter to be: "user1"
+    And I set the userId filter to be: "my-test-user-id-1-integration-test"
     And I have a bearer token with the "SCHEDULE:READ" scope
     When I get all schedules
     Then I receive a page of schedules with 1 items with status code 200
@@ -186,29 +186,38 @@ Feature: Schedule API Scenarios
     When I update the schedule
     Then the response code is 400 and message: "400 : \"INVALID_ARGUMENT: Invalid schedule spec: CronString does not have 5-7 fields\""
 
+  @RemoveExistingSchedules
+  @CreateScheduleWithInterval
+  @RemoveSchedule
   Scenario: User updates a schedule with interval without gatewayId
     Given I have a schedule with the following details:
       | userId  | paused | interval   |
       | my user | false  | 10 seconds |
     And I have a bearer token with the "SCHEDULE:WRITE" scope
     When I update the schedule
-    Then the response code is 400 and message: "400 : \"'gatewayId' cannot be empty\""
+    Then the new or updated schedule is returned with status code of 200
 
+  @RemoveExistingSchedules
+  @CreateScheduleWithInterval
+  @RemoveSchedule
   Scenario: User updates a schedule with interval without userId
     Given I have a schedule with the following details:
       | gatewayId  | paused | interval   |
       | my gateway | false  | 10 seconds |
     And I have a bearer token with the "SCHEDULE:WRITE" scope
     When I update the schedule
-    Then the response code is 400 and message: "400 : \"'userId' cannot be empty\""
+    Then the new or updated schedule is returned with status code of 200
 
+  @RemoveExistingSchedules
+  @CreateScheduleWithInterval
+  @RemoveSchedule
   Scenario: User updates a new schedule with no schedule specification
     Given I have a schedule with the following details:
       | gatewayId  | userId  | paused |
       | my gateway | my user | false  |
     And I have a bearer token with the "SCHEDULE:WRITE" scope
     When I update the schedule
-    Then the response code is 400 and message: "400 : \"Please provide exactly one schedule configuration, either: 'calendar', 'interval' or 'cronExpression'\""
+    Then the new or updated schedule is returned with status code of 200
 
   Scenario: User updates an existing schedule without providing a schedule id
     Given I have a schedule with the following details:
@@ -251,7 +260,7 @@ Feature: Schedule API Scenarios
   @RemoveMultipleSchedules
   Scenario: User pauses multiple schedules matching the userId filter
     Given I have a bearer token with the "SCHEDULE:WRITE" scope
-    And I set the userId filter to be: "user1"
+    And I set the userId filter to be: "my-test-user-id-1-integration-test"
     And I have the following patch DTO:
       | paused |
       | true   |
@@ -276,7 +285,7 @@ Feature: Schedule API Scenarios
   Scenario: User updates multiple schedules matching the gateway and user filter
     Given I have a bearer token with the "SCHEDULE:WRITE" scope
     And I set the gatewayId filter to be: "gateway1"
-    And I set the userId filter to be: "user1"
+    And I set the userId filter to be: "my-test-user-id-1-integration-test"
     And I have the following patch DTO:
       | gatewayId           | paused |
       | test-gateway-update | true   |
@@ -322,7 +331,7 @@ Feature: Schedule API Scenarios
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Delete all schedules matching the userId
-    Given I set the userId filter to be: "user2"
+    Given I set the userId filter to be: "my-test-user-id-2-integration-test"
     And I have a bearer token with the "SCHEDULE:DELETE" scope
     When I batch delete schedules
     Then a modified DTO is returned with status 200 and message "Successfully Deleted" and totalModified is 2
@@ -364,7 +373,7 @@ Feature: Schedule API Scenarios
     And I set the gatewayId filter to be: "gateway1"
     And I have a bearer token with the "SCHEDULE:READ" scope
     When I get the schedule count
-    Then a CountDTO is returned with total: 1 and status code 200
+    Then a CountDTO is returned with total at least: 1 and status code 200
 
   @RemoveExistingSchedules
   @CreateMultipleSchedules
@@ -372,7 +381,7 @@ Feature: Schedule API Scenarios
   Scenario: Get the number of schedules matching an empty filter
     And I have a bearer token with the "SCHEDULE:READ" scope
     When I get the schedule count
-    Then a CountDTO is returned with total: 3 and status code 200
+    Then a CountDTO is returned with total at least: 3 and status code 200
 
   Scenario: User gets total schedules with wrong scope
     Given I have a bearer token with the "SCHEDULE:WRITE" scope

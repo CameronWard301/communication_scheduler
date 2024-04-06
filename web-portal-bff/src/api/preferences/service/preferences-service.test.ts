@@ -1,10 +1,10 @@
-import {PreferencesService} from "./preferences-service";
-import {ClientPreferences} from "../model/Preferences";
+import { PreferencesService } from "./preferences-service";
+import { ClientPreferences } from "../model/Preferences";
 import axiosClient from "../../../axios-client";
 import MockAdapter from "axios-mock-adapter";
 
 
-describe('PreferencesService', () => {
+describe("PreferencesService", () => {
   let preferencesService: ReturnType<typeof PreferencesService>;
   let mockAxios = new MockAdapter(axiosClient);
 
@@ -15,7 +15,7 @@ describe('PreferencesService', () => {
   });
 
 
-  it('should get preferences', async () => {
+  it("should get preferences", async () => {
 
 
     const expectedResponse = {
@@ -37,7 +37,7 @@ describe('PreferencesService', () => {
         value: 10,
         unit: "S"
       }
-    } as ClientPreferences
+    } as ClientPreferences;
 
     mockAxios.onGet(process.env.PREFERENCES_API_URL).reply(200, {
 
@@ -49,32 +49,32 @@ describe('PreferencesService', () => {
         maximumInterval: `PT${expectedResponse.maximumInterval.value}${expectedResponse.maximumInterval.unit}`,
         startToCloseTimeout: `PT${expectedResponse.startToCloseTimeout.value}${expectedResponse.startToCloseTimeout.unit}`
       }
-    })
+    });
 
-    const result = await preferencesService.getPreferences('test-token');
+    const result = await preferencesService.getPreferences("test-token");
     expect(result.status).toBe(200);
     expect(result.data).toBeDefined();
     expect(result.data).toEqual(expectedResponse);
 
   });
 
-  it('should throw an exception when getting preferences', async () => {
+  it("should throw an exception when getting preferences", async () => {
 
     mockAxios.onGet(process.env.PREFERENCES_API_URL).reply(() => Promise.reject({
       response: {
         status: 400,
-        data: 'Bad Request',
+        data: "Bad Request"
       }
     }));
 
 
-    preferencesService.getPreferences('test-token').catch((reason) => {
+    preferencesService.getPreferences("test-token").catch((reason) => {
       expect(reason.response.status).toBe(400);
-      expect(reason.response.data).toBe('Bad Request');
-    })
+      expect(reason.response.data).toBe("Bad Request");
+    });
   });
 
-  it('should put preferences with correct seconds', async () => {
+  it("should put preferences with correct seconds", async () => {
 
     const putRequest = {
       maximumAttempts: 100,
@@ -95,14 +95,14 @@ describe('PreferencesService', () => {
         value: 10,
         unit: "S"
       }
-    } as ClientPreferences
+    } as ClientPreferences;
 
 
     await verifyPutRequest(putRequest, putRequest, mockAxios, preferencesService);
 
   });
 
-  it('should put preferences with correct minutes', async () => {
+  it("should put preferences with correct minutes", async () => {
 
     const putRequest = {
       maximumAttempts: 100,
@@ -123,7 +123,7 @@ describe('PreferencesService', () => {
         value: 10,
         unit: "S"
       }
-    } as ClientPreferences
+    } as ClientPreferences;
 
     const putResponse = {
       maximumAttempts: 100,
@@ -144,7 +144,7 @@ describe('PreferencesService', () => {
         value: 10,
         unit: "S"
       }
-    } as ClientPreferences
+    } as ClientPreferences;
 
 
     await verifyPutRequest(putRequest, putResponse, mockAxios, preferencesService);
@@ -152,7 +152,7 @@ describe('PreferencesService', () => {
 
   });
 
-  it('should put preferences with correct hours', async () => {
+  it("should put preferences with correct hours", async () => {
 
     const putRequest = {
       maximumAttempts: 100,
@@ -173,7 +173,7 @@ describe('PreferencesService', () => {
         value: 10,
         unit: "S"
       }
-    } as ClientPreferences
+    } as ClientPreferences;
 
     const putResponse = {
       maximumAttempts: 100,
@@ -194,7 +194,7 @@ describe('PreferencesService', () => {
         value: 10,
         unit: "S"
       }
-    } as ClientPreferences
+    } as ClientPreferences;
 
 
     await verifyPutRequest(putRequest, putResponse, mockAxios, preferencesService);
@@ -202,7 +202,7 @@ describe('PreferencesService', () => {
 
   });
 
-  it('should put preferences with correct days', async () => {
+  it("should put preferences with correct days", async () => {
 
     const putRequest = {
       maximumAttempts: 100,
@@ -223,7 +223,7 @@ describe('PreferencesService', () => {
         value: 10,
         unit: "S"
       }
-    } as ClientPreferences
+    } as ClientPreferences;
 
     const putResponse = {
       maximumAttempts: 100,
@@ -244,7 +244,7 @@ describe('PreferencesService', () => {
         value: 10,
         unit: "S"
       }
-    } as ClientPreferences
+    } as ClientPreferences;
 
 
     await verifyPutRequest(putRequest, putResponse, mockAxios, preferencesService);
@@ -252,7 +252,7 @@ describe('PreferencesService', () => {
 
   });
 
-  it('should put preferences with correct years', async () => {
+  it("should put preferences with correct years", async () => {
 
     const putRequest = {
       maximumAttempts: 100,
@@ -273,7 +273,7 @@ describe('PreferencesService', () => {
         value: 10,
         unit: "S"
       }
-    } as ClientPreferences
+    } as ClientPreferences;
 
     const putResponse = {
       maximumAttempts: 100,
@@ -294,7 +294,7 @@ describe('PreferencesService', () => {
         value: 10,
         unit: "S"
       }
-    } as ClientPreferences
+    } as ClientPreferences;
 
 
     await verifyPutRequest(putRequest, putResponse, mockAxios, preferencesService);
@@ -302,7 +302,7 @@ describe('PreferencesService', () => {
 
   });
 
-  it('should throw an error if time unit is wrong for gateways seconds', async () => {
+  it("should throw an error if time unit is wrong for gateways seconds", async () => {
 
     const putRequest = {
       maximumAttempts: 100,
@@ -323,15 +323,15 @@ describe('PreferencesService', () => {
         value: 10,
         unit: "S"
       }
-    } as ClientPreferences
+    } as ClientPreferences;
 
 
-    preferencesService.putPreferences('test-token', putRequest).catch((reason) => {
+    preferencesService.putPreferences("test-token", putRequest).catch((reason) => {
       expect(reason.message).toBe("Invalid time unit");
-    })
+    });
   });
 
-})
+});
 
 const verifyPutRequest = async (putRequest: ClientPreferences, putResponse: ClientPreferences, mockAxios: MockAdapter, preferencesService: ReturnType<typeof PreferencesService>) => {
   mockAxios.onPut(process.env.PREFERENCES_API_URL + "/gateway-timeout").reply(200, {
@@ -346,11 +346,11 @@ const verifyPutRequest = async (putRequest: ClientPreferences, putResponse: Clie
     startToCloseTimeout: `PT${putRequest.startToCloseTimeout.value}${putRequest.startToCloseTimeout.unit}`
   });
 
-  const result = await preferencesService.putPreferences('test-token', putRequest);
+  const result = await preferencesService.putPreferences("test-token", putRequest);
 
   expect(result.status).toBe(200);
   expect(result.data).toBeDefined();
   expect(result.data).toEqual(putResponse);
-}
+};
 
 

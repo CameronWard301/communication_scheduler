@@ -1,4 +1,4 @@
-import express, {type Express} from "express";
+import express, { type Express } from "express";
 import dotenv from "dotenv";
 
 import swaggerUi from "swagger-ui-express";
@@ -8,6 +8,7 @@ import preferencesController from "./api/preferences/controller/preferences-cont
 import * as fs from "fs";
 import * as https from "https";
 import gatewayController from "./api/gateways/controller/gateway-controller";
+import scheduleController from "./api/schedule/controller/schedule-controller";
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ const router = require("express").Router();
 let version: string;
 let options = {};
 try {
-  version = fs.readFileSync('version', 'utf8');
+  version = fs.readFileSync("version", "utf8");
   let key = process.env.PRIVATE_KEY;
   let cert = process.env.CERTIFICATE;
   options = {
@@ -26,24 +27,24 @@ try {
     cert: cert
   };
 } catch (err) {
-  console.error('Error reading version from file:', err);
+  console.error("Error reading version from file:", err);
 }
 
 router.use("/api-docs", swaggerUi.serve);
 router.get("/api-docs", swaggerUi.setup(swaggerDocument));
 router.use(express.json());
 app.use(router);
-app.use(function (_req, res, next) {
+app.use(function(_req, res, next) {
   res.header("Access-Control-Allow-Origin", process.env.ALLOW_ORIGIN);
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
 
   next();
-})
+});
 app.use(authenticationController);
 app.use(preferencesController);
 app.use(gatewayController);
-
+app.use(scheduleController);
 
 const printConfig = () => {
   console.log("[server]: SSL Verification: " + process.env.SSL_VERIFICATION);
@@ -51,7 +52,7 @@ const printConfig = () => {
   console.log("[server]: Preferences service at: " + process.env.PREFERENCES_API_URL);
   console.log("[server]: Gateway service at: " + process.env.GATEWAY_API_URL);
   console.log("[server]: Schedule service at: " + process.env.SCHEDULE_API_URL);
-}
+};
 
 if (process.env.HTTPS_ENABLED == "false") {
   app.listen(port, () => {

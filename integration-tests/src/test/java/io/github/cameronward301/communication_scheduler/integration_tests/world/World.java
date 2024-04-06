@@ -15,4 +15,5 @@ public class World {
     private String workflowId;
     private String workflowRunId;
     private Gateway gateway;
+    private String createdScheduleUserId;
 }

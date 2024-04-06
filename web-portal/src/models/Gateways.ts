@@ -1,9 +1,9 @@
 export interface Gateway {
-  "id": string,
-  "endpointUrl": string,
-  "friendlyName": string,
-  "description": string
-  "dateCreated": string
+  id: string,
+  endpointUrl: string,
+  friendlyName: string,
+  description: string
+  dateCreated: string
 }
 
 export interface GatewayPage {
