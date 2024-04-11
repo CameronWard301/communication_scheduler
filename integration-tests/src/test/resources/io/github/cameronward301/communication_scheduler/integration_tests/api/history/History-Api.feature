@@ -22,9 +22,9 @@ Feature: History API Scenarios
     Given I have a bearer token with the "HISTORY:READ" scope
     And I set the history pageSize to be 1
     And I set the history pageNumber to be 0
-    And I set the history userId filter to be "test-user-id"
-    And I set the history gatewayId filter to be "test-gateway-id"
-    And I set the history scheduleId filter to be "test-schedule-id"
+    And I set the history userId filter to be the userId
+    And I set the history gatewayId filter to be the gatewayId
+    And I set the history scheduleId filter to be the scheduleId
     And I set the status filter to be "RUNNING"
     When I get all workflows
     Then the I receive a page of history workflows with a size of 1 and status code 200
@@ -35,11 +35,12 @@ Feature: History API Scenarios
   @RemoveTestWorkflows
   Scenario: Should get workflows by filter and have 0 results on the third page
     Given I have a bearer token with the "HISTORY:READ" scope
+    And I wait 1 second
     And I set the history pageSize to be 5
     And I set the history pageNumber to be 2
-    And I set the history userId filter to be "test-user-id"
-    And I set the history gatewayId filter to be "test-gateway-id"
-    And I set the history scheduleId filter to be "test-schedule-id"
+    And I set the history userId filter to be the userId
+    And I set the history gatewayId filter to be the gatewayId
+    And I set the history scheduleId filter to be the scheduleId
     And I set the status filter to be "RUNNING"
     When I get all workflows
     Then the I receive a page of history workflows with a size of 0 and status code 200
@@ -51,9 +52,9 @@ Feature: History API Scenarios
   Scenario: Should get workflows by invalid filter produces an empty page
     Given I have a bearer token with the "HISTORY:READ" scope
     And I set the history pageSize to be 100
-    And I set the history userId filter to be "test-user-id-invalid"
-    And I set the history gatewayId filter to be "test-gateway-id"
-    And I set the history scheduleId filter to be "test-schedule-id"
+    And I set the history userId filter to be "invalid-user-id-xxxx"
+    And I set the history gatewayId filter to be the gatewayId
+    And I set the history scheduleId filter to be the scheduleId
     And I set the status filter to be "RUNNING"
     When I get all workflows
     Then the I receive a page of history workflows with a size of 0 and status code 200
@@ -147,9 +148,9 @@ Feature: History API Scenarios
   Scenario: Should get total workflows by filter
     Given I have a bearer token with the "HISTORY:READ" scope
     And I set the history pageSize to be 1
-    And I set the history userId filter to be "test-user-id"
-    And I set the history gatewayId filter to be "test-gateway-id"
-    And I set the history scheduleId filter to be "test-schedule-id"
+    And I set the history userId filter to be the userId
+    And I set the history gatewayId filter to be the gatewayId
+    And I set the history scheduleId filter to be the scheduleId
     And I set the status filter to be "RUNNING"
     When I get total workflows
     Then the I receive a total number of 10 and status code 200
@@ -160,9 +161,9 @@ Feature: History API Scenarios
   Scenario: Should get total workflows by filter with no results
     Given I have a bearer token with the "HISTORY:READ" scope
     And I set the history pageSize to be 1
-    And I set the history userId filter to be "test-user-id-invalid"
-    And I set the history gatewayId filter to be "test-gateway-id-invalid"
-    And I set the history scheduleId filter to be "test-schedule-id-invalid"
+    And I set the history userId filter to be "invalid-user-id-xxxx"
+    And I set the history gatewayId filter to be "invalid-gateway-id-xxxx"
+    And I set the history scheduleId filter to be "invalid-schedule-id-xxxx"
     And I set the status filter to be "RUNNING"
     When I get total workflows
     Then the I receive a total number of 0 and status code 200

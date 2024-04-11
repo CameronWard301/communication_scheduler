@@ -45,16 +45,16 @@ describe("ScheduleService", () => {
 
   const getDateString = (date: Date) => {
     const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    return new Intl.DateTimeFormat('en-GB', {
+    return new Intl.DateTimeFormat("en-GB", {
       timeZone: userTimezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
       hour12: false,
-      timeZoneName: 'short'
+      timeZoneName: "short"
     }).format(date);
   };
 
@@ -1230,6 +1230,10 @@ describe("ScheduleService", () => {
       schedule = {
         ...schedule,
         gateway: {
+          id: "",
+          endpointUrl: "",
+          dateCreated: "",
+          description: "",
           friendlyName: "Gateway not found"
         } as Gateway
       };
@@ -1245,7 +1249,7 @@ describe("ScheduleService", () => {
           ...schedule,
           gateway: {
             ...schedule.gateway,
-            id: "0"
+            id: ""
           } as Gateway
         };
 

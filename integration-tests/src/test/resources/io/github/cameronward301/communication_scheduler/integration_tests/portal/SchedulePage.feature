@@ -215,7 +215,7 @@ Feature: Schedule Web Portal Page
     And I click the first gateway in the data grid filter results
     When I click by id on "next-step"
     And I click by id on "calendar-month"
-    Then the element with id "calendar-month-title" should be set to: "Recurring Month(s)"
+    Then the element with id "calendar-month-title" should be set to: "Recurring Month(s)*"
     When I set the "day-of-the-month" field to be "0"
     Then the button with id "next-step" should be disabled
     When I set the "day-of-the-month" field to be "31"
@@ -275,7 +275,7 @@ Feature: Schedule Web Portal Page
   @MongoDbRemoveEntity
   @RemoveSchedule
   Scenario: User can navigate to the edit schedule page
-    When I navigate go to the edit schedule page
+    When I navigate to the edit schedule page
     Then I can see the edit schedule page
 
   Scenario: User navigates to the edit schedule page with an invalid schedule id
@@ -287,7 +287,7 @@ Feature: Schedule Web Portal Page
   @CreateScheduleWithInterval
   @RemoveSchedule
   Scenario: User that doesn't make any edits can't save the schedule
-    Given I navigate go to the edit schedule page
+    Given I navigate to the edit schedule page
     When I click by id on "confirm-edit-button"
     Then I should see a snackbar message with the text "No changes to save, please edit a field and try again"
 
@@ -295,7 +295,7 @@ Feature: Schedule Web Portal Page
   @CreateScheduleWithInterval
   @RemoveSchedule
   Scenario: User can edit the user id of a schedule
-    Given I navigate go to the edit schedule page
+    Given I navigate to the edit schedule page
     And I set the "user-id-input" field to be "my-test-user-id"
     When I click by id on "confirm-edit-button"
     Then the element with id "user-id-new-value" should be set to: "my-test-user-id"
@@ -311,7 +311,7 @@ Feature: Schedule Web Portal Page
   @MongoDbRemoveMultipleEntities
   @RemoveSchedule
   Scenario: User can change the gateway of a schedule
-    Given I navigate go to the edit schedule page
+    Given I navigate to the edit schedule page
     And I click by id on "change-gateway-button"
     And I search for the new gateway
     And I click by id on "refresh-gateways-button"
@@ -328,7 +328,7 @@ Feature: Schedule Web Portal Page
   @CreateScheduleWithInterval
   @RemoveSchedule
   Scenario: User can change the schedule to a new interval
-    Given I navigate go to the edit schedule page
+    Given I navigate to the edit schedule page
     And I click by id on "change-schedule"
     And I set the "days-interval-input" field to be "2"
     And I set the "hours-interval-input" field to be "2"
@@ -350,7 +350,7 @@ Feature: Schedule Web Portal Page
   @CreateScheduleWithInterval
   @RemoveSchedule
   Scenario: User can change the schedule to a day of the week
-    Given I navigate go to the edit schedule page
+    Given I navigate to the edit schedule page
     And I click by id on "change-schedule"
     And I click by id on "calendar-week"
     And I click by id on "schedule-type-Tuesday"
@@ -369,7 +369,7 @@ Feature: Schedule Web Portal Page
   @CreateScheduleWithInterval
   @RemoveSchedule
   Scenario: User can change the schedule to a day of the month
-    Given I navigate go to the edit schedule page
+    Given I navigate to the edit schedule page
     And I click by id on "change-schedule"
     And I click by id on "calendar-month"
     And I set the "day-of-the-month" field to be "2"
@@ -389,7 +389,7 @@ Feature: Schedule Web Portal Page
   @CreateScheduleWithInterval
   @RemoveSchedule
   Scenario: User can change the schedule to a cron schedule
-    Given I navigate go to the edit schedule page
+    Given I navigate to the edit schedule page
     And I click by id on "change-schedule"
     And I click by id on "cron-string"
     And I set the "cron-string-input" field to be "0 8-10 * * *"
@@ -406,7 +406,7 @@ Feature: Schedule Web Portal Page
   @CreateScheduleWithInterval
   @RemoveSchedule
   Scenario: User can't confirm the change gateway modal without selecting a gateway
-    Given I navigate go to the edit schedule page
+    Given I navigate to the edit schedule page
     And I click by id on "change-gateway-button"
     And the button with id "confirm-modal-button" should be disabled
 
@@ -416,7 +416,7 @@ Feature: Schedule Web Portal Page
   @MongoDbRemoveEntity
   @RemoveSchedule
   Scenario: The user can pause a schedule from the edit page
-    Given I navigate go to the edit schedule page
+    Given I navigate to the edit schedule page
     And I click by id on "pause-schedule-button"
     And I should see the confirm schedule modal
     And the element with id "transition-modal-title" should be set to: "Are you sure you want to pause this schedule?"
@@ -430,7 +430,7 @@ Feature: Schedule Web Portal Page
   @MongoDbRemoveEntity
   @RemoveSchedule
   Scenario: The user can resume a schedule from the edit page
-    Given I navigate go to the edit schedule page
+    Given I navigate to the edit schedule page
     And I click by id on "pause-schedule-button"
     And I click by id on "confirm-modal-button"
     And I should see a snackbar message with the text "Schedule Paused"
@@ -447,7 +447,7 @@ Feature: Schedule Web Portal Page
   @MongoDbSetupEntity
   @MongoDbRemoveEntity
   Scenario: The user can delete a schedule from the edit page
-    Given I navigate go to the edit schedule page
+    Given I navigate to the edit schedule page
     And I click by id on "delete-schedule-button"
     And I should see the confirm schedule modal
     And the element with id "transition-modal-title" should be set to: "Are you sure you want to delete this schedule?"
@@ -471,7 +471,7 @@ Feature: Schedule Web Portal Page
     Then the button with id "bulk-actions" should not be disabled
     When I press the select all button in the data grid
     Then the button with id "bulk-actions" should be disabled
-    When I click the first schedule in the data grid filter results
+    When I click the first schedule in the data grid filter results with the user ID
     Then the button with id "bulk-actions" should not be disabled
     When I click by id on "reset-selection-button"
     Then the button with id "bulk-actions" should be disabled
@@ -488,40 +488,41 @@ Feature: Schedule Web Portal Page
     When I click by id on "delete-schedules-card"
     And I click by id on "next-step"
     Then the element with id "bulk-action-review-type" should be set to: "Delete"
-    And the element with id "selected-schedule-number" should be set to: "2"
+    And the element with id "selected-schedule-number" should be set to: "2" after clicking by id on "refresh-selection"
     And the total schedule results should be "1–2 of 2"
     When I click by id on "apply-bulk-action-button"
     Then the element with id "bulk-action-type" should be set to: "Delete"
     And the element with id "total-schedules-affected" should be set to: "2"
     When I click by id on "confirm-modal-button"
     Then I should see a snackbar message with the text "Batch update operation success. Affected 2 schedules"
-    And I click by id on "refresh-schedules"
-    And the total schedule results should be 0
+    And the total schedule results should be 0 after clicking by id on "refresh-schedules"
 
-  @RemoveExistingSchedules
+  @RemoveExistingSchedulesTest
   @CreateMultipleSchedules
+  @CheckSchedulesAreCreated
   @RemoveMultipleSchedules
   Scenario: User can bulk delete selected schedules
     Given I navigate to "/schedules?userId=my-test-user-id-2-integration-test"
-    When I click the first schedule in the data grid filter results
+    When I click the first schedule in the data grid filter results with user ID "my-test-user-id-2-integration-test"
+    And the element with css class "MuiDataGrid-selectedRowCount" should be set to: "1 row selected"
     And I click by id on "bulk-actions"
     Then The URI is now "/schedule/actions"
     And the button with id "next-step" should be disabled
     When I click by id on "delete-schedules-card"
     And I click by id on "next-step"
     Then the element with id "bulk-action-review-type" should be set to: "Delete"
-    And the element with id "selected-schedule-number" should be set to: "1"
+    And the element with id "selected-schedule-number" should be set to: "1" after clicking by id on "refresh-selection"
     And the total schedule results should be 1
     When I click by id on "apply-bulk-action-button"
     Then the element with id "bulk-action-type" should be set to: "Delete"
     And the element with id "total-schedules-affected" should be set to: "1"
     When I click by id on "confirm-modal-button"
     Then I should see a snackbar message with the text "Batch update operation success. Affected 1 schedules"
-    And I click by id on "refresh-schedules"
-    And the total schedule results should be 1
+    And the total schedule results should be 1 after clicking by id on "refresh-schedules"
 
   @RemoveExistingSchedules
   @CreateMultipleSchedules
+  @CheckSchedulesAreCreated
   @RemoveMultipleSchedules
   Scenario: User can bulk pause all selected schedules
     Given I navigate to "/schedules?userId=my-test-user-id-2-integration-test"
@@ -532,14 +533,13 @@ Feature: Schedule Web Portal Page
     When I click by id on "pause-schedules-card"
     And I click by id on "next-step"
     Then the element with id "bulk-action-review-type" should be set to: "Pause"
-    And the element with id "selected-schedule-number" should be set to: "2"
+    And the element with id "selected-schedule-number" should be set to: "2" after clicking by id on "refresh-selection"
     And the total schedule results should be "1–2 of 2"
     When I click by id on "apply-bulk-action-button"
     Then the element with id "bulk-action-type" should be set to: "Pause"
     And the element with id "total-schedules-affected" should be set to: "2"
     When I click by id on "confirm-modal-button"
     Then I should see a snackbar message with the text "Batch update operation success. Affected 2 schedules"
-    And I wait 1 second
     And I click by id on "refresh-schedules"
     And the total schedule results should be "1–2 of 2"
     And the selected schedules now have a status of "Paused"
@@ -549,21 +549,22 @@ Feature: Schedule Web Portal Page
   @RemoveMultipleSchedules
   Scenario: User can bulk pause selected schedules
     Given I navigate to "/schedules?userId=my-test-user-id-2-integration-test"
-    When I click the first schedule in the data grid filter results
+    When I click the first schedule in the data grid filter results with user ID "my-test-user-id-2-integration-test"
+    And the element with css class "MuiDataGrid-selectedRowCount" should be set to: "1 row selected"
     And I click by id on "bulk-actions"
     Then The URI is now "/schedule/actions"
     And the button with id "next-step" should be disabled
     When I click by id on "pause-schedules-card"
     And I click by id on "next-step"
     Then the element with id "bulk-action-review-type" should be set to: "Pause"
-    And the element with id "selected-schedule-number" should be set to: "1"
+    And the element with id "selected-schedule-number" should be set to: "1" after clicking by id on "refresh-selection"
     And the total schedule results should be 1
     When I click by id on "apply-bulk-action-button"
     Then the element with id "bulk-action-type" should be set to: "Pause"
     And the element with id "total-schedules-affected" should be set to: "1"
     When I click by id on "confirm-modal-button"
     Then I should see a snackbar message with the text "Batch update operation success. Affected 1 schedules"
-    And the total schedule results should be "1–2 of 2"
+    And the total schedule results should be "1–2 of 2" after clicking by id on "refresh-schedules"
     And the first schedule has a status of "Paused"
     And the last schedule has a status of "Running"
 
@@ -579,7 +580,7 @@ Feature: Schedule Web Portal Page
     When I click by id on "resume-schedules-card"
     And I click by id on "next-step"
     Then the element with id "bulk-action-review-type" should be set to: "Resume"
-    And the element with id "selected-schedule-number" should be set to: "2"
+    And the element with id "selected-schedule-number" should be set to: "2" after clicking by id on "refresh-selection"
     And the total schedule results should be "1–2 of 2"
     When I click by id on "apply-bulk-action-button"
     Then the element with id "bulk-action-type" should be set to: "Resume"
@@ -594,14 +595,15 @@ Feature: Schedule Web Portal Page
   @RemoveMultipleSchedules
   Scenario: User can bulk run selected schedules
     Given I navigate to "/schedules?userId=my-test-user-id-2-integration-test"
-    When I click the first schedule in the data grid filter results
+    When I click the first schedule in the data grid filter results with user ID "my-test-user-id-2-integration-test"
+    And the element with css class "MuiDataGrid-selectedRowCount" should be set to: "1 row selected"
     And I click by id on "bulk-actions"
     Then The URI is now "/schedule/actions"
     And the button with id "next-step" should be disabled
     When I click by id on "resume-schedules-card"
     And I click by id on "next-step"
     Then the element with id "bulk-action-review-type" should be set to: "Resume"
-    And the element with id "selected-schedule-number" should be set to: "1"
+    And the element with id "selected-schedule-number" should be set to: "1" after clicking by id on "refresh-selection"
     And the total schedule results should be 1
     When I click by id on "apply-bulk-action-button"
     Then the element with id "bulk-action-type" should be set to: "Resume"
@@ -622,6 +624,7 @@ Feature: Schedule Web Portal Page
   Scenario: User can bulk update all selected schedule's gateway
     Given I navigate to "/schedules?userId=my-test-user-id-2-integration-test"
     When I press the select all button in the data grid
+    And the element with css class "MuiDataGrid-selectedRowCount" should be: "2 rows selected"
     And I click by id on "bulk-actions"
     Then The URI is now "/schedule/actions"
     And the button with id "next-step" should be disabled
@@ -635,7 +638,7 @@ Feature: Schedule Web Portal Page
     Then the button with id "next-step" should not be disabled
     When I click by id on "next-step"
     Then the element with id "bulk-action-review-type" should be set to: "Update Gateway"
-    And the element with id "selected-schedule-number" should be set to: "2"
+    And the element with id "selected-schedule-number" should be set to: "2" after clicking by id on "refresh-selection"
     And the total schedule results should be "1–2 of 2"
     And I should see the existing gateway details
     When I click by id on "apply-bulk-action-button"
@@ -654,7 +657,8 @@ Feature: Schedule Web Portal Page
   @RemoveMultipleSchedules
   Scenario: User can bulk update selected schedule's gateway
     Given I navigate to "/schedules?userId=my-test-user-id-2-integration-test"
-    When I click the first schedule in the data grid filter results
+    When I click the first schedule in the data grid filter results with user ID "my-test-user-id-2-integration-test"
+    And the element with css class "MuiDataGrid-selectedRowCount" should be set to: "1 row selected"
     And I click by id on "bulk-actions"
     Then The URI is now "/schedule/actions"
     And the button with id "next-step" should be disabled
@@ -668,7 +672,7 @@ Feature: Schedule Web Portal Page
     Then the button with id "next-step" should not be disabled
     When I click by id on "next-step"
     Then the element with id "bulk-action-review-type" should be set to: "Update Gateway"
-    And the element with id "selected-schedule-number" should be set to: "1"
+    And the element with id "selected-schedule-number" should be set to: "1" after clicking by id on "refresh-selection"
     And the total schedule results should be 1
     And I should see the existing gateway details
     When I click by id on "apply-bulk-action-button"

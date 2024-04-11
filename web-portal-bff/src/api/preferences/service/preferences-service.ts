@@ -4,8 +4,9 @@ import { BFFResponse } from "../../../model/BFFResponse";
 import extractAuthToken from "../../../helper/extract-auth-token";
 
 const getTimeUnit = (value: String): TimeUnit => {
-  //Values from the server are in the format PT1S, PT1M, PT1H, PT100D
+  //Values from the server are in the format PT1S, PT1M, PT1H, P10D
   value = value.replace("PT", "");
+  value = value.replace("P", "");
 
   //slice the string on the last character to get the unit
   const unit = value.slice(-1);
@@ -13,6 +14,11 @@ const getTimeUnit = (value: String): TimeUnit => {
     value: parseInt(value.slice(0, -1)),
     unit: unit
   };
+};
+
+const getDurationString = (timeUnit: TimeUnit): string => {
+  //Values to the server are in the format PT1S, PT1M, PT1H, P10D
+  return "P" + (timeUnit.unit.toUpperCase() === "D" ? "" : "T") + timeUnit.value + timeUnit.unit.toUpperCase();
 };
 
 const convertToSeconds = (timeUnit: TimeUnit): number => {
@@ -68,9 +74,9 @@ export const PreferencesService = () => {
     const retryPolicy = await axiosClient.put(process.env.PREFERENCES_API_URL as string + "/retry-policy", {
       maximumAttempts: preferences.maximumAttempts,
       backoffCoefficient: preferences.backoffCoefficient,
-      initialInterval: "PT" + preferences.initialInterval.value + preferences.initialInterval.unit.toUpperCase(),
-      maximumInterval: "PT" + preferences.maximumInterval.value + preferences.maximumInterval.unit.toUpperCase(),
-      startToCloseTimeout: "PT" + preferences.startToCloseTimeout.value + preferences.startToCloseTimeout.unit.toUpperCase()
+      initialInterval: getDurationString(preferences.initialInterval),
+      maximumInterval: getDurationString(preferences.maximumInterval),
+      startToCloseTimeout: getDurationString(preferences.startToCloseTimeout)
     }, {
       headers: extractAuthToken(token)
     });

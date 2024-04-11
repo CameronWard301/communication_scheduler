@@ -8,6 +8,7 @@ import {ScheduleEditStore} from "./ScheduleEditStore.tsx";
 import {CreateScheduleStore} from "./CreateScheduleStore.tsx";
 import {GenerateScheduleStore} from "./GenerateScheduleStore.tsx";
 import {BulkActionStore} from "./BulkActionStore.tsx";
+import {HistoryTableStore} from "./HistoryTableStore.tsx";
 
 export class RootStore {
   preferencesStore: PreferencesStore;
@@ -20,6 +21,7 @@ export class RootStore {
   generateScheduleStore: GenerateScheduleStore;
   createScheduleStore: CreateScheduleStore;
   bulkActionStore: BulkActionStore;
+  historyTableStore: HistoryTableStore;
 
   constructor() {
     this.preferencesStore = new PreferencesStore(this);
@@ -32,5 +34,6 @@ export class RootStore {
     this.generateScheduleStore = new GenerateScheduleStore(this);
     this.createScheduleStore = new CreateScheduleStore(this);
     this.bulkActionStore = new BulkActionStore(this);
+    this.historyTableStore = new HistoryTableStore(this);
   }
 }

@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>schedule-api</artifactId>
-    <version>0.1.4</version>
+    <version>0.1.5</version>
     <name>schedule-api</name>
     <description>schedule-api</description>
     <properties>

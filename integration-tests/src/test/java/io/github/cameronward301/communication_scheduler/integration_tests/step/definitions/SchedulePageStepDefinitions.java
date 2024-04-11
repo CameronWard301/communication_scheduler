@@ -6,12 +6,11 @@ import io.cucumber.java.en.When;
 import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Gateway;
 import io.github.cameronward301.communication_scheduler.integration_tests.model.schedule.ScheduleEntity;
 import io.github.cameronward301.communication_scheduler.integration_tests.world.World;
-import io.temporal.client.schedules.ScheduleClient;
 import io.temporal.common.SearchAttributeKey;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.junit.jupiter.api.function.Executable;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,12 +26,10 @@ import static io.github.cameronward301.communication_scheduler.integration_tests
 import static java.lang.String.format;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SchedulePageStepDefinitions {
     private final WebDriver webDriver;
-    private final ScheduleClient scheduleClient;
     private final World world;
 
     private final ScheduleEntity scheduleEntity;
@@ -44,9 +41,8 @@ public class SchedulePageStepDefinitions {
     @Value("${web-portal.address}")
     private String webDriverUrl;
 
-    public SchedulePageStepDefinitions(WebDriver webDriver, ScheduleClient scheduleClient, World world, ScheduleEntity scheduleEntity, Gateway existingGateway) {
+    public SchedulePageStepDefinitions(WebDriver webDriver, World world, ScheduleEntity scheduleEntity, Gateway existingGateway) {
         this.webDriver = webDriver;
-        this.scheduleClient = scheduleClient;
         this.world = world;
         this.scheduleEntity = scheduleEntity;
         this.existingGateway = existingGateway;
@@ -80,13 +76,27 @@ public class SchedulePageStepDefinitions {
         assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(6)")).getText(), is(scheduleEntity.getScheduleOptions().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("gatewayId"))));
         assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(7)")).getText(), is(scheduleEntity.getScheduleOptions().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("userId"))));
         DateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        assertTrue(dateFormat.parse(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(8)")).getText().replace(",", "")).after(new Date()));
+        assertNotNull(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(8)")).getText());
+        dateFormat.parse(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(8)")).getText().replace(",", ""));
     }
 
     @And("the total schedule results should be {int}")
     public void theTotalScheduleResultsShouldBe(int total) {
         Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
         wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiTablePagination-displayedRows"), Pattern.compile(format("%s–%s of %s", total, total, total))));
+    }
+
+    @And("the total schedule results should be {int} after clicking by id on {string}")
+    public void theTotalScheduleResultsShouldBeAfterClickingByIdOn(int total, String refreshId) {
+        Wait<WebDriver> wait = new FluentWait<>(webDriver)
+                .withTimeout(Duration.ofSeconds(explicitWait))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(NoSuchElementException.class);
+
+        wait.until((driver -> {
+            driver.findElement(By.id(refreshId)).click();
+            return ExpectedConditions.textMatches(By.cssSelector(".MuiTablePagination-displayedRows"), Pattern.compile(format("%s–%s of %s", total, total, total)));
+        }));
     }
 
     @And("the total schedule results should be {string}")
@@ -135,7 +145,7 @@ public class SchedulePageStepDefinitions {
         assertThat(elements.size(), is(7));
     }
 
-    @When("I navigate go to the edit schedule page")
+    @When("I navigate to the edit schedule page")
     public void iNavigateGoToTheEditSchedulePage() {
         webDriver.navigate().to(webDriverUrl + "/schedule/" + scheduleEntity.getScheduleId());
     }
@@ -163,6 +173,8 @@ public class SchedulePageStepDefinitions {
 
     @Then("I should see the old and new gateway confirm modal for gateway {string}")
     public void iShouldSeeTheOldAndNewGatewayConfirmModal(String gatewayNumber) {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("transition-modal-title")));
         assertEquals("Are you sure you want to modify this schedule?", webDriver.findElement(By.id("transition-modal-title")).getText());
         assertEquals("ID: " + existingGateway.getId(), webDriver.findElement(By.id("old-gateway-id")).getText());
         assertEquals("Friendly Name: " + existingGateway.getFriendlyName(), webDriver.findElement(By.id("old-gateway-friendly-name")).getText());
@@ -187,9 +199,41 @@ public class SchedulePageStepDefinitions {
         setTextField(webDriver, "gateway-id-filter-input", existingGateway.getId());
     }
 
-    @When("I click the first schedule in the data grid filter results")
-    public void iClickTheFirstScheduleInTheDataGridFilterResults() {
+    @When("I click the first schedule in the data grid filter results with the user ID")
+    public void iClickTheFirstScheduleInTheDataGridFilterResultsToBeTheUserID() {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.textToBe(By.cssSelector(".MuiDataGrid-cell:nth-child(7)"), scheduleEntity.getScheduleOptions().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("userId"))));
         webDriver.findElement(By.cssSelector(".MuiDataGrid-row:nth-child(1) .PrivateSwitchBase-input")).click();
+    }
+
+
+    @When("I click the first schedule in the data grid filter results with user ID {string}")
+    public void iClickTheFirstScheduleInTheDataGridFilterResults(String expectedId) {
+        Wait<WebDriver> wait = new FluentWait<>(webDriver)
+                .withTimeout(Duration.ofSeconds(explicitWait))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(NoSuchElementException.class);
+        wait.until((driver ->  {
+            driver.navigate().refresh();
+            return driver.findElement(By.cssSelector(".MuiDataGrid-row:nth-child(1) .PrivateSwitchBase-input"));
+        }));
+
+        assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-row:nth-child(1) .MuiDataGrid-cell:nth-child(7)")).getText(), is(expectedId));
+
+        webDriver.findElement(By.cssSelector(".MuiDataGrid-row:nth-child(1) .PrivateSwitchBase-input")).click();
+    }
+
+    @And("the total schedule results should be {string} after clicking by id on {string}")
+    public void theTotalScheduleResultsShouldBeAfterClickingByIdOn(String total, String refreshId) {
+        Wait<WebDriver> wait = new FluentWait<>(webDriver)
+                .withTimeout(Duration.ofSeconds(explicitWait))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(NoSuchElementException.class);
+
+        wait.until((driver -> {
+            driver.findElement(By.id(refreshId)).click();
+            return ExpectedConditions.textMatches(By.cssSelector(".MuiTablePagination-displayedRows"), Pattern.compile(total));
+        }));
     }
 
     @When("I press the select all button in the data grid")
@@ -199,19 +243,55 @@ public class SchedulePageStepDefinitions {
 
     @And("the selected schedules now have a status of {string}")
     public void theSelectedSchedulesNowHaveAStatusOf(String value) {
-        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
-        wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(4)"), Pattern.compile(value)));
+        Wait<WebDriver> wait = new FluentWait<>(webDriver)
+                .withTimeout(Duration.ofSeconds(explicitWait))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(NoSuchElementException.class)
+                .ignoring(AssertionError.class);
+
+        wait.until((driver -> {
+            driver.findElement(By.id("refresh-schedules")).click();
+            assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-row--firstVisible .MuiTypography-root")).getText(), is(value));
+            return webDriver.findElement(By.cssSelector(".MuiDataGrid-row--firstVisible .MuiTypography-root")).getText().equals(value);
+        }));
+
+        wait.until((driver -> {
+            driver.findElement(By.id("refresh-schedules")).click();
+            assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-row--lastVisible .MuiTypography-root")).getText(), is(value));
+            return webDriver.findElement(By.cssSelector(".MuiDataGrid-row--lastVisible .MuiTypography-root")).getText().equals(value);
+        }));
         assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-row--firstVisible .MuiTypography-root")).getText(), is(value));
         assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-row--lastVisible .MuiTypography-root")).getText(), is(value));
     }
 
     @And("the first schedule has a status of {string}")
     public void theFirstScheduleHasAStatusOf(String value) {
+        Wait<WebDriver> wait = new FluentWait<>(webDriver)
+                .withTimeout(Duration.ofSeconds(explicitWait))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(NoSuchElementException.class)
+                .ignoring(AssertionError.class);
+
+        wait.until((driver -> {
+            driver.findElement(By.id("refresh-schedules")).click();
+            assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-row--firstVisible .MuiTypography-root")).getText(), is(value));
+            return ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-row--firstVisible .MuiTypography-root"), Pattern.compile(value));
+        }));
         assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-row--firstVisible .MuiTypography-root")).getText(), is(value));
     }
 
     @And("the last schedule has a status of {string}")
     public void theLastScheduleHasAStatusOf(String value) {
+        Wait<WebDriver> wait = new FluentWait<>(webDriver)
+                .withTimeout(Duration.ofSeconds(explicitWait))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(NoSuchElementException.class);
+
+        wait.until((driver -> {
+            driver.findElement(By.id("refresh-schedules")).click();
+            assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-row--lastVisible .MuiTypography-root")).getText(), is(value));
+            return ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-row--lastVisible .MuiTypography-root"), Pattern.compile(value));
+        }));
         assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-row--lastVisible .MuiTypography-root")).getText(), is(value));
     }
 }

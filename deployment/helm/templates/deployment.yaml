@@ -722,7 +722,7 @@ spec:
     spec:
       containers:
         - name: selenium-hub
-          image: seleniarm/hub:4.18
+          image: seleniarm/hub:4.19.1
           ports:
             - containerPort: 4444
             - containerPort: 4443
@@ -780,7 +780,7 @@ spec:
               value: "4443"
             - name: SE_EVENT_BUS_PUBLISH_PORT
               value: "4442"
-          resources:
-            limits:
-              memory: "1000Mi"
-              cpu: ".5"
+            - name: "SCREEN_WIDTH"
+              value: "1920"
+            - name: "SCREEN_HEIGHT"
+              value: "1080"

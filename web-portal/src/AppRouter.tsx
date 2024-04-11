@@ -10,6 +10,7 @@ const AddSchedule = lazy(() => import ("./pages/Schedule/AddSchedule.tsx"))
 const Preferences = lazy(() => import ("./pages/Preferences.tsx"))
 const EditSchedule = lazy(() => import ("./pages/Schedule/EditSchedule.tsx"))
 const BulkAction = lazy(() => import ("./pages/Schedule/BulkScheduleAction.tsx"))
+const HistoryTable = lazy(() => import ("./pages/HistoryTable.tsx"))
 
 
 const AppRouter = () => {
@@ -24,6 +25,7 @@ const AppRouter = () => {
       <Route path={"/schedule/:id"} element={<Suspense><EditSchedule/></Suspense>}/>
       <Route path={"/add-schedule"} element={<Suspense><AddSchedule/></Suspense>}/>
       <Route path={"/schedule/actions"} element={<Suspense><BulkAction/></Suspense>}/>
+      <Route path={"/history"} element={<Suspense><HistoryTable/></Suspense>}/>
     </Routes>
   )
 }

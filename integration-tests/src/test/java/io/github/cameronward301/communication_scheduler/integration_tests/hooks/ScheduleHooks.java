@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,7 +24,6 @@ import java.util.UUID;
 
 @Slf4j
 public class ScheduleHooks {
-    private static boolean completedBeforeAll = false;
     private final ScheduleClient scheduleClient;
     private final List<ScheduleEntity> createdSchedules;
     private final ScheduleEntity scheduleEntity;
@@ -47,23 +47,20 @@ public class ScheduleHooks {
         this.restTemplate = restTemplate;
     }
 
-    @Before("@RemoveExistingSchedules")
+    @Before(value = "@RemoveExistingSchedules", order = 1)
     public void removeExistingSchedulesBeforeAll() {
-        if (!completedBeforeAll) {
-            List<String> scheduleIds = new ArrayList<>();
-            scheduleClient.listSchedules().filter(scheduleListDescription -> scheduleListDescription.getScheduleId().contains("integration-test")).forEach(schedule -> scheduleIds.add(schedule.getScheduleId()));
-            for (String scheduleId : scheduleIds) {
-                try {
-                    scheduleClient.getHandle(scheduleId).delete();
-                } catch (ScheduleException e) {
-                    log.debug(e.getMessage());
-                }
+        List<String> scheduleIds = new ArrayList<>();
+        scheduleClient.listSchedules().filter(scheduleListDescription -> scheduleListDescription.getScheduleId().contains("integration-test")).forEach(schedule -> scheduleIds.add(schedule.getScheduleId()));
+        for (String scheduleId : scheduleIds) {
+            try {
+                scheduleClient.getHandle(scheduleId).delete();
+            } catch (ScheduleException e) {
+                log.debug(e.getMessage());
             }
-            completedBeforeAll = true;
         }
     }
 
-    @Before("@CreateMultipleSchedules")
+    @Before(value = "@CreateMultipleSchedules", order = 2)
     public void createSchedules() {
         for (ScheduleEntity schedule : createdSchedules) {
             String id = "integration-test-" + UUID.randomUUID();
@@ -72,9 +69,41 @@ public class ScheduleHooks {
         }
     }
 
-    @Before("@CreateScheduleWithInterval")
+    @Before(value = "@CreateScheduleWithInterval", order = 2)
     public void createSchedule() {
         scheduleClient.createSchedule(scheduleEntity.getScheduleId(), scheduleEntity.getSchedule(), scheduleEntity.getScheduleOptions());
+        int attempts = 10;
+        while (attempts > 0) {
+            try {
+                scheduleClient.getHandle(scheduleEntity.getScheduleId()).describe();
+                break;
+            } catch (ScheduleException e) {
+                log.debug(e.getMessage());
+                attempts--;
+                if (attempts == 0) {
+                    throw new RuntimeException("Schedule not created");
+                }
+            }
+        }
+    }
+
+    @Before(value = "@CheckSchedulesAreCreated", order = 3)
+    public void checkSchedulesAreCreated() {
+        for (String scheduleId : scheduleIds) {
+            int attempts = 10;
+            while (attempts > 0) {
+                try {
+                    scheduleClient.getHandle(scheduleId).describe();
+                    break;
+                } catch (ScheduleException e) {
+                    log.debug(e.getMessage());
+                    attempts--;
+                    if (attempts == 0) {
+                        throw new RuntimeException("Schedule not created");
+                    }
+                }
+            }
+        }
     }
 
     @After("@RemoveMultipleSchedules")
@@ -96,7 +125,7 @@ public class ScheduleHooks {
         String authToken = Objects.requireNonNull(restTemplate.postForEntity(authAPIUrl, List.of("SCHEDULE:DELETE"), JwtDTO.class).getBody()).getToken();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.set("Authorization", "Bearer " + authToken);
-        restTemplate.exchange(scheduleAPIURL + "?userId=" + world.getCreatedScheduleUserId(), org.springframework.http.HttpMethod.DELETE, new HttpEntity<>(world.getHttpHeaders()), String.class);
+        restTemplate.exchange(scheduleAPIURL + "?userId=" + world.getCreatedScheduleUserId(), HttpMethod.DELETE, new HttpEntity<>(world.getHttpHeaders()), String.class);
     }
 
     @After("@RemoveSchedule")

@@ -1,6 +1,8 @@
 package io.github.cameronward301.communication_scheduler.integration_tests.world;
 
 import io.github.cameronward301.communication_scheduler.integration_tests.gateway.Gateway;
+import io.temporal.api.common.v1.WorkflowExecution;
+import io.temporal.client.WorkflowStub;
 import lombok.Data;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -16,4 +18,6 @@ public class World {
     private String workflowRunId;
     private Gateway gateway;
     private String createdScheduleUserId;
+    private WorkflowExecution workflowExecution;
+    private WorkflowStub workflowStub;
 }

@@ -228,7 +228,22 @@ const doc = {
       GatewayName: {
         friendlyName: "My Gateway Name"
       },
-
+      ClientHistoryPage: {
+        historyItems: [{
+          workflowId: "1234",
+          id: "1234",
+          userId: "1234",
+          gatewayId: "1234",
+          gatewayName: "My Gateway",
+          scheduleId: "1234",
+          status: "Running",
+          startTime: "03/03/2024 16:45:12",
+          endTime: "03/03/2024 16:45:12"
+        }],
+        totalElements: 1,
+        pageSize: 25,
+        pageNumber: 0
+      }
     }
   }
 };

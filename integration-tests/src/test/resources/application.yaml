@@ -38,9 +38,11 @@ history-api:
   address: ${HISTORY_API_ADDRESS:https://localhost:50387/workflow}
 
 web-portal:
-  address: ${WEB_PORTAL_ADDRESS:http://localhost:5173}
-  environment: ${WEB_PORTAL_ENVIRONMENT:local}
-  remote-web-driver-url: ${WEB_PORTAL_REMOTE_WEB_DRIVER_URL:http://localhost:53034/wd/hub}
+  #address: ${WEB_PORTAL_ADDRESS:http://localhost:5173}
+  #environment: ${WEB_PORTAL_ENVIRONMENT:local}
+  address: ${WEB_PORTAL_ADDRESS:https://cs-web-portal-service.default.svc.cluster.local:3000}
+  environment: ${WEB_PORTAL_ENVIRONMENT:server}
+  remote-web-driver-url: ${WEB_PORTAL_REMOTE_WEB_DRIVER_URL:http://localhost:51127/wd/hub}
   implicit-wait: ${WEB_PORTAL_IMPLICIT_WAIT:5}
   explicit-wait: ${WEB_PORTAL_EXPLICIT_WAIT:10}
 

@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>integration-tests</artifactId>
-    <version>0.11.0</version>
+    <version>0.12.1</version>
     <name>integration-tests</name>
     <description>integration-tests</description>
     <properties>

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.Duration;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 /**
@@ -54,6 +56,7 @@ public class PreferencesController {
         if (bindingResult.hasErrors()) {
             throw new RequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
+        validateRetryPolicy(retryPolicy);
         return ResponseEntity.ok(preferencesService.setRetryPolicy(retryPolicy));
     }
 
@@ -72,5 +75,25 @@ public class PreferencesController {
             throw new RequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(preferencesService.setGatewayTimeoutSeconds(gatewayTimeout));
+    }
+
+    private void validateRetryPolicy(RetryPolicy retryPolicy) throws RequestException {
+        try {
+            Duration.parse(retryPolicy.getInitialInterval());
+        } catch (DateTimeParseException e) {
+            throw new RequestException("Could not parse 'initialInterval' to a datetime object", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            Duration.parse(retryPolicy.getMaximumInterval());
+        } catch (DateTimeParseException e) {
+            throw new RequestException("Could not parse 'maximumInterval' to a datetime object", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            Duration.parse(retryPolicy.getStartToCloseTimeout());
+        } catch (DateTimeParseException e) {
+            throw new RequestException("Could not parse 'startToCloseTimeout' to a datetime object", HttpStatus.BAD_REQUEST);
+        }
     }
 }
