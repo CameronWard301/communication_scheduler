@@ -9,6 +9,8 @@ import {useEffect} from "react";
 import {ReviewGatewayTable} from "../modal/gateway";
 import Box from "@mui/material/Box";
 import {BulkActionType} from "../../models/Schedules.ts";
+import LoadingButton from "@mui/lab/LoadingButton";
+import {RefreshRounded} from "@mui/icons-material";
 
 const ReviewBulkAction = observer(() => {
   const rootStore = useStore();
@@ -32,7 +34,11 @@ const ReviewBulkAction = observer(() => {
           id={"bulk-action-review-type"}>{rootStore.bulkActionStore.bulkActionType}</span></Typography>
         <Typography variant={"h5"}><b>Selected Schedules:</b> <span
           id={"selected-schedule-number"}>{rootStore.scheduleTableStore.scheduleTableData.length}</span></Typography>
-        <Typography variant={"h5"} mt={2}><b>The following schedules will be affected:</b></Typography>
+        <Typography sx={{display: "inline-block"}} variant={"h5"} mt={2}><b>The following schedules will be
+          affected:</b></Typography>
+        <LoadingButton id={"refresh-selection"} variant={"contained"} endIcon={<RefreshRounded/>} sx={{ml: 3, mb: 1}}
+                       loading={rootStore.scheduleTableStore.isLoading}
+                       onClick={() => getScheduleReviewTable()}>Refresh</LoadingButton>
         <DataGrid columns={columns} rows={rootStore.scheduleTableStore.scheduleTableData.slice()}
                   autoHeight
                   sx={{mt: 1}}

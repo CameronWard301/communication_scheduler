@@ -25,24 +25,9 @@ import { BFFResponse } from "../../../model/BFFResponse";
 import GatewayService from "../../gateways/service/gateway-service";
 import { Gateway } from "../../gateways/model/Gateways";
 import { ScheduleSpecService } from "./schedule-spec-service";
+import { getDateString } from "../../../helper/date-converter";
 
 export const ScheduleService = () => {
-
-
-  const getDateString = (date: Date) => {
-    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    return new Intl.DateTimeFormat('en-GB', {
-      timeZone: userTimezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-      timeZoneName: 'short'
-    }).format(date);
-  };
 
   const convertToBaseClientSchedule = (schedule: Schedule, gateway: Gateway): BaseClientSchedule => {
     const formattedNextRunDate = getDateString(new Date(schedule.info.nextActionTimes[0]));
@@ -66,6 +51,44 @@ export const ScheduleService = () => {
     };
   };
 
+  const getScheduleById = async (token: string | undefined, scheduleId: string): Promise<BFFResponse<ClientSchedule>> => {
+    return await axiosClient.get(`${process.env.SCHEDULE_API_URL as string}/${scheduleId}`, {
+      headers: extractAuthToken(token)
+
+    }).then(async (value) => {
+      const serverSchedule = value.data as Schedule;
+      let gateway;
+      try {
+        gateway = await GatewayService().getGatewayById(token, serverSchedule.searchAttributes.gatewayId[0]);
+      } catch (e) {
+        gateway = {
+          data: {
+            id: "",
+            dateCreated: "",
+            description: "",
+            endpointUrl: "",
+            friendlyName: "Gateway not found"
+          } as Gateway
+        };
+      }
+      const baseSchedule = convertToBaseClientSchedule(serverSchedule, gateway.data as Gateway);
+
+      return {
+        status: value.status,
+        data: {
+          ...baseSchedule,
+          createdAt: getDateString(new Date(serverSchedule.info.createdAt)),
+          updatedAt: serverSchedule.info.lastUpdatedAt ? getDateString(new Date(serverSchedule.info.lastUpdatedAt)) : "",
+          nextActionTimes: serverSchedule.info.nextActionTimes.map((action) => getDateString(new Date(action))),
+          recentActions: serverSchedule.info.recentActions.map((action) => getDateString(new Date(action.scheduledAt)))
+        } as ClientSchedule
+      };
+
+    }).catch((reason) => {
+      throw reason;
+    });
+  };
+
   const getSchedules = async (token: string | undefined, params: SchedulePageQueryParams): Promise<BFFResponse<ClientSchedulePage>> => {
     if (params.scheduleId === undefined) {
       return await axiosClient.get(process.env.SCHEDULE_API_URL as string, {
@@ -75,59 +98,50 @@ export const ScheduleService = () => {
       }).then(async (value) => {
         const serverSchedulePage = value.data as ServerSchedulePage;
 
-        const gatewayPromises = serverSchedulePage.content.map(async (schedule) => {
-            try {
-              return await GatewayService().getGatewayById(token, schedule.searchAttributes.gatewayId[0]);
-            } catch (error) {
-              return { data: { friendlyName: "Gateway not found" } };
-            }
-          }
-        );
-
-        const gateways = await Promise.all(gatewayPromises);
-
-
-        return {
-          status: value.status,
-          data: {
-            schedules: gateways.map((gateway, index) => {
-              const schedule = serverSchedulePage.content[index];
-              return convertToBaseClientSchedule(schedule, gateway.data as Gateway);
-            }),
-            totalElements: serverSchedulePage.totalElements,
-            pageSize: serverSchedulePage.size,
-            pageNumber: serverSchedulePage.number
-          } as ClientSchedulePage
-        };
+        const gatewayIds = [...new Set(serverSchedulePage.content.map((scheduleItem) => scheduleItem.searchAttributes.gatewayId[0]))];
+        return await GatewayService().resolveGatewayIds(token, gatewayIds).then((gateways) => {
+          return {
+            status: value.status,
+            data: {
+              schedules: serverSchedulePage.content.map((schedule) => {
+                return convertToBaseClientSchedule(schedule, gateways[schedule.searchAttributes.gatewayId[0]]);
+              }),
+              totalElements: serverSchedulePage.totalElements,
+              pageSize: serverSchedulePage.size,
+              pageNumber: serverSchedulePage.number
+            } as ClientSchedulePage
+          };
+        });
 
       }).catch((reason) => {
         throw reason;
       });
-    }
-    return await getScheduleById(token, params.scheduleId).then((value) => {
-      return {
-        status: value.status,
-        data: {
-          schedules: [value.data],
-          totalElements: 1,
-          pageSize: 25,
-          pageNumber: 0
-        } as ClientSchedulePage
-      };
-    }).catch((reason) => {
-      if (reason.response.status === 404) {
+    } else {
+      return await getScheduleById(token, params.scheduleId).then((value) => {
         return {
-          status: 200,
+          status: value.status,
           data: {
-            schedules: [],
-            totalElements: 0,
+            schedules: [value.data],
+            totalElements: 1,
             pageSize: 25,
             pageNumber: 0
           } as ClientSchedulePage
         };
-      }
-      throw reason;
-    });
+      }).catch((reason) => {
+        if (reason.response.status === 404) {
+          return {
+            status: 200,
+            data: {
+              schedules: [],
+              totalElements: 0,
+              pageSize: 25,
+              pageNumber: 0
+            } as ClientSchedulePage
+          };
+        }
+        throw reason;
+      });
+    }
   };
 
   const getSchedulesForBulkAction = async (token: string | undefined, params: ScheduleBulkActionQueryParams) => {
@@ -223,37 +237,11 @@ export const ScheduleService = () => {
 
   };
 
-  const getScheduleById = async (token: string | undefined, scheduleId: string): Promise<BFFResponse<ClientSchedule>> => {
-    return await axiosClient.get(`${process.env.SCHEDULE_API_URL as string}/${scheduleId}`, {
-      headers: extractAuthToken(token)
 
-    }).then(async (value) => {
-      const serverSchedule = value.data as Schedule;
-      let gateway;
-      try {
-        gateway = await GatewayService().getGatewayById(token, serverSchedule.searchAttributes.gatewayId[0]);
-      } catch (e) {
-        gateway = { data: { friendlyName: "Gateway not found" } };
-      }
-      const baseSchedule = convertToBaseClientSchedule(serverSchedule, gateway.data as Gateway);
-
-      return {
-        status: value.status,
-        data: {
-          ...baseSchedule,
-          createdAt: getDateString(new Date(serverSchedule.info.createdAt)),
-          updatedAt: serverSchedule.info.lastUpdatedAt? getDateString(new Date(serverSchedule.info.lastUpdatedAt)): "",
-          nextActionTimes: serverSchedule.info.nextActionTimes.map((action) => getDateString(new Date(action))),
-          recentActions: serverSchedule.info.recentActions.map((action) => getDateString(new Date(action.scheduledAt)))
-        } as ClientSchedule
-      };
-
-    }).catch((reason) => {
-      throw reason;
-    });
-  };
-
-  const deleteScheduleById = async (token: string | undefined, scheduleId: string): Promise<BFFResponse<any>> => {
+  const deleteScheduleById = async (token: string | undefined, scheduleId: string): Promise<BFFResponse<{
+    status: number;
+    data: never
+  }>> => {
     return await axiosClient.delete(`${process.env.SCHEDULE_API_URL as string}/${scheduleId}`, {
       headers: extractAuthToken(token)
     }).then((value) => {
@@ -267,12 +255,13 @@ export const ScheduleService = () => {
   };
 
   const updateScheduleStatus = async (token: string | undefined, scheduleId: string, paused: boolean, gateway: Gateway | null): Promise<BFFResponse<ClientScheduleCreateEdit>> => {
-    let scheduleUpdate = {
+    const scheduleUpdate = {
       scheduleId: scheduleId,
       paused: paused
     } as ServerScheduleCreateEdit;
 
 
+    // eslint-disable-next-line no-useless-catch
     try {
       const updatedSchedule = await axiosClient.put(`${process.env.SCHEDULE_API_URL as string}`, scheduleUpdate, {
         headers: extractAuthToken(token)
@@ -361,7 +350,15 @@ export const ScheduleService = () => {
       try {
         gateway = await GatewayService().getGatewayById(authorization, scheduleRequest.gatewayId);
       } catch (e) {
-        gateway = { data: { friendlyName: "Gateway not found", id: "0" } } as BFFResponse<Gateway>;
+        gateway = {
+          data: {
+            friendlyName: "Gateway not found",
+            id: "",
+            endpointUrl: "",
+            dateCreated: "",
+            description: ""
+          } as Gateway
+        } as BFFResponse<Gateway>;
       }
 
       const schedule = value.data as Schedule;
@@ -409,7 +406,15 @@ export const ScheduleService = () => {
       try {
         gateway = await GatewayService().getGatewayById(authorization, schedule.searchAttributes.gatewayId[0]);
       } catch (e) {
-        gateway = { data: { friendlyName: "Gateway not found", id: "0" } } as BFFResponse<Gateway>;
+        gateway = {
+          data: {
+            friendlyName: "Gateway not found",
+            id: "",
+            description: "",
+            dateCreated: "",
+            endpointUrl: ""
+          }
+        } as BFFResponse<Gateway>;
       }
 
 

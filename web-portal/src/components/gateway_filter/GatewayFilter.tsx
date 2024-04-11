@@ -67,7 +67,7 @@ const GatewayFilter = observer(({
   }, [rootStore.gatewayFilterStore.paginationModel, rootStore.gatewayFilterStore.sortModel, rootStore.gatewayFilterStore.gatewayIdFilter, rootStore.gatewayFilterStore.gatewayNameFilter, rootStore.gatewayFilterStore.gatewayDescriptionFilter, rootStore.gatewayFilterStore.gatewayEndpointUrlFilter]);
 
   return (
-    <Grid container direction={"column"} position={"relative"} className={"gatewayFilter"}>
+    <Grid container direction={"column"} position={"relative"} className={"gatewayFilter"} zIndex={50}>
       <Grid xs={12} className={"gatewayFilter"}>
         <Box sx={{alignItems: 'center'}} className={"gatewayFilter"}>
           <Button variant={"outlined"}

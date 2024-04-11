@@ -1,6 +1,6 @@
 {
   "name": "web-portal-bff",
-  "version": "0.4.1",
+  "version": "0.5.1",
   "description": "BFF for the platforms desktop web portal",
   "main": "index.js",
   "scripts": {
@@ -44,7 +44,10 @@
     "@types/jest": "29.5.12",
     "@types/node": "20.11.20",
     "@types/supertest": "6.0.2",
+    "@typescript-eslint/eslint-plugin": "^7.6.0",
+    "@typescript-eslint/parser": "^7.6.0",
     "axios-mock-adapter": "^1.22.0",
+    "eslint": "^8.56.0",
     "jest": "29.7.0",
     "jest-mock-axios": "4.7.3",
     "nodemon": "3.1.0",
@@ -52,6 +55,6 @@
     "supertest": "6.3.4",
     "ts-jest": "29.1.2",
     "ts-node": "10.9.2",
-    "typescript": "5.3.3"
+    "typescript": "5.4.4"
   }
 }

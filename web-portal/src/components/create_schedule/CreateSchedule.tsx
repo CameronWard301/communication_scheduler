@@ -272,7 +272,8 @@ const CreateSchedule = observer(({
             <Grid container spacing={2}>
               <Grid xs={12}>
                 <Typography variant={"h4"} display={"inline-block"} id={"calendar-month-title"}>Recurring
-                  Month(s)</Typography>
+                  Month(s)<span
+                    style={{color: theme.palette.error.main}}>*</span></Typography>
                 <CustomTooltip
                   message="Enter the day of the month you want the communication to be sent on. Note that if the date doesn't exist e.g the 31st of September, then the communication will never be sent"/>
               </Grid>

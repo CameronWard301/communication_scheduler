@@ -16,10 +16,10 @@ class PreferencesControllerTest extends Specification {
     def preferencesService = Mock(PreferencesService)
     def retryPolicy = RetryPolicy.builder()
             .backoffCoefficient(2.0)
-            .initialInterval("test-initial-interval")
+            .initialInterval("PT30S")
             .maximumAttempts(1234)
-            .maximumInterval("test-max-interval")
-            .startToCloseTimeout("test-start-to-close")
+            .maximumInterval("PT10S")
+            .startToCloseTimeout("PT20S")
             .build()
     def preferences = Preferences.builder()
     .gatewayTimeoutSeconds(10)
@@ -76,6 +76,81 @@ class PreferencesControllerTest extends Specification {
 
         and:
         exception.getMessage() == "test-message"
+        exception.getHttpStatus() == HttpStatus.BAD_REQUEST
+    }
+
+    def "Should return 400 when initial interval is invalid"() {
+        given: "Invalid initial interval"
+        def retryPolicy = RetryPolicy.builder()
+                .backoffCoefficient(2.0)
+                .initialInterval("invalid-test")
+                .maximumAttempts(1234)
+                .maximumInterval("PT10S")
+                .startToCloseTimeout("PT20S")
+                .build()
+
+        and: "Binding result has no errors"
+        def bindingResult = Mock(BindingResult)
+        bindingResult.hasErrors() >> false
+
+        when: "Calling PUT retry-policy"
+        preferencesController.setRetryPolicy(retryPolicy, bindingResult)
+
+        then: "RequestException is thrown"
+        def exception = thrown(RequestException)
+
+        and:
+        exception.getMessage() == "Could not parse 'initialInterval' to a datetime object"
+        exception.getHttpStatus() == HttpStatus.BAD_REQUEST
+    }
+
+    def "Should return 400 when maximum interval is invalid"() {
+        given: "Invalid initial interval"
+        def retryPolicy = RetryPolicy.builder()
+                .backoffCoefficient(2.0)
+                .initialInterval("PT30S")
+                .maximumAttempts(1234)
+                .maximumInterval("invalid-test")
+                .startToCloseTimeout("PT20S")
+                .build()
+
+        and: "Binding result has no errors"
+        def bindingResult = Mock(BindingResult)
+        bindingResult.hasErrors() >> false
+
+        when: "Calling PUT retry-policy"
+        preferencesController.setRetryPolicy(retryPolicy, bindingResult)
+
+        then: "RequestException is thrown"
+        def exception = thrown(RequestException)
+
+        and:
+        exception.getMessage() == "Could not parse 'maximumInterval' to a datetime object"
+        exception.getHttpStatus() == HttpStatus.BAD_REQUEST
+    }
+
+    def "Should return 400 when start to close timeout is invalid"() {
+        given: "Invalid initial interval"
+        def retryPolicy = RetryPolicy.builder()
+                .backoffCoefficient(2.0)
+                .initialInterval("PT30S")
+                .maximumAttempts(1234)
+                .maximumInterval("PT10S")
+                .startToCloseTimeout("invalid-test")
+                .build()
+
+        and: "Binding result has no errors"
+        def bindingResult = Mock(BindingResult)
+        bindingResult.hasErrors() >> false
+
+        when: "Calling PUT retry-policy"
+        preferencesController.setRetryPolicy(retryPolicy, bindingResult)
+
+        then: "RequestException is thrown"
+        def exception = thrown(RequestException)
+
+        and:
+        exception.getMessage() == "Could not parse 'startToCloseTimeout' to a datetime object"
         exception.getHttpStatus() == HttpStatus.BAD_REQUEST
     }
 

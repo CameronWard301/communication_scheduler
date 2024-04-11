@@ -348,6 +348,150 @@
         }
       }
     },
+    "/v1/bff/history": {
+      "get": {
+        "tags": [
+          "History"
+        ],
+        "description": "Get the history page.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "The number of items to return.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "The page number to return.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "The status to filter by, either 'Any Status', 'Completed', 'Running', 'Failed', 'Terminated', 'Cancelled', or 'Unknown'.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gatewayId",
+            "in": "query",
+            "description": "The gateway ID to filter by.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scheduleId",
+            "in": "query",
+            "description": "The schedule ID to filter by.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The user ID to filter by.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The history page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientHistoryPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        }
+      }
+    },
+    "/v1/bff/history/stop/{workflowId}/{runId}": {
+      "delete": {
+        "tags": [
+          "History"
+        ],
+        "description": "Stop the communication.",
+        "parameters": [
+          {
+            "name": "workflowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The workflow ID."
+          },
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The run ID."
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      }
+    },
     "/v1/bff/preferences": {
       "get": {
         "tags": [
@@ -935,6 +1079,15 @@
             "in": "header",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The gateway name to be returned back in the same object",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/GatewayName"
             }
           }
         ],
@@ -1713,6 +1866,70 @@
         },
         "xml": {
           "name": "GatewayName"
+        }
+      },
+      "ClientHistoryPage": {
+        "type": "object",
+        "properties": {
+          "historyItems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workflowId": {
+                  "type": "string",
+                  "example": "1234"
+                },
+                "id": {
+                  "type": "string",
+                  "example": "1234"
+                },
+                "userId": {
+                  "type": "string",
+                  "example": "1234"
+                },
+                "gatewayId": {
+                  "type": "string",
+                  "example": "1234"
+                },
+                "gatewayName": {
+                  "type": "string",
+                  "example": "My Gateway"
+                },
+                "scheduleId": {
+                  "type": "string",
+                  "example": "1234"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "Running"
+                },
+                "startTime": {
+                  "type": "string",
+                  "example": "03/03/2024 16:45:12"
+                },
+                "endTime": {
+                  "type": "string",
+                  "example": "03/03/2024 16:45:12"
+                }
+              }
+            }
+          },
+          "totalElements": {
+            "type": "number",
+            "example": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "example": 25
+          },
+          "pageNumber": {
+            "type": "number",
+            "example": 0
+          }
+        },
+        "xml": {
+          "name": "ClientHistoryPage"
         }
       }
     },

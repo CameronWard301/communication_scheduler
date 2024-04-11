@@ -56,14 +56,15 @@ const ScheduleTable = observer(() => {
     if (userId !== null) {
       rootStore.scheduleTableStore.setUserIdFilter(userId);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-
-  useEffect(() => {
     getScheduleTable();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rootStore.scheduleTableStore.paginationModel, rootStore.scheduleTableStore.gatewayIdFilter]);
+  }, [rootStore.scheduleTableStore.paginationModel]);
+
+
+  /*  useEffect(() => {
+      getScheduleTable();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [rootStore.scheduleTableStore.paginationModel]);*/
 
   useEffect(() => {
     const handleEvent: GridEventListener<'headerSelectionCheckboxChange'> = (

@@ -4,11 +4,10 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.hamcrest.CoreMatchers;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,9 +83,17 @@ public class SharedWebPortalStepDefinitions {
 
     @Then("I should see a snackbar message with the text {string}")
     public void iShouldSeeASnackbarMessageWithTheText(String message) {
+        Wait<WebDriver> wait = new FluentWait<>(webDriver)
+                .withTimeout(Duration.ofSeconds(explicitWait))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(StaleElementReferenceException.class);
+
+        wait.until((driver -> {
+            WebElement element = driver.findElement(By.id("snackbar-message"));
+            return element.getText().equals(message);
+        }));
+
         WebElement element = webDriver.findElement(By.id("snackbar-message"));
-        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
-        wait.until(ExpectedConditions.textToBe(By.id("snackbar-message"), message));
         assertThat(element.getText(), is(message));
     }
 
@@ -142,5 +149,31 @@ public class SharedWebPortalStepDefinitions {
         webElement.sendKeys(keys);
     }
 
-    // Write code here that turns the phrase above into concrete actions    throw new cucumber.api.PendingException();}
+    @And("the element with css class {string} should be set to: {string}")
+    public void theElementWithCssClassShouldBeSetTo(String cssClass, String value) {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.textToBe(By.className(cssClass), (value)));
+        assertEquals(value, webDriver.findElement(By.className(cssClass)).getText());
+    }
+
+    @And("the element with css class {string} should be: {string}")
+    public void theElementWithCssClassShouldContain(String cssClass, String value) {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.textToBe(By.className(cssClass), value));
+        assertEquals(value, webDriver.findElement(By.className(cssClass)).getText());
+    }
+
+    @And("the element with id {string} should be set to: {string} after clicking by id on {string}")
+    public void theElementWithIdShouldBeSetToAfterClickingByIdOn(String testId, String value, String refreshId) {
+        Wait<WebDriver> wait = new FluentWait<>(webDriver)
+                .withTimeout(Duration.ofSeconds(explicitWait))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(NoSuchElementException.class);
+
+        wait.until((driver -> {
+            driver.findElement(By.id(refreshId)).click();
+            assertThat(webDriver.findElement(By.id(testId)).getText(), is(value));
+            return ExpectedConditions.textToBe(By.id(testId), value);
+        }));
+    }
 }

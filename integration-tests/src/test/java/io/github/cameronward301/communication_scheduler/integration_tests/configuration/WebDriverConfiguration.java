@@ -1,5 +1,6 @@
 package io.github.cameronward301.communication_scheduler.integration_tests.configuration;
 
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -36,6 +37,7 @@ public class WebDriverConfiguration {
     @ConditionalOnProperty(name = "web-portal.environment", havingValue = "local")
     public WebDriver webDriverLocal() {
         WebDriver driver = new ChromeDriver();
+        driver.manage().window().setSize(new Dimension(1920, 1080));
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(Integer.parseInt(implicitWait)));
         driver.manage().window().maximize();
         return driver;

@@ -1,3 +1,5 @@
+// Adapted from: https://mui.com/material-ui/react-modal/
+
 import React from "react";
 import {Button, Fade, Modal, Typography, useTheme} from "@mui/material";
 import Box from "@mui/material/Box";
@@ -11,17 +13,19 @@ export type ConfirmModalProps = {
   setOpen: (show: boolean) => void;
   heading: React.ReactNode;
   description: React.ReactNode;
-  confirmIcon: React.ReactNode;
-  confirmText: string;
+  confirmIcon?: React.ReactNode;
+  confirmText?: string;
+  showConfirmButton?: boolean;
   allowConfirm?: boolean;
   confirmErrorMessage?: string;
   cancelIcon?: React.ReactNode;
   cancelText?: string;
   descriptionContainer?: boolean;
-  onConfirm: () => void;
+  onConfirm?: () => void;
   loading: boolean;
   height?: string;
   width?: string;
+  idPrefix?: string;
   fixButtonsBottom?: boolean;
 };
 
@@ -34,6 +38,7 @@ const ConfirmModal = observer(
      confirmIcon,
      confirmText,
      allowConfirm = true,
+     showConfirmButton = true,
      confirmErrorMessage = "",
      cancelIcon = <CloseIcon/>,
      cancelText = "Cancel",
@@ -42,6 +47,7 @@ const ConfirmModal = observer(
      width,
      descriptionContainer = true,
      fixButtonsBottom = false,
+     idPrefix = "",
      loading
    }: ConfirmModalProps) => {
     const theme = useTheme();
@@ -86,13 +92,13 @@ const ConfirmModal = observer(
               <Grid container spacing={2} sx={{overflowY: "auto"}} alignContent={"flex-start"}
                     pb={fixButtonsBottom ? 3 : 0} mb={fixButtonsBottom ? 2 : 0}>
                 <Grid xs={12}>
-                  <Typography id="transition-modal-title" variant="h6" component="h2">
+                  <Typography id={idPrefix + "transition-modal-title"} variant="h6" component="h2">
                     {heading}
                   </Typography>
                 </Grid>
                 {descriptionContainer && (
                   <Grid xs={12}>
-                    <Box id="transition-modal-description">{description}</Box>
+                    <Box id={idPrefix + "transition-modal-description"}>{description}</Box>
                   </Grid>
                 )}
                 {!descriptionContainer && (
@@ -113,7 +119,7 @@ const ConfirmModal = observer(
                         <Button
                           variant="contained"
                           endIcon={cancelIcon}
-                          id={"cancel-modal-button"}
+                          id={idPrefix + "cancel-modal-button"}
                           color={"info"}
                           fullWidth
                           sx={{height: 56}}
@@ -124,14 +130,18 @@ const ConfirmModal = observer(
                           {cancelText}
                         </Button>
                       </Grid>
-                      <Grid xs={12} md={6} marginTop={"auto"}>
-                        <LoadingButton loading={loading} onClick={onConfirm} endIcon={confirmIcon} variant="contained"
-                                       fullWidth sx={{height: 56}}
-                                       disabled={!allowConfirm}
-                                       color={"primary"} id={"confirm-modal-button"}>
-                          <span>{confirmText}</span>
-                        </LoadingButton>
-                      </Grid>
+                      {
+                        showConfirmButton && (
+                          <Grid xs={12} md={6} marginTop={"auto"}>
+                            <LoadingButton loading={loading} onClick={onConfirm} endIcon={confirmIcon} variant="contained"
+                                           fullWidth sx={{height: 56}}
+                                           disabled={!allowConfirm}
+                                           color={"primary"} id={idPrefix + "confirm-modal-button"}>
+                              <span>{confirmText}</span>
+                            </LoadingButton>
+                          </Grid>
+                        )
+                      }
                     </>
                   )
                 }
@@ -145,7 +155,7 @@ const ConfirmModal = observer(
                       <Button
                         variant="contained"
                         endIcon={cancelIcon}
-                        id={"cancel-modal-button"}
+                        id={idPrefix + "cancel-modal-button"}
                         color={"info"}
                         fullWidth
                         sx={{height: 56}}
@@ -156,17 +166,20 @@ const ConfirmModal = observer(
                         {cancelText}
                       </Button>
                     </Grid>
-                    <Grid xs={12} md={6} marginTop={"auto"}>
+                    {
+                      showConfirmButton && (
+                        <Grid xs={12} md={6} marginTop={"auto"}>
 
-                      <LoadingButton loading={loading} onClick={onConfirm} endIcon={confirmIcon} variant="contained"
-                                     fullWidth sx={{height: 56}}
-                                     disabled={!allowConfirm}
-                                     color={"primary"} id={"confirm-modal-button"}>
-                        <span>{confirmText}</span>
-                      </LoadingButton>
+                          <LoadingButton loading={loading} onClick={onConfirm} endIcon={confirmIcon} variant="contained"
+                                         fullWidth sx={{height: 56}}
+                                         disabled={!allowConfirm}
+                                         color={"primary"} id={idPrefix + "confirm-modal-button"}>
+                            <span>{confirmText}</span>
+                          </LoadingButton>
+                        </Grid>
+                      )
+                    }
 
-
-                    </Grid>
                   </Grid>
 
                 )

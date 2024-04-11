@@ -131,7 +131,27 @@ export const GatewayService = () => {
     });
   };
 
-  return { getGateways, getGatewayById, deleteGatewayById, updateGateway, createGateway };
+  const resolveGatewayIds = async (token: string | undefined, ids: string[]): Promise<{ [id: string]: Gateway }> => {
+    const gateways: { [id: string]: Gateway } = {};
+    await Promise.all(ids.map(async (gatewayId) => {
+      try {
+        await GatewayService().getGatewayById(token, gatewayId).then((value) => {
+          gateways[gatewayId] = (value.data as Gateway);
+        });
+      } catch (error) {
+        gateways[gatewayId] = {
+          dateCreated: "",
+          description: "",
+          endpointUrl: "",
+          id: "",
+          friendlyName: "Gateway not found"
+        };
+      }
+    }));
+    return gateways;
+  };
+
+  return { getGateways, getGatewayById, deleteGatewayById, updateGateway, createGateway, resolveGatewayIds };
 };
 
 export default GatewayService;

@@ -9,6 +9,7 @@ import * as fs from "fs";
 import * as https from "https";
 import gatewayController from "./api/gateways/controller/gateway-controller";
 import scheduleController from "./api/schedule/controller/schedule-controller";
+import historyController from "./api/history/controllers/history-controller";
 
 dotenv.config();
 
@@ -45,6 +46,7 @@ app.use(authenticationController);
 app.use(preferencesController);
 app.use(gatewayController);
 app.use(scheduleController);
+app.use(historyController);
 
 const printConfig = () => {
   console.log("[server]: SSL Verification: " + process.env.SSL_VERIFICATION);
@@ -52,6 +54,7 @@ const printConfig = () => {
   console.log("[server]: Preferences service at: " + process.env.PREFERENCES_API_URL);
   console.log("[server]: Gateway service at: " + process.env.GATEWAY_API_URL);
   console.log("[server]: Schedule service at: " + process.env.SCHEDULE_API_URL);
+  console.log("[server]: History service at: " + process.env.HISTORY_API_URL);
 };
 
 if (process.env.HTTPS_ENABLED == "false") {
