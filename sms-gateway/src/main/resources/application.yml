@@ -22,10 +22,6 @@ default-communication-history-access-provider:
   region: ${REGION:eu-west-1}
   table-name: ${COMMUNICATION_HISTORY_TABLE_NAME:communication-history}
 
-security:
-  cors.enabled: ${CORS_ENABLED:true}
-  csrf.enabled: ${CSRF_ENABLED:true}
-
 spring:
   datasource:
     driver-class-name: org.h2.Driver
@@ -41,3 +37,14 @@ spring:
 logging:
   level:
     io.github.cameronward301.communication_scheduler.gateway_library: ${GATEWAY_LOGGING:DEBUG}
+
+io:
+  github:
+    cameronward301:
+      communication-scheduler:
+        gateway-library:
+          security:
+            cors:
+              enabled: ${CORS_ENABLED:true}
+            csrf:
+              enabled: ${CSRF_ENABLED:true}

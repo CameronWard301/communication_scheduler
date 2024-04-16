@@ -1,6 +1,7 @@
 package io.github.cameronward301.communication_scheduler.gateway_library.security;
 
-import org.springframework.beans.factory.annotation.Value;
+import io.github.cameronward301.communication_scheduler.gateway_library.configuration.SecurityConfigurationProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,18 +15,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * Secures all gateway endpoints behind a valid api key to be provided by the worker
  */
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final GatewayApiKeyFilter gatewayApiKeyFilter;
-    private final boolean corsEnabled;
-    private final boolean csrfEnabled;
-
-    public SecurityConfig (GatewayApiKeyFilter gatewayApiKeyFilter, @Value("${security.cors.enabled}") boolean corsEnabled, @Value("${security.csrf.enabled}") boolean csrfEnabled) {
-        this.gatewayApiKeyFilter = gatewayApiKeyFilter;
-        this.corsEnabled = corsEnabled;
-        this.csrfEnabled = csrfEnabled;
-    }
+    private final SecurityConfigurationProperties securityConfigurationProperties;
 
     /**
      * Bean for securing the application
@@ -43,11 +38,11 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        if (!corsEnabled) {
+        if (!securityConfigurationProperties.getCors().isEnabled()) {
             httpSecurity.cors(AbstractHttpConfigurer::disable);
         }
 
-        if (!csrfEnabled) {
+        if (!securityConfigurationProperties.getCsrf().isEnabled()) {
             httpSecurity.csrf(AbstractHttpConfigurer::disable);
         }
 

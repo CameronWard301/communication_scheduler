@@ -12,3 +12,14 @@ logging:
   level:
     io.github.cameronward301.communication_scheduler.gateway_library: ${GATEWAY_LOGGING:info}
     root: ${ROOT_LOGGING:info}
+
+io:
+  github:
+    cameronward301:
+      communication-scheduler:
+        gateway-library:
+          security:
+            cors:
+              enabled: ${CORS_ENABLED:true}
+            csrf:
+              enabled: ${CSRF_ENABLED:true}
