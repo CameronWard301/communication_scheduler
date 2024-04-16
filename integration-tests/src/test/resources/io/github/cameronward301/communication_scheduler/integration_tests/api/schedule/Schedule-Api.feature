@@ -379,7 +379,7 @@ Feature: Schedule API Scenarios
   @CreateMultipleSchedules
   @RemoveMultipleSchedules
   Scenario: Get the number of schedules matching an empty filter
-    And I have a bearer token with the "SCHEDULE:READ" scope
+    Given I have a bearer token with the "SCHEDULE:READ" scope
     When I get the schedule count
     Then a CountDTO is returned with total at least: 3 and status code 200
 

@@ -41,7 +41,7 @@ const AddSchedule = observer(() => {
                   <Box>
                     <Typography variant={"h4"} display={"inline-block"} id={"add-schedule-user-id-title"}>User ID<span
                       style={{color: theme.palette.error.main}}>*</span></Typography>
-                    <CustomTooltip message="The user ID of the user to send the communication to"/>
+                    <CustomTooltip message="The user ID of the user to send the communication to" ariaLabelTopic={"User ID"}/>
                   </Box>
                   <Box>
                     <TextField label="UserId" type="text" variant="outlined" margin={"normal"}

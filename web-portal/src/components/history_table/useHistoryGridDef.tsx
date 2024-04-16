@@ -5,7 +5,7 @@ import Stack from "@mui/material/Stack";
 import StopCircleRoundedIcon from '@mui/icons-material/StopCircleRounded';
 import IconButton from "@mui/material/IconButton";
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
-import {getStatusColour, HistoryItem} from "../../models/History.ts";
+import {getStatusColour, getStatusColourText, HistoryItem} from "../../models/History.ts";
 import Box from "@mui/material/Box";
 
 const useHistoryGridDef = () => {
@@ -19,7 +19,11 @@ const useHistoryGridDef = () => {
         return (
           <Box display="flex" alignContent={"center"} alignItems={"center"} height={"100%"} justifyContent={"center"}
                width={"100%"}>
-            <Chip sx={{backgroundColor: getStatusColour(params.row.status, theme), width: "100%"}}
+            <Chip sx={{
+              backgroundColor: getStatusColour(params.row.status, theme),
+              color: getStatusColourText(params.row.status, theme),
+              width: "100%"
+            }}
                   label={params.row.status}/>
           </Box>
         )
@@ -53,7 +57,7 @@ const useHistoryGridDef = () => {
             </Button>
             {
               params.row.status == "Running" && (
-                <IconButton sx={{"&:hover": {color: theme.palette.error.main}}} onClick={() => {
+                <IconButton aria-label={"Stop communication: " + params.row.id} sx={{"&:hover": {color: theme.palette.error.main}}} onClick={() => {
                   rootStore.historyTableStore.setSelectedHistoryItem(params.row);
                   rootStore.historyTableStore.setOpenConfirmStopModal(true);
                 }}

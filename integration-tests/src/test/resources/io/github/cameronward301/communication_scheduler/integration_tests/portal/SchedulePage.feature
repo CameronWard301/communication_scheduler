@@ -1,4 +1,6 @@
 # Created by Cameron at 02/04/2024
+@WebPortal
+@CloseBrowserAfterScenario
 Feature: Schedule Web Portal Page
   Allows searching, modifying, removing, and adding schedules for the web portal.
 
@@ -6,7 +8,7 @@ Feature: Schedule Web Portal Page
   @CreateScheduleWithInterval
   @MongoDbSetupEntity
   @RemoveSchedule
-  @RemoveSchedule
+  @MongoDbRemoveEntity
   Scenario: User should be able to filter schedules by ID
     Given I navigate to "/schedules"
     When I set the "schedule-id-filter-input" to be the schedule id
@@ -14,7 +16,6 @@ Feature: Schedule Web Portal Page
     And I click by id on "refresh-schedules"
     Then I should see the schedule
     And the total schedule results should be 1
-
 
   @RemoveExistingSchedules
   @CreateScheduleWithInterval

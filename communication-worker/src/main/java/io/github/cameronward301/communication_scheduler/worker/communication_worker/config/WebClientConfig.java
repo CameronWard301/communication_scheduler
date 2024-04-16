@@ -1,7 +1,9 @@
 package io.github.cameronward301.communication_scheduler.worker.communication_worker.config;
 
 import io.grpc.netty.shaded.io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +16,10 @@ import javax.net.ssl.SSLException;
 
 @Configuration
 @Slf4j
+@RequiredArgsConstructor
 public class WebClientConfig {
+
+    private final SslContextWrapper sslContextWrapper;
 
     @Bean
     @ConditionalOnProperty(prefix = "web-client", name = "ssl-verification", havingValue = "true")
@@ -27,16 +32,15 @@ public class WebClientConfig {
     @ConditionalOnProperty(prefix = "web-client", name = "ssl-verification", havingValue = "false")
     WebClient insecureWebClient() {
         log.info("Creating webclient with ssl verification disabled for gateway communications");
-        return WebClient.builder().clientConnector(new ReactorClientHttpConnector(HttpClient.create().secure(client -> {
-            try {
-                client.sslContext(SslContextBuilder
-                        .forClient()
-                        .trustManager(InsecureTrustManagerFactory.INSTANCE)
-                        .build());
-            } catch (SSLException e) {
-                throw new RuntimeException(e);
-            }
-        }))).build();
+        return WebClient.builder().clientConnector(new ReactorClientHttpConnector(HttpClient.create().secure(client -> client.sslContext(createSslContext())))).build();
+    }
+
+    public SslContext createSslContext() {
+        try {
+            return sslContextWrapper.buildSslContext();
+        } catch (SSLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

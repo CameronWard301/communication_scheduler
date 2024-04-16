@@ -7,8 +7,10 @@ import io.github.cameronward301.communication_scheduler.integration_tests.gatewa
 import io.github.cameronward301.communication_scheduler.integration_tests.model.schedule.ScheduleEntity;
 import io.github.cameronward301.communication_scheduler.integration_tests.world.World;
 import io.temporal.common.SearchAttributeKey;
-import org.junit.jupiter.api.function.Executable;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -213,7 +215,7 @@ public class SchedulePageStepDefinitions {
                 .withTimeout(Duration.ofSeconds(explicitWait))
                 .pollingEvery(Duration.ofMillis(500))
                 .ignoring(NoSuchElementException.class);
-        wait.until((driver ->  {
+        wait.until((driver -> {
             driver.navigate().refresh();
             return driver.findElement(By.cssSelector(".MuiDataGrid-row:nth-child(1) .PrivateSwitchBase-input"));
         }));

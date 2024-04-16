@@ -69,13 +69,13 @@ public class HistoryAPIStepDefinitions {
     @And("I set the history gatewayId filter to be the gatewayId")
     public void iSetTheHistoryGatewayIdFilterToBe() {
         assertTrue(world.getWorkflowStub().getOptions().isPresent());
-        this.gatewayIdFilter = world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("gatewayId"));;
+        this.gatewayIdFilter = world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("gatewayId"));
     }
 
     @And("I set the history scheduleId filter to be the scheduleId")
     public void iSetTheHistoryScheduleIdFilterToBe() {
         assertTrue(world.getWorkflowStub().getOptions().isPresent());
-        this.scheduleIdFilter = world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("scheduleId"));;
+        this.scheduleIdFilter = world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("scheduleId"));
 
     }
 
@@ -103,6 +103,7 @@ public class HistoryAPIStepDefinitions {
         try {
             workflowListDTOResponseEntity = restTemplate.exchange(getWorkflowQueryURI(List.of()), HttpMethod.GET, new HttpEntity<>(world.getHttpHeaders()), WorkflowListDTO.class);
         } catch (HttpClientErrorException e) {
+            System.out.println(e.getMessage());
             world.setHttpClientErrorException(e);
         }
     }
@@ -112,6 +113,7 @@ public class HistoryAPIStepDefinitions {
         try {
             workflowExecutionDTOResponseEntity = restTemplate.exchange(historyAPIURL + "/" + workflowId + "/" + runId, HttpMethod.GET, new HttpEntity<>(world.getHttpHeaders()), WorkflowExecutionDTO.class);
         } catch (HttpClientErrorException e) {
+            System.out.println(e.getMessage());
             world.setHttpClientErrorException(e);
         }
     }
@@ -122,6 +124,7 @@ public class HistoryAPIStepDefinitions {
         try {
             deletedWorkflowResponseEntity = restTemplate.exchange(historyAPIURL + "/" + workflowId + "/" + runId, HttpMethod.DELETE, new HttpEntity<>(world.getHttpHeaders()), Void.class);
         } catch (HttpClientErrorException e) {
+            System.out.println(e.getMessage());
             world.setHttpClientErrorException(e);
         }
     }
@@ -131,6 +134,7 @@ public class HistoryAPIStepDefinitions {
         try {
             totalDTOResponseEntity = restTemplate.exchange(getWorkflowQueryURI(List.of("total")), HttpMethod.GET, new HttpEntity<>(world.getHttpHeaders()), TotalDTO.class);
         } catch (HttpClientErrorException e) {
+            System.out.println(e.getMessage());
             world.setHttpClientErrorException(e);
         }
     }
@@ -201,6 +205,9 @@ public class HistoryAPIStepDefinitions {
 
     @Then("the I receive a history workflow with status code {int}")
     public void theIReceiveAHistoryWorkflowWithStatusCode(int status) {
+        if (world.getHttpClientErrorException() != null) {
+            System.out.println(world.getHttpClientErrorException().getMessage());
+        }
         assertEquals(status, workflowExecutionDTOResponseEntity.getStatusCode().value());
         assertNotNull(workflowExecutionDTOResponseEntity.getBody());
         assertEquals(workflowId, workflowExecutionDTOResponseEntity.getBody().getWorkflowId());

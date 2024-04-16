@@ -4,7 +4,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
-import org.hamcrest.CoreMatchers;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -158,9 +157,18 @@ public class SharedWebPortalStepDefinitions {
 
     @And("the element with css class {string} should be: {string}")
     public void theElementWithCssClassShouldContain(String cssClass, String value) {
-        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
-        wait.until(ExpectedConditions.textToBe(By.className(cssClass), value));
-        assertEquals(value, webDriver.findElement(By.className(cssClass)).getText());
+        Wait<WebDriver> wait = new FluentWait<>(webDriver)
+                .withTimeout(Duration.ofSeconds(explicitWait))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(NoSuchElementException.class)
+                .ignoring(AssertionError.class);
+
+        wait.until((driver -> {
+            driver.findElement(By.id("refresh-schedules")).click();
+            assertThat(webDriver.findElement(By.className(cssClass)).getText(), is(value));
+            return ExpectedConditions.textToBe(By.className(cssClass), value);
+        }));
+        assertThat(webDriver.findElement(By.className(cssClass)).getText(), is(value));
     }
 
     @And("the element with id {string} should be set to: {string} after clicking by id on {string}")
@@ -168,12 +176,20 @@ public class SharedWebPortalStepDefinitions {
         Wait<WebDriver> wait = new FluentWait<>(webDriver)
                 .withTimeout(Duration.ofSeconds(explicitWait))
                 .pollingEvery(Duration.ofMillis(500))
-                .ignoring(NoSuchElementException.class);
+                .ignoring(NoSuchElementException.class)
+                .ignoring(AssertionError.class);
 
         wait.until((driver -> {
             driver.findElement(By.id(refreshId)).click();
             assertThat(webDriver.findElement(By.id(testId)).getText(), is(value));
             return ExpectedConditions.textToBe(By.id(testId), value);
         }));
+    }
+
+    @And("there are {int} iframes loaded")
+    public void thereAreIframesLoaded(int total) {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.numberOfElementsToBe(By.tagName("iframe"), total));
+        assertEquals(total, webDriver.findElements(By.tagName("iframe")).size());
     }
 }

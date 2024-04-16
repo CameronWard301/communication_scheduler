@@ -2,5 +2,8 @@ dependencies:
 - name: temporal
   repository: https://charts.lemontech.engineering
   version: 0.28.1
-digest: sha256:55035e95e2f04bbd3d4218c58729d93f9da8706dcaf43877ab95ebd12f142e5b
-generated: "2024-02-28T19:02:51.3698205Z"
+- name: grafana
+  repository: https://grafana.github.io/helm-charts
+  version: 7.3.7
+digest: sha256:64233efd2773096578811be12661d3ef7ca388089175a366103e3d57551bc310
+generated: "2024-04-10T20:39:52.0567497+01:00"

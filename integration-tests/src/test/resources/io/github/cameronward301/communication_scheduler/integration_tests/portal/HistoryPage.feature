@@ -1,4 +1,6 @@
 # Created by Cameron at 10/04/2024
+@WebPortal
+@CloseBrowserAfterScenario
 Feature: History Pages
   Tests the history pages of the application
 

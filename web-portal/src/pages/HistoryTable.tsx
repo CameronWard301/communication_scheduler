@@ -99,6 +99,7 @@ const HistoryTable = observer(() => {
                       setSearchParams(new URLSearchParams());
                       getHistoryPage();
                     }}
+                    disabled={rootStore.historyTableStore.statusFilter.join() === ["Any Status"].join() && rootStore.historyTableStore.gatewayIdFilter === "" && rootStore.historyTableStore.scheduleIdFilter === "" && rootStore.historyTableStore.userIdFilter === ""}
                     id={"reset-filters-button"}
             >Reset Filters</Button>
           </Grid>

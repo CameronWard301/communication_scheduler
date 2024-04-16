@@ -27,9 +27,7 @@ const UpcomingCommunications = observer(({
                                          }: UpcomingCommunicationsProps) => {
   const [upcomingCommunications, setUpcomingCommunications] = useState<string[]>([])
   const {
-    numberOfCommunications,
-    getUpcomingTimestamps,
-    calculateIntervalInSecondsFromIntervalSpec,
+    getUpcomingTimestampsForInterval,
     calculateIntervalFromMonthSpec,
     calculateIntervalsFromCronString,
     calculateIntervalFromDayOFWeekSpec
@@ -38,7 +36,7 @@ const UpcomingCommunications = observer(({
   useEffect(() => {
     switch (scheduleType) {
       case ScheduleType.Interval:
-        setUpcomingCommunications(getUpcomingTimestamps(numberOfCommunications, calculateIntervalInSecondsFromIntervalSpec(intervalSpec!)))
+        setUpcomingCommunications(getUpcomingTimestampsForInterval(intervalSpec!))
         break;
       case ScheduleType.CalendarWeek:
         setUpcomingCommunications(calculateIntervalFromDayOFWeekSpec(calendarWeekSpec!))

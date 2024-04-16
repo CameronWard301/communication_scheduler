@@ -58,3 +58,23 @@ export const getStatusColour = (status: CommunicationStatus, theme: Theme) => {
       return theme.palette.info.main;
   }
 }
+
+
+export const getStatusColourText = (status: CommunicationStatus, theme: Theme) => {
+  switch (status) {
+    case "Completed":
+      return theme.palette.success.contrastText;
+    case "Running":
+      return theme.palette.primary.contrastText;
+    case "Failed":
+      return theme.palette.error.contrastText;
+    case "Terminated":
+      return theme.palette.warning.contrastText;
+    case "Cancelled":
+      return theme.palette.warning.contrastText;
+    case "Unknown":
+      return theme.palette.info.contrastText;
+    default:
+      return theme.palette.info.contrastText;
+  }
+}

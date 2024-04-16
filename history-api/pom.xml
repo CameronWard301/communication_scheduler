@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.2</version>
+        <version>3.2.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>history-api</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <name>history-api</name>
     <description>history-api</description>
     <properties>
@@ -30,7 +30,7 @@
                     <artifactId>spring-boot-starter-data-mongodb</artifactId>
                 </exclusion>
             </exclusions>
-            <version>0.17.2</version>
+            <version>0.18.1</version>
         </dependency>
 
         <dependency>

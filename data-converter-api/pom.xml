@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.2</version>
+        <version>3.2.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.github.CameronWard301.communication_scheduler</groupId>
     <artifactId>data-converter-api</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <name>data-converter-api</name>
     <description>data-converter-api</description>
     <properties>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>io.github.cameronward301.communication_scheduler.workflows</groupId>
             <artifactId>communication_workflow</artifactId>
-            <version>0.17.2</version>
+            <version>0.18.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>

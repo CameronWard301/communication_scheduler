@@ -96,11 +96,11 @@ const GatewayModal = observer(
                     <span>
                       {
                         affectedSchedules > 0 &&
-                          <CustomTooltip message={affectedScheduleTooltip}/>
+                          <CustomTooltip message={affectedScheduleTooltip} ariaLabelTopic={"Affected schedule"}/>
                       }
                       {
                         affectedSchedules == 0 &&
-                          <CustomTooltip
+                          <CustomTooltip ariaLabelTopic={"Affected schedule"}
                               message={"Modifying or deleting this gateway will not have any effect on existing schedules"}/>
                       }
                     </span>

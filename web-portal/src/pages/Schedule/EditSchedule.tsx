@@ -223,7 +223,7 @@ const EditSchedule = observer(() => {
                 <Box>
                   <Typography variant={"h4"} display={"inline-block"} id={"schedule-user-id"}>User Id<span
                     style={{color: theme.palette.error.main}}>*</span></Typography>
-                  <CustomTooltip message="The user ID of the user to send the communication to"/>
+                  <CustomTooltip message="The user ID of the user to send the communication to" ariaLabelTopic={"User ID"}/>
                 </Box>
                 <Box>
                   <TextField label="User Id" type="text" variant="outlined" margin={"normal"}
@@ -240,7 +240,7 @@ const EditSchedule = observer(() => {
                 <Box display={"flex"} alignItems={"center"}>
                   <Typography variant={"h4"} display={"inline-block"} id={"connected-gateway-title"}>Connected
                     Gateway</Typography>
-                  <CustomTooltip message="The gateway that will process the communication for this schedule"/>
+                  <CustomTooltip message="The gateway that will process the communication for this schedule" ariaLabelTopic={"Connected gateway"}/>
                   <Button variant={"contained"} color={"secondary"} endIcon={<SyncRoundedIcon/>} sx={{ml: 3}}
                           id={"change-gateway-button"}
                           onClick={() => {
@@ -258,7 +258,7 @@ const EditSchedule = observer(() => {
                   <Box display={"flex"} alignItems={"center"}>
                     <Typography variant={"h4"} display={"inline-block"} id={"connected-gateway-title"}>Gateway To
                       Update</Typography>
-                    <CustomTooltip message="The new gateway that will process the communication for this schedule"/>
+                    <CustomTooltip message="The new gateway that will process the communication for this schedule" ariaLabelTopic={"Gateway To be used instead"}/>
                   </Box>
                   <Box>
                     <ReviewGatewayTable gateway={rootStore.scheduleEditStore.updatedSchedule.gateway}
@@ -276,7 +276,7 @@ const EditSchedule = observer(() => {
                 <Box display={"flex"} alignItems={"center"}>
                   <Typography variant={"h4"} display={"inline-block"} id={"edit-schedule-upcoming-title"}>Upcoming
                     Communications</Typography>
-                  <CustomTooltip message="The upcoming timestamps of when a communication will be sent"/>
+                  <CustomTooltip message="The upcoming timestamps of when a communication will be sent" ariaLabelTopic={"Upcoming communications"}/>
                   <Button variant={"contained"} color={"secondary"} endIcon={<SyncRoundedIcon/>} sx={{ml: 3}}
                           id={"change-schedule"}
                           onClick={() => {

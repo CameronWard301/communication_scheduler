@@ -1,4 +1,6 @@
 # Created by Cameron at 02/04/2024
+@WebPortal
+@CloseBrowserAfterScenario
 Feature: # Gateway Filter Component
   # Tests the functionality of the Gateway Filter Component on the schedule page
 
