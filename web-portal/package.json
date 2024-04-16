@@ -1,7 +1,7 @@
 {
   "name": "web-portal",
   "private": true,
-  "version": "0.6.0",
+  "version": "0.7.3",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +15,7 @@
     "@mui/icons-material": "5.15.10",
     "@mui/lab": "5.0.0-alpha.166",
     "@mui/material": "5.15.14",
-    "@mui/x-data-grid": "7.1.0",
+    "@mui/x-data-grid": "7.2.0",
     "@mui/x-date-pickers": "6.19.7",
     "@react-buddy/ide-toolbox": "2.4.0",
     "@react-buddy/palette-mui": "5.0.2",

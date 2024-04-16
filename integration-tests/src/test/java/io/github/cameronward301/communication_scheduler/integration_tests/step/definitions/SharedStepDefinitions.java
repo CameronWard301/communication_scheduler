@@ -48,6 +48,7 @@ public class SharedStepDefinitions {
     public void theResponseCodeIsAndMessage(int code, String message) {
         assertEquals(code, world.getHttpClientErrorException().getStatusCode().value());
         assertEquals(message, world.getHttpClientErrorException().getMessage());
+        world.setHttpClientErrorException(null);
     }
 
 }

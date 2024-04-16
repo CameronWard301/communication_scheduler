@@ -153,18 +153,25 @@ export const useUpcomingCommunications = () => {
 
   }
 
-  const getUpcomingTimestamps = (count: number, intervalInSeconds: number) => {
+  const getUpcomingTimestampsForInterval = (intervalSpec: IntervalSpec) => {
+    const intervalInSeconds = calculateIntervalInSecondsFromIntervalSpec(intervalSpec);
     const timestamps: string[] = [];
     const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
-    for (let i = 0; i < count; i++) {
+    if (parseInt(intervalSpec.days) > 0) {
+      currentDate.setHours(0, 0, 0, 0);
+    } else if (parseInt(intervalSpec.hours) > 0) {
+      currentDate.setMinutes(0, 0, 0);
+    } else if (parseInt(intervalSpec.minutes) > 0 || parseInt(intervalSpec.seconds) > 0) {
+      currentDate.setSeconds(0, 0);
+    }
+    for (let i = 0; i < numberOfCommunications; i++) {
       timestamps.push(new Date(currentDate.getTime() + intervalInSeconds * 1000 * (i + 1)).toLocaleString());
     }
     return timestamps;
   }
 
   return {
-    getUpcomingTimestamps,
+    getUpcomingTimestampsForInterval,
     calculateIntervalInSecondsFromIntervalSpec,
     calculateIntervalFromDayOFWeekSpec,
     calculateIntervalFromMonthSpec,

@@ -146,6 +146,7 @@ const GatewayTable = observer(() => {
                       setSearchParams(new URLSearchParams());
                       getGatewaysForTable();
                     }}
+                    disabled={rootStore.gatewayTableStore.gatewayIdFilter === "" && rootStore.gatewayTableStore.gatewayNameFilter === "" && rootStore.gatewayTableStore.gatewayDescriptionFilter === "" && rootStore.gatewayTableStore.gatewayEndpointUrlFilter === ""}
                     id={"reset-filters-button"}
             >Reset Filters</Button>
           </Grid>
@@ -167,6 +168,7 @@ const GatewayTable = observer(() => {
                         ,
                       },
                     }}
+                    aria-label={"gateway-table"}
                     disableRowSelectionOnClick
                     pageSizeOptions={[5, 10, 25, 50, 100]}
                     paginationModel={rootStore.gatewayTableStore.paginationModel}

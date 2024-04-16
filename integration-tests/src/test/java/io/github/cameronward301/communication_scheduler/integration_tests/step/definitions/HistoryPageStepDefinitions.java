@@ -77,12 +77,12 @@ public class HistoryPageStepDefinitions {
     @Given("I navigate to the history page with filters correctly set")
     public void iNavigateToTheHistoryPageWithFiltersCorrectlySet() {
         assertTrue(world.getWorkflowStub().getOptions().isPresent());
-        webDriver.navigate().to(webDriverUrl + "/history?status=Running&gatewayId=" + gateway.getId() + "&userId=" + world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("userId")) + "&scheduleId=" + world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("scheduleId"))+ "&scheduleId=" + world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("scheduleId")));
+        webDriver.navigate().to(webDriverUrl + "/history?status=Running&gatewayId=" + gateway.getId() + "&userId=" + world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("userId")) + "&scheduleId=" + world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("scheduleId")) + "&scheduleId=" + world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("scheduleId")));
     }
 
     @When("I click view on the history item")
     public void iClickViewOnTheHistoryItem() {
-        webDriver.findElement(By.id("view-communication-"+world.getWorkflowRunId())).click();
+        webDriver.findElement(By.id("view-communication-" + world.getWorkflowRunId())).click();
     }
 
     @Then("the history item should be displayed correctly with running status {string}")
@@ -93,7 +93,7 @@ public class HistoryPageStepDefinitions {
 
     @When("I click stop on the history item")
     public void iClickStopOnTheHistoryItem() {
-        webDriver.findElement(By.id("stop-communication-"+world.getWorkflowRunId())).click();
+        webDriver.findElement(By.id("stop-communication-" + world.getWorkflowRunId())).click();
     }
 
     @Then("I see the confirm stop modal")
@@ -129,7 +129,7 @@ public class HistoryPageStepDefinitions {
     @Then("the url should contain the schedule id filter")
     public void theUrlShouldContainTheScheduleIdFilter() {
         webDriver.switchTo().window(webDriver.getWindowHandles().stream().toList().get(1));
-        assertTrue( world.getWorkflowStub().getOptions().isPresent());
+        assertTrue(world.getWorkflowStub().getOptions().isPresent());
         assertThat(webDriver.getCurrentUrl(), is(webDriverUrl + "/schedules?scheduleId=" + world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("scheduleId"))));
     }
 }

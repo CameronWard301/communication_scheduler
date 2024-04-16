@@ -13,27 +13,42 @@ import useAxiosClient from "./client/AxiosClient.ts";
 import {AxiosContextProvider} from "./context/AxiosContext.tsx";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {LocalizationProvider} from "@mui/x-date-pickers";
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#2E8BC0'
-    },
-    secondary: {
-      main: '#2e42c0'
-    },
-    info: {
-      main: '#6e7180'
-    },
-
-  }
-})
+import {useEffect} from "react";
+import Cookies from "js-cookie";
+import {observer} from "mobx-react-lite";
 
 const store = new RootStore();
 
-function App() {
+const App = observer(() => {
   const client = useAxiosClient();
+
+
+  useEffect(() => {
+    const preferences = Cookies.get("cs-platform-preferences")
+    if (preferences) {
+      store.setPlatformPreferences(JSON.parse(preferences));
+    } else {
+      store.setNavigationBarOpen(true)
+    }
+
+  }, []);
+
+
+  const theme = createTheme({
+    palette: {
+      mode: store.platformPreferences.colorTheme,
+      primary: {
+        main: '#2E8BC0'
+      },
+      secondary: {
+        main: '#2e42c0'
+      },
+      info: {
+        main: '#6e7180'
+      },
+
+    }
+  })
 
   return (
     <>
@@ -58,6 +73,6 @@ function App() {
       </StoreProvider>
     </>
   )
-}
+})
 
 export default App

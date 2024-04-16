@@ -1,5 +1,5 @@
 import {OverridableComponent} from "@mui/material/OverridableComponent";
-import {Badge, Button, InputAdornment, Paper, SvgIconTypeMap, TextField} from "@mui/material";
+import {Badge, Button, InputAdornment, Paper, SvgIconTypeMap, TextField, useTheme} from "@mui/material";
 import {observer} from "mobx-react-lite";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import Box from "@mui/material/Box";
@@ -48,6 +48,7 @@ const GatewayFilter = observer(({
   const rootStore = useStore();
   const {gatewayFilterColumns} = useGatewayGridDef();
   const {getGatewaysForScheduleFilter} = useGatewayService();
+  const theme = useTheme();
 
   const setTextField = (value: string, queryParam: string) => {
     setFieldValue(value)
@@ -81,8 +82,8 @@ const GatewayFilter = observer(({
                   id={`${idPrefix}-filter-button`}
                   fullWidth
                   size={"large"}
-                  endIcon={isFieldFocused ? <ArrowDropUpRoundedIcon sx={{justifyContent: "flex-end"}}/> :
-                    <ArrowDropDownRoundedIcon/>}
+                  endIcon={isFieldFocused ? <ArrowDropUpRoundedIcon sx={{justifyContent: "flex-end", color: rootStore.platformPreferences.colorTheme == "light"? theme.palette.info.main : "white"}}/> :
+                    <ArrowDropDownRoundedIcon sx={{color: rootStore.platformPreferences.colorTheme == "light"? theme.palette.info.main : "white"}}/>}
                   color={"info"}
                   className={"gatewayFilter"}
                   onClick={() => setIsFieldFocused(!isFieldFocused)}
@@ -95,7 +96,7 @@ const GatewayFilter = observer(({
                     }
                   }}
 
-          ><span style={{paddingLeft: 10}}>Gateway</span></Button>
+          ><span style={{paddingLeft: 10, color: rootStore.platformPreferences.colorTheme == "light"? theme.palette.info.main : "white"}}>Gateway</span></Button>
 
         </Box>
       </Grid>
@@ -132,6 +133,7 @@ const GatewayFilter = observer(({
                           onClick={() => {
                             setTextField(rootStore.gatewayFilterStore.rowSelectionModel.length > 0 ? rootStore.gatewayFilterStore.rowSelectionModel[0] as string : "", queryParam);
                             setIsFieldFocused(false)
+                            fetchResults();
                           }}
                   >
                     Apply Filter
@@ -224,7 +226,7 @@ const GatewayFilter = observer(({
                                  fullWidth
                                  id={"gateway-filter-search"}
                                  loading={rootStore.gatewayFilterStore.isLoading}
-                                 onClick={() => fetchResults()}
+                                 onClick={() => getGatewaysForScheduleFilter()}
                   >Find Gateways</LoadingButton>
 
                 </Grid>

@@ -74,8 +74,12 @@ const HistoryStatusSelection = observer(() => {
                   fullWidth
                   size={"large"}
                   endIcon={rootStore.historyTableStore.isStatusFilterFocused ?
-                    <ArrowDropUpRoundedIcon sx={{justifyContent: "flex-end"}}/> :
-                    <ArrowDropDownRoundedIcon/>}
+                    <ArrowDropUpRoundedIcon sx={{
+                      justifyContent: "flex-end",
+                      color: rootStore.platformPreferences.colorTheme == "light" ? theme.palette.info.main : "white"
+                    }}/> :
+                    <ArrowDropDownRoundedIcon
+                      sx={{color: rootStore.platformPreferences.colorTheme == "light" ? theme.palette.info.main : "white"}}/>}
                   color={"info"}
                   className={"gatewayFilter"}
 
@@ -88,7 +92,10 @@ const HistoryStatusSelection = observer(() => {
                     }
                   }}
 
-          ><span style={{paddingLeft: 10}}>Status</span></Button>
+          ><span style={{
+            paddingLeft: 10,
+            color: rootStore.platformPreferences.colorTheme == "light" ? theme.palette.info.main : "white"
+          }}>Status</span></Button>
 
         </Box>
       </Grid>

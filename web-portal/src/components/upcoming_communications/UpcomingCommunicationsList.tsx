@@ -10,9 +10,7 @@ const UpcomingCommunicationsList = observer(() => {
   const rootStore = useStore();
   const [upcomingCommunications, setUpcomingCommunications] = useState<string[]>([])
   const {
-    numberOfCommunications,
-    getUpcomingTimestamps,
-    calculateIntervalInSecondsFromIntervalSpec,
+    getUpcomingTimestampsForInterval,
     calculateIntervalFromMonthSpec,
     calculateIntervalsFromCronString,
     calculateIntervalFromDayOFWeekSpec
@@ -24,7 +22,7 @@ const UpcomingCommunicationsList = observer(() => {
     }
     switch (rootStore.scheduleEditStore.updateScheduleSpec.scheduleType) {
       case ScheduleType.Interval:
-        setUpcomingCommunications(getUpcomingTimestamps(numberOfCommunications, calculateIntervalInSecondsFromIntervalSpec(rootStore.scheduleEditStore.updateScheduleSpec.intervalSpec)))
+        setUpcomingCommunications(getUpcomingTimestampsForInterval(rootStore.scheduleEditStore.updateScheduleSpec.intervalSpec))
         break;
       case ScheduleType.CalendarWeek:
         setUpcomingCommunications(calculateIntervalFromDayOFWeekSpec(rootStore.scheduleEditStore.updateScheduleSpec.calendarWeekSpec))

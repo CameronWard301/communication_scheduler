@@ -67,7 +67,7 @@ const Preferences = observer(() => {
             <Typography variant={"h4"} display={"inline-block"} id={"maximum-attempts-title"}>Maximum
               Attempts</Typography>
             <CustomTooltip
-              message="The maximum number of attempts to send the communication to the customer if the system encounters an error, or select unlimited attempts."/>
+              message="The maximum number of attempts to send the communication to the customer if the system encounters an error, or select unlimited attempts." ariaLabelTopic={"Maximum attempts"}/>
           </Box>
           <Box>
             <TextField label="Maximum Attempts" type="number" variant="outlined" margin={"normal"}
@@ -87,7 +87,7 @@ const Preferences = observer(() => {
             <Typography variant={"h4"} display={"inline-block"} id={"gateway-timeout-title"}>Gateway
               Timeout</Typography>
             <CustomTooltip
-              message="The time to wait for a gateway to respond back with a status before retrying the gateway"/>
+              message="The time to wait for a gateway to respond back with a status before retrying the gateway" ariaLabelTopic={"Gateway timeout"}/>
           </Box>
           <Box>
             <TextField label="Gateway Timeout" type="number" variant="outlined" margin={"normal"}
@@ -127,7 +127,7 @@ const Preferences = observer(() => {
                   <Typography variant={"h4"} display={"inline-block"} id={"backoff-coefficient-title"}>Backoff
                     Coefficient</Typography>
                   <CustomTooltip message="The backoff coefficient to use for exponential backoff. To disable backoff, enter 1.0,
-                                     the system will then use the initial interval to determine when the next retry should be."/>
+                                     the system will then use the initial interval to determine when the next retry should be." ariaLabelTopic={"Backoff coefficient"}/>
                 </Box>
                 <Box>
                   <TextField label="Backoff Coeeficient" type="number" variant="outlined" margin={"normal"}
@@ -147,7 +147,7 @@ const Preferences = observer(() => {
                   <Typography variant={"h4"} display={"inline-block"} id={"initial-interval-title"}>Initial
                     Interval</Typography>
                   <CustomTooltip message="How soon should the system retry the failed step after encountering a failure.
-                                     Subsequent retries will also be at this value if the backoff coefficient is set to 1 or less."/>
+                                     Subsequent retries will also be at this value if the backoff coefficient is set to 1 or less." ariaLabelTopic={"Initial interval"}/>
                 </Box>
                 <Box>
                   <TextField label="Initial Interval" type="number" variant="outlined" margin={"normal"}
@@ -165,7 +165,7 @@ const Preferences = observer(() => {
                   <Typography variant={"h4"} display={"inline-block"} id={"maximum-interval-title"}>Maximum
                     Interval</Typography>
                   <CustomTooltip message="The maximum amount of time between a retried communication. Set this value to set
-                                     a limit to the exponential backoff coefficient, setting this to 0 means no limit."/>
+                                     a limit to the exponential backoff coefficient, setting this to 0 means no limit." ariaLabelTopic={"Maximum interval"}/>
                 </Box>
                 <Box>
                   <TextField label="Maximum Interval" type="number" variant="outlined" margin={"normal"}
@@ -189,7 +189,7 @@ const Preferences = observer(() => {
                   <Typography variant={"h4"} display={"inline-block"} id={"start-to-close-timout-title"}>Start To Close
                     Timeout</Typography>
                   <CustomTooltip
-                    message="The maximum amount of time it should take to send a communication, if the communication execution exceeds this limit then there are no more retries. Set to 0 to disable"/>
+                    message="The maximum amount of time it should take to send a communication, if the communication execution exceeds this limit then there are no more retries. Set to 0 to disable" ariaLabelTopic={"Start to close timeout help"}/>
                 </Box>
                 <Box>
                   <TextField label="Start To Close Timeout" type="number" variant="outlined" margin={"normal"}

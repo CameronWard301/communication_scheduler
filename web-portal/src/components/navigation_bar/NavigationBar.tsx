@@ -1,5 +1,4 @@
 // Adapted from https://mui.com/material-ui/react-drawer/
-import * as React from "react";
 import {useContext} from "react";
 import {CSSObject, styled, Theme} from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
@@ -21,9 +20,13 @@ import ScheduleSendRoundIcon from '@mui/icons-material/ScheduleSend';
 import MonitorHeartRoundedIcon from '@mui/icons-material/MonitorHeartRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
+import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import {SnackbarContext} from "../../context/SnackbarContext";
 import logo from "../../assets/logo.png";
 import {ConfigContext} from "../../context/ConfigContext.tsx";
+import {useStore} from "../../context/StoreContext.tsx";
+import {observer} from "mobx-react-lite";
 
 const drawerWidth = 340;
 
@@ -75,17 +78,17 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function NavigationBar() {
-  const [open, setOpen] = React.useState(false);
+const NavigationBar = observer(() => {
   const navigate = useNavigate();
   const {addSnackbar} = useContext(SnackbarContext);
   const [config] = useContext(ConfigContext);
+  const rootStore = useStore()
 
   const toggleDrawer = () => {
-    if (open) {
-      setOpen(false);
+    if (rootStore.platformPreferences.navigationBarOpen) {
+      rootStore.setNavigationBarOpen(false);
     } else {
-      setOpen(true);
+      rootStore.setNavigationBarOpen(true);
     }
   };
 
@@ -93,18 +96,18 @@ export default function NavigationBar() {
     return window.location.pathname.replace("/", "") === path ? "primary" : "inherit";
   }
 
-  return <><Drawer variant="permanent" open={open}>
+  return <><Drawer variant="permanent" open={rootStore.platformPreferences.navigationBarOpen}>
     <DrawerHeader style={{justifyContent: "flex-start"}}>
       <img id={"app-logo"} src={logo} alt="Platform Logo" style={{maxWidth: "48px", cursor: "pointer"}}
            onClick={() => navigate("/")}/>
     </DrawerHeader>
     <DrawerHeader
       sx={{
-        justifyContent: open ? "flex-end" : "center",
+        justifyContent: rootStore.platformPreferences.navigationBarOpen ? "flex-end" : "center",
       }}
     >
       <IconButton onClick={toggleDrawer} title={"Expand menu"} id={"navbar-expand"}>
-        {!open ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
+        {!rootStore.platformPreferences.navigationBarOpen ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
       </IconButton>
     </DrawerHeader>
     <Divider/>
@@ -115,20 +118,21 @@ export default function NavigationBar() {
           onClick={() => navigate("/")}
           sx={{
             minHeight: 48,
-            justifyContent: open ? "initial" : "center",
+            justifyContent: rootStore.platformPreferences.navigationBarOpen ? "initial" : "center",
             px: 2.5,
           }}
         >
           <ListItemIcon
             sx={{
               minWidth: 0,
-              mr: open ? 3 : "auto",
+              mr: rootStore.platformPreferences.navigationBarOpen ? 3 : "auto",
               justifyContent: "center",
             }}
           >
             <HomeRoundIcon color={getColor("")}/>
           </ListItemIcon>
-          <ListItemText primary={"Home"} sx={{opacity: open ? 1 : 0}} id={"nav-home-label"}/>
+          <ListItemText primary={"Home"} sx={{opacity: rootStore.platformPreferences.navigationBarOpen ? 1 : 0}}
+                        id={"nav-home-label"}/>
         </ListItemButton>
       </ListItem>
 
@@ -138,20 +142,22 @@ export default function NavigationBar() {
           onClick={() => navigate("/history")}
           sx={{
             minHeight: 48,
-            justifyContent: open ? "initial" : "center",
+            justifyContent: rootStore.platformPreferences.navigationBarOpen ? "initial" : "center",
             px: 2.5,
           }}
         >
           <ListItemIcon
             sx={{
               minWidth: 0,
-              mr: open ? 3 : "auto",
+              mr: rootStore.platformPreferences.navigationBarOpen ? 3 : "auto",
               justifyContent: "center",
             }}
           >
             <HistoryRoundIcon color={getColor("history")}/>
           </ListItemIcon>
-          <ListItemText primary={"Communication History"} sx={{opacity: open ? 1 : 0}} id={"nav-history-label"}/>
+          <ListItemText primary={"Communication History"}
+                        sx={{opacity: rootStore.platformPreferences.navigationBarOpen ? 1 : 0}}
+                        id={"nav-history-label"}/>
         </ListItemButton>
       </ListItem>
 
@@ -161,20 +167,22 @@ export default function NavigationBar() {
           onClick={() => navigate("/schedules")}
           sx={{
             minHeight: 48,
-            justifyContent: open ? "initial" : "center",
+            justifyContent: rootStore.platformPreferences.navigationBarOpen ? "initial" : "center",
             px: 2.5,
           }}
         >
           <ListItemIcon
             sx={{
               minWidth: 0,
-              mr: open ? 3 : "auto",
+              mr: rootStore.platformPreferences.navigationBarOpen ? 3 : "auto",
               justifyContent: "center",
             }}
           >
             <ScheduleSendRoundIcon color={getColor("schedules")}/>
           </ListItemIcon>
-          <ListItemText primary={"Communication Schedules"} sx={{opacity: open ? 1 : 0}} id={"nav-schedules-label"}/>
+          <ListItemText primary={"Communication Schedules"}
+                        sx={{opacity: rootStore.platformPreferences.navigationBarOpen ? 1 : 0}}
+                        id={"nav-schedules-label"}/>
         </ListItemButton>
       </ListItem>
 
@@ -184,20 +192,22 @@ export default function NavigationBar() {
           onClick={() => navigate("/gateways")}
           sx={{
             minHeight: 48,
-            justifyContent: open ? "initial" : "center",
+            justifyContent: rootStore.platformPreferences.navigationBarOpen ? "initial" : "center",
             px: 2.5,
           }}
         >
           <ListItemIcon
             sx={{
               minWidth: 0,
-              mr: open ? 3 : "auto",
+              mr: rootStore.platformPreferences.navigationBarOpen ? 3 : "auto",
               justifyContent: "center",
             }}
           >
             <StorageRoundedIcon color={getColor("gateways")}/>
           </ListItemIcon>
-          <ListItemText primary={"Communication Gateways"} sx={{opacity: open ? 1 : 0}} id={"nav-gateways-label"}/>
+          <ListItemText primary={"Communication Gateways"}
+                        sx={{opacity: rootStore.platformPreferences.navigationBarOpen ? 1 : 0}}
+                        id={"nav-gateways-label"}/>
         </ListItemButton>
       </ListItem>
 
@@ -207,20 +217,22 @@ export default function NavigationBar() {
           onClick={() => navigate("/preferences")}
           sx={{
             minHeight: 48,
-            justifyContent: open ? "initial" : "center",
+            justifyContent: rootStore.platformPreferences.navigationBarOpen ? "initial" : "center",
             px: 2.5,
           }}
         >
           <ListItemIcon
             sx={{
               minWidth: 0,
-              mr: open ? 3 : "auto",
+              mr: rootStore.platformPreferences.navigationBarOpen ? 3 : "auto",
               justifyContent: "center",
             }}
           >
             <SettingsRoundedIcon color={getColor("preferences")}/>
           </ListItemIcon>
-          <ListItemText primary={"Platform Preferences"} sx={{opacity: open ? 1 : 0}} id={"nav-preferences-label"}/>
+          <ListItemText primary={"Platform Preferences"}
+                        sx={{opacity: rootStore.platformPreferences.navigationBarOpen ? 1 : 0}}
+                        id={"nav-preferences-label"}/>
         </ListItemButton>
       </ListItem>
 
@@ -230,20 +242,22 @@ export default function NavigationBar() {
           onClick={() => navigate("/stats")}
           sx={{
             minHeight: 48,
-            justifyContent: open ? "initial" : "center",
+            justifyContent: rootStore.platformPreferences.navigationBarOpen ? "initial" : "center",
             px: 2.5,
           }}
         >
           <ListItemIcon
             sx={{
               minWidth: 0,
-              mr: open ? 3 : "auto",
+              mr: rootStore.platformPreferences.navigationBarOpen ? 3 : "auto",
               justifyContent: "center",
             }}
           >
             <MonitorHeartRoundedIcon color={getColor("stats")}/>
           </ListItemIcon>
-          <ListItemText primary={"Platform Monitoring"} sx={{opacity: open ? 1 : 0}} id={"nav-monitoring-label"}/>
+          <ListItemText primary={"Platform Monitoring"}
+                        sx={{opacity: rootStore.platformPreferences.navigationBarOpen ? 1 : 0}}
+                        id={"nav-monitoring-label"}/>
         </ListItemButton>
       </ListItem>
     </List>
@@ -253,6 +267,30 @@ export default function NavigationBar() {
 
 
     <List sx={{marginTop: "auto"}}>
+      <ListItem disablePadding sx={{display: "block"}}>
+        <ListItemButton sx={{
+          minHeight: 48,
+          justifyContent: rootStore.platformPreferences.navigationBarOpen ? "initial" : "center",
+          px: 2.5,
+        }}
+                        onClick={() => {
+                          rootStore.setColorTheme(rootStore.platformPreferences.colorTheme == "dark" ? "light" : "dark");
+                        }}
+        >
+          <ListItemIcon
+            sx={{
+              minWidth: 0,
+              mr: rootStore.platformPreferences.navigationBarOpen ? 3 : "auto",
+              justifyContent: "center",
+            }}
+          >
+            {rootStore.platformPreferences.colorTheme == "light" ? <LightModeRoundedIcon/> : <DarkModeRoundedIcon/>}
+          </ListItemIcon>
+          <ListItemText primary={rootStore.platformPreferences.colorTheme == "dark" ? "Dark Mode" : "Light Mode"}
+                        sx={{opacity: rootStore.platformPreferences.navigationBarOpen ? 1 : 0}}
+                        id={"nav-theme-label"}/>
+        </ListItemButton>
+      </ListItem>
       <ListItem disablePadding sx={{display: "block"}} key={"Version"}>
         <Typography
           variant={"body2"}
@@ -268,7 +306,7 @@ export default function NavigationBar() {
         <ListItemButton
           sx={{
             minHeight: 48,
-            justifyContent: open ? "initial" : "center",
+            justifyContent: rootStore.platformPreferences.navigationBarOpen ? "initial" : "center",
             px: 2.5,
           }}
           onClick={() => {
@@ -279,15 +317,18 @@ export default function NavigationBar() {
           <ListItemIcon
             sx={{
               minWidth: 0,
-              mr: open ? 3 : "auto",
+              mr: rootStore.platformPreferences.navigationBarOpen ? 3 : "auto",
               justifyContent: "center",
             }}
           >
             <LogoutIcon/>
           </ListItemIcon>
-          <ListItemText primary="Log out" sx={{opacity: open ? 1 : 0}} id={"nav-logout-label"}/>
+          <ListItemText primary="Log out" sx={{opacity: rootStore.platformPreferences.navigationBarOpen ? 1 : 0}}
+                        id={"nav-logout-label"}/>
         </ListItemButton>
       </ListItem>
     </List>
   </Drawer></>;
-}
+})
+
+export default NavigationBar;

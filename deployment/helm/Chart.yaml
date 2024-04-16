@@ -27,3 +27,6 @@ dependencies:
   - name: temporal
     version: 0.28.1
     repository: https://charts.lemontech.engineering
+  - name: grafana
+    version: 7.3.7
+    repository: https://grafana.github.io/helm-charts

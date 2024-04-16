@@ -50,7 +50,7 @@ public class ScheduleHooks {
     @Before(value = "@RemoveExistingSchedules", order = 1)
     public void removeExistingSchedulesBeforeAll() {
         List<String> scheduleIds = new ArrayList<>();
-        scheduleClient.listSchedules().filter(scheduleListDescription -> scheduleListDescription.getScheduleId().contains("integration-test")).forEach(schedule -> scheduleIds.add(schedule.getScheduleId()));
+        scheduleClient.listSchedules().filter(scheduleListDescription -> scheduleListDescription.getScheduleId().contains("integration-test") || scheduleListDescription.getSearchAttributes().get("userId").toString().contains("integration-test")).forEach(schedule -> scheduleIds.add(schedule.getScheduleId()));
         for (String scheduleId : scheduleIds) {
             try {
                 scheduleClient.getHandle(scheduleId).delete();

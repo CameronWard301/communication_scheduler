@@ -100,7 +100,7 @@ const EditGateway = observer(() => {
                 <Box>
                   <Typography variant={"h4"} display={"inline-block"} id={"edit-gateway-name-title"}>Gateway Name<span
                     style={{color: theme.palette.error.main}}>*</span></Typography>
-                  <CustomTooltip message="A friendly name to identify the gateway"/>
+                  <CustomTooltip message="A friendly name to identify the gateway" ariaLabelTopic={"Gateway name"}/>
                 </Box>
                 <Box>
                   <TextField label="Gateway Name" type="text" variant="outlined" margin={"normal"}
@@ -116,7 +116,7 @@ const EditGateway = observer(() => {
                 <Box>
                   <Typography variant={"h4"} display={"inline-block"} id={"edit-gateway-url-title"}>Endpoint URL<span
                     style={{color: theme.palette.error.main}}>*</span></Typography>
-                  <CustomTooltip message="The URL to connect to the gateway"/>
+                  <CustomTooltip message="The URL to connect to the gateway" ariaLabelTopic={"Endpoint URL"}/>
                 </Box>
                 <Box>
                   <TextField label="Gateway Name" type="text" variant="outlined" margin={"normal"}
@@ -132,7 +132,7 @@ const EditGateway = observer(() => {
                 <Box>
                   <Typography variant={"h4"} display={"inline-block"}
                               id={"edit-gateway-description-title"}>Description</Typography>
-                  <CustomTooltip message="An optional description of this gateway"/>
+                  <CustomTooltip message="An optional description of this gateway" ariaLabelTopic={"Gateway Description"}/>
                 </Box>
                 <Box>
                   <TextField label="Gateway Name" type="text" variant={"outlined"} margin={"normal"}

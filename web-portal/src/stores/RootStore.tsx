@@ -9,6 +9,9 @@ import {CreateScheduleStore} from "./CreateScheduleStore.tsx";
 import {GenerateScheduleStore} from "./GenerateScheduleStore.tsx";
 import {BulkActionStore} from "./BulkActionStore.tsx";
 import {HistoryTableStore} from "./HistoryTableStore.tsx";
+import {action, makeAutoObservable} from "mobx";
+import {PlatformPreferences} from "../models/PlatformPreferences.ts";
+import Cookies from "js-cookie";
 
 export class RootStore {
   preferencesStore: PreferencesStore;
@@ -23,6 +26,11 @@ export class RootStore {
   bulkActionStore: BulkActionStore;
   historyTableStore: HistoryTableStore;
 
+  platformPreferences: PlatformPreferences = {
+    navigationBarOpen: false,
+    colorTheme: "dark"
+  }
+
   constructor() {
     this.preferencesStore = new PreferencesStore(this);
     this.gatewayTableStore = new GatewayTableStore(this);
@@ -35,5 +43,26 @@ export class RootStore {
     this.createScheduleStore = new CreateScheduleStore(this);
     this.bulkActionStore = new BulkActionStore(this);
     this.historyTableStore = new HistoryTableStore(this);
+    makeAutoObservable(this);
+  }
+
+  setNavigationBarOpen = (open: boolean) => {
+    action(() => {
+      this.platformPreferences.navigationBarOpen = open;
+      Cookies.set("cs-platform-preferences", JSON.stringify(this.platformPreferences));
+    })();
+  }
+
+  setColorTheme = (theme: "dark" | "light") => {
+    action(() => {
+      this.platformPreferences.colorTheme = theme;
+      Cookies.set("cs-platform-preferences", JSON.stringify(this.platformPreferences));
+    })();
+  }
+
+  setPlatformPreferences = (preferences: PlatformPreferences) => {
+    action(() => {
+      this.platformPreferences = preferences;
+    })();
   }
 }

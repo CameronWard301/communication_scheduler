@@ -1,5 +1,6 @@
 package io.github.cameronward301.communication_scheduler.integration_tests.configuration;
 
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -24,6 +25,9 @@ public class WebDriverConfiguration {
     @Value("${web-portal.remote-web-driver-url}")
     private String remoteWebDriverUrl;
 
+    @Value("${web-portal.address}")
+    private String webDriverUrl;
+
     @Bean
     public ChromeOptions chromeOptions() {
         ChromeOptions options = new ChromeOptions();
@@ -40,6 +44,7 @@ public class WebDriverConfiguration {
         driver.manage().window().setSize(new Dimension(1920, 1080));
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(Integer.parseInt(implicitWait)));
         driver.manage().window().maximize();
+        setPreferencesCookie(driver);
         return driver;
     }
 
@@ -50,7 +55,13 @@ public class WebDriverConfiguration {
         WebDriver driver = new RemoteWebDriver(new URI(remoteWebDriverUrl).toURL(), chromeOptions);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(Integer.parseInt(implicitWait)));
         driver.manage().window().maximize();
+        setPreferencesCookie(driver);
         return driver;
+    }
+
+    private void setPreferencesCookie(WebDriver driver) {
+        driver.get(webDriverUrl);
+        driver.manage().addCookie(new Cookie("cs-platform-preferences", "{\"navigationBarOpen\":false,\"colorTheme\":\"dark\"}"));
     }
 
 

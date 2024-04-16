@@ -107,7 +107,7 @@ const CreateSchedule = observer(({
             <Box sx={{mb: 1}}>
               <Typography variant={"h4"} display={"inline-block"} id={"create-schedule-recurring-interval-title"}>Recurring
                 Interval</Typography>
-              <CustomTooltip message="Specify the time interval for this communication to run (e.g. Every 12 hours)"/>
+              <CustomTooltip message="Specify the time interval for this communication to run (e.g. Every 12 hours)" ariaLabelTopic={"Recurring interval"}/>
               {
                 rootStore.createScheduleStore.intervalDays == "0" &&
                 rootStore.createScheduleStore.intervalHours == "0" &&
@@ -176,7 +176,7 @@ const CreateSchedule = observer(({
                 <Typography variant={"h4"} display={"inline-block"}
                             id={"create-schedule-offset-title"}>Offset</Typography>
                 <CustomTooltip
-                  message="Specify the time to offset when this schedule will run (E.g. every 15 minutes past the hour)"/>
+                  message="Specify the time to offset when this schedule will run (E.g. every 15 minutes past the hour)" ariaLabelTopic={"Offset"}/>
                 {
                   rootStore.createScheduleStore.isIntervalOffsetValid() ? (
                     <Typography color={theme.palette.success.main}>The offset must be smaller than the total interval
@@ -206,7 +206,7 @@ const CreateSchedule = observer(({
             <Box>
               <Typography variant={"h4"} display={"inline-block"} id={"calendar-week-title"}>Recurring
                 Day(s)</Typography>
-              <CustomTooltip message="Select the day(s) of the week you want the communication to be sent on"/>
+              <CustomTooltip message="Select the day(s) of the week you want the communication to be sent on" ariaLabelTopic={"Recurring days"}/>
               <Grid container spacing={2}>
                 {
                   topDayOfWeekRow.map((day) => {
@@ -236,7 +236,7 @@ const CreateSchedule = observer(({
 
                 <Grid xs={12}>
                   <Typography variant={"h4"} display={"inline-block"} mt={4}>Time</Typography>
-                  <CustomTooltip
+                  <CustomTooltip ariaLabelTopic={"Time"}
                     message="Enter the time you would like the communication to be sent in 12-hour format. By default, the communication will be set to run at 12am UTC. "/>
 
                 </Grid>
@@ -274,7 +274,7 @@ const CreateSchedule = observer(({
                 <Typography variant={"h4"} display={"inline-block"} id={"calendar-month-title"}>Recurring
                   Month(s)<span
                     style={{color: theme.palette.error.main}}>*</span></Typography>
-                <CustomTooltip
+                <CustomTooltip ariaLabelTopic={"Recurring month(s)"}
                   message="Enter the day of the month you want the communication to be sent on. Note that if the date doesn't exist e.g the 31st of September, then the communication will never be sent"/>
               </Grid>
 
@@ -292,7 +292,7 @@ const CreateSchedule = observer(({
 
                 <Grid xs={12} mt={4}>
                   <Typography variant={"h4"} display={"inline-block"}>Select Month(s)</Typography>
-                  <CustomTooltip
+                  <CustomTooltip ariaLabelTopic={"Select month"}
                     message="Enter the day of the month you want the communication to be sent on. Note that if the date doesn't exist e.g the 31st of September, then the communication will never be sent"/>
 
                   <Grid mb={2}>
@@ -331,7 +331,7 @@ const CreateSchedule = observer(({
 
               <Grid xs={12} py={0}>
                 <Typography variant={"h4"} display={"inline-block"}>Time</Typography>
-                <CustomTooltip
+                <CustomTooltip ariaLabelTopic={"Time"}
                   message="Enter the time you would like the communication to be sent in 12-hour format. By default, the communication will be set to run at 12am UTC. "/>
 
               </Grid>
@@ -368,7 +368,7 @@ const CreateSchedule = observer(({
                 <Grid xs={12}>
                   <Typography variant={"h4"} display={"inline-block"} id={"cron-string-title"}>Cron String
                     (Advanced)</Typography>
-                  <CustomTooltip
+                  <CustomTooltip ariaLabelTopic={"Cron string"}
                     message="Enter a CRON string that specifies when to send the communication"/>
                 </Grid>
                 <Grid xs={12} lg={6}>

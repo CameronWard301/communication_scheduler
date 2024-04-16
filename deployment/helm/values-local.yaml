@@ -27,8 +27,8 @@ temporal:
 
   grafana:
     image:
-      tag: 10.2.3
-    enabled: true
+      tag: 10.4.1
+    enabled: false
 
   elasticsearch:
     persistence:
@@ -41,6 +41,83 @@ temporal:
       enabled: true
     update:
       enabled: true
+
+grafana:
+  enabled: true
+  replicas: 1
+  testFramework:
+    enabled: false
+  rbac:
+    create: false
+    pspEnabled: false
+    namespaced: true
+  persistence:
+    type: pvc
+    enabled: true
+    size: 500Mi
+  env:
+    GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
+    GF_SERVER_SERVE_FROM_SUB_PATH: true
+    GF_SECURITY_ALLOW_EMBEDDING: true
+    GF_AUTH_ANONYMOUS_ENABLED: true
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: "default"
+          orgId: 1
+          folder: ""
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default
+        - name: "custom"
+          orgId: 1
+          folder: "custom"
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default/custom
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: TemporalMetrics
+          type: prometheus
+          url: http://{{ .Release.Name }}-prometheus-server
+          access: proxy
+          isDefault: true
+  dashboards:
+    default:
+      server-general-github:
+        url: https://raw.githubusercontent.com/temporalio/dashboards/helm/server/server-general.json
+        datasource: TemporalMetrics
+      sdk-general-github:
+        url: https://raw.githubusercontent.com/temporalio/dashboards/helm/sdk/sdk-general.json
+        datasource: TemporalMetrics
+      misc-advanced-visibility-specific-github:
+        url: https://raw.githubusercontent.com/temporalio/dashboards/helm/misc/advanced-visibility-specific.json
+        datasource: TemporalMetrics
+      misc-clustermonitoring-kubernetes-github:
+        url: https://raw.githubusercontent.com/temporalio/dashboards/helm/misc/clustermonitoring-kubernetes.json
+        datasource: TemporalMetrics
+      misc-frontend-service-specific-github:
+        url: https://raw.githubusercontent.com/temporalio/dashboards/helm/misc/frontend-service-specific.json
+        datasource: TemporalMetrics
+      misc-history-service-specific-github:
+        url: https://raw.githubusercontent.com/temporalio/dashboards/helm/misc/history-service-specific.json
+        datasource: TemporalMetrics
+      misc-matching-service-specific-github:
+        url: https://raw.githubusercontent.com/temporalio/dashboards/helm/misc/matching-service-specific.json
+        datasource: TemporalMetrics
+      misc-worker-service-specific-github:
+        url: https://raw.githubusercontent.com/temporalio/dashboards/helm/misc/worker-service-specific.json
+        datasource: TemporalMetrics
+      custom-grafana-dashboard:
+        url: https://raw.githubusercontent.com/CameronWard301/temporal-custom-grafana-dashboard/main/custom-grafana-dashboard.json
+        datasource: TemporalMetrics
 
 communication_worker:
   repository: cameronward/communication-worker
@@ -82,7 +159,7 @@ gateway_api:
   repository: cameronward/gateway-api
   tag: latest
   region: eu-west-1
-  loggingLevel: DEBUG
+  loggingLevel: info
   keyStorePath: /certs/gateway-api.p12
   verifyHostnames: false
 

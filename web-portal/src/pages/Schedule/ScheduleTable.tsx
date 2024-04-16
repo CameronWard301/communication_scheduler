@@ -19,7 +19,6 @@ import PlayCircleFilledRoundedIcon from '@mui/icons-material/PlayCircleFilledRou
 import RemoveDoneRoundedIcon from '@mui/icons-material/RemoveDoneRounded';
 import LayersIcon from '@mui/icons-material/Layers';
 import GatewayFilter from "../../components/gateway_filter/GatewayFilter.tsx";
-import {useGatewayService} from "../../service/GatewayService.ts";
 import {ConfirmModal} from "../../components/modal";
 import {ConfirmModifySchedule} from "../../components/modal/schedule";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
@@ -31,7 +30,6 @@ const ScheduleTable = observer(() => {
   const rootStore = useStore();
   const {columns} = useScheduleGridDef();
   const {getScheduleTable, pauseSchedule, resumeSchedule, deleteScheduleById} = useScheduleService();
-  const {getGatewaysForScheduleFilter} = useGatewayService();
   const apiRef = useGridApiRef();
   const [, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -60,11 +58,6 @@ const ScheduleTable = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rootStore.scheduleTableStore.paginationModel]);
 
-
-  /*  useEffect(() => {
-      getScheduleTable();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [rootStore.scheduleTableStore.paginationModel]);*/
 
   useEffect(() => {
     const handleEvent: GridEventListener<'headerSelectionCheckboxChange'> = (
@@ -174,7 +167,7 @@ const ScheduleTable = observer(() => {
                          queryParam={"gatewayId"}
                          label={"Gateway"}
                          InputIcon={StorageRoundedIcon}
-                         fetchResults={getGatewaysForScheduleFilter}
+                         fetchResults={getScheduleTable}
           />
         </Grid>
 

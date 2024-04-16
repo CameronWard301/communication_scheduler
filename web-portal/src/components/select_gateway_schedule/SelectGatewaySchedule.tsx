@@ -42,7 +42,7 @@ const SelectGatewaySchedule = observer(({
       <Grid xs={12}>
         <Typography variant={"h4"} display={"inline-block"} id={"select-gateway-title"}>Select Gateway<span
           style={{color: theme.palette.error.main}}>*</span></Typography>
-        <CustomTooltip message="Select the gateway to process the message"/>
+        <CustomTooltip message="Select the gateway to process the message" ariaLabelTopic={"Select gateway"}/>
       </Grid>
       <Grid xs={3}>
         <TextFieldFilter fieldValue={rootStore.gatewayTableStore.gatewayIdFilter}

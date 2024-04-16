@@ -25,6 +25,7 @@ const useScheduleGridDef = () => {
             title={rootStore.scheduleTableStore.selectedAll ? "Please unselect all schedules before selecting individual schedules" : ""}>
             <span>
                <Checkbox
+                 inputProps={{'aria-label': `Select schedule ${params.id}`}}
                  disabled={rootStore.scheduleTableStore.selectedAll}
                  checked={rootStore.scheduleTableStore.selectedAll ? true : rootStore.scheduleTableStore.checkBoxSelectionModel.includes(params.id)}
                  onChange={(_event, checked) => {
@@ -86,7 +87,7 @@ const useScheduleGridDef = () => {
 
             {
               params.row.status === ScheduleStatus.Paused && (
-                <IconButton sx={{"&:hover": {color: theme.palette.success.main}}} onClick={() => {
+                <IconButton aria-label={"Resume schedule" + params.row.id} sx={{"&:hover": {color: theme.palette.success.main}}} onClick={() => {
                   rootStore.scheduleTableStore.setSelectedSchedule(params.row as Schedule);
                   rootStore.scheduleTableStore.setConfirmResumeModalOpen(true);
                 }}
@@ -97,7 +98,7 @@ const useScheduleGridDef = () => {
             }
             {
               params.row.status === ScheduleStatus.Running && (
-                <IconButton sx={{"&:hover": {color: theme.palette.warning.main}}} onClick={() => {
+                <IconButton aria-label={"Pause schedule" + params.row.id} sx={{"&:hover": {color: theme.palette.warning.main}}} onClick={() => {
                   rootStore.scheduleTableStore.setSelectedSchedule(params.row as Schedule);
                   rootStore.scheduleTableStore.setConfirmPauseModalOpen(true);
                 }}
@@ -106,7 +107,7 @@ const useScheduleGridDef = () => {
                 </IconButton>
               )
             }
-            <IconButton sx={{"&:hover": {color: theme.palette.error.main}}} onClick={() => {
+            <IconButton aria-label={"Delete schedule" + params.row.id} sx={{"&:hover": {color: theme.palette.error.main}}} onClick={() => {
               rootStore.scheduleTableStore.setSelectedSchedule(params.row as Schedule);
               rootStore.scheduleTableStore.setConfirmDeleteModalOpen(true);
             }}
