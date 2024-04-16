@@ -5,10 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.TestPropertySource
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient
 import spock.lang.Specification
 
-@ContextConfiguration(classes = SharedGatewayConfiguration)
+@TestPropertySource(properties = [
+        "security.cors.enabled=true",
+        "security.csrf.enabled=true"
+])
+@ContextConfiguration(classes = [SharedGatewayConfiguration])
 class SharedGatewayConfigurationTest extends Specification {
 
     @Autowired
