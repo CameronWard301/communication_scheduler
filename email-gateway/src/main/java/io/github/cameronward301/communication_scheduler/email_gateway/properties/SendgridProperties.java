@@ -5,6 +5,9 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Properties for the Sendgrid email gateway read from the application.yml file
+ */
 @Configuration
 @ConfigurationProperties(prefix = "sendgrid")
 @Getter

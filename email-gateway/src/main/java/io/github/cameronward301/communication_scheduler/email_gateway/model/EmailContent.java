@@ -7,6 +7,9 @@ import lombok.*;
 
 import static java.lang.String.format;
 
+/**
+ * Represents the data that can be used to generate the email message
+ */
 @Getter
 @Setter
 @Builder
