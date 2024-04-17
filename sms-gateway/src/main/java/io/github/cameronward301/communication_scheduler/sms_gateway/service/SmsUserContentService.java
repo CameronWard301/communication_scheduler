@@ -9,6 +9,11 @@ import io.github.cameronward301.communication_scheduler.sms_gateway.repository.U
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service for resolving the userID to a user and their usage statistics in one transaction
+ * You can extend the "GetUserAndContent" interface to provide the implementation for retrieving the user and content objects in separate requests
+ * In this example, the user and content objects are retrieved from the in-memory database for simplicity but would be some external business data source in a real-world scenario
+ */
 @Service
 @RequiredArgsConstructor
 public class SmsUserContentService implements UserContentService<SmsUser, UserUsage> {

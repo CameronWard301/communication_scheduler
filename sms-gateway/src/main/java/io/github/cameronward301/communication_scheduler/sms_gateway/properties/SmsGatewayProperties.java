@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Creates the properties for the SMS gateway and used to configure the generics
+ */
 @Getter
 @Setter
 @SuperBuilder

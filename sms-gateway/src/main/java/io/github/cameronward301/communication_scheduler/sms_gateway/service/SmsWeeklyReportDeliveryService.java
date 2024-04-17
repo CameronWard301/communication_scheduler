@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-
+/**
+ * Service to deliver the weekly report to a user via SMS
+ * This can be an external service like Twilio or an internal service belonging to a business
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -34,6 +37,11 @@ public class SmsWeeklyReportDeliveryService implements ContentDeliveryService<Sm
         checkStatus(message.getSid());
     }
 
+    /**
+     * Polls the Twilio API to check the status of a message to confirm its delivery
+     * @param messageSid the message sid to check
+     * @throws ContentDeliveryException if the message failed to send
+     */
     void checkStatus(String messageSid) throws ContentDeliveryException {
         for (int i = 0; i < twilioProperties.getMaximumPollingAttempts(); i++) {
             log.debug("Checking message status for sid: {}", messageSid);
