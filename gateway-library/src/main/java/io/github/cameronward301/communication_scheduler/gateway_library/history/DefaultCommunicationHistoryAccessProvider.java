@@ -4,6 +4,7 @@ import io.github.cameronward301.communication_scheduler.gateway_library.model.Co
 import io.github.cameronward301.communication_scheduler.gateway_library.properties.DefaultCommunicationHistoryAccessProviderProperties;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
@@ -18,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 @Builder
 @Component
 @Slf4j
+@ConditionalOnProperty(prefix = "io.github.cameronward301.communication-scheduler.gateway-library.default-communication-history-access-provider", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class DefaultCommunicationHistoryAccessProvider implements CommunicationHistoryAccessProvider {
     private final DynamoDbAsyncClient dynamoDbAsyncClient;
     private final DefaultCommunicationHistoryAccessProviderProperties historyAccessProviderProperties;
@@ -33,6 +35,11 @@ public class DefaultCommunicationHistoryAccessProvider implements CommunicationH
         this.historyAccessProviderProperties = historyAccessProviderProperties;
     }
 
+    /**
+     * Check if the message has been sent before
+     * @param messageHash the hash of the message to get the previous communication history for
+     * @return CommunicationHistory object with previous communication information, it will have previousMessageSent set to true if the message has been sent before otherwise false
+     */
     @Override
     public CommunicationHistory getPreviousCommunicationByMessageHash(String messageHash) {
         GetItemRequest getItemRequest = GetItemRequest.builder()
@@ -58,6 +65,11 @@ public class DefaultCommunicationHistoryAccessProvider implements CommunicationH
                 .build();
     }
 
+    /**
+     * Remove the communication history for a messageHash
+     * @param messageHash the hash of the message to remove the communication history for
+     * @throws RuntimeException if there is an error removing the communication history
+     */
     @Override
     public void removeCommunicationHistoryByMessageHash(String messageHash) {
         DeleteItemRequest deleteItemRequest = DeleteItemRequest.builder()
@@ -78,6 +90,12 @@ public class DefaultCommunicationHistoryAccessProvider implements CommunicationH
         });
     }
 
+    /**
+     * When a communication has been sent, call this method to store it in the communication history database.
+     * @param workflowRunId the id of the workflow run that triggered the communication
+     * @param userId        the id of the user whose message history is being stored
+     * @param messageHash   the hash of the message being sent with the user id
+     */
     @Override
     public void storeCommunication(String workflowRunId, String userId, String messageHash) {
         PutItemRequest putItemRequest = PutItemRequest.builder()

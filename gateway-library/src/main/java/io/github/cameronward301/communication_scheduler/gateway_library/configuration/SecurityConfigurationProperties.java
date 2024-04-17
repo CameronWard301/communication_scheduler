@@ -8,6 +8,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 
+/**
+ * Configures the options to disabled cors and csrf if set in the application.yml
+ */
 @ConfigurationProperties(prefix = "io.github.cameronward301.communication-scheduler.gateway-library.security")
 @Configuration
 @Getter

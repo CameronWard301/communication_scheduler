@@ -8,11 +8,14 @@ import org.springframework.context.annotation.ComponentScan;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 
+/**
+ * Creates the dynamoDB client if using the default history access provider
+ */
 @AutoConfiguration
 @ComponentScan(basePackages = {"io.github.cameronward301.communication_scheduler.gateway_library"})
 public class SharedGatewayConfiguration {
     @Bean
-    @ConditionalOnProperty(prefix = "default-communication-history-access-provider", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "io.github.cameronward301.communication-scheduler.gateway-library.default-communication-history-access-provider", name = "enabled", havingValue = "true", matchIfMissing = true)
     public DynamoDbAsyncClient dynamoDbAsyncClient(DefaultCommunicationHistoryAccessProviderProperties properties) {
         return DynamoDbAsyncClient.builder()
                 .region(Region.of(properties.getRegion()))
