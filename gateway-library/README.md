@@ -103,7 +103,7 @@ The database must have the [schema defined here](../Designs/Images/Database/Comm
 
 This section describes the configuration options that must be set in the application.properties or application.yml file of your project implementing this library
 
-> [!IMPORTANT]
+> [!CAUTION]
 > Disabling the cors and csrf to false should NOT be used in a live production environment, it should only be used when testing.
 
 All properties set must be under the base prefix: `io.github.cameronward301.communication-scheduler.gateway-library`

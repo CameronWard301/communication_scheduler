@@ -36,7 +36,7 @@ This section describes the configuration options available for the preferences A
    - If you don't want to place the file in the resources folder:
      - Run `base64 -e -i .\<project-name>.p12 -o <project-name>-base64.txt` to encode the keystore file for use in kubernetes secrets that will set the `PREFERENCES_API_SSL_KEY_STORE` to be the data in the text file you've just generated.
 
-> [!IMPORTANT]
+> [!CAUTION]
 > Setting VERIFY_HOSTNAMES to false should NOT be used in a live production environment, it should only be used when testing with self-signed SSL certificates.
 
 | Environment Variable                    | Description                                                                                                                                                             | Default Value                                      | Required               |

@@ -25,3 +25,6 @@ tctl namespace register default
 tctl admin cluster add-search-attributes --name userId --type Keyword
 tctl admin cluster add-search-attributes --name gatewayId --type Keyword
 tctl admin cluster add-search-attributes --name scheduleId --type Keyword
+
+# include
+- entrypoint env var to select spring profiles
