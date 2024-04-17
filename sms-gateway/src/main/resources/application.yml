@@ -1,6 +1,3 @@
-worker:
-  apiKey: ${WORKER_API_KEY:replace-me}
-
 twilio:
   account-sid: ${TWILIO_ACCOUNT_SID}
   auth-token: ${TWILIO_AUTH_TOKEN}
@@ -17,11 +14,6 @@ user2:
   name: ${USER2_NAME:Cameron}
   phoneNumber: ${USER2_PHONE_NUMBER:441234567890}
 
-
-default-communication-history-access-provider:
-  region: ${REGION:eu-west-1}
-  table-name: ${COMMUNICATION_HISTORY_TABLE_NAME:communication-history}
-
 spring:
   datasource:
     driver-class-name: org.h2.Driver
@@ -36,13 +28,18 @@ spring:
 
 logging:
   level:
-    io.github.cameronward301.communication_scheduler.gateway_library: ${GATEWAY_LOGGING:DEBUG}
+    io.github.cameronward301.communication_scheduler.gateway_library: ${GATEWAY_LOGGING:info}
 
 io:
   github:
     cameronward301:
       communication-scheduler:
         gateway-library:
+          worker:
+            apiKey: ${WORKER_API_KEY:replace-me}
+          default-communication-history-access-provider:
+            region: ${REGION:eu-west-1}
+            table-name: ${COMMUNICATION_HISTORY_TABLE_NAME:communication-history}
           security:
             cors:
               enabled: ${CORS_ENABLED:true}

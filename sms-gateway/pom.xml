@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>sms-gateway</artifactId>
-    <version>0.2.4</version>
+    <version>0.2.5</version>
     <name>sms-gateway</name>
     <description>sms-gateway</description>
     <properties>
@@ -43,7 +43,7 @@
         <dependency>
             <groupId>io.github.cameronward301.communication_scheduler</groupId>
             <artifactId>gateway-library</artifactId>
-            <version>0.3.10</version>
+            <version>0.3.12</version>
         </dependency>
         <dependency>
             <groupId>com.twilio.sdk</groupId>
