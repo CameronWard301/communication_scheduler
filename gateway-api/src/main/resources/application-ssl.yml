@@ -1,0 +1,8 @@
+server:
+  ssl:
+    key-store: ${GATEWAY_API_SSL_KEY_STORE:classpath:keystore/gateway-api.p12}
+    key-store-password: ${GATEWAY_API_SSL_KEY_STORE_PASSWORD}
+    key-store-type: PKCS12
+    enabled: true
+    key-alias: gateway-api
+    key-password: ${GATEWAY_API_SSL_KEY_STORE_PASSWORD}
