@@ -15,6 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Controller for processing mock messages
+ * I recommend creating a new controller each time the userContentService needs to be different to generate a different type of message
+ */
 @Controller
 @RequestMapping("/mock/message")
 public class MockGatewayController implements GatewayController<MockUser, MockContent> {

@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * POJO holding the user information
+ */
 @Builder
 @Data
 @NoArgsConstructor
