@@ -22,11 +22,11 @@ Ensure you have the following installed and configured locally:
 This section describes the configuration options available for the schedule API via environment variables and spring profiles
 - Run the project with the `ssl` profile to enable SSL
 - To generate a self-signed keystore file for development purposes, run the following command in the project directory:
-    - `keytool -genkeypair -alias <project-name> -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore <project-name>.p12 -validity 3650`
-        - replace project desired value, follow prompts to set the keystore password.
+    - `keytool -genkeypair -alias schedule-api -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore schedule-api.p12 -validity 3650`
+        - Follow prompts to set the keystore password.
         - Place the generated file in src/main/resources/keystore
     - If you don't want to place the file in the resources folder:
-        - Run `base64 -e -i .\<project-name>.p12 -o <project-name>-base64.txt` to encode the keystore file for use in kubernetes secrets that will set the `SCHEDULE_API_SSL_KEY_STORE` to be the data in the text file you've just generated.
+        - Run `base64 -e -i .\schedule-api.p12 -o schedule-api-base64.txt` to encode the keystore file for use in kubernetes secrets that will set the `SCHEDULE_API_SSL_KEY_STORE` to be the data in the text file you've just generated.
 
 > [!CAUTION]
 > Setting VERIFY_HOSTNAMES to false should NOT be used in a live production environment, it should only be used when testing with self-signed SSL certificates.
