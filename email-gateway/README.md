@@ -51,7 +51,7 @@ This section describes the configuration options available for the gateway via e
         - Follow prompts to set the keystore password.
         - Place the generated file in src/main/resources/keystore
     - If you don't want to place the file in the resources folder:
-        - Run `base64 -e -i .\email-gateway.p12 -o <project-name>-base64.txt` to encode the keystore file for use in kubernetes secrets that will set the `GATEWAY_API_SSL_KEY_STORE` to be the data in the text file you've just generated.
+        - Run `base64 -e -i .\email-gateway.p12 -o email-gateway-base64.txt` to encode the keystore file for use in kubernetes secrets that will set the `GATEWAY_API_SSL_KEY_STORE` to be the data in the text file you've just generated.
 
 > [!CAUTION]
 > Setting CORS_ENABLED or CSRF_ENABLED to false should NOT be used in a live production environment, it should only be used when testing with self-signed SSL certificates.
@@ -70,7 +70,7 @@ This section describes the configuration options available for the gateway via e
 | EMAIL_GATEWAY_SSL_KEY_STORE_PASSWORD | The keystore password to access the keystore                                                                                                                                                                               |                                      | Y if using SSL profile |
 | EMAIL_GATEWAY_SSL_KEY_STORE          | The file path or file containing the public and private keys in PKCS12 format                                                                                                                                              | classpath:keystore/email-gateway.p12 | N                      |
 | ROOT_LOGGING                         | The root [logging level](https://docs.spring.io/spring-boot/docs/2.1.13.RELEASE/reference/html/boot-features-logging.html#boot-features-logging-format) for the project                                                    | info                                 | N                      |
-| GATEWAY_LOGGING                      | The gateway [logging level](https://docs.spring.io/spring-boot/docs/2.1.13.RELEASE/reference/html/boot-features-logging.html#boot-features-logging-format) for the gateway library                                         | info                                 | N                      |
+| GATEWAY_LOGGING                      | The [logging level](https://docs.spring.io/spring-boot/docs/2.1.13.RELEASE/reference/html/boot-features-logging.html#boot-features-logging-format) for the gateway library                                                 | info                                 | N                      |
 | CORS_ENABLED                         | Sets the CORS check when processing a request. Set to false for testing purposes to disable                                                                                                                                | true                                 | N                      |
 | CSRF_ENABLED                         | Sets the CSRF check when processing a request. Set to false for testing purposes to disable                                                                                                                                | true                                 | N                      |
 
@@ -89,7 +89,7 @@ A step by step series of examples that tell you how to get a development environ
 
 - To run the unit tests, run `mvn test` in the project directory
 - To run the integration tests see the [Integration Tests Project](../integration-tests)
-  and make sure that the `@GatewayAPI` is added to the filter expression.
+  and make sure that the `@EmailGateway` is added to the filter expression.
 
 ## Deployment
 
