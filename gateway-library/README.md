@@ -10,7 +10,7 @@ Download the library from [maven central](https://central.sonatype.com/artifact/
   - By default, this is an AWS DynamoDB database but this can be overridden, see the [implementation section](#creating-a-gateway-using-the-library) for more information.
 
 ## API Specification
-Gateways should expose endpoints that accept and return JSON payloads outlined in the [swagger specification](https://app.swaggerhub.com/apis/CameronWard301/Communication_APIs/1.0.3#/Gateway%20API).
+Gateways should expose endpoints that accept and return JSON payloads outlined in the [swagger specification](https://app.swaggerhub.com/apis/CameronWard301/Gateway_API/1.1.3).
 for gateways.
  - gateways should always expose POST endpoints
  - The endpoint path doesn't matter as you can create the gateway in the [gateway-api](../gateway-api) and specify the path there to match the one that the gateway exposes.
@@ -60,7 +60,7 @@ Ensure you have the following installed and configured locally:
 This class is responsible for resolving the user and content objects from the user ID passed in the request payload.
    1. Create a public class that implements the `UserContentService` interface and use your User and Content models as the generic arguments.  
    2. Implement the getUserAndContent method to resolve the user and content objects from the user ID.
-   3. If you can resolve the content and user objects from just the user ID then you dont need to extend the `GetUserAndContent` interface. See the [sms gateway](../sms-gateway/src/main/java/io/github/cameronward301/communication_scheduler/sms_gateway/service/SmsUserContentService.java) for an example.
+   3. If you can resolve the content and user objects from just the user ID then you don't need to extend the `GetUserAndContent` interface. See the [sms gateway](../sms-gateway/src/main/java/io/github/cameronward301/communication_scheduler/sms_gateway/service/SmsUserContentService.java) for an example.
    4. If you need to use separate methods to resolve the user and content objects then extend the `GetUserAndContent` interface and implement the `getUser` and `getContent` methods. See the [email gateway](../email-gateway/src/main/java/io/github/cameronward301/communication_scheduler/email_gateway/service/EmailUserContentService.java) for an example.
    5. If you can't resolve the user by ID then throw a `ResourceNotFoundException`
 6. **Creating a service class to generate and send the message contents.**  
