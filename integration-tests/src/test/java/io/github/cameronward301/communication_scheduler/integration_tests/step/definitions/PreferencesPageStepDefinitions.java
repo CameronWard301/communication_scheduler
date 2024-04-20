@@ -5,9 +5,13 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Duration;
+import java.util.regex.Pattern;
 
 import static io.github.cameronward301.communication_scheduler.integration_tests.step.definitions.SharedWebPortalStepDefinitions.setNumericField;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -20,6 +24,9 @@ public class PreferencesPageStepDefinitions {
 
     @Value("${web-portal.implicit-wait}")
     private int implicitWait;
+
+    @Value("${web-portal.explicit-wait}")
+    private int explicitWait;
 
     public PreferencesPageStepDefinitions(WebDriver driver) {
         this.driver = driver;
@@ -78,6 +85,8 @@ public class PreferencesPageStepDefinitions {
 
     @Then("I should see the preference confirmation modal with new values:")
     public void iShouldSeeThePreferenceConfirmationModalWithNewValues(DataTable fields) {
+        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.textMatches(By.id("transition-modal-title"), Pattern.compile("Save Changes")));
         assertThat(driver.findElement(By.id("transition-modal-title")).getText(), is("Save Changes"));
         assertThat(driver.findElement(By.id("max-attempts-confirm-table-cell")).getText(), is("Maximum Attempts"));
         assertThat(driver.findElement(By.id("max-attempts-new-value")).getText(), is(fields.asMaps().get(0).get("maximumAttempts")));
