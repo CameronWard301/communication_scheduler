@@ -10,4 +10,4 @@ server:
 
 logging:
   level:
-    root: ${SPRING_DEBUG:info}
+    root: ${LOGGING_LEVEL:info}

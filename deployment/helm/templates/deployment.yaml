@@ -138,6 +138,10 @@ spec:
                   name: {{ .Release.Name }}-email-gateway
             - name: "REGION"
               value: "{{ .Values.email_gateway.region }}"
+            - name: "CORS_ENABLED"
+              value: "{{ .Values.email_gateway.corsEnabled }}"
+            - name: "CSRF_ENABLED"
+              value: "{{ .Values.email_gateway.csrfEnabled }}"
             - name: "GATEWAY_LOGGING_LEVEL"
               value: "{{ .Values.email_gateway.loggingLevel }}"
             - name: "SPRING_PROFILES_ACTIVE"
@@ -200,6 +204,10 @@ spec:
                   name: aws-credentials
                   key: AWS_SECRET_ACCESS_KEY
                         {{- end }}
+            - name: "CORS_ENABLED"
+              value: "{{ .Values.mock_gateway.corsEnabled }}"
+            - name: "CSRF_ENABLED"
+              value: "{{ .Values.mock_gateway.csrfEnabled }}"
             - name: "COMMUNICATION_HISTORY_TABLE_NAME"
               valueFrom:
                 secretKeyRef:
@@ -252,6 +260,10 @@ spec:
                   name: aws-credentials
                   key: AWS_SECRET_ACCESS_KEY
                         {{- end }}
+            - name: "CORS_ENABLED"
+              value: "{{ .Values.sms_gateway.corsEnabled }}"
+            - name: "CSRF_ENABLED"
+              value: "{{ .Values.sms_gateway.csrfEnabled }}"
             - name: "TWILIO_ACCOUNT_SID"
               valueFrom:
                 secretKeyRef:
@@ -353,6 +365,8 @@ spec:
                 secretKeyRef:
                   key: mongo-db-connection-string
                   name: {{ .Release.Name }}-gateway-api
+            - name: "SPRING_PROFILES_ACTIVE"
+              value: "{{ .Values.gateway_api.profile }}"
             - name: "LOGGING_LEVEL"
               value: "{{ .Values.gateway_api.loggingLevel }}"
             - name: "JWKS_URI"
@@ -464,7 +478,7 @@ spec:
                   name: {{ .Release.Name }}-auth-api
             - name: "SPRING_PROFILES_ACTIVE"
               value: "{{ .Values.auth_api.profile }}"
-            - name: "SPRING_DEBUG"
+            - name: "LOGGING_LEVEL"
               value: "{{ .Values.auth_api.loggingLevel }}"
           volumeMounts:
             - mountPath: /certs/
