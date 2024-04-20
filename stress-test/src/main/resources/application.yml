@@ -1,14 +1,16 @@
 spring.cloud.task.closecontextEnabled: true
 
 workflow:
-  gatewayId: "2cba1413-63b1-4c25-b13b-976c8794dd9b"
-  userId: "stress-test-user"
-  number: 100000
+  gatewayId: ${GATEWAY_ID:2cba1413-63b1-4c25-b13b-976c8794dd9b}
+  userId: ${USER_ID:stress-test-user}
+  number: ${WORKFLOW_COUNT:1000}
 
 worker:
-  taskQueue: "communication-workflow"
+  taskQueue: ${TEMPORAL_TASK_QUEUE:communication-workflow}
 
 temporal-properties:
   encryption:
     password: ${ENCRYPTION_PASSWORD:changeme}
-    salt: ${ENCRYPTION_SALT:4573c195d6593c}
+    salt: ${ENCRYPTION_SALT:changeme}
+  namespace: ${TEMPORAL_NAMESPACE:default}
+  endpoint: ${TEMPORAL_HOST:localhost:7233}
