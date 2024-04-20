@@ -1,7 +1,7 @@
 spring.cloud.task.closecontextEnabled: true
 
 workflow:
-  gatewayId: ${GATEWAY_ID:2cba1413-63b1-4c25-b13b-976c8794dd9b}
+  gatewayId: ${GATEWAY_ID}
   userId: ${USER_ID:stress-test-user}
   number: ${WORKFLOW_COUNT:1000}
 
@@ -13,4 +13,4 @@ temporal-properties:
     password: ${ENCRYPTION_PASSWORD:changeme}
     salt: ${ENCRYPTION_SALT:changeme}
   namespace: ${TEMPORAL_NAMESPACE:default}
-  endpoint: ${TEMPORAL_HOST:localhost:7233}
+  endpoint: ${TEMPORAL_ENDPOINT:localhost:7233}
