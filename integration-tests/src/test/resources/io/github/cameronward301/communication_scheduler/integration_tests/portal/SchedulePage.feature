@@ -498,7 +498,7 @@ Feature: Schedule Web Portal Page
     Then I should see a snackbar message with the text "Batch update operation success. Affected 2 schedules"
     And the total schedule results should be 0 after clicking by id on "refresh-schedules"
 
-  @RemoveExistingSchedulesTest
+  @RemoveExistingSchedules
   @CreateMultipleSchedules
   @CheckSchedulesAreCreated
   @RemoveMultipleSchedules

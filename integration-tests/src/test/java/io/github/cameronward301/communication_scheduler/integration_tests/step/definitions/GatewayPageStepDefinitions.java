@@ -120,6 +120,8 @@ public class GatewayPageStepDefinitions {
 
     @Then("the delete gateway fields are shown")
     public void theDeleteGatewayFieldsAreShown() {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait * 10L));
+        wait.until(ExpectedConditions.textMatches(By.id("transition-modal-title"), Pattern.compile("Delete Gateway")));
         assertThat(webDriver.findElement(By.id("transition-modal-title")).getText(), is("Delete Gateway"));
         assertThat(webDriver.findElement(By.id("gateway-id")).getText(), is(existingGatewayId));
         assertThat(webDriver.findElement(By.id("gateway-friendly-name")).getText(), is(existingGateway.getFriendlyName()));
@@ -129,6 +131,8 @@ public class GatewayPageStepDefinitions {
 
     @Then("the add gateway fields are shown")
     public void theAddGatewayFieldsAreShown() {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait * 10L));
+        wait.until(ExpectedConditions.textMatches(By.id("transition-modal-title"), Pattern.compile("Add Gateway")));
         assertThat(webDriver.findElement(By.id("transition-modal-title")).getText(), is("Add Gateway"));
         assertThat(webDriver.findElement(By.id("gateway-friendly-name")).getText(), is(world.getGateway().getFriendlyName()));
         assertThat(webDriver.findElement(By.id("gateway-endpoint-url")).getText(), is(world.getGateway().getEndpointUrl()));

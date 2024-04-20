@@ -8,6 +8,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Data
 @Component
@@ -20,4 +23,5 @@ public class World {
     private String createdScheduleUserId;
     private WorkflowExecution workflowExecution;
     private WorkflowStub workflowStub;
+    private List<String> createdScheduleIds = new ArrayList<>();
 }

@@ -214,9 +214,17 @@ public class SchedulePageStepDefinitions {
         Wait<WebDriver> wait = new FluentWait<>(webDriver)
                 .withTimeout(Duration.ofSeconds(explicitWait))
                 .pollingEvery(Duration.ofMillis(500))
-                .ignoring(NoSuchElementException.class);
+                .ignoring(NoSuchElementException.class)
+                .ignoring(AssertionError.class);
         wait.until((driver -> {
             driver.navigate().refresh();
+            //check that result shown is not left over from previous test
+            //The id in the first row should be one of the new schedule entity Ids
+            String firstId = webDriver.findElement(By.cssSelector(".MuiDataGrid-row:nth-child(1) .MuiDataGrid-cell:nth-child(3)")).getText();
+            if (world.getCreatedScheduleIds().stream().noneMatch(scheduleEntityInList -> scheduleEntityInList.equals(firstId))) {
+                throw new AssertionError("The first schedule id is not one of the new schedule entity ids");
+            }
+            assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-row:nth-child(1) .MuiDataGrid-cell:nth-child(7)")).getText(), is(expectedId));
             return driver.findElement(By.cssSelector(".MuiDataGrid-row:nth-child(1) .PrivateSwitchBase-input"));
         }));
 
