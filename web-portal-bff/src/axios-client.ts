@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import * as https from "https";
-
+import dotenv from "dotenv";
+dotenv.config();
 
 let axiosClient: AxiosInstance;
 
