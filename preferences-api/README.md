@@ -23,7 +23,7 @@ Ensure you have the following installed and configured locally:
     - `RetryPolicy`
     - `GatewayTimeoutSeconds`
     - See [helm deployment](../deployment/helm) to deploy the config map with default values
-  - The [cluster context](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_config/kubectl_config_set-context/) on your local machine set to the cluster you want the preferences API to connect to.
+  - The [cluster context](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_config/kubectl_config_set-context/) on your local machine should be set to the cluster you want the preferences API to connect to.
 
 ### Configuration
 
