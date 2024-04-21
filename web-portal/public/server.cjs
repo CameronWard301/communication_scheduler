@@ -73,11 +73,13 @@ app.all(["/v1/bff/*", "/grafana/*"], async (req, res) => {
 
 app.get("/configuration", (req, res) => {
     console.log("Sending configuration");
+    res.setHeader('Content-Type', 'application/json')
     res.send(configFile);
 })
 
 app.get("/*", (req, res) => {
     console.log("Sending index.html");
+    res.setHeader('Content-Type', 'text/html')
     res.send(indexFile)
 })
 
