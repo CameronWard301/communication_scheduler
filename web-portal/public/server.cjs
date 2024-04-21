@@ -3,7 +3,6 @@ const path = require("path");
 const axios = require("axios");
 const fs = require("fs");
 const {createServer, Agent} = require("https");
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.static(__dirname));
@@ -41,6 +40,9 @@ if (process.env.SSL_VERIFICATION === "false") {
     });
 }
 
+const configFile = fs.readFileSync(path.join(__dirname, "config.json"));
+const indexFile = fs.readFileSync(path.join(__dirname, "index.html"));
+
 
 app.all(["/v1/bff/*", "/grafana/*"], async (req, res) => {
     let url = process.env.BFF_API_URL + req.url;
@@ -71,12 +73,12 @@ app.all(["/v1/bff/*", "/grafana/*"], async (req, res) => {
 
 app.get("/configuration", (req, res) => {
     console.log("Sending configuration");
-    res.sendFile(path.join(__dirname, "config.json"));
+    res.send(configFile);
 })
 
 app.get("/*", (req, res) => {
     console.log("Sending index.html");
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.send(indexFile)
 })
 
 let server;
