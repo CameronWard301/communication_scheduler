@@ -7,3 +7,12 @@
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px #121212 inset !important;
 }
+
+.gatewayFilter {
+    cursor: pointer !important;
+    color: white !important;
+}
+
+.gatewayFilter input:disabled {
+    cursor: pointer !important;
+}

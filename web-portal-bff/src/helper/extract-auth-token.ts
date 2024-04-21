@@ -4,8 +4,8 @@ export const extractAuthToken = (token: string | undefined) => {
   }
   return {
     Authorization: token
-  }
+  };
 
-}
+};
 
 export default extractAuthToken;

@@ -1,30 +1,14 @@
 import {RootStore} from "./RootStore.tsx";
-import {action, makeAutoObservable} from "mobx";
-import {GridPaginationModel, GridSortModel} from "@mui/x-data-grid";
+import {action, makeObservable, observable} from "mobx";
 import {Gateway} from "../models/Gateways.ts";
+import {GatewayPageStore} from "./GatewayPageStore.tsx";
 
-export class GatewayTableStore {
-  rootStore: RootStore;
-  paginationModel: GridPaginationModel = {
-    pageSize: 25,
-    page: 0,
-  };
-  sortModel: GridSortModel = [];
-  gatewayTableData: Gateway[] = [];
-  isLoading = false;
-  totalCount = 0;
+export class GatewayTableStore extends GatewayPageStore {
 
   gatewayIdFocus = false;
-  gatewayIdFilter = "";
-
   gatewayNameFocus = false;
-  gatewayNameFilter = "";
-
   gatewayDescriptionFocus = false;
-  gatewayDescriptionFilter = "";
-
   gatewayEndpointUrlFocus = false;
-  gatewayEndpointUrlFilter = "";
 
   deleteModalOpen = false;
   selectedGateway: Gateway = {
@@ -37,38 +21,23 @@ export class GatewayTableStore {
   affectedSchedules = 0;
 
   constructor(rootStore: RootStore) {
-    this.rootStore = rootStore;
-    makeAutoObservable(this);
-  }
-
-  setPaginationModel = (paginationModel: GridPaginationModel) => {
-    action(() => {
-      this.paginationModel = paginationModel;
-    })();
-  }
-
-  setSortModel = (sortModel: GridSortModel) => {
-    action(() => {
-      this.sortModel = sortModel;
-    })();
-  }
-
-  setLoading = (loading: boolean) => {
-    action(() => {
-      this.isLoading = loading;
-    })();
-  }
-
-  setTotalCount = (totalCount: number) => {
-    action(() => {
-      this.totalCount = totalCount;
-    })();
-  }
-
-  setGatewayTableData = (data: Gateway[]) => {
-    action(() => {
-      this.gatewayTableData = data;
-    })();
+    super(rootStore);
+    makeObservable(this, {
+      gatewayIdFocus: observable,
+      gatewayNameFocus: observable,
+      gatewayDescriptionFocus: observable,
+      gatewayEndpointUrlFocus: observable,
+      deleteModalOpen: observable,
+      selectedGateway: observable,
+      affectedSchedules: observable,
+      setGatewayIdFocus: action,
+      setGatewayNameFocus: action,
+      setGatewayDescriptionFocus: action,
+      setGatewayEndpointUrlFocus: action,
+      setDeleteModalOpen: action,
+      setSelectedGateway: action,
+      setAffectedSchedules: action,
+    });
   }
 
   setGatewayIdFocus = (focus: boolean) => {
@@ -77,21 +46,10 @@ export class GatewayTableStore {
     })();
   }
 
-  setGatewayIdFilter = (filter: string) => {
-    action(() => {
-      this.gatewayIdFilter = filter;
-    })();
-  }
 
   setGatewayNameFocus = (focus: boolean) => {
     action(() => {
       this.gatewayNameFocus = focus;
-    })();
-  }
-
-  setGatewayNameFilter = (filter: string) => {
-    action(() => {
-      this.gatewayNameFilter = filter;
     })();
   }
 
@@ -101,32 +59,12 @@ export class GatewayTableStore {
     })();
   }
 
-  setGatewayDescriptionFilter = (filter: string) => {
-    action(() => {
-      this.gatewayDescriptionFilter = filter;
-    })();
-  }
-
   setGatewayEndpointUrlFocus = (focus: boolean) => {
     action(() => {
       this.gatewayEndpointUrlFocus = focus;
     })();
   }
 
-  setGatewayEndpointUrlFilter = (filter: string) => {
-    action(() => {
-      this.gatewayEndpointUrlFilter = filter;
-    })();
-  }
-
-  resetFilters = () => {
-    action(() => {
-      this.gatewayIdFilter = "";
-      this.gatewayNameFilter = "";
-      this.gatewayDescriptionFilter = "";
-      this.gatewayEndpointUrlFilter = "";
-    })();
-  }
 
   setDeleteModalOpen = (open: boolean) => {
     action(() => {

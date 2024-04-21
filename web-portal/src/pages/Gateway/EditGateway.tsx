@@ -13,7 +13,7 @@ import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import LoadingButton from "@mui/lab/LoadingButton";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import {GatewayChangesTable, GatewayModal} from "../../components/modal";
-import {ConfirmGatewayTable} from "../../components/modal/gateway";
+import {ReviewGatewayTable} from "../../components/modal/gateway";
 import {SnackbarContext} from "../../context/SnackbarContext.tsx";
 
 
@@ -70,7 +70,7 @@ const EditGateway = observer(() => {
                           onConfirm={() => {
                             deleteGatewayById(rootStore.gatewayEditStore.storedGateway!);
                           }}
-                          description={<ConfirmGatewayTable gateway={rootStore.gatewayEditStore.storedGateway}/>}
+                          description={<ReviewGatewayTable gateway={rootStore.gatewayEditStore.storedGateway}/>}
                           affectedScheduleTooltip={"Deleting this gateway will cause the number of schedules shown to stop working, its best to update the schedules to use a new gateway first by viewing the affected schedules and performing a bulk action."}/>
 
             <GatewayModal confirmIcon={<SaveRoundedIcon/>}
@@ -82,7 +82,7 @@ const EditGateway = observer(() => {
                           heading={"Modify Gateway"}
                           confirmText={"Modify"}
                           onConfirm={() => {
-                            updateGateway(rootStore.gatewayEditStore.storedGateway!);
+                            updateGateway(rootStore.gatewayEditStore.updatedGateway!);
                           }}
                           description={<GatewayChangesTable/>}
                           affectedScheduleTooltip={"Updating this gateway will affect the number of schedules shown here, make sure that your new gateway details are correct."}
@@ -98,9 +98,9 @@ const EditGateway = observer(() => {
             <Grid xs={12} container spacing={2}>
               <Grid xs={12} lg={6} m={1} ml={2}>
                 <Box>
-                  <Typography variant={"h4"} display={"inline-block"} id={"initial-interval-title"}>Gateway Name<span
+                  <Typography variant={"h4"} display={"inline-block"} id={"edit-gateway-name-title"}>Gateway Name<span
                     style={{color: theme.palette.error.main}}>*</span></Typography>
-                  <CustomTooltip message="A friendly name to identify the gateway"/>
+                  <CustomTooltip message="A friendly name to identify the gateway" ariaLabelTopic={"Gateway name"}/>
                 </Box>
                 <Box>
                   <TextField label="Gateway Name" type="text" variant="outlined" margin={"normal"}
@@ -114,9 +114,9 @@ const EditGateway = observer(() => {
               </Grid>
               <Grid xs={12} lg={6} m={1} ml={2}>
                 <Box>
-                  <Typography variant={"h4"} display={"inline-block"} id={"initial-interval-title"}>Endpoint URL<span
+                  <Typography variant={"h4"} display={"inline-block"} id={"edit-gateway-url-title"}>Endpoint URL<span
                     style={{color: theme.palette.error.main}}>*</span></Typography>
-                  <CustomTooltip message="The URL to connect to the gateway"/>
+                  <CustomTooltip message="The URL to connect to the gateway" ariaLabelTopic={"Endpoint URL"}/>
                 </Box>
                 <Box>
                   <TextField label="Gateway Name" type="text" variant="outlined" margin={"normal"}
@@ -131,8 +131,8 @@ const EditGateway = observer(() => {
               <Grid xs={12} lg={6} m={1} ml={2}>
                 <Box>
                   <Typography variant={"h4"} display={"inline-block"}
-                              id={"initial-interval-title"}>Description</Typography>
-                  <CustomTooltip message="An optional description of this gateway"/>
+                              id={"edit-gateway-description-title"}>Description</Typography>
+                  <CustomTooltip message="An optional description of this gateway" ariaLabelTopic={"Gateway Description"}/>
                 </Box>
                 <Box>
                   <TextField label="Gateway Name" type="text" variant={"outlined"} margin={"normal"}

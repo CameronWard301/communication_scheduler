@@ -7,6 +7,7 @@ import {useErrorHandling} from "../helper/UseErrorHandling.ts";
 import {Gateway, GatewayPage, TotalMatches} from "../models/Gateways.ts";
 import {SnackbarContext} from "../context/SnackbarContext.tsx";
 import {useNavigate} from "react-router-dom";
+import {GatewayPageStore} from "../stores/GatewayPageStore.tsx";
 
 export const useGatewayService = () => {
   const client = useAxiosClientContext();
@@ -16,30 +17,36 @@ export const useGatewayService = () => {
   const {handleError} = useErrorHandling();
   const snackbar = useContext(SnackbarContext);
   const navigate = useNavigate();
-  const getGateways = () => {
-    rootStore.gatewayTableStore.setLoading(true);
+
+  const getGatewayFilterParams = (store: GatewayPageStore) => {
     const params = new URLSearchParams({
-      pageSize: rootStore.gatewayTableStore.paginationModel.pageSize.toString(),
-      pageNumber: rootStore.gatewayTableStore.paginationModel.page.toString(),
+      pageSize: store.paginationModel.pageSize.toString(),
+      pageNumber: store.paginationModel.page.toString(),
     });
-    if (rootStore.gatewayTableStore.sortModel.length > 0) {
-      rootStore.gatewayTableStore.sortModel.forEach((sortModel) => {
+    if (store.sortModel.length > 0) {
+      store.sortModel.forEach((sortModel) => {
         params.append("sort", `${sortModel.field}`);
         params.append("sortDirection", `${sortModel.sort as string}`);
       })
     }
-    if (rootStore.gatewayTableStore.gatewayIdFilter !== "") {
-      params.append("gatewayId", rootStore.gatewayTableStore.gatewayIdFilter);
+    if (store.gatewayIdFilter !== "") {
+      params.append("gatewayId", store.gatewayIdFilter);
     }
-    if (rootStore.gatewayTableStore.gatewayNameFilter !== "") {
-      params.append("friendlyName", rootStore.gatewayTableStore.gatewayNameFilter);
+    if (store.gatewayNameFilter !== "") {
+      params.append("friendlyName", store.gatewayNameFilter);
     }
-    if (rootStore.gatewayTableStore.gatewayDescriptionFilter !== "") {
-      params.append("description", rootStore.gatewayTableStore.gatewayDescriptionFilter);
+    if (store.gatewayDescriptionFilter !== "") {
+      params.append("description", store.gatewayDescriptionFilter);
     }
-    if (rootStore.gatewayTableStore.gatewayEndpointUrlFilter !== "") {
-      params.append("endpointUrl", rootStore.gatewayTableStore.gatewayEndpointUrlFilter);
+    if (store.gatewayEndpointUrlFilter !== "") {
+      params.append("endpointUrl", store.gatewayEndpointUrlFilter);
     }
+    return params;
+  }
+  const fetchGatewayPage = (store: GatewayPageStore) => {
+    store.setLoading(true);
+    const params = getGatewayFilterParams(store);
+
     authToken.then((token) => {
       client.get(config.bffBaseUrl + "/gateway", {
         headers: {
@@ -48,17 +55,25 @@ export const useGatewayService = () => {
         params: params
       }).then(response => {
         const gatewayPage = response.data as GatewayPage;
-        rootStore.gatewayTableStore.setGatewayTableData(gatewayPage.gateways);
-        rootStore.gatewayTableStore.setTotalCount(gatewayPage.totalElements);
+        store.setGatewayTableData(gatewayPage.gateways);
+        store.setTotalCount(gatewayPage.totalElements);
       })
         .catch(error => {
           handleError(error)
         })
-        .finally(() => rootStore.gatewayTableStore.setLoading(false));
+        .finally(() => store.setLoading(false));
     }).catch(error => {
       handleError(error)
-      rootStore.gatewayTableStore.setLoading(false)
+      store.setLoading(false)
     })
+  };
+
+  const getGatewaysForTable = () => {
+    fetchGatewayPage(rootStore.gatewayTableStore)
+  }
+
+  const getGatewaysForScheduleFilter = () => {
+    fetchGatewayPage(rootStore.gatewayFilterStore)
   }
 
   const getAffectedSchedules = (gatewayId: string) => {
@@ -163,7 +178,7 @@ export const useGatewayService = () => {
         snackbar.addSnackbar("Gateway deleted", "success");
         rootStore.gatewayTableStore.setDeleteModalOpen(false);
         rootStore.gatewayEditStore.setDeleteModalOpen(false);
-        getGateways();
+        fetchGatewayPage(rootStore.gatewayTableStore);
       })
         .catch(error => {
           handleError(error)
@@ -181,5 +196,14 @@ export const useGatewayService = () => {
     })
   }
 
-  return {getGateways, getAffectedSchedules, deleteGatewayById, getGatewayById, updateGateway, createGateway}
+  return {
+    getGatewaysForScheduleFilter,
+    getGatewaysForTable,
+    fetchGatewayPage,
+    getAffectedSchedules,
+    deleteGatewayById,
+    getGatewayById,
+    updateGateway,
+    createGateway
+  }
 }

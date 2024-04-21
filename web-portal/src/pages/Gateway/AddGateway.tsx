@@ -13,7 +13,7 @@ import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import LoadingButton from "@mui/lab/LoadingButton";
 import {SnackbarContext} from "../../context/SnackbarContext.tsx";
 import {ConfirmModal} from "../../components/modal";
-import {ConfirmGatewayTable} from "../../components/modal/gateway";
+import {ReviewGatewayTable} from "../../components/modal/gateway";
 
 
 const EditGateway = observer(() => {
@@ -59,15 +59,15 @@ const EditGateway = observer(() => {
                         onConfirm={() => {
                           createGateway(rootStore.gatewayAddStore.gateway);
                         }}
-                        description={<ConfirmGatewayTable gateway={rootStore.gatewayAddStore.gateway}/>}
+                        description={<ReviewGatewayTable gateway={rootStore.gatewayAddStore.gateway}/>}
           />
 
           <Grid xs={12} container spacing={2}>
             <Grid xs={12} lg={6} m={1} ml={2}>
               <Box>
-                <Typography variant={"h4"} display={"inline-block"} id={"initial-interval-title"}>Gateway Name<span
+                <Typography variant={"h4"} display={"inline-block"} id={"add-gateway-name-title"}>Gateway Name<span
                   style={{color: theme.palette.error.main}}>*</span></Typography>
-                <CustomTooltip message="A friendly name to identify the gateway"/>
+                <CustomTooltip message="A friendly name to identify the gateway" ariaLabelTopic={"Gateway name"}/>
               </Box>
               <Box>
                 <TextField label="Gateway Name" type="text" variant="outlined" margin={"normal"}
@@ -81,9 +81,9 @@ const EditGateway = observer(() => {
             </Grid>
             <Grid xs={12} lg={6} m={1} ml={2}>
               <Box>
-                <Typography variant={"h4"} display={"inline-block"} id={"initial-interval-title"}>Endpoint URL<span
+                <Typography variant={"h4"} display={"inline-block"} id={"add-endpoint-url-title"}>Endpoint URL<span
                   style={{color: theme.palette.error.main}}>*</span></Typography>
-                <CustomTooltip message="The URL to connect to the gateway"/>
+                <CustomTooltip message="The URL to connect to the gateway" ariaLabelTopic={"Endpoint URL"}/>
               </Box>
               <Box>
                 <TextField label="Gateway URL" type="text" variant="outlined" margin={"normal"}
@@ -98,8 +98,8 @@ const EditGateway = observer(() => {
             <Grid xs={12} lg={6} m={1} ml={2}>
               <Box>
                 <Typography variant={"h4"} display={"inline-block"}
-                            id={"initial-interval-title"}>Description</Typography>
-                <CustomTooltip message="An optional description of this gateway"/>
+                            id={"add-gateway-description-title"}>Description</Typography>
+                <CustomTooltip message="An optional description of this gateway" ariaLabelTopic={"Gateway description"}/>
               </Box>
               <Box>
                 <TextField label="Gateway Name" type="text" variant={"outlined"} margin={"normal"}

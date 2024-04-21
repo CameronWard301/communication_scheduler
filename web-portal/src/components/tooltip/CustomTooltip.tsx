@@ -18,6 +18,7 @@ const HtmlTooltip = styled(({className, ...props}: TooltipProps) => (
 }));
 
 interface CustomTooltipProps {
+  ariaLabelTopic: string;
   message: string;
 }
 
@@ -30,7 +31,7 @@ const CustomTooltip = (props: CustomTooltipProps) => {
                      <Typography variant={"body1"}>{props.message}</Typography>
                    </React.Fragment>
                  }>
-      <IconButton>
+      <IconButton sx={{mb: 3}} aria-label={`Help for: ${props.ariaLabelTopic}`}>
         <HelpRoundedIcon/>
       </IconButton>
     </HtmlTooltip>

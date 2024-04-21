@@ -51,20 +51,22 @@ e.g. implicitly obtain user session:
 
 ```typescript
 export const useInitial: () => InitialHookStatus = () => {
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
-    useEffect(() => {
-        setLoading(true);
-        async function login() {
-            const response = await loginRequest(DEV_LOGIN, DEV_PASSWORD);
-            if (response?.status !== 200) {
-                setError(true);
-            }
-            setLoading(false);
-        }
-        login();
-    }, []);
-    return { loading, error };
+  useEffect(() => {
+    setLoading(true);
+
+    async function login() {
+      const response = await loginRequest(DEV_LOGIN, DEV_PASSWORD);
+      if (response?.status !== 200) {
+        setError(true);
+      }
+      setLoading(false);
+    }
+
+    login();
+  }, []);
+  return {loading, error};
 };
 ```

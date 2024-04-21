@@ -17,6 +17,7 @@ export interface TextFieldFilterProps {
   idPrefix: string;
   queryParam: string;
   label: string;
+  zIndex?: number;
 
   fetchResults: () => void;
 
@@ -32,7 +33,8 @@ const TextFieldFilter = observer(({
                                     label,
                                     idPrefix,
                                     queryParam,
-                                    fetchResults
+                                    fetchResults,
+                                    zIndex = 1
                                   }: TextFieldFilterProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -49,7 +51,7 @@ const TextFieldFilter = observer(({
   }
 
   return (
-    <Grid container direction={"column"} position={"relative"}>
+    <Grid container direction={"column"} position={"relative"} zIndex={zIndex}>
       <Grid xs={12}>
         <Box sx={{alignItems: 'center'}}>
           <TextField

@@ -68,32 +68,32 @@ public class GatewayPageStepDefinitions {
     @Then("I should see the gateway with the id")
     public void iShouldSeeTheGatewayWithTheId() throws ParseException {
         Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait * 10L));
-        wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(1) > .MuiDataGrid-cellContent"), Pattern.compile(existingGatewayId)));
-        assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(1) > .MuiDataGrid-cellContent")).getText(), is(existingGatewayId));
-        assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(2) > .MuiDataGrid-cellContent")).getText(), is(existingGateway.getFriendlyName()));
-        assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(3) > .MuiDataGrid-cellContent")).getText(), is(existingGateway.getDescription()));
-        assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(4) > .MuiDataGrid-cellContent")).getText(), is(existingGateway.getEndpointUrl()));
+        wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(2)"), Pattern.compile(existingGatewayId)));
+        assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(2)")).getText(), is(existingGatewayId));
+        assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(3)")).getText(), is(existingGateway.getFriendlyName()));
+        assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(4)")).getText(), is(existingGateway.getDescription()));
+        assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(5)")).getText(), is(existingGateway.getEndpointUrl()));
         DateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        assertTrue(dateFormat.parse(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(5) > .MuiDataGrid-cellContent")).getText().replace(",", "")).before(new Date()));
+        assertTrue(dateFormat.parse(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(6)")).getText().replace(",", "")).before(new Date()));
     }
 
     @Then("I should see the gateway with the name")
     public void iShouldSeeTheGatewayWithTheName() {
         Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait * 10L));
-        wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(2) > .MuiDataGrid-cellContent"), Pattern.compile(existingGateway.getFriendlyName())));
+        wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(3)"), Pattern.compile(existingGateway.getFriendlyName())));
     }
 
     @Then("I should see the gateway with the description")
     public void iShouldSeeTheGatewayWithTheDescription() {
         Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait * 10L));
-        wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(3) > .MuiDataGrid-cellContent"), Pattern.compile(existingGateway.getDescription())));
+        wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(4)"), Pattern.compile(existingGateway.getDescription())));
 
     }
 
     @Then("I should see the gateway with the endpoint url")
     public void iShouldSeeTheGatewayWithTheEndpointUrl() {
         Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait * 10L));
-        wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(4) > .MuiDataGrid-cellContent"), Pattern.compile(existingGateway.getEndpointUrl())));
+        wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(5)"), Pattern.compile(existingGateway.getEndpointUrl())));
 
     }
 

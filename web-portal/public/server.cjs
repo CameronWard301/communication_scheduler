@@ -42,7 +42,7 @@ if (process.env.SSL_VERIFICATION === "true") {
 }
 
 
-app.all("/v1/bff/*", async (req, res) => {
+app.all(["/v1/bff/*", "/grafana/*"], async (req, res) => {
     let url = process.env.BFF_API_URL + req.url;
     console.log(`Proxying ${req.method} request to: ${url}`);
 

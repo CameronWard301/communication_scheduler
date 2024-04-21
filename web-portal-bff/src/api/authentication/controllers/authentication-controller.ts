@@ -1,8 +1,8 @@
 import express from "express";
-import {AuthToken} from "../model/auth-models";
+import { AuthToken } from "../model/auth-models";
 
-import {AuthService} from "../service/auth-service";
-import {errorHandler} from "../../../helper/error-handler";
+import { AuthService } from "../service/auth-service";
+import { errorHandler } from "../../../helper/error-handler";
 
 const router = express.Router();
 router.post("/v1/bff/auth", (req, res) => {
@@ -20,7 +20,7 @@ router.post("/v1/bff/auth", (req, res) => {
                 }
             }
     } */
-  console.log("getting auth token")
+  console.log("getting auth token");
   AuthService().getAuthToken(req.body).then((value) => {
     return res.status(value.status).send(value.data as AuthToken);
   }).catch((reason) => {

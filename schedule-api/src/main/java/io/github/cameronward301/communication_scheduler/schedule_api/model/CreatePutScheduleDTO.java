@@ -1,6 +1,5 @@
 package io.github.cameronward301.communication_scheduler.schedule_api.model;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,13 +12,10 @@ import java.util.List;
  */
 @Data
 @Builder
-public class CreateScheduleDTO {
+public class CreatePutScheduleDTO {
     private String scheduleId; //only to be sent if updating an exising schedule
 
-    @NotBlank(message = "'gatewayId' cannot be empty")
     private String gatewayId;
-
-    @NotBlank(message = "'userId' cannot be empty")
     private String userId;
 
     private ScheduleCalendarSpecDTO calendar;
@@ -29,20 +25,21 @@ public class CreateScheduleDTO {
     private boolean paused;
 
     /**
-     * Only supply one type of way for the schedule to be created
+     * Count the number of specifications provided
      *
-     * @return true if one schedule type has been set otherwise false
+     * @return the number of schedule specifications
      */
-    public boolean isInvalid() {
+    public int getNumberOfSpecifications() {
         int count = 0;
         if (calendar != null) count++;
         if (interval != null) count++;
         if (cronExpression != null) count++;
-        return count != 1;
+        return count;
     }
 
     @Getter
     @AllArgsConstructor
+    @Builder
     public static class ScheduleCalendarSpecDTO {
         private List<ScheduleRangeDTO> seconds;
         private List<ScheduleRangeDTO> minutes;

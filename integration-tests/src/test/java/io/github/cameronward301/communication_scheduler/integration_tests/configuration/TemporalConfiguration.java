@@ -15,6 +15,7 @@ import io.temporal.common.converter.DefaultDataConverter;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,6 +29,8 @@ import static java.lang.String.format;
 public class TemporalConfiguration {
     private final IntegrationTestTemporalProperties integrationTestTemporalProperties;
 
+    @Value("${gateway-api.entity.id}")
+    private String testGatewayId;
 
     @Bean
     public WorkflowServiceStubs workflowServiceStubs() {
@@ -60,9 +63,9 @@ public class TemporalConfiguration {
             String gatewayId;
             String scheduleId = "integration-test-" + UUID.randomUUID();
             if (i < 1) {
-                userId = "user1";
+                userId = "my-test-user-id-1-integration-test";
             } else {
-                userId = "user2";
+                userId = "my-test-user-id-2-integration-test";
             }
 
             if (i < 1) {
@@ -79,7 +82,7 @@ public class TemporalConfiguration {
                                     .setPaused(false)
                                     .build())
                             .setSpec(ScheduleSpec.newBuilder()
-                                    .setIntervals(List.of(new ScheduleIntervalSpec(Duration.parse("PT2H"), Duration.ZERO)))
+                                    .setIntervals(List.of(new ScheduleIntervalSpec(Duration.parse("P1DT5H"), Duration.ZERO)))
                                     .build())
                             .setAction(ScheduleActionStartWorkflow.newBuilder()
                                     .setWorkflowType(CommunicationWorkflow.class)
@@ -109,8 +112,8 @@ public class TemporalConfiguration {
 
     @Bean
     public ScheduleEntity scheduleEntity() {
-        String userId = "user1";
-        String gatewayId = "gateway1";
+        String userId = "user-integration-test-1";
+        String gatewayId = testGatewayId;
         String scheduleId = "integration-test-" + UUID.randomUUID();
         return ScheduleEntity.builder()
                 .scheduleId(scheduleId)
@@ -119,7 +122,7 @@ public class TemporalConfiguration {
                                 .setPaused(false)
                                 .build())
                         .setSpec(ScheduleSpec.newBuilder()
-                                .setIntervals(List.of(new ScheduleIntervalSpec(Duration.parse("PT2H"), Duration.ZERO)))
+                                .setIntervals(List.of(new ScheduleIntervalSpec(Duration.parse("P1DT5H"), Duration.ZERO)))
                                 .build())
                         .setAction(ScheduleActionStartWorkflow.newBuilder()
                                 .setWorkflowType(CommunicationWorkflow.class)

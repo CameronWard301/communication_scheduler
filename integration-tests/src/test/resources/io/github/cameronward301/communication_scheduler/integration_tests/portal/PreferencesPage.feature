@@ -40,10 +40,13 @@ Feature: Preferences Page
     And preference fields are set to:
       | maximumAttempts | gatewayTimeout | backoffCoefficient | initialInterval | maximumInterval | startToCloseTimeout |
       | 12456           | 123789         | 567890             | 90909090        | 11111111        | 987654              |
+    And I set the time periods to:
+      | gatewayTimeout | initialInterval | maximumInterval | startToCloseTimeout |
+      | M              | H               | D               | M                   |
     When I click by id on "save-preferences-btn"
     Then I should see the preference confirmation modal with new values:
-      | maximumAttempts | gatewayTimeout | backoffCoefficient | initialInterval  | maximumInterval  | startToCloseTimeout |
-      | 12456           | 123789 Seconds | 567890             | 90909090 Seconds | 11111111 Seconds | 987654 Seconds      |
+      | maximumAttempts | gatewayTimeout | backoffCoefficient | initialInterval | maximumInterval | startToCloseTimeout |
+      | 12456           | 123789 Minutes | 567890             | 90909090 Hours  | 11111111 Days   | 987654 Minutes      |
     When I click by id on "cancel-modal-button"
     And I set the time periods to:
       | gatewayTimeout | initialInterval | maximumInterval | startToCloseTimeout |
@@ -64,6 +67,6 @@ Feature: Preferences Page
     When I click by id on "save-preferences-btn"
     And I click by id on "confirm-modal-button"
     Then I should see a snackbar message with the text "Preferences updated"
-    Then Wait for snackbar to disappear
+    Then I close the snackbar
     When I click by id on "save-preferences-btn"
     Then I should see a snackbar message with the text "You haven't made any changes to save"

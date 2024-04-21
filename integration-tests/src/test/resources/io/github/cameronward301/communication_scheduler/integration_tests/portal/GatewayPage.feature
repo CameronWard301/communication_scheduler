@@ -1,4 +1,6 @@
 # Created by Cameron at 07/03/2024
+@WebPortal
+@CloseBrowserAfterScenario
 Feature: Gateway Web portal page
   Allows searching, modifying, removing and adding of gateways
 
@@ -8,6 +10,7 @@ Feature: Gateway Web portal page
     Given I navigate to "/gateways"
     When I set the "gateway-id-filter-input" to be the gateway id
     And I press enter on the field with id "gateway-id-filter-input"
+    And I click by id on "refresh-gateways-button"
     Then I should see the gateway with the id
     And the total gateway results should be 1
 
@@ -56,11 +59,13 @@ Feature: Gateway Web portal page
     And the field with id "gateway-description-filter-input" should be set to: ""
     And the field with id "gateway-url-filter-input" should be set to: ""
 
+  @RemoveExistingSchedules
   @MongoDbSetupEntity
   @MongoDbRemoveEntity
   Scenario: User should be able to modify gateway
     Given I navigate to "/gateways"
     And I set the "gateway-id-filter-input" to be the gateway id
+    And I press enter on the field with id "gateway-id-filter-input"
     And I click the modify gateway button
     When I set the "gateway-name-input" field to be "updated gateway name"
     And I set the "gateway-description-input" field to be "updated gateway description"
@@ -78,6 +83,7 @@ Feature: Gateway Web portal page
   Scenario: User should not be able to modify gateway if no fields are changed
     Given I navigate to "/gateways"
     And I set the "gateway-id-filter-input" to be the gateway id
+    And I press enter on the field with id "gateway-id-filter-input"
     And I click the modify gateway button
     When I click by id on "confirm-edit-button"
     Then I should see a snackbar message with the text "No changes to save, please edit a field and try again"
@@ -87,6 +93,7 @@ Feature: Gateway Web portal page
   Scenario: User should not be able to modify gateway if gateway name is left blank
     Given I navigate to "/gateways"
     And I set the "gateway-id-filter-input" to be the gateway id
+    And I press enter on the field with id "gateway-id-filter-input"
     And I click the modify gateway button
     When I set the "gateway-name-input" field to be ""
     Then the button with id "confirm-edit-button" should be disabled
@@ -96,24 +103,29 @@ Feature: Gateway Web portal page
   Scenario: User should not be able to modify gateway if gateway url is left blank
     Given I navigate to "/gateways"
     And I set the "gateway-id-filter-input" to be the gateway id
+    And I press enter on the field with id "gateway-id-filter-input"
     And I click the modify gateway button
     When I set the "gateway-url-input" field to be ""
     Then the button with id "confirm-edit-button" should be disabled
 
+  @RemoveExistingSchedules
   @MongoDbSetupEntity
   Scenario: User should be able remove a gateway from the table
     Given I navigate to "/gateways"
     And I set the "gateway-id-filter-input" to be the gateway id
+    And I press enter on the field with id "gateway-id-filter-input"
     When I click the delete gateway button
     Then the delete gateway fields are shown
     Then the element with id "affected-schedules-count" should be set to: "0"
     When I click by id on "confirm-modal-button"
     Then I should see a snackbar message with the text "Gateway deleted"
 
+  @RemoveExistingSchedules
   @MongoDbSetupEntity
   Scenario: User should be able remove a gateway from the edit screen
     Given I navigate to "/gateways"
     And I set the "gateway-id-filter-input" to be the gateway id
+    And I press enter on the field with id "gateway-id-filter-input"
     And I click the modify gateway button
     When I click by id on "delete-gateway-button"
     Then the delete gateway fields are shown

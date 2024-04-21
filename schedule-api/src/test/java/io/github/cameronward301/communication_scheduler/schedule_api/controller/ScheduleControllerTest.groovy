@@ -58,10 +58,10 @@ class ScheduleControllerTest extends Specification {
 
     def "Should return 200 and return created schedule"() {
         given: "Create Request"
-        def request = CreateScheduleDTO.builder()
+        def request = CreatePutScheduleDTO.builder()
                 .gatewayId("123")
                 .userId("2134")
-                .interval(new CreateScheduleDTO.ScheduleIntervalSpecDTO("PT10S", "PT0S"))
+                .interval(new CreatePutScheduleDTO.ScheduleIntervalSpecDTO("PT10S", "PT0S"))
                 .build()
 
         and: "Binding result has no error"
@@ -80,10 +80,10 @@ class ScheduleControllerTest extends Specification {
 
     def "Should throw Request Exception with status 400 if there are binding errors when creating"() {
         given: "Create Request"
-        def request = CreateScheduleDTO.builder()
+        def request = CreatePutScheduleDTO.builder()
                 .gatewayId("123")
                 .userId("2134")
-                .interval(new CreateScheduleDTO.ScheduleIntervalSpecDTO("PT10S", "PT0S"))
+                .interval(new CreatePutScheduleDTO.ScheduleIntervalSpecDTO("PT10S", "PT0S"))
                 .build()
 
         and: "Binding result has errors"
@@ -100,13 +100,53 @@ class ScheduleControllerTest extends Specification {
         exception.getHttpStatus() == HttpStatus.BAD_REQUEST
     }
 
+    def "Should throw Request Exception with status 400 if there gatewayId is not present"() {
+        given: "Create Request"
+        def request = CreatePutScheduleDTO.builder()
+                .userId("2134")
+                .cronExpression("1234")
+                .build()
+
+        and: "Binding result has no errors"
+        def bindingResult = Mock(BindingResult)
+        bindingResult.hasErrors() >> false
+
+        when:
+        scheduleController.createSchedule(request, bindingResult)
+
+        then:
+        def exception = thrown(RequestException)
+        exception.getMessage() == "'gatewayId' cannot be empty"
+        exception.getHttpStatus() == HttpStatus.BAD_REQUEST
+    }
+
+    def "Should throw Request Exception with status 400 if there userId is not present"() {
+        given: "Create Request"
+        def request = CreatePutScheduleDTO.builder()
+                .gatewayId("2134")
+                .cronExpression("1234")
+                .build()
+
+        and: "Binding result has no errors"
+        def bindingResult = Mock(BindingResult)
+        bindingResult.hasErrors() >> false
+
+        when:
+        scheduleController.createSchedule(request, bindingResult)
+
+        then:
+        def exception = thrown(RequestException)
+        exception.getMessage() == "'userId' cannot be empty"
+        exception.getHttpStatus() == HttpStatus.BAD_REQUEST
+    }
+
     def "Should throw Request Exception with status 400 if there are too many schedule specs when creating"() {
         given: "Create Request"
-        def request = CreateScheduleDTO.builder()
+        def request = CreatePutScheduleDTO.builder()
                 .gatewayId("123")
                 .userId("2134")
                 .cronExpression("1234")
-                .interval(new CreateScheduleDTO.ScheduleIntervalSpecDTO("PT10S", "PT0S"))
+                .interval(new CreatePutScheduleDTO.ScheduleIntervalSpecDTO("PT10S", "PT0S"))
                 .build()
 
         and: "Binding result has no errors"
@@ -124,10 +164,10 @@ class ScheduleControllerTest extends Specification {
 
     def "Should throw Request Exception with status 400 if there are binding errors when updating"() {
         given: "Update Request"
-        def request = CreateScheduleDTO.builder()
+        def request = CreatePutScheduleDTO.builder()
                 .gatewayId("123")
                 .userId("2134")
-                .interval(new CreateScheduleDTO.ScheduleIntervalSpecDTO("PT10S", "PT0S"))
+                .interval(new CreatePutScheduleDTO.ScheduleIntervalSpecDTO("PT10S", "PT0S"))
                 .build()
 
         and: "Binding result has errors"
@@ -144,13 +184,32 @@ class ScheduleControllerTest extends Specification {
         exception.getHttpStatus() == HttpStatus.BAD_REQUEST
     }
 
+
+    def "Should throw exception when updating schedule with no schedule id"() {
+        given: "update request"
+        def update = CreatePutScheduleDTO.builder().build()
+
+        and: "Binding result has no errors"
+        def bindingResult = Mock(BindingResult)
+        bindingResult.hasErrors() >> false
+
+        when:
+        scheduleController.updateSchedule(update, bindingResult)
+
+        then:
+        def exception = thrown(RequestException)
+        exception.getMessage() == "Please provide a 'scheduleId' in the request body to update a schedule"
+        exception.getHttpStatus() == HttpStatus.BAD_REQUEST
+    }
+
     def "Should throw Request Exception with status 400 if there are too many schedule specs when updating"() {
         given: "Update Request"
-        def request = CreateScheduleDTO.builder()
+        def request = CreatePutScheduleDTO.builder()
+                .scheduleId("1234")
                 .gatewayId("123")
                 .userId("2134")
                 .cronExpression("1234")
-                .interval(new CreateScheduleDTO.ScheduleIntervalSpecDTO("PT10S", "PT0S"))
+                .interval(new CreatePutScheduleDTO.ScheduleIntervalSpecDTO("PT10S", "PT0S"))
                 .build()
 
         and: "Binding result has no errors"
@@ -162,17 +221,17 @@ class ScheduleControllerTest extends Specification {
 
         then:
         def exception = thrown(RequestException)
-        exception.getMessage() == "Please provide exactly one schedule configuration, either: 'calendar', 'interval' or 'cronExpression'"
+        exception.getMessage() == "Please only provide zero or one schedule configurations, either: 'calendar', 'interval' or 'cronExpression'"
         exception.getHttpStatus() == HttpStatus.BAD_REQUEST
     }
 
     def "Should return 200 and return updated schedule"() {
         given: "Update Request"
-        def request = CreateScheduleDTO.builder()
+        def request = CreatePutScheduleDTO.builder()
                 .scheduleId("1234")
                 .gatewayId("123")
                 .userId("2134")
-                .interval(new CreateScheduleDTO.ScheduleIntervalSpecDTO("PT10S", "PT0S"))
+                .interval(new CreatePutScheduleDTO.ScheduleIntervalSpecDTO("PT10S", "PT0S"))
                 .build()
 
         and: "Binding result has no error"
@@ -283,7 +342,7 @@ class ScheduleControllerTest extends Specification {
         given:
         def id = "123"
         def dto = new ScheduleDescriptionDTO()
-        dto.setId("123")
+        dto.setScheduleId("123")
         dto.setSchedule(
                 ScheduleDescriptionDTO.ScheduleDTO.builder()
                         .state(ScheduleState.newBuilder()

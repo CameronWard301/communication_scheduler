@@ -7,6 +7,7 @@ import io.github.cameronward301.communication_scheduler.integration_tests.model.
 import io.github.cameronward301.communication_scheduler.integration_tests.model.workflow.WorkflowExecutionDTO;
 import io.github.cameronward301.communication_scheduler.integration_tests.model.workflow.WorkflowListDTO;
 import io.github.cameronward301.communication_scheduler.integration_tests.world.World;
+import io.temporal.common.SearchAttributeKey;
 import org.apache.hc.core5.net.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -59,19 +60,23 @@ public class HistoryAPIStepDefinitions {
         this.pageNumber = String.valueOf(pageNumber);
     }
 
-    @And("I set the history userId filter to be {string}")
-    public void iSetTheHistoryUserIdFilterToBe(String userId) {
-        this.userIdFilter = userId;
+    @And("I set the history userId filter to be the userId")
+    public void iSetTheHistoryUserIdFilterToBe() {
+        assertTrue(world.getWorkflowStub().getOptions().isPresent());
+        this.userIdFilter = world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("userId"));
     }
 
-    @And("I set the history gatewayId filter to be {string}")
-    public void iSetTheHistoryGatewayIdFilterToBe(String gatewayIdFilter) {
-        this.gatewayIdFilter = gatewayIdFilter;
+    @And("I set the history gatewayId filter to be the gatewayId")
+    public void iSetTheHistoryGatewayIdFilterToBe() {
+        assertTrue(world.getWorkflowStub().getOptions().isPresent());
+        this.gatewayIdFilter = world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("gatewayId"));
     }
 
-    @And("I set the history scheduleId filter to be {string}")
-    public void iSetTheHistoryScheduleIdFilterToBe(String scheduleIdFilter) {
-        this.scheduleIdFilter = scheduleIdFilter;
+    @And("I set the history scheduleId filter to be the scheduleId")
+    public void iSetTheHistoryScheduleIdFilterToBe() {
+        assertTrue(world.getWorkflowStub().getOptions().isPresent());
+        this.scheduleIdFilter = world.getWorkflowStub().getOptions().get().getTypedSearchAttributes().get(SearchAttributeKey.forKeyword("scheduleId"));
+
     }
 
     @And("I set the status filter to be {string}")
@@ -98,6 +103,7 @@ public class HistoryAPIStepDefinitions {
         try {
             workflowListDTOResponseEntity = restTemplate.exchange(getWorkflowQueryURI(List.of()), HttpMethod.GET, new HttpEntity<>(world.getHttpHeaders()), WorkflowListDTO.class);
         } catch (HttpClientErrorException e) {
+            System.out.println(e.getMessage());
             world.setHttpClientErrorException(e);
         }
     }
@@ -107,6 +113,7 @@ public class HistoryAPIStepDefinitions {
         try {
             workflowExecutionDTOResponseEntity = restTemplate.exchange(historyAPIURL + "/" + workflowId + "/" + runId, HttpMethod.GET, new HttpEntity<>(world.getHttpHeaders()), WorkflowExecutionDTO.class);
         } catch (HttpClientErrorException e) {
+            System.out.println(e.getMessage());
             world.setHttpClientErrorException(e);
         }
     }
@@ -117,6 +124,7 @@ public class HistoryAPIStepDefinitions {
         try {
             deletedWorkflowResponseEntity = restTemplate.exchange(historyAPIURL + "/" + workflowId + "/" + runId, HttpMethod.DELETE, new HttpEntity<>(world.getHttpHeaders()), Void.class);
         } catch (HttpClientErrorException e) {
+            System.out.println(e.getMessage());
             world.setHttpClientErrorException(e);
         }
     }
@@ -126,6 +134,7 @@ public class HistoryAPIStepDefinitions {
         try {
             totalDTOResponseEntity = restTemplate.exchange(getWorkflowQueryURI(List.of("total")), HttpMethod.GET, new HttpEntity<>(world.getHttpHeaders()), TotalDTO.class);
         } catch (HttpClientErrorException e) {
+            System.out.println(e.getMessage());
             world.setHttpClientErrorException(e);
         }
     }
@@ -196,6 +205,9 @@ public class HistoryAPIStepDefinitions {
 
     @Then("the I receive a history workflow with status code {int}")
     public void theIReceiveAHistoryWorkflowWithStatusCode(int status) {
+        if (world.getHttpClientErrorException() != null) {
+            System.out.println(world.getHttpClientErrorException().getMessage());
+        }
         assertEquals(status, workflowExecutionDTOResponseEntity.getStatusCode().value());
         assertNotNull(workflowExecutionDTOResponseEntity.getBody());
         assertEquals(workflowId, workflowExecutionDTOResponseEntity.getBody().getWorkflowId());
@@ -217,5 +229,20 @@ public class HistoryAPIStepDefinitions {
     public void theIReceiveATotalNumberOfAndStatusCode(int totalNumber, int statusCode) {
         assertEquals(statusCode, totalDTOResponseEntity.getStatusCode().value());
         assertEquals(totalNumber, Objects.requireNonNull(totalDTOResponseEntity.getBody()).getTotal());
+    }
+
+    @And("I set the history userId filter to be {string}")
+    public void iSetTheHistoryUserIdFilterToBe(String value) {
+        this.userIdFilter = value;
+    }
+
+    @And("I set the history gatewayId filter to be {string}")
+    public void iSetTheHistoryGatewayIdFilterToBe(String value) {
+        this.gatewayIdFilter = value;
+    }
+
+    @And("I set the history scheduleId filter to be {string}")
+    public void iSetTheHistoryScheduleIdFilterToBe(String value) {
+        this.scheduleIdFilter = value;
     }
 }

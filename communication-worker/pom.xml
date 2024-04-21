@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.2</version>
+        <version>3.2.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.github.CameronWard301.communication_scheduler.worker</groupId>
     <artifactId>communication_worker</artifactId>
-    <version>0.7.1</version>
+    <version>0.7.2</version>
     <name>communication_worker</name>
     <description>communication_worker</description>
     <properties>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>io.github.cameronward301.communication_scheduler.workflows</groupId>
             <artifactId>communication_workflow</artifactId>
-            <version>0.18.0</version>
+            <version>0.18.1</version>
         </dependency>
 
         <dependency>
