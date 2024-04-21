@@ -16,7 +16,7 @@
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>gateway-library</artifactId>
-    <version>0.3.12</version>
+    <version>0.3.13</version>
     <name>gateway-library</name>
     <description>Gateway library for developing custom communication gateways</description>
     <url>https://github.com/CameronWard301/communication_scheduler/tree/main/gateway-library</url>
@@ -127,7 +127,7 @@
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
-            <version>10.1.17</version>
+            <version>10.1.19</version>
         </dependency>
     </dependencies>
 
