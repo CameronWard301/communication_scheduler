@@ -137,6 +137,8 @@ email_gateway:
   rootLoggingLevel: DEBUG
   profile: ssl
   keyStorePath: /certs/email-gateway.p12
+  corsEnabled: false
+  csrfEnabled: false
 
 sms_gateway:
   repository: cameronward/sms-gateway
@@ -147,6 +149,8 @@ sms_gateway:
   profile: ssl
   keyStorePath: /certs/sms-gateway.p12
   loggingLevel: DEBUG
+  corsEnabled: false
+  csrfEnabled: false
 
 mock_gateway:
   repository: cameronward/mock-gateway
@@ -154,6 +158,8 @@ mock_gateway:
   rootLoggingLevel: info
   loggingLevel: info
   region: eu-west-1
+  corsEnabled: false
+  csrfEnabled: false
 
 gateway_api:
   repository: cameronward/gateway-api
@@ -162,6 +168,7 @@ gateway_api:
   loggingLevel: info
   keyStorePath: /certs/gateway-api.p12
   verifyHostnames: false
+  profile: ssl
 
 preferences_api:
   repository: cameronward/preferences-api
@@ -211,6 +218,8 @@ web_bff:
   tag: latest
   port: "3000"
   sslVerification: "false"
+  limitPeriodSeconds: "120"
+  limitNumberRequests: "1000"
 
 web_portal:
   repository: cameronward/cs-web-portal

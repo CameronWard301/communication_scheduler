@@ -13,12 +13,17 @@ import historyController from "./api/history/controllers/history-controller";
 import statsController from "./api/stats/controller/stats-controller";
 import * as http from "node:http";
 import proxy from "./proxy";
+import RateLimit from "express-rate-limit";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
 const router = require("express").Router();
+const limiter = RateLimit({
+  windowMs: Number(process.env.LIMIT_PERIOD_SECONDS) * 1000, // how long to remember the requests in seconds
+  limit: Number(process.env.LIMIT_NUMBER_REQUESTS) // how many requests per windowMs
+})
 
 
 let version: string;
@@ -51,6 +56,7 @@ const handleProxy = (server: https.Server | http.Server) => {
 router.use("/api-docs", swaggerUi.serve);
 router.get("/api-docs", swaggerUi.setup(swaggerDocument));
 router.use(express.json());
+app.use(limiter)
 app.use(router);
 app.use(function(_req, res, next) {
   res.header("Access-Control-Allow-Origin", process.env.ALLOW_ORIGIN);
@@ -67,6 +73,8 @@ app.use(historyController);
 app.use(statsController);
 
 const printConfig = () => {
+  console.log("[server]: Limit Window: " + process.env.LIMIT_PERIOD_SECONDS);
+  console.log("[server]: Limit Requests: " + process.env.LIMIT_NUMBER_REQUESTS);
   console.log("[server]: SSL Verification: " + process.env.SSL_VERIFICATION);
   console.log("[server]: Auth service at: " + process.env.AUTH_API_URL);
   console.log("[server]: Preferences service at: " + process.env.PREFERENCES_API_URL);
