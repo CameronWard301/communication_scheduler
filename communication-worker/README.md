@@ -30,7 +30,6 @@ To run locally, ensure you have the following installed:
 - [Temporal Server 1.22.0 or newer](https://learn.temporal.io/getting_started/java/dev_environment/) running locally or in a cloud environment. See [helm deployment](../deployment/helm) to deploy the Temporal Server to a kubernetes cluster.
 
 
-
 ### Configuration
 
 This section describes the configuration options available for the communication worker via environment variables.  
@@ -75,4 +74,5 @@ This section describes the configuration options available for the communication
 ## Built With
 - [Spring Boot](https://spring.io/projects/spring-boot)
 - [Maven](https://maven.apache.org/)
-- [DynamoDB](https://aws.amazon.com/dynamodb/)
+- [MongoDB](https://www.mongodb.com/)
+- [Temporal](https://temporal.io/)
