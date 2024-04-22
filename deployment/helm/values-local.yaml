@@ -122,8 +122,8 @@ grafana:
 communication_worker:
   repository: cameronward/communication-worker
   tag: latest
-  debug: debug
-  springDebug: info
+  logging: debug
+  rootLogging: info
   sslVerification: false
   temporal:
     taskQueue: communication-workflow

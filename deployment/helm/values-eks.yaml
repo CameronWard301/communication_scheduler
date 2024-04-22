@@ -207,8 +207,8 @@ temporal:
 communication_worker:
   repository: cameronward/communication-worker
   tag: 0.3.0
-  debug: info
-  springDebug: info
+  logging: info
+  rootLogging: info
   sslVerification: false
   temporal:
     taskQueue: communication-workflow

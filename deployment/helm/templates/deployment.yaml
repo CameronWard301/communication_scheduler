@@ -27,10 +27,10 @@ spec:
               value: "{{ .Values.communication_worker.temporal.namespace }}"
             - name: "TEMPORAL_TASK_QUEUE"
               value: "{{ .Values.communication_worker.temporal.taskQueue }}"
-            - name: "WORKER_DEBUG"
-              value: "{{ .Values.communication_worker.debug }}"
-            - name: "SPRING_DEBUG"
-              value: "{{ .Values.communication_worker.springDebug }}"
+            - name: "WORKER_LOGGING"
+              value: "{{ .Values.communication_worker.logging }}"
+            - name: "ROOT_LOGGING"
+              value: "{{ .Values.communication_worker.rootLogging }}"
             - name: "MONGODB_DATABASE_NAME"
               valueFrom:
                 secretKeyRef:
