@@ -28,3 +28,6 @@ tctl admin cluster add-search-attributes --name scheduleId --type Keyword
 
 # include
 - entrypoint env var to select spring profiles
+
+
+https://www.mongodb.com/docs/atlas/configure-api-access/#std-label-create-org-api-key

@@ -56,7 +56,7 @@ Generating the public and private keys for the Auth API requires the use of Open
 
 ### Installing & Running Locally
 
-A step by step series of examples that tell you how to get a development environment running.
+Follow the instructions below to get a development environment running::
 
 1. Clone the repository
 2. Navigate to the project directory

@@ -47,8 +47,7 @@ The gateway has not been set up to use SSL for simplicity, see the [email gatewa
 
 ### Installing & Running Locally
 
-A step by step series of examples that tell you how to get a development environment running.
-
+Follow the instructions below to get a development environment running:
 1. Clone the repository
 2. Navigate to the project directory
 3. Run `mvn clean install` to build and test the project

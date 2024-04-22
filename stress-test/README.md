@@ -49,8 +49,7 @@ Ensure you have completed the prerequisites before configuring the application.
 
 ### Installing & Running Locally
 
-A step by step series of examples that tell you how to get a development environment running.
-
+Follow the instructions below to get a development environment running:
 1. Clone the repository
 2. Navigate to the project directory
 3. Run `mvn spring-boot:run` to start the test.
