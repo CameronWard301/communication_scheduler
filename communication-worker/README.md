@@ -58,13 +58,23 @@ This section describes the configuration options available for the communication
 | WORKER_LOGGING            | The logging level for the worker components                                                                                                                             | info                        | N                              |
 | ROOT_LOGGING              | The root [logging level](https://docs.spring.io/spring-boot/docs/2.1.13.RELEASE/reference/html/boot-features-logging.html#boot-features-logging-format) for the project | info                        | N                              |
 
+## Running a workflow locally
+With a Gateway, Worker and Temporal cluster running you can use the command below to start a workflow and get the worker to process it.
+ - taskqueue: communication-workflow - this is the default task queue for the worker
+ - workflow_type: CommunicationWorkflow - this is the workflow type that the worker will process (must be set to this value)
+ - input: The input to the workflow, this must contain the userId and gatewayId to process the workflow
+   - userId: can be any value if using the Mock gateway, otherwise a real user id or the one provided with the SMS or Email gateway
+   - gatewayId: must be the id of the gateway object stored in the gateway database
+     - use the [web-portal](../web-portal) or [gateway-api](../gateway-api) to add a gateway to the database
+   - workflowId: must be of the format: "<gatewayId>:<userId>:<scheduleId>" in this useCase, the schedule Id can be any value as the workflow you are about to create is not part of any schedule
+- `tctl workflow run --taskqueue communication-workflow --workflow_type CommunicationWorkflow --input "{\"userId\":\"62f8a8e1-f55a-4d9a-ab15-852168a321a4\", \"gatewayId\": \"8b38a09f-a722-46e5-b147-09765ba722bb\"}" -w "8b38a09f-a722-46e5-b147-09765ba722bb:62f8a8e1-f55a-4d9a-ab15-852168a321a4:test-schedule"`
 
 ## Running the tests
 
 - To run the unit tests, run `mvn test` in the project directory
 - To run the integration tests see the [Integration Tests Project](../integration-tests)
   and make sure that the `@MockGateway`, `@EmailGateway` or `@SmsGateway` is added to the filter expression.
-- 
+
 ## Deployment
 
 - Run the command from the project root to build and push a new image for both arm and amd platforms.

@@ -47,6 +47,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_VAR_temporal_db_username: ${{ secrets.TEMPORAL_DB_USERNAME }}
           TF_VAR_temporal_db_password: ${{ secrets.TEMPORAL_DB_PASSWORD }}
+          TF_VAR_mongo_private_key: ${{ secrets.MONGO_PRIVATE_KEY }}
+          TF_VAR_mongo_public_key: ${{ secrets.MONGO_PUBLIC_KEY }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -69,3 +71,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_VAR_temporal_db_username: ${{ secrets.TEMPORAL_DB_USERNAME }}
           TF_VAR_temporal_db_password: ${{ secrets.TEMPORAL_DB_PASSWORD }}
+          TF_VAR_mongo_private_key: ${{ secrets.MONGO_PRIVATE_KEY }}
+          TF_VAR_mongo_public_key: ${{ secrets.MONGO_PUBLIC_KEY }}
