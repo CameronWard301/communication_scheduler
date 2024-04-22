@@ -1,48 +1,34 @@
 //REQUIRED VARIABLES:
-variable "default_tags" {
-  type = map(string)
-}
-
-variable "region" {
+variable "development_environment_tag" {
   type = string
 }
 
-variable "account_name" {
+variable "mongo_public_key" {
   type = string
 }
 
-variable "billing_mode" {
-  type = string // Can be either PROVISIONED or PAY_PER_REQUEST
+variable "mongo_private_key" {
+  type = string
 }
 
 //Optional Variables:
 
-variable "deletion_protection_enabled" {
-  type = bool
-  default = false
+variable "cluster_type" {
+  type = string
+  default = "REPLICASET"
 }
 
-variable "read_capacity" {
-  type = number
-  default = 5
+variable "cluster_name" {
+  type = string
+  default = "communication-scheduling-platform"
 }
 
-variable "write_capacity" {
-  type = number
-  default = 5
+variable "mongo_db_project_name" {
+  type = string
+  default = "CSP"
 }
 
-variable "deploy_mock_gateway_api" {
-  type = bool
-  default = false
-}
-
-variable "enable_mock_gateway_logs" {
-  type = bool
-  default = false
-}
-
-variable "configure_global_api_gateway_log_role" {
-  type = bool
-  default = false
+variable "mongo_db_region_name" {
+  type = string
+  default = "EU_WEST_1"
 }

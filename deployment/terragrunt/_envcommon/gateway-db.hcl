@@ -44,7 +44,8 @@ locals {
 # environments.
 # ---------------------------------------------------------------------------------------------------------------------
 inputs = {
-  account_name        = local.env
-  region              = local.region_vars.locals.aws_region
   default_tags        = local.env_tags
+  development_environment_tag = local.env
+  mongo_db_project_name = "CSP"
+  mongo_db_region_name = replace(upper(local.region_vars.locals.aws_region), "-", "_")
 }
