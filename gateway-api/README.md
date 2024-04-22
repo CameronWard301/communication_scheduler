@@ -17,6 +17,7 @@ Ensure you have the following installed and configured locally:
 - [Maven 3.8.7 or newer](https://maven.apache.org/download.cgi)
 - [Auth API](../auth-api) running locally or in a development environment
 - [MongoDB Collection](https://www.mongodb.com/docs/atlas/getting-started/) running locally or in an Atlas free tier cluster
+  - Deploy one using the [Terragrunt library](../deployment/terragrunt)
 
 ### Configuration
 
