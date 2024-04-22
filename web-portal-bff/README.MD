@@ -1,6 +1,6 @@
 # Web Portal BFF API
 
-This is a middleware API built with Node.js and Express to communicate with the backend services (gateway-api, schedule-api, history-api, auth-api, preferences-api and Grafana) and the [web-portal](../web-portal).
+This is a middleware API built with Node.js with Typescript and Express to communicate with the backend services (gateway-api, schedule-api, history-api, auth-api, preferences-api and Grafana) and the [web-portal](../web-portal).
 
 
 ## API Specification
@@ -63,7 +63,8 @@ Follow the instructions below to get a development environment running:
 
 1. Clone the repository
 2. Navigate to the project directory
-3. Run `npm run dev` to start the server
+3. Run `npm i` to install the project dependencies
+4. Run `npm run dev` to start the server
 
 
 ## Running the tests
@@ -78,10 +79,15 @@ Follow the instructions below to get a development environment running:
     - `docker buildx build --platform linux/amd64,linux/arm64 -t <account name>/<image-name>:<image-tag> --push .`
 - See [helm deployment](../deployment/helm) to deploy the Web Portal BFF API to a kubernetes cluster.
 
+## Generate Swagger API Documentation
+This project uses the [Swagger Autogen](https://swagger-autogen.github.io/docs/getting-started/quick-start/) package to generate the swagger documentation.
+ - Once an update has been made to the API documentation, run `npm run swagger-autogen` to generate the updated swagger documentation.
+   - The output file is located in `src/swagger_output.json` and can be accessed by visiting [`http://localhost:9090/api-docs`](http://localhost:9090/api-docs) or [`https://localhost:9090/api-docs`](https://localhost:9090/api-docs) when the server is running.
 ## Built With
-- [Spring Boot](https://spring.io/projects/spring-boot)
-- [Maven](https://maven.apache.org/)
-- [Temporal](https://temporal.io/)
+- [NodeJS](https://nodejs.org/en)
+- [Express](https://expressjs.com/)
+- [Jest](https://jestjs.io/)
+- [Swagger Autogen](https://swagger-autogen.github.io/docs/getting-started/quick-start/)
 
 
 # Generate Https Keys
