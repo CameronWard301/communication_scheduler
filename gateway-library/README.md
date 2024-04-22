@@ -37,7 +37,7 @@ Ensure you have the following installed and configured locally:
 
 - [Java 21](https://www.oracle.com/java/technologies/downloads/#java21)
 - [Maven 3.8.7 or newer](https://maven.apache.org/download.cgi)
-- [Spring Boot 3.2.4 or newer](???)
+- [Spring Boot 3.2.4 or newer](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot/3.2.4)
 - History database (AWS DynamoDB by default) with the [schema defined here](../Designs/Images/Database/CommunicationHistoryDbSchema.svg)
   - Deploy one using the [Terragrunt library](../deployment/terragrunt) 
 
