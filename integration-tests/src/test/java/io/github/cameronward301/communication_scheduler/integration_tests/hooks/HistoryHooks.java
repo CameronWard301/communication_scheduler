@@ -6,6 +6,7 @@ import io.github.cameronward301.communication_scheduler.integration_tests.gatewa
 import io.github.cameronward301.communication_scheduler.integration_tests.model.schedule.ScheduleEntity;
 import io.github.cameronward301.communication_scheduler.integration_tests.world.World;
 import io.temporal.api.common.v1.WorkflowExecution;
+import io.temporal.api.enums.v1.WorkflowExecutionStatus;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowExecutionAlreadyStarted;
 import io.temporal.client.WorkflowOptions;
@@ -41,6 +42,7 @@ public class HistoryHooks {
             try {
                 WorkflowStub workflow = workflowClient.newUntypedWorkflowStub(workflowExecution.getExecution().getWorkflowId());
                 workflow.terminate("test-termination");
+                checkWorkflowIsTerminated(workflowExecution.getExecution().getWorkflowId());
             } catch (Exception e) {
                 log.debug(e.getMessage());
             }
@@ -67,12 +69,12 @@ public class HistoryHooks {
             }
 
         }
-        Thread.sleep(1500);
+        checkWorkflowsAreCreated();
 
     }
 
     @Before(value = "@CreateTestWorkflow", order = 2)
-    public void createWorkflow() throws InterruptedException {
+    public void createWorkflow() {
         String id = "integration-test";
         workflowIds.add(id);
         WorkflowStub workflow = getWorkflowStub(id);
@@ -81,7 +83,7 @@ public class HistoryHooks {
         world.setWorkflowId(execution.getWorkflowId());
         world.setWorkflowExecution(execution);
         world.setWorkflowStub(workflow);
-        Thread.sleep(1500);
+        checkWorkflowsAreCreated();
     }
 
     @After("@RemoveTestWorkflows")
@@ -94,6 +96,7 @@ public class HistoryHooks {
                 log.debug(e.getMessage());
             }
         }
+        checkWorkflowsAreTerminated();
     }
 
     private WorkflowStub getWorkflowStub(String workflowId) {
@@ -106,5 +109,47 @@ public class HistoryHooks {
                         .set(SearchAttributeKey.forKeyword("scheduleId"), schedule.getScheduleId())
                         .build())
                 .build());
+    }
+
+    private void checkWorkflowsAreCreated() {
+        for (String id : workflowIds) {
+            int attempts = 10;
+            while (attempts > 0) {
+                if (workflowClient.listExecutions("WorkflowId=\"" + id + "\"").filter(workflowExecutionMetadata -> workflowExecutionMetadata.getStatus()== WorkflowExecutionStatus.WORKFLOW_EXECUTION_STATUS_RUNNING).count() == 1) {
+                    return;
+                }
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    log.error("Interrupted while waiting for workflow to start", e);
+                    throw new RuntimeException("Interrupted while waiting for workflow to start");
+                }
+                attempts--;
+            }
+            throw new RuntimeException("Workflow with id: " + id + " did not reach running state");
+        }
+    }
+
+    private void checkWorkflowsAreTerminated() {
+        for (String id : workflowIds) {
+            checkWorkflowIsTerminated(id);
+        }
+    }
+
+    private void checkWorkflowIsTerminated(String id){
+        int attempts = 10;
+        while (attempts > 0) {
+            if (workflowClient.listExecutions("WorkflowId=\"" + id + "\"").noneMatch(workflowExecutionMetadata -> workflowExecutionMetadata.getStatus() == WorkflowExecutionStatus.WORKFLOW_EXECUTION_STATUS_RUNNING)) {
+                return;
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                log.error("Interrupted while waiting for workflow to terminate", e);
+                throw new RuntimeException("Interrupted while waiting for workflow to terminate");
+            }
+            attempts--;
+        }
+        throw new RuntimeException("Workflow with id: " + id + " did not reach terminated state");
     }
 }

@@ -35,7 +35,7 @@ schedule-api:
   address: ${SCHEDULE_API_ADDRESS:https://localhost:53286/schedule}
 
 history-api:
-  address: ${HISTORY_API_ADDRESS:https://localhost:50387/workflow}
+  address: ${HISTORY_API_ADDRESS:https://localhost:50559/workflow}
 
 web-portal:
   #address: ${WEB_PORTAL_ADDRESS:http://localhost:5173}

@@ -7,10 +7,7 @@ import io.github.cameronward301.communication_scheduler.integration_tests.gatewa
 import io.github.cameronward301.communication_scheduler.integration_tests.model.schedule.ScheduleEntity;
 import io.github.cameronward301.communication_scheduler.integration_tests.world.World;
 import io.temporal.common.SearchAttributeKey;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -257,6 +254,7 @@ public class SchedulePageStepDefinitions {
                 .withTimeout(Duration.ofSeconds(explicitWait))
                 .pollingEvery(Duration.ofMillis(500))
                 .ignoring(NoSuchElementException.class)
+                .ignoring(ElementClickInterceptedException.class)
                 .ignoring(AssertionError.class);
 
         wait.until((driver -> {
