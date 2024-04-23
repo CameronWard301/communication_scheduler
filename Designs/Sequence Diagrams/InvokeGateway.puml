@@ -8,29 +8,48 @@ database "Communication History DB" as historyDB
 participant "SMS Integration" as sms
 
 autonumber
-
+activate worker #4793AF
 worker -> gateway: Sends userId, workflowRunId \nwith API Key to
+
+activate gateway #4793AF
 gateway -> gateway: Validates API key
+
 gateway -> userDB: Get user By id and left join to user product metrics
+activate userDB #4793AF
+
 userDB -> metricsDB: Get metrics for user
+activate metricsDB #4793AF
 metricsDB --> userDB: Returns metrics
+deactivate metricsDB
 userDB --> gateway: Resolves user object with metrics
+deactivate userDB
 
 gateway -> gateway: Generates SMS contents
 gateway -> gateway: Hash the message contents with the workflowRunId
 
 gateway -> historyDB: Check for previous message by messageHash
+activate historyDB #4793AF
 
 historyDB --> gateway: Returns result
+deactivate historyDB
+
 gateway -> gateway: Check that messageHash result is null
+
 gateway -> historyDB: Write workflowRunId, userId and messageHash to
+activate historyDB #4793AF
+
 historyDB --> gateway: Successful write
+deactivate historyDB
 
 gateway -> gateway: Gets user's phone number
 gateway -> sms: Send message to phone number
+activate sms #4793AF
+
 sms --> gateway: Returns result
+deactivate sms
+
 gateway -> gateway: Check result
 gateway --> worker: Return 200 success,\nmessageHash and userId
-
+deactivate gateway
 
 @enduml

@@ -2,30 +2,71 @@
 
 participant "Temporal" as temporal
 participant "Worker" as worker
+database "Kubernetes Configmap" as configmap
 database "Gateway DB" as gwdb
 
 participant "Communication Gateway" as cgw
 
 autonumber
-
+activate temporal #4793AF
 worker -> temporal: Polls task queue
+activate worker #4793AF
 temporal -> temporal: Schedules workflow
+activate temporal #DD5746
+
 worker -> worker: Starts workflow
+activate worker #DD5746
 temporal -> worker: Schedules GetPreferencesActivity
-worker -> worker: Get Preferences
+activate temporal #8576FF
+activate worker #8576FF
+
+worker -> configmap: Get Preferences
+activate configmap #4793AF
+configmap --> worker: Returns preferences
+deactivate configmap
+
 worker --> temporal: Activity completed
+deactivate worker
+deactivate temporal
+
 temporal -> worker: Schedules GetGatewayActivity
+activate temporal #8576FF
+activate worker #8576FF
 worker -> gwdb: Get gateway by id
+activate gwdb #4793AF
+
 gwdb --> worker: Returns gateway object
+deactivate gwdb
+
 worker --> temporal: Activity completed
+deactivate worker
+deactivate temporal
+
 temporal -> worker: Schedules SendCommunicationActivity
+activate temporal #8576FF
+activate worker #8576FF
 worker -> cgw: Send user id with workflow run id
+activate cgw #4793AF
 cgw --> worker: Returns error response
+deactivate cgw
+
 worker --> temporal: Activity failed
+deactivate temporal
+deactivate worker
+
 temporal -> worker: Retry SendCommunicationActivity
+activate temporal #8576FF
+activate worker #8576FF
 worker -> cgw: Send user id with workflow run id
+activate cgw #4793AF
 cgw --> worker: Returns delivery response 200 with message hash and user id
+deactivate cgw
+
 worker --> temporal: Activity completed
+deactivate worker
+deactivate temporal
 temporal -> worker: Complete workflow
 worker --> temporal: Workflow complete
+deactivate worker
+deactivate temporal
 @enduml
