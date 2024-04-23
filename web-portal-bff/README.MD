@@ -29,7 +29,7 @@ See [helm-deployment](../deployment/helm) to deploy the following components to 
 ### Configuration
 
 This section describes the configuration options available for the Web Portal BFF API via environment variables
-- Run the project with the `ssl` profile to enable SSL
+- Run the project with the `HTTPS_ENABLED` environment variable set to true to enable SSL
 - To generate self-signed certificate files for development purposes, run the following command in the project directory:
     - `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./private.key -out public.crt`
         - Follow prompts to enter the certificate information.
@@ -88,11 +88,3 @@ This project uses the [Swagger Autogen](https://swagger-autogen.github.io/docs/g
 - [Express](https://expressjs.com/)
 - [Jest](https://jestjs.io/)
 - [Swagger Autogen](https://swagger-autogen.github.io/docs/getting-started/quick-start/)
-
-
-# Generate Https Keys
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./private.key -out public.crt
-
-running locally: go to browser and type https://localhost:3000
-When the browser displays unsafe warning, click anywhere on the page and type `thisisunsafe` to bypass the warning.
-The web portal will then be able to connect to the server.
