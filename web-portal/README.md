@@ -67,7 +67,7 @@ Follow the instructions below to get a development environment running:
 
 ### Running in a Cluster
 - Deploy the Web Portal to a kubernetes cluster using the [helm chart](../deployment/helm) configuration.
-- Port forward the `cs-web-portal` service to access the Web Portal locally. Use a kubectl command or a software such as [Lens](https://k8slens.dev/) to port forward the service.
+- Port forward the `cs-web-portal-service` to access the Web Portal locally. Use a kubectl command or a software such as [Lens](https://k8slens.dev/) to port forward the service.
 - Go to browser and type https://localhost:3000 (Use your port number chosen and make sure its HTTPs).
   - If using self-signed certificates, the browser will display an unsafe warning, click anywhere on the page and type `thisisunsafe` to bypass the warning.
   - The web portal will then be able to connect to the server.
