@@ -53,7 +53,7 @@ public class HistoryHooks {
     @SneakyThrows
     @Before(value = "@CreateTestWorkflows", order = 2)
     public void createWorkflows() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             String id = "integration-test-" + i;
             workflowIds.add(id);
             try {

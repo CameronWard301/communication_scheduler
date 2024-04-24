@@ -73,7 +73,7 @@ Feature: History Pages
   @RemoveTestWorkflows
   Scenario: Should load history items
     When I navigate to "/history?userId=user-integration-test-1&status=Running"
-    Then the total history results should be "1–10 of 10"
+    Then the total history results should be "1–5 of 5"
     And the status cell of the first item should be set to "Running"
 
   @TerminateExistingWorkflows

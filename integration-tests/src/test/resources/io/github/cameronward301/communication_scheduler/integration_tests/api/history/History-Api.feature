@@ -28,7 +28,7 @@ Feature: History API Scenarios
     And I set the status filter to be "RUNNING"
     When I get all workflows
     Then the I receive a page of history workflows with a size of 1 and status code 200
-    And the total number of workflows matching the filter is 10
+    And the total number of workflows matching the filter is 5
 
   @TerminateExistingWorkflows
   @CreateTestWorkflows
@@ -44,7 +44,7 @@ Feature: History API Scenarios
     And I set the status filter to be "RUNNING"
     When I get all workflows
     Then the I receive a page of history workflows with a size of 0 and status code 200
-    And the total number of workflows matching the filter is 10
+    And the total number of workflows matching the filter is 5
 
   @TerminateExistingWorkflows
   @CreateTestWorkflows
@@ -153,7 +153,7 @@ Feature: History API Scenarios
     And I set the history scheduleId filter to be the scheduleId
     And I set the status filter to be "RUNNING"
     When I get total workflows
-    Then the I receive a total number of 10 and status code 200
+    Then the I receive a total number of 5 and status code 200
 
   @TerminateExistingWorkflows
   @CreateTestWorkflows
