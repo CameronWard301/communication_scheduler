@@ -297,6 +297,7 @@ integration_tests:
   temporalNamespace: default
   kubernetesNamespace: default
   filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI or @MockGateway or @ScheduleAPI or @HistoryAPI or @WebPortal"
+  loggingLevel: INFO
   selenium:
     implicitWait: 5
     explicitWait: 10

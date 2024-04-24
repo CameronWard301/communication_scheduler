@@ -44,6 +44,8 @@ spec:
               value: "{{ .Values.integration_tests.temporalNamespace }}"
             - name: "KUBERNETES_NAMESPACE"
               value: "{{ .Values.integration_tests.kubernetesNamespace }}"
+            - name: "LOGGING_LEVEL"
+              value: "{{ .Values.integration_tests.loggingLevel }}"
             - name: "MONGODB_DATABASE_NAME"
               valueFrom:
                 secretKeyRef:
