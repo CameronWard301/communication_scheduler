@@ -3,6 +3,10 @@
 This project is used to run end to end integration tests against all the following components. This runs automatically as a Kubernetes job when upgrading or installing the Kubernetes cluster using the [helm chart](../deployment/helm).
 It takes about 7-10 minutes to run all the tests successfully.
 
+> [!IMPORTANT]
+> The integration tests read and write to the gateway database, and the Temporal cluster. Running this in production may modify user data and schedules if the tests are not configured correctly.
+
+
 Components tested:
 - [History API](../history-api)
 - [Auth API](../auth-api)
@@ -115,7 +119,7 @@ This section describes running the tests on the cluster as a job and takes rough
 - Run the command from the project root to build and push a new image for both arm and amd platforms.
   - `docker buildx build --platform linux/amd64,linux/arm64 -t <account name>/<image-name>:<image-tag> --push .`
 
-- There is an extra environment variable called `TEST_FILTER_EXPRESSION` that is set in the [helm chart](../deployment/helm/) values.yml file to run the tests with the correct filter expression.
+- There is an extra environment variable called `TEST_FILTER_EXPRESSION` that is set in the [helm chart](../deployment/helm) values.yml file to run the tests with the correct filter expression.
   - See [Cucumber filter expression](https://cucumber.io/docs/cucumber/api/?lang=java#running-a-subset-of-scenarios) for the syntax to build your own filter expression to test specific components of the platform.
 
 The available filter tags are:
