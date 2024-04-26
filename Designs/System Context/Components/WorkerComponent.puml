@@ -10,6 +10,7 @@ Person(customer, "Customer", "Customer receiving communications from a particula
 
 
 ContainerDb(gatewayDB, "Gateway Database", "Stores information about the available gateways")
+ContainerDb(configMap, "Settings Config Map", "Stores retry policy and gateway timeout settings")
 Container(temporal, "Temporal", "Container: Temporal", "Schedules workflows to send communications to customers")
 
 
@@ -29,6 +30,7 @@ Rel(dataConverter, communicationWorker, "Decrypts Data")
 Rel_Up(communicationWorker, dataConverter, "Encrypts Data")
 
 Rel(communicationWorker, gatewayDB, "Reads from", "SQL/TCP")
+Rel(communicationWorker, configMap, "Reads from", "Kubernetes Java Client")
 Rel(communicationWorker, email_gateway, "Sends API request to", "JSON/HTTPS")
 Rel(communicationWorker, sms_gateway, "Sends API request to", "JSON/HTTPS")
 

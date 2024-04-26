@@ -48,7 +48,6 @@ package "Communication APIs" as communicationApis {
 
 
     interface gatewayRepository extends MongoRepository {
-        + Page<Gateway> findAll(Pageable pageable)
         + Page<Gateway> findByFriendlyNameRegexAndEndpointUrlRegexAndDescriptionRegex(String friendlyName, String dateCreated, String description, Pageable pageable)
     }
 
