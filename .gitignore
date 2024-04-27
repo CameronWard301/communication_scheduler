@@ -36,3 +36,6 @@ terraform.tfvars
 **/charts/*.tgz
 /deployment/helm/values-secrets.yaml
 /deployment/helm/certs/
+!/deployment/terraform/tf-states/.terraform/
+
+!/deployment/terraform/tf-states/.terraform.lock.hcl
