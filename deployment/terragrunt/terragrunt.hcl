@@ -56,7 +56,7 @@ remote_state {
   backend = "s3"
   config = {
     encrypt        = true
-    # uncomment for local testing:
+    # uncomment the rest of the lines in the config for local testing:
     profile        = "saml"
     bucket         = "terraform-state-${local.account_name}-${local.account_id}-${local.aws_region}"
     key            = "${path_relative_to_include()}/terraform.tfstate"
