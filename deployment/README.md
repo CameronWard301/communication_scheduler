@@ -16,7 +16,12 @@ This section describes the steps to deploy the cloud resources to AWS, connect t
       3. Use the same process as step 1.iv.a to update the desired size back to the original value or apply the [Terraform project](terraform) again.
       4. Wait for the new nodes to come online.
 2. Configure and deploy the resources to the Kubernetes cluster using the provided [Helm chart](helm)
-
+   1. Use a tool like [Lens](https://k8slens.dev/) to monitor the deployment.
+   2. Once deployed, exec into the `temporal-admintools` pod and run the following commands to create the required search attributes:
+      1. `tctl namespace register default`
+      2. `tctl admin cluster add-search-attributes --name userId --type Keyword`
+      3. `tctl admin cluster add-search-attributes --name gatewayId --type Keyword`
+      4. `tctl admin cluster add-search-attributes --name scheduleId --type Keyword`
 
 # Enable GithubActionUser to access EKS:
 Run `kubectl edit configmap aws-auth --namespace kube-system` and add the following to the mapUsers section:
@@ -31,13 +36,6 @@ data:
       groups:
         - system:masters
 ```
-
-
-# Add search attributes to temporal:
-tctl namespace register default
-tctl admin cluster add-search-attributes --name userId --type Keyword
-tctl admin cluster add-search-attributes --name gatewayId --type Keyword
-tctl admin cluster add-search-attributes --name scheduleId --type Keyword
 
 # include
 - entrypoint env var to select spring profiles
