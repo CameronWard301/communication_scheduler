@@ -1,5 +1,17 @@
 # Schedule API
 
+<!-- TOC -->
+* [Schedule API](#schedule-api)
+  * [API Specification](#api-specification)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Configuration](#configuration)
+    * [Installing & Running Locally](#installing--running-locally)
+  * [Running the tests](#running-the-tests)
+  * [Deployment](#deployment)
+  * [Built With](#built-with)
+<!-- TOC -->
+
 This is an API built with Spring Boot to perform CRUD operations on Temporal Schedules.
 
 ## API Specification

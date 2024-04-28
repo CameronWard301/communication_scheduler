@@ -1,6 +1,19 @@
 # History API
 
+<!-- TOC -->
+* [History API](#history-api)
+  * [API Specification](#api-specification)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Configuration](#configuration)
+    * [Installing & Running Locally](#installing--running-locally)
+  * [Running the tests](#running-the-tests)
+  * [Deployment](#deployment)
+  * [Built With](#built-with)
+<!-- TOC -->
+
 This is an API built with Spring Boot to retrieve workflow history and terminate running workflows.
+
 
 ## API Specification
 See [swagger specification](https://app.swaggerhub.com/apis/CameronWard301/Communication_APIs/1.0.3#/History%20API) for the exposed endpoints.

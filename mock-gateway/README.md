@@ -1,5 +1,17 @@
 # Mock Gateway
 
+<!-- TOC -->
+* [Mock Gateway](#mock-gateway)
+  * [API Specification](#api-specification)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Configuration](#configuration)
+    * [Installing & Running Locally](#installing--running-locally)
+  * [Running the tests](#running-the-tests)
+  * [Deployment](#deployment)
+  * [Built With](#built-with)
+<!-- TOC -->
+
 - This is example gateway built with Spring Boot and the [gateway library](../gateway-library) that returns the correct response to complete a [Communication Workflow](../workflows/communication_workflow).
 - Use this project as a reference guide to integrate the gateway library into your own project.
 - The gateway receives any user ID and returns a JSON response containing the User ID sent in the request body and the message hash to simulate a successful message delivery. 

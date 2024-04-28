@@ -1,5 +1,18 @@
 # Web Portal BFF API
 
+<!-- TOC -->
+* [Web Portal BFF API](#web-portal-bff-api)
+  * [API Specification](#api-specification)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Configuration](#configuration)
+    * [Installing & Running Locally](#installing--running-locally)
+  * [Running the tests](#running-the-tests)
+  * [Deployment](#deployment)
+  * [Generate Swagger API Documentation](#generate-swagger-api-documentation)
+  * [Built With](#built-with)
+<!-- TOC -->
+
 This is a middleware API built with Node.js with Typescript and Express to communicate with the backend services (gateway-api, schedule-api, history-api, auth-api, preferences-api and Grafana) and the [web-portal](../web-portal).
 
 

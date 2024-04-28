@@ -1,7 +1,21 @@
 # Integration Testing
 
+<!-- TOC -->
+* [Integration Testing](#integration-testing)
+  * [Components tested:](#components-tested)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+      * [Configure Gateway Database for Integration Tests](#configure-gateway-database-for-integration-tests)
+        * [Add using MongoDB UI (simplest):](#add-using-mongodb-ui-simplest)
+        * [Add the Mock gateway to the gateway database using the gateway API or web portal (more complex):](#add-the-mock-gateway-to-the-gateway-database-using-the-gateway-api-or-web-portal-more-complex)
+    * [Configuration](#configuration)
+    * [Installing & Running Locally](#installing--running-locally)
+    * [Running the project as a job on the cluster](#running-the-project-as-a-job-on-the-cluster)
+  * [Built With](#built-with)
+<!-- TOC -->
+
 This project is used to run end to end integration tests against all the following components. This runs automatically as a Kubernetes job when upgrading or installing the Kubernetes cluster using the [helm chart](../deployment/helm).
-It takes about 7-10 minutes to run all the tests successfully.
+It takes about 10-15 minutes to run all the tests successfully.
 
 > [!IMPORTANT]
 > The integration tests read and write to the gateway database, and the Temporal cluster. Running this in production may modify user data and schedules if the tests are not configured correctly.

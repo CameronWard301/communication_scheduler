@@ -1,5 +1,18 @@
 # Web Portal
 
+<!-- TOC -->
+* [Web Portal](#web-portal)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Cluster Configuration Only](#cluster-configuration-only)
+    * [Cluster And Local Configuration](#cluster-and-local-configuration)
+    * [Installing & Running Locally](#installing--running-locally)
+    * [Running in a Cluster](#running-in-a-cluster)
+  * [Running the tests](#running-the-tests)
+  * [Deployment](#deployment)
+  * [Built With](#built-with)
+<!-- TOC -->
+
 This is a React project built with Node.js, Typescript and MobX to provide a user interface to interact with the communication platform.
 
 

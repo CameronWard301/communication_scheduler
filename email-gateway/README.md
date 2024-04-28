@@ -1,5 +1,17 @@
 # Email Gateway
 
+<!-- TOC -->
+* [Email Gateway](#email-gateway)
+  * [API Specification](#api-specification)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Configuration](#configuration)
+    * [Installing & Running Locally](#installing--running-locally)
+  * [Running the tests](#running-the-tests)
+  * [Deployment](#deployment)
+  * [Built With](#built-with)
+<!-- TOC -->
+
 - This is example gateway built with Spring Boot and the [gateway library](../gateway-library) to send email messages to customers.  
 - Use this project as a reference guide to integrate the gateway library into your own project.
 - The gateway receives a user ID and generates a report containing antivirus and anti-malware statistics for the month and sends it to the user's email address.  

@@ -1,5 +1,17 @@
 # Communication Worker
 
+<!-- TOC -->
+* [Communication Worker](#communication-worker)
+  * [Design](#design)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Configuration](#configuration)
+  * [Running a workflow locally](#running-a-workflow-locally)
+  * [Running the tests](#running-the-tests)
+  * [Deployment](#deployment)
+  * [Built With](#built-with)
+<!-- TOC -->
+
 This is a [Temporal](https://temporal.io/) Spring Boot application that processes [communication workflows](../workflows/communication_workflow). 
 
 ## Design
@@ -66,7 +78,7 @@ With a Gateway, Worker and Temporal cluster running you can use the command belo
    - userId: can be any value if using the Mock gateway, otherwise a real user id or the one provided with the SMS or Email gateway
    - gatewayId: must be the id of the gateway object stored in the gateway database
      - use the [web-portal](../web-portal) or [gateway-api](../gateway-api) to add a gateway to the database
-   - workflowId: must be of the format: "<gatewayId>:<userId>:<scheduleId>" in this useCase, the schedule Id can be any value as the workflow you are about to create is not part of any schedule
+   - workflowId: must be of the format: "<gatewayId>:<userId>:<scheduleId>" in this useCase, the schedule ID can be any value as the workflow you are about to create is not part of any schedule
 - `tctl workflow run --taskqueue communication-workflow --workflow_type CommunicationWorkflow --input "{\"userId\":\"62f8a8e1-f55a-4d9a-ab15-852168a321a4\", \"gatewayId\": \"8b38a09f-a722-46e5-b147-09765ba722bb\"}" -w "8b38a09f-a722-46e5-b147-09765ba722bb:62f8a8e1-f55a-4d9a-ab15-852168a321a4:test-schedule"`
 
 ## Running the tests

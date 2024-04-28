@@ -1,7 +1,20 @@
 # Gateway Library
 
+<!-- TOC -->
+* [Gateway Library](#gateway-library)
+  * [API Specification](#api-specification)
+  * [Design](#design)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Creating a gateway using the library](#creating-a-gateway-using-the-library)
+    * [Configuration](#configuration)
+  * [Running the tests](#running-the-tests)
+  * [Deployment](#deployment)
+  * [Built With](#built-with)
+<!-- TOC -->
+
 This is a library for building communication gateways.  
-Download the library from [maven central](https://central.sonatype.com/artifact/io.github.cameronward301.communication_scheduler/gateway-library/overview).  
+Download the library from [maven central](https://central.sonatype.com/artifact/io.github.cameronward301.communication_scheduler/gateway-library/overview).
 
 - Gateways are responsible for sending communications to users.
 - For a given user ID, the gateway should resolve the user and content objects, generate the message, and send it to the user.

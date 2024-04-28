@@ -1,7 +1,19 @@
 # Preferences API
 
+<!-- TOC -->
+* [Preferences API](#preferences-api)
+  * [API Specification](#api-specification)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Configuration](#configuration)
+    * [Installing & Running Locally](#installing--running-locally)
+  * [Running the tests](#running-the-tests)
+  * [Deployment](#deployment)
+  * [Built With](#built-with)
+<!-- TOC -->
+
 This is an API built with Spring Boot to control the platforms preferences.
-1. Retry Policy - Specify how many times communications should be retried
+1. Retry Policy - Specify the configuration for retrying a failed workflow
 2. Gateway Timeout Duration - Specify how long to wait for a gateway to complete the request
 
 ## API Specification

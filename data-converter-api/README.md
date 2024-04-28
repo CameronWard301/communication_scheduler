@@ -1,5 +1,17 @@
 # Temporal Data Converted API
 
+<!-- TOC -->
+* [Temporal Data Converted API](#temporal-data-converted-api)
+  * [API Specification](#api-specification)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Configuration](#configuration)
+    * [Installing & Running Locally](#installing--running-locally)
+  * [Running the tests](#running-the-tests)
+  * [Deployment](#deployment)
+  * [Built With](#built-with)
+<!-- TOC -->
+
 This is an API built with Spring Boot to connect to the Temporal Web UI to decode payloads 
 
 ## API Specification

@@ -1,5 +1,14 @@
 # Stress Testing Tool (Experimental)
 
+<!-- TOC -->
+* [Stress Testing Tool (Experimental)](#stress-testing-tool-experimental)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Configuration](#configuration)
+    * [Installing & Running Locally](#installing--running-locally)
+  * [Built With](#built-with)
+<!-- TOC -->
+
 This tool can be configured to start a specified amount of communication workflows.
  - The tool will start the workflows and then wait for them to complete.
  - Once complete the tool will shut down 

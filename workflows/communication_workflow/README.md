@@ -1,4 +1,11 @@
 # Communication Workflow 
+
+<!-- TOC -->
+* [Communication Workflow](#communication-workflow-)
+  * [Design](#design)
+  * [Deployment](#deployment)
+<!-- TOC -->
+
 This is the communication workflow that processes communication requests and sends them to the appropriate gateway.  
 It has been uploaded to [Maven Central](https://central.sonatype.com/artifact/io.github.cameronward301.communication_scheduler.workflows/communication_workflow) and used in the [communication-worker](../../communication-worker) and [integration-tests](../../integration-tests) projects.
 
