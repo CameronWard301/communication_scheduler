@@ -7,7 +7,7 @@ It takes about 7-10 minutes to run all the tests successfully.
 > The integration tests read and write to the gateway database, and the Temporal cluster. Running this in production may modify user data and schedules if the tests are not configured correctly.
 
 
-Components tested:
+## Components tested:
 - [History API](../history-api)
 - [Auth API](../auth-api)
 - [Data Converter API](../data-converter-api)
@@ -50,16 +50,51 @@ Ensure that the following are running locally or deployed to a cluster using the
 - [Web Portal](../web-portal)
 - [Web Portal BFF](../web-portal-bff)
 - [Selenium Grid Hub](https://www.selenium.dev/documentation/grid/) and [Chrome Node](https://hub.docker.com/r/selenium/node-chrome)
-- [Mock Gateway](../mock-gateway) (optional)
+- [Mock Gateway](../mock-gateway)
 - [Email Gateway](../email-gateway) (optional)
 - [SMS Gateway](../sms-gateway) (optional)
-
-
-If the gateways have not yet been added to the gateway database, follow these steps:
-1. Add the Mock gateway to the gateway database using the gateway API or web portal
-    1. The gateway can have any name or description but the URL must be the cluster service address or the local address of the mock gateway: E.g. `http://cs-mock-gateway-service.default.svc.cluster.local:8080/mock/message`
-    2. Note down the UUID that is generated for the gateway
-2. Repeat step 1 for the email and SMS gateway if you are testing these features.
+[link](#add-using-mongodb-ui-simplest)
+#### Configure Gateway Database for Integration Tests
+If the gateways have not yet been added to the gateway database, follow these steps:  
+##### Add using MongoDB UI (simplest):
+1. Log into MongoDB online and navigate to the database: `communication-scheduling-platform`.
+2. Create a new collection called `gateway` if it doesn't exist
+3. Click on the `insert document` button and click the `{}` json format option
+4. Add the following documents to the collection one by one for the mock, email and sms gateway:
+5. ```json
+   {
+       "_id": "2cba1413-63b1-4c25-b13b-976c8794dd9b",
+       "endpointUrl": "http://cs-mock-gateway-service.default.svc.cluster.local:8080/mock/message",
+       "friendlyName": "Mock Gateway",
+       "description": "always returns successful message regardless of user-id",
+       "dateCreated": "2024-01-14T21:05:57.597846100Z",
+       "_class": "io.github.cameronward301.communication_scheduler.gateway_api.model.Gateway"
+   }
+   ``` 
+6. ```json
+   {
+       "_id": "5e9500ff-59ac-4e0f-8e86-9cf21b6e500d",
+       "endpointUrl": "https://cs-email-gateway-service.default.svc.cluster.local:8080/email/monthly-report/",
+       "friendlyName": "email gateway",
+       "description": "email gateway that sends monthly reports",
+       "dateCreated": "2024-01-11T23:20:22",
+       "_class": "io.github.cameronward301.communication_scheduler.gateway_api.model.Gateway"
+   }
+   ```
+7. ```json
+   {
+       "_id": "d2a3d6f8-2a67-471f-aa8f-75cbed07ebf9",
+       "endpointUrl": "https://cs-sms-gateway-service.default.svc.cluster.local:8080/sms/weekly-report/",
+       "friendlyName": "sms gateway",
+       "description": "sms gateway that sends weekly reports",
+       "dateCreated": "2024-01-11T23:20:22",
+       "_class": "io.github.cameronward301.communication_scheduler.gateway_api.model.Gateway"
+   }
+   ```  
+##### Add the Mock gateway to the gateway database using the gateway API or web portal (more complex):
+1. The gateway can have any name or description but the URL must be the cluster service address or the local address of the mock gateway: E.g. `http://cs-mock-gateway-service.default.svc.cluster.local:8080/mock/message`
+2. Note down the UUID that is generated for the gateway and set these as environment variables in the integration tests.
+3. Repeat step 1 for the email and SMS gateway if you are testing these features.
     1. The email gateway URL should look like: `https://cs-email-gateway-service.default.svc.cluster.local:8080/email/monthly-report/`
     2. The sms gateway URL should look like: `https://cs-sms-gateway-service.default.svc.cluster.local:8080/sms/weekly-report/`
 
