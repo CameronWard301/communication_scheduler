@@ -66,6 +66,7 @@ spec:
           image: busybox
           command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for temporal frontend; sleep 2; done;' ]
 ---
+{{ if .Values.email_gateway.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -152,7 +153,7 @@ spec:
                   key: gateway-api-key
                   name: {{ .Release.Name }}-communication-worker
             - name: "EMAIL_GATEWAY_SSL_KEY_STORE"
-              value: "{{ .Values.email_gateway.keyStorePath }}"
+              value: "/certs/email-gateway.p12"
             - name: "EMAIL_GATEWAY_SSL_KEY_STORE_PASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -169,6 +170,7 @@ spec:
           secret:
             secretName: {{ .Release.Name }}-email-gateway-ssl
 ---
+{{ end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -225,6 +227,7 @@ spec:
             - name: "ROOT_LOGGING"
               value: "{{ .Values.mock_gateway.rootLoggingLevel }}"
 ---
+{{ if .Values.sms_gateway.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -320,7 +323,7 @@ spec:
                   key: gateway-api-key
                   name: {{ .Release.Name }}-communication-worker
             - name: "SMS_GATEWAY_SSL_KEY_STORE"
-              value: "{{ .Values.sms_gateway.keyStorePath }}"
+              value: "/certs/sms-gateway.p12"
             - name: "SMS_GATEWAY_SSL_KEY_STORE_PASSWORD"
               value: "{{ .Values.env.sms_gateway.keyStorePassword }}"
           volumeMounts:
@@ -332,6 +335,7 @@ spec:
           secret:
             secretName: {{ .Release.Name }}-sms-gateway-ssl
 ---
+{{ end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -372,7 +376,7 @@ spec:
             - name: "JWKS_URI"
               value: https://{{ .Release.Name}}-auth-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/auth/.well-known/jwks.json
             - name: "GATEWAY_API_SSL_KEY_STORE"
-              value: "{{ .Values.gateway_api.keyStorePath }}"
+              value: "/certs/gateway-api.p12"
             - name: "GATEWAY_API_SSL_KEY_STORE_PASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -423,7 +427,7 @@ spec:
             - name: "JWKS_URI"
               value: https://{{ .Release.Name}}-auth-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/auth/.well-known/jwks.json
             - name: "PREFERENCES_API_SSL_KEY_STORE"
-              value: "{{ .Values.preferences_api.keyStorePath }}"
+              value: "/certs/preferences-api.p12"
             - name: "PREFERENCES_API_SSL_KEY_STORE_PASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -470,7 +474,7 @@ spec:
             - name: "AUTH_API_TOKEN_EXPIRATION"
               value: "{{ .Values.auth_api.tokenExpiration }}"
             - name: "AUTH_API_SSL_KEY_STORE"
-              value: "{{ .Values.auth_api.keyStorePath }}"
+              value: "/certs/auth-api.p12"
             - name: "AUTH_API_SSL_KEY_STORE_PASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -567,7 +571,7 @@ spec:
                   key: salt
                   name: {{ .Release.Name }}-data-converter-encryption
             - name: "SCHEDULE_API_SSL_KEY_STORE"
-              value: "{{ .Values.schedule_api.keyStorePath }}"
+              value: "/certs/schedule-api.p12"
             - name: "SCHEDULE_API_SSL_KEY_STORE_PASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -630,7 +634,7 @@ spec:
                   key: salt
                   name: {{ .Release.Name }}-data-converter-encryption
             - name: "HISTORY_API_SSL_KEY_STORE"
-              value: "{{ .Values.history_api.keyStorePath }}"
+              value: "/certs/history-api.p12"
             - name: "HISTORY_API_SSL_KEY_STORE_PASSWORD"
               valueFrom:
                 secretKeyRef:
