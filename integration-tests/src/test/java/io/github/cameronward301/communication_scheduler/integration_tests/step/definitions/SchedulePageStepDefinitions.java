@@ -245,6 +245,16 @@ public class SchedulePageStepDefinitions {
 
     @When("I press the select all button in the data grid")
     public void iPressTheSelectAllButtonInTheDataGrid() {
+        Wait<WebDriver> wait = new FluentWait<>(webDriver)
+                .withTimeout(Duration.ofSeconds(explicitWait))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(NoSuchElementException.class);
+
+        wait.until((driver -> {
+            driver.findElement(By.id("refresh-schedules")).click();
+            return ExpectedConditions.not(ExpectedConditions.textMatches(By.cssSelector(".MuiTablePagination-displayedRows"), Pattern.compile("0–0 of 0")));
+        }));
+
         webDriver.findElement(By.cssSelector(".MuiDataGrid-checkboxInput > .PrivateSwitchBase-input")).click();
     }
 
