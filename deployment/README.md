@@ -23,22 +23,3 @@ This section describes the steps to deploy the cloud resources to AWS, connect t
       3. `tctl admin cluster add-search-attributes --name gatewayId --type Keyword`
       4. `tctl admin cluster add-search-attributes --name scheduleId --type Keyword`
 
-# Enable GithubActionUser to access EKS:
-Run `kubectl edit configmap aws-auth --namespace kube-system` and add the following to the mapUsers section:
-```kubernetes helm
-apiVersion: v1
-data:
-  mapRoles: |
-    # might have other roles here
-  mapUsers: |
-    - userarn: <user arn>
-      username: <username>
-      groups:
-        - system:masters
-```
-
-# include
-- entrypoint env var to select spring profiles
-
-
-https://www.mongodb.com/docs/atlas/configure-api-access/#std-label-create-org-api-key

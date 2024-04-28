@@ -1,72 +1,114 @@
-# Communication Scheduling Platform
-## Design diagrams:
-* [System Context](#system-context-c1)
-* [System Containers](#system-containers-c2)
-* [System Components](#system-components-c3)
-* [Class Diagrams](#class-diagrams-c4)
-* [Activity Diagrams](#activity-diagrams)
-* [Sequence Diagrams](#sequence-diagrams)
-* [Database Schema](#database-schema)
-* [Interface Diagrams](#interface-diagrams)
-* [Deployment Diagram](Designs/Deployment/README.md)
+# Cloud Communication Scheduling Platform
 
-### System Context (C1):
-1. [System Context Diagram:](Designs/System%20Context/SystemContextDiagram.puml)  
-    ![systemContext](Designs/Images/System%20Context/SystemContextDiagram.svg)
+## Overview
+This project is a communication scheduling platform that allows business to schedule messages to be sent customers on a reoccurring basis.
+The platform is built using a microservices architecture and can be deployed on AWS with Kubernetes (EKS). 
 
-### System Containers (C2):
-2. [System Container Diagram:](Designs/System%20Context/SystemContainerDiagram.puml)  
-    ![systemContainerDiagram](Designs/Images/System%20Context/SystemContainerDiagram.svg)
+[Temporal.io](https://temporal.io/) is used to orchestrate the communication scheduling process using scheduled workflows.
+* Each user has a schedule that specifies the message type and when they receive a message
+* Businesses create "communication gateways" that receive a user ID from a scheduled workflow and generate the message to be sent to the user.
+* This allows for personalised messages to be generated as the gateway can interact with businesses internal user databases and usage data.
 
-### System Components (C3):
-3. [Communication API Component:](Designs/System%20Context/Components/CommunicationAPIComponent.puml)
-    ![ApiComponent](Designs/Images/System%20Context/Components/CommunicationAPIComponent.svg)
+## Features
+* Terragrunt and Helm charts for easy deployment and configuration
+* Scalable solution leveraging Kubernetes and EKS
+* Uses [Temporal](https://temporal.io) (a fault-tolerant and scalable orchestration engine) to manage the scheduling of messages and ensure messages are always delivered.
+  * Retry policies can be configured to send messages again if they fail
+* Provided [gateway library](gateway-library) makes it easy to develop your own gateways
+  * Can choose any type of delivery method, email, SMS, push notification etc
+  * Integrate with your own internal systems to generate personalised messages
+  * See the reference implementations of gateways in the [gateway library](gateway-library/README.md#getting-started)
+* Secure platform leveraging SSL between microservices, JWT tokens for API authentication and encryption of Temporal payloads
+* API endpoints to enable automation of creating, updating and deleting schedules and gateways
+  * Includes bulk operations to remove or update multiple schedules at once.
+* A [web portal](web-portal) to manage and monitor platform performance and usage
+  * Interact with schedules and gateways
+  * View communication history
+  * View platform usage statistics
+  * Built using React and Material-UI
+* Cost-effective solution using spot instances for non-critical services
+* Automatic integration testing to ensure the platform is working as expected when updating the cluster or run on a regular basis
+* Reference CI/CD pipelines using GitHub actions to automate deployment and image building.
 
-4. [Worker Component:](Designs/System%20Context/Components/WorkerComponent.puml)  
-    ![workerComponent](Designs/Images/System%20Context/Components/WorkerComponent.svg)
+### Web Portal Screenshots:
+#### Home Page:
+![portal-home](Designs/Images/Web Portal/portal-home.png)
+#### History Page:
+* View previously sent communications.
+* Filter by status, gateway, schedule ID and user ID
 
-### Class Diagrams (C4):
-5. [Worker Component Class Diagram](Designs/System%20Context/Components/CommunicationWorkflowClassDiagram.puml)  
-    ![Worker Component Class Diagram](Designs/Images/System%20Context/Components/CommunicationWorkflowClassDiagram.svg)
+![portal-history](Designs/Images/Web Portal/portal-history.png)
+#### Schedules Page:
+* View, create and update schedules. Filter by gateway, schedule ID and user ID
+* Carry out bulk operations to update or delete multiple schedules at once  
 
-### Activity Diagrams:
-6. [Send Communication Workflow](Designs/Activity%20Diagrams/SendCommunicationWorkflow.puml)  
-    ![Send Communication Workflow](Designs/Images/Activity%20Diagrams/SendCommunicationWorkflow.svg)
+![portal-schedules](Designs/Images/Web Portal/portal-schedules.png)
 
-7. [GetPreferencesActivity](Designs/Activity%20Diagrams/GetPreferencesActivity.puml)  
-    ![GetPreferencesActivity](Designs/Images/Activity%20Diagrams/GetPreferencesActivity.svg)
+* Can update the gateway, schedule state or remove multiple schedules at once using bulk actions: 
 
-8. [GetGatewayActivity](Designs/Activity%20Diagrams/GetGatewayActivity.puml)  
-    ![GatGatewayActivity](Designs/Images/Activity%20Diagrams/GetGatewayActivity.svg)
+![portal-bulk-actions](Designs/Images/Web Portal/portal-bulk-actions.png)
 
-9. [SendMessageToGatewayActivity](Designs/Activity%20Diagrams/SendMessageToGatewayActivity.puml)  
-    ![SendMessageToGatewayActivity](Designs/Images/Activity%20Diagrams/SendMessageToGatewayActivity.svg)
+#### Gateways Page:
+* View, create and update gateways. Filter by gateway ID, name, description and endpoint URL
 
-### Sequence Diagrams:
-10. [Create New Workflow:](Designs/Sequence%20Diagrams/CreateNewSchedule.puml)  
-This describes a business user using the web portal to manually create a new communication schedule between a gateway and a user.  
-    ![Create New Workflow](Designs/Images/Sequence%20Diagrams/CreateNewSchedule.svg)
+![portal-gateways](Designs/Images/Web Portal/portal-gateways.png)
 
-11. [Send Communication:](Designs/Sequence%20Diagrams/SendCommunication.puml) This demonstrates the messages transferred between temporal, the workers, the database and the communication gateway when executing a workflow.  
-    ![Send Communication](Designs/Images/Sequence%20Diagrams/SendCommunication.svg)
+#### Preferences Page:
+* View and update the platform preferences
+* Specify the retry policy and gateway timeout parameters
 
-12. [Handle Send Communication Activity Error:](Designs/Sequence%20Diagrams/SendCommunicationHandleError.puml)  
-This diagram demonstrates how temporal can retry an activity if one of the activities are not executing correctly 
-    ![HandleActivityErrorSendCommunication](Designs/Images/Sequence%20Diagrams/SendCommunicationHandleError.svg)
-13. [Invoke Gateway:](Designs/Sequence%20Diagrams/InvokeGateway.puml)
-The worker invokes the gateway to send a message to a user.
-    ![Invoke Gateway](Designs/Images/Sequence%20Diagrams/InvokeGateway.svg)
+![preferences-page.png](Designs/Images/Web Portal/portal-preferences.png)
 
-### Database Schema:
-14. [GatewayDatabase](Designs/Database/gatewayDbSchema.puml)  
-    ![GatewayDatabase](Designs/Images/Database/GatewayDatabaseSchema.svg)
+#### Monitoring Page:
+* View platform usage statistics
 
-### Interface Diagrams:
-15. [Communication APIs](Designs/System%20Context/Components/ApiInterfaces.puml)  
-    ![CommunicationAPIs](Designs/Images/System%20Context/Components/ApiInterfaces.svg)
+![portal-monitoring.png](Designs/Images/Web Portal/portal-monitoring.png) 
 
-16. [Gateway References](Designs/System%20Context/Components/GatewayInterfaces.puml)  
-    ![GatewayReferences](Designs/Images/System%20Context/Components/GatewayInterfaces.svg)
+## Example use cases:
+To illustrate the project’s potential, the case studies below highlight how companies like Vodafone and banks could leverage scheduled communications to their benefit.
+The case studies serve as an example of how the application developed in this project can be utilised to help businesses enhance customer relationships and offer better services.
 
-17. [Worker Interfaces](Designs/System%20Context/Components/WorkerInterfaces.puml)  
-    ![WorkerInterfaces](Designs/Images/System%20Context/Components/WorkerInterfaces.svg)
+### Vodafone Example:
+Vodafone provides internet services for mobile and home broadband. For mobile devices they offer an additional security package called “Secure Net” to protect customers from ID theft, viruses, malware, and secures their personal information. Secure Net uses “smart alerts” to notify customers when their information is compromised. 
+This project aims to create an application that would enable Vodafone to add extra features to services like Secure Net. Providing Vodafone with a scheduled communication platform, could offer customers usage statistics. For example, a customer could receive a weekly or monthly SMS message or email that summarises how many threats Secure Net has blocked. The customer could specify which day of the week and time they want the alerts to be sent and have the option to easily turn off all or some notifications. This would improve customer relationships and potentially keep high customer engagement with a product like Secure Net if customers can see that the service is actively protecting them. 
+
+In this context, Vodafone would implement an SMS gateway and an email gateway that generates a message containing a customer’s Secure Net statistics. These gateways would integrate into their existing customer databases and notification delivery mechanisms. They could then leverage this application to handle scheduling each customer’s Secure Net notification preferences while ensuring each notification is reliably delivered. Ensuring notifications are delivered successfully is challenging. What happens if one service is not responding? This project aims to solve the deliverability challenges by using retry mechanisms to ensure successful delivery and provide a resilient solution.
+
+
+### Banking Example:
+In the financial industry customers often receive banking statements on a reoccurring basis. From my own experience, I have not been able to choose the day of the week, month or time these are delivered. A bank could implement SMS and email gateways and offer customers choices about where their statement is delivered to and when. Banks could then rely on this application’s retry mechanisms to be confident that communications will not get lost and would always be delivered. This provides customers with greater control and options over their notifications, improving customer relationships. It also enables businesses to increase their revenue streams by offering tailored communications for new or existing services.
+
+## Requirements:
+* AWS account (Free tier is not sufficient)
+* MongoDB Atlas (Free tier is sufficient)
+
+## Repository Structure:
+Find more information about each component in their respective README files.  
+* [Auth API](auth-api) - Generates JWT tokens for use with the other APIs
+* [Designs](Designs) - Contains context, sequence, deployment and activity diagrams explaining the project in more detail
+* [Communication Worker](communication-worker) - Worker that polls the Temporal task queue and sends triggers gateways to send messages
+* [Data Converter API](data-converter-api) - Use with the Temporal UI to decode the encrypted payloads
+* [Deployment](deployment) - Contains the Terragrunt, Helm and Terraform projects to deploy the platform
+* [Email Gateway](email-gateway) - Example gateway implementation that sends an email to a user
+* [Gateway API](gateway-api) - API to manage the gateways in MongoDB
+* [Gateway Library](gateway-library) - The library that all gateways must implement, contains implementation walkthroughes.
+* [History API](history-api) - API to stop Temporal workflows and retrieve past and running workflows from Temporal
+* [Integration Tests](integration-tests) - Integration tests for the platform, useful to test components in isolation or the whole platform
+* [Mock Gateway](mock-gateway) - Example gateway that always returns a successful response to the worker to complete the worker (regardless of the user ID used)
+* [Preferences API](preferences-api) - API to manage the platform preferences (stored as a Kubernetes config map)
+* [Schedule API](schedule-api) - API to manage the schedules in Temporal
+* [SMS Gateway](sms-gateway) - Example gateway implementation that sends an SMS to a user
+* [Stress Tests](stress-test) - Starts a large number of workflows using the Mock gateway to test the platform's scalability
+* [Web Portal](web-portal) - React web portal to manage and monitor the platform
+* [Web Portal BFF API](web-portal-bff) - Backend for the web portal, interacts with the other APIs to provide data to the web portal
+
+## Getting Started:
+- Follow the instructions in the [deployment](deployment/README.md) folder to deploy and configure the platform
+- Use the [gateway library](gateway-library/README.md) to create your own gateways
+- Once deployed port forward the web portal service to your local machine and use the web portal to manage and monitor the platform
+  - Using software like [Lens](https://k8slens.dev/) can also be useful to monitor the cluster and manage port forwarding services
+  - Alternatively, you can port forward the web service using this kubectl command: `kubectl port-forward svc/cs-web-portal-service 8080:3000`
+  - Then access the web portal at `https://localhost:8080`
+- Use the [Temporal UI](https://docs.temporal.io/docs/ui-quick-install) to monitor the workflows and schedules in Temporal as an extra debugging tool
+  - You can also port forward the service to your local machine
+  - Connect the data converter API ([see readme](data-converter-api/README.md#getting-started)) to the Temporal UI to decode the payloads
