@@ -1,4 +1,22 @@
 # Cloud Communication Scheduling Platform
+<!-- TOC -->
+* [Cloud Communication Scheduling Platform](#cloud-communication-scheduling-platform)
+  * [Overview](#overview)
+  * [Features](#features)
+    * [Web Portal Screenshots:](#web-portal-screenshots)
+      * [Home Page:](#home-page)
+      * [History Page:](#history-page)
+      * [Schedules Page:](#schedules-page)
+      * [Gateways Page:](#gateways-page)
+      * [Preferences Page:](#preferences-page)
+      * [Monitoring Page:](#monitoring-page)
+  * [Example use cases:](#example-use-cases)
+    * [Vodafone Example:](#vodafone-example)
+    * [Banking Example:](#banking-example)
+  * [Requirements:](#requirements)
+  * [Repository Structure:](#repository-structure)
+  * [Getting Started:](#getting-started)
+<!-- TOC -->
 
 ## Overview
 This project is a communication scheduling platform that allows business to schedule messages to be sent customers on a reoccurring basis.
@@ -32,37 +50,37 @@ The platform is built using a microservices architecture and can be deployed on 
 
 ### Web Portal Screenshots:
 #### Home Page:
-![portal-home](Designs/Images/Web Portal/portal-home.png)
+![portal-home](Designs/Images/Web%20Portal/portal-home.png)
 #### History Page:
 * View previously sent communications.
 * Filter by status, gateway, schedule ID and user ID
 
-![portal-history](Designs/Images/Web Portal/portal-history.png)
+![portal-history](Designs/Images/Web%20Portal/portal-history.png)
 #### Schedules Page:
 * View, create and update schedules. Filter by gateway, schedule ID and user ID
 * Carry out bulk operations to update or delete multiple schedules at once  
 
-![portal-schedules](Designs/Images/Web Portal/portal-schedules.png)
+![portal-schedules](Designs/Images/Web%20Portal/portal-schedules.png)
 
 * Can update the gateway, schedule state or remove multiple schedules at once using bulk actions: 
 
-![portal-bulk-actions](Designs/Images/Web Portal/portal-bulk-actions.png)
+![portal-bulk-actions](Designs/Images/Web%20Portal/portal-bulk-actions.png)
 
 #### Gateways Page:
 * View, create and update gateways. Filter by gateway ID, name, description and endpoint URL
 
-![portal-gateways](Designs/Images/Web Portal/portal-gateways.png)
+![portal-gateways](Designs/Images/Web%20Portal/portal-gateways.png)
 
 #### Preferences Page:
 * View and update the platform preferences
 * Specify the retry policy and gateway timeout parameters
 
-![preferences-page.png](Designs/Images/Web Portal/portal-preferences.png)
+![preferences-page.png](Designs/Images/Web%20Portal/portal-preferences.png)
 
 #### Monitoring Page:
 * View platform usage statistics
 
-![portal-monitoring.png](Designs/Images/Web Portal/portal-monitoring.png) 
+![portal-monitoring.png](Designs/Images/Web%20Portal/portal-monitoring.png) 
 
 ## Example use cases:
 To illustrate the project’s potential, the case studies below highlight how companies like Vodafone and banks could leverage scheduled communications to their benefit.
@@ -81,6 +99,11 @@ In the financial industry customers often receive banking statements on a reoccu
 ## Requirements:
 * AWS account (Free tier is not sufficient)
 * MongoDB Atlas (Free tier is sufficient)
+* [Helm](https://helm.sh/docs/intro/install/)
+* [Terragrunt](https://terragrunt.gruntwork.io/docs/getting-started/install/)
+* [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+* [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+* [Lens](https://k8slens.dev/) (Optional but recommended)
 
 ## Repository Structure:
 Find more information about each component in their respective README files.  
