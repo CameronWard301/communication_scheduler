@@ -19,7 +19,6 @@ temporal:
   postgresql:
     enabled: false
 
-
   prometheus:
     enabled: true
     nodeExporter:
@@ -130,24 +129,24 @@ communication_worker:
     namespace: default
 
 email_gateway:
+  enabled: true
   repository: cameronward/email-gateway
   tag: latest
   region: eu-west-1
   loggingLevel: DEBUG
   rootLoggingLevel: DEBUG
   profile: ssl
-  keyStorePath: /certs/email-gateway.p12
   corsEnabled: false
   csrfEnabled: false
 
 sms_gateway:
+  enabled: true
   repository: cameronward/sms-gateway
+  tag: latest
   twilioPollingInterval: 5
   maximumPollingAttempts: 10
-  tag: latest
   region: eu-west-1
   profile: ssl
-  keyStorePath: /certs/sms-gateway.p12
   loggingLevel: DEBUG
   corsEnabled: false
   csrfEnabled: false
@@ -166,7 +165,6 @@ gateway_api:
   tag: latest
   region: eu-west-1
   loggingLevel: info
-  keyStorePath: /certs/gateway-api.p12
   verifyHostnames: false
   profile: ssl
 
@@ -178,17 +176,14 @@ preferences_api:
   profile: ssl
   verifyHostnames: false
   clusterNamespace: default
-  keyStorePath: /certs/preferences-api.p12
 
 auth_api:
   keyId: "communication-auth-api"
   repository: cameronward/auth-api
   tokenExpiration: 86400
   tag: latest
-  region: eu-west-1
   loggingLevel: INFO
   profile: ssl
-  keyStorePath: /certs/auth-api.p12
 
 data_converter_api:
   repository: cameronward/data-converter-api
@@ -199,7 +194,6 @@ schedule_api:
   repository: cameronward/schedule-api
   tag: latest
   loggingLevel: info
-  keyStorePath: /certs/schedule-api.p12
   profile: ssl
   temporalNamespace: default
   verifyHostnames: false
@@ -208,7 +202,6 @@ history_api:
   repository: cameronward/history-api
   tag: latest
   loggingLevel: info
-  keyStorePath: /certs/history-api.p12
   profile: ssl
   temporalNamespace: default
   verifyHostnames: false
@@ -216,7 +209,6 @@ history_api:
 web_bff:
   repository: cameronward/cs-web-portal-bff
   tag: latest
-  port: "3000"
   sslVerification: "false"
   limitPeriodSeconds: "120"
   limitNumberRequests: "1000"
@@ -224,19 +216,23 @@ web_bff:
 web_portal:
   repository: cameronward/cs-web-portal
   tag: latest
-  port: "3000"
   verifyHttps: "false"
-  bffUri: "/v1/bff"
   environment: "dev"
 
 integration_tests:
+  enableOnUpdate: false
+  enableOnSchedule: false # Setting both to true will run cause conflicts between the tests.
+  cronSchedule: "0 */2 * * *" # Every 2 hours
   repository: cameronward/cs-integration-tests
   tag: latest
   temporalNamespace: default
   kubernetesNamespace: default
   loggingLevel: INFO
-  filterExpression: "@EmailGateway or @GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI or @MockGateway or @ScheduleAPI or @HistoryAPI or @WebPortal"
-  #filterExpression: "@WebPortal"
+  filterExpression: "@GatewayAPI or @PreferencesAPI or @InvalidGateway or @DataConverterAPI or @MockGateway or @ScheduleAPI or @HistoryAPI or @WebPortal"
+  #filterExpression: "@EmailGateway or @SmsGateway"
+  mockGatewayId: "2cba1413-63b1-4c25-b13b-976c8794dd9b"
+  smsGatewayId: "d2a3d6f8-2a67-471f-aa8f-75cbed07ebf9"
+  emailGatewayId: "5e9500ff-59ac-4e0f-8e86-9cf21b6e500d"
   selenium:
     implicitWait: 5
     explicitWait: 10
