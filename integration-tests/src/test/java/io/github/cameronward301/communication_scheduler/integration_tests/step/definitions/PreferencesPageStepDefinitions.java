@@ -98,9 +98,11 @@ public class PreferencesPageStepDefinitions {
         assertThat(driver.findElement(By.id("backoff-coefficient-new-value")).getText(), is(fields.asMaps().get(0).get("backoffCoefficient")));
 
         assertThat(driver.findElement(By.id("initial-interval-confirm-table-cell")).getText(), is("Initial Interval"));
+        wait.until(ExpectedConditions.textMatches(By.id("initial-interval-new-value"), Pattern.compile(fields.asMaps().get(0).get("initialInterval"))));
         assertThat(driver.findElement(By.id("initial-interval-new-value")).getText(), is(fields.asMaps().get(0).get("initialInterval")));
 
         assertThat(driver.findElement(By.id("maximum-interval-confirm-table-cell")).getText(), is("Maximum Interval"));
+        wait.until(ExpectedConditions.textMatches(By.id("maximum-interval-new-value"), Pattern.compile(fields.asMaps().get(0).get("maximumInterval"))));
         assertThat(driver.findElement(By.id("maximum-interval-new-value")).getText(), is(fields.asMaps().get(0).get("maximumInterval")));
 
         assertThat(driver.findElement(By.id("start-to-close-confirm-table-cell")).getText(), is("Start To Close Timeout"));

@@ -64,7 +64,6 @@ public class GatewayFilterComponentStepDefinitions {
             return driver.findElement((By.cssSelector(".MuiDataGrid-cell:nth-child(3)")));
         }));
         wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(3)"), Pattern.compile(existingGateway.getId())));
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".MuiDataGrid-row:nth-child(1) > .MuiDataGrid-cellCheckbox > .MuiButtonBase-root > .PrivateSwitchBase-input")));
-        webDriver.findElement(By.cssSelector(".MuiDataGrid-row:nth-child(1) > .MuiDataGrid-cellCheckbox > .MuiButtonBase-root > .PrivateSwitchBase-input")).click();
+        webDriver.findElement(By.cssSelector(".MuiDataGrid-cellCheckbox .PrivateSwitchBase-input")).click();
     }
 }

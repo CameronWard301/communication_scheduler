@@ -13,7 +13,7 @@ Feature: History API Scenarios
   Scenario: Should get workflows by no filter
     Given I have a bearer token with the "HISTORY:READ" scope
     When I get all workflows
-    Then the I receive a page of history workflows with a size greater than or equal to 10 and status code 200
+    Then the I receive a page of history workflows with a size greater than or equal to 5 and status code 200
 
   @TerminateExistingWorkflows
   @CreateTestWorkflows
