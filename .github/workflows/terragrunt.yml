@@ -2,11 +2,12 @@
 name: 'Terragrunt GitHub Actions'
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - deployment/terraform/**
-      - deployment/terragrunt/**
-      - .github/workflows/terragrunt.yml
+  # Uncomment below for automatic pipeline when pushing to helm directory
+  # push:
+  #  paths:
+  #    - deployment/terraform/**
+  #    - deployment/terragrunt/**
+  #    - .github/workflows/terragrunt.yml
 
 env:
   tf_version: '1.6.3'

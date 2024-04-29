@@ -2,10 +2,11 @@
 name: 'Helm Deployments'
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - deployment/helm/**
-      - .github/workflows/helm.yml
+  # Uncomment below for automatic pipeline when pushing to helm directory
+  # push:
+  #  paths:
+  #    - deployment/helm/**
+  #    - .github/workflows/helm.yml
 
 jobs:
   helm-deploy:
