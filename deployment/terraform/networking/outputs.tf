@@ -17,3 +17,8 @@ output "public_subnet_1b_id" {
 output "vpc_id" {
   value = aws_vpc.main.id
 }
+
+output "eip_public_ip" {
+  value = aws_eip.default.public_ip
+  description = "Elastic IP address allocated for use in white listing MongoDB Atlas IP addresses"
+}

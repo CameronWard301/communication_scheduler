@@ -12,7 +12,11 @@ variable "mongo_public_key" {
 variable "mongo_private_key" {
   type = string
   description = "Your MongoDB private key, see: https://www.mongodb.com/docs/atlas/configure-api-access/#grant-programmatic-access-to-services"
+}
 
+variable "aws_EIP_public_ip" {
+  type = string
+  description = "The AWS Elastic IP address to whitelist for MongoDB access"
 }
 
 //Optional Variables:
