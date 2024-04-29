@@ -18,8 +18,10 @@ This section describes the steps to deploy the cloud resources to AWS, connect t
 2. Configure and deploy the resources to the Kubernetes cluster using the provided [Helm chart](helm)
    1. Use a tool like [Lens](https://k8slens.dev/) to monitor the deployment.
    2. Once deployed, exec into the `temporal-admintools` pod and run the following commands to create the required search attributes:
-      1. `tctl namespace register default`
+      1. `tctl namespace register default` (It may already exist, so this command may fail, that's fine.)
       2. `tctl admin cluster add-search-attributes --name userId --type Keyword`
       3. `tctl admin cluster add-search-attributes --name gatewayId --type Keyword`
       4. `tctl admin cluster add-search-attributes --name scheduleId --type Keyword`
+      5. One created, connected clients such as the schedule API take a few minutes to register the new search attributes.
+         1. You can force the registration by restarting the schedule and history API deployments.
 
