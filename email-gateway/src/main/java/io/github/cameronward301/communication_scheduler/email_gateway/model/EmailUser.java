@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
 
+/**
+ * Example user entity that represents a businesses customer model
+ */
 @Getter
 @Setter
 @Builder

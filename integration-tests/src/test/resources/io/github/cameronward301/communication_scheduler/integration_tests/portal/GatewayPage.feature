@@ -20,6 +20,7 @@ Feature: Gateway Web portal page
     Given I navigate to "/gateways"
     When I set the "gateway-name-filter-input" to be the gateway name
     And I press enter on the field with id "gateway-name-filter-input"
+    And I click by id on "refresh-gateways-button"
     Then I should see the gateway with the name
 
   @MongoDbSetupEntity
@@ -28,6 +29,7 @@ Feature: Gateway Web portal page
     Given I navigate to "/gateways"
     When I set the "gateway-description-filter-input" to be the gateway description
     And I click by id on "gateway-description-filter-apply-button"
+    And I click by id on "refresh-gateways-button"
     Then I should see the gateway with the description
 
   @MongoDbSetupEntity
@@ -36,6 +38,7 @@ Feature: Gateway Web portal page
     Given I navigate to "/gateways"
     When I set the "gateway-url-filter-input" to be the gateway endpoint url
     And I click by id on "gateway-url-filter-apply-button"
+    And I click by id on "refresh-gateways-button"
     Then I should see the gateway with the endpoint url
 
   @MongoDbSetupEntity
@@ -46,6 +49,7 @@ Feature: Gateway Web portal page
     And I set the "gateway-description-filter-input" to be the gateway description
     And I set the "gateway-url-filter-input" to be the gateway endpoint url
     And I click by id on "gateway-url-filter-apply-button"
+    And I click by id on "refresh-gateways-button"
     Then I should see the gateway with the name, description and endpoint url
 
   Scenario: User should be able to reset filters
@@ -104,6 +108,7 @@ Feature: Gateway Web portal page
     Given I navigate to "/gateways"
     And I set the "gateway-id-filter-input" to be the gateway id
     And I press enter on the field with id "gateway-id-filter-input"
+    And I click by id on "refresh-gateways-button"
     And I click the modify gateway button
     When I set the "gateway-url-input" field to be ""
     Then the button with id "confirm-edit-button" should be disabled

@@ -20,7 +20,7 @@ public class GatewayApiKeyExtractor {
 
     private static final String HEADER = "x-worker-api-key";
 
-    public GatewayApiKeyExtractor(@Value("${worker.apiKey}") String gatewayApiKey) {
+    public GatewayApiKeyExtractor(@Value("${io.github.cameronward301.communication-scheduler.gateway-library.worker.apiKey}") String gatewayApiKey) {
         this.gatewayApiKey = gatewayApiKey;
     }
 

@@ -5,6 +5,9 @@ import io.github.cameronward301.communication_scheduler.email_gateway.properties
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
+/**
+ * Creates a sendgrid bean for sending emails
+ */
 @AutoConfiguration
 public class EmailGatewayConfiguration {
 

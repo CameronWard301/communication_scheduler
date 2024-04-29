@@ -10,15 +10,35 @@ participant "Temporal" as temporal
 autonumber
 
 bu -> wmp: Clicks create new Schedule
+activate wmp #4793AF
+
 wmp -> pbff: Create Schedule Request
+activate pbff #4793AF
+
 pbff -> cAPI: Create Schedule Request
+activate cAPI #4793AF
+
 cAPI -> aAPI: Get public JWK
+activate aAPI #4793AF
+
 aAPI --> cAPI: return JWK
+deactivate aAPI
+
 cAPI -> cAPI: Verify JWT with JWK
+
 cAPI -> temporal: Create Schedule
+activate temporal #4793AF
+
 temporal --> cAPI: Creation Result
+deactivate temporal
+
 cAPI --> pbff: Creation Result
+deactivate cAPI
+
 pbff --> wmp: Creation Result
+deactivate pbff
+
 wmp --> bu: Creation Result Displayed
+deactivate wmp
 
 @enduml

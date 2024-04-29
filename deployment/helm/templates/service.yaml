@@ -1,3 +1,4 @@
+{{ if .Values.email_gateway.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -12,6 +13,7 @@ spec:
       targetPort: 8080
   type: ClusterIP
 ---
+{{ end }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -26,6 +28,7 @@ spec:
       targetPort: 8080
   type: ClusterIP
 ---
+{{ if .Values.sms_gateway.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -40,6 +43,7 @@ spec:
       targetPort: 8080
   type: ClusterIP
 ---
+{{ end }}
 apiVersion: v1
 kind: Service
 metadata:

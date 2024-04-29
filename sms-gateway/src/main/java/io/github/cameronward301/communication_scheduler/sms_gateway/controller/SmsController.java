@@ -15,6 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Controller for handling SMS gateway requests
+ * I recommend a separate controller for each time a different content delivery service is used
+ */
 @Controller
 @RequestMapping("/sms/weekly-report")
 public class SmsController implements GatewayController<SmsUser, UserUsage> {

@@ -1,0 +1,56 @@
+@startuml Get a schedule by ID using the BFF API;
+|WP| Web Portal
+start
+
+:Send scheduleId and
+auth token to BFF API;
+
+|BFF| BFF API
+:Call Schedule API to get
+the schedule by ID;
+
+|SAPI| Schedule API
+:Return result;
+
+|BFF| BFF API
+if (result code is not 2xx?) is (yes) then
+    if (response code is present?) is (yes) then
+        :Forward response
+        code and message to the portal;
+      else (no)
+        :Send 500 error to the portal;
+      endif
+
+
+else (no)
+  :Call the Gateway API
+    to get the gateway by ID;
+    |GAPI| Gateway API
+    :Return result;
+
+    |BFF| BFF API
+    if (result code is 2xx?) is (yes) then
+    else (no)
+      :Set the gateway to be a blank object
+      with friendly name set to "Gateway not found";
+    endif
+
+    |BFF| BFF API
+    :Convert the Schedule to a ClientSchedule;
+    :Format date strings;
+    :Set response code to be the
+    same as the schedule API result;
+    :Return the ClientSchedule BFF response;
+
+
+endif
+
+|WP| Web Portal
+:Display the schedule;
+
+
+
+
+
+stop
+@enduml

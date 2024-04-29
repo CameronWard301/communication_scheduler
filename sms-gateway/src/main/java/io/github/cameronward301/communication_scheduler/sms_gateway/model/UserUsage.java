@@ -9,6 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents the usage statistics for a user using some business product/service
+ */
 @Getter
 @Builder
 @Entity

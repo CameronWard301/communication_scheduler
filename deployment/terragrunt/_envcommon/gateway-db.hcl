@@ -37,6 +37,9 @@ locals {
   }
 }
 
+dependency "networking" {
+  config_path = "${get_terragrunt_dir()}/../networking"
+}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # MODULE PARAMETERS
@@ -44,7 +47,9 @@ locals {
 # environments.
 # ---------------------------------------------------------------------------------------------------------------------
 inputs = {
-  account_name        = local.env
-  region              = local.region_vars.locals.aws_region
   default_tags        = local.env_tags
+  development_environment_tag = local.env
+  mongo_db_project_name = "CSP"
+  mongo_db_region_name = replace(upper(local.region_vars.locals.aws_region), "-", "_")
+  aws_EIP_public_ip = dependency.networking.outputs.eip_public_ip
 }

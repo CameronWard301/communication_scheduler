@@ -1,3 +1,4 @@
+{{ if .Values.integration_tests.enableOnUpdate }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -14,6 +15,12 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: "MOCK_GATEWAY_ID"
+              value: "{{ .Values.integration_tests.mockGatewayId }}"
+            - name: "SMS_GATEWAY_ID"
+              value: "{{ .Values.integration_tests.smsGatewayId }}"
+            - name: "EMAIL_GATEWAY_ID"
+              value: "{{ .Values.integration_tests.emailGatewayId }}"
             - name: "WEB_PORTAL_ADDRESS"
               value: "https://{{ .Release.Name}}-web-portal-service.{{.Release.Namespace }}.svc.cluster.local:3000"
             - name: "WEB_PORTAL_REMOTE_WEB_DRIVER_URL"
@@ -44,6 +51,8 @@ spec:
               value: "{{ .Values.integration_tests.temporalNamespace }}"
             - name: "KUBERNETES_NAMESPACE"
               value: "{{ .Values.integration_tests.kubernetesNamespace }}"
+            - name: "LOGGING_LEVEL"
+              value: "{{ .Values.integration_tests.loggingLevel }}"
             - name: "MONGODB_DATABASE_NAME"
               valueFrom:
                 secretKeyRef:
@@ -100,3 +109,122 @@ spec:
           command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-web-portal-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for web-portal; sleep 2; done;' ]
       restartPolicy: Never
   backoffLimit: 0
+---
+{{ end }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: integration-tests
+spec:
+  schedule: {{ .Values.integration_tests.cronSchedule }}
+  concurrencyPolicy: Forbid
+  {{ if .Values.integration_tests.enableOnSchedule }}
+  suspend: false
+  {{ else }}
+  suspend: true
+  {{ end }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: {{ .Release.Name }}-integration-tests
+              image: "{{ .Values.integration_tests.repository }}:{{ .Values.integration_tests.tag }}"
+              imagePullPolicy: Always
+              ports:
+                - containerPort: 8080
+              env:
+                - name: "MOCK_GATEWAY_ID"
+                  value: "{{ .Values.integration_tests.mockGatewayId }}"
+                - name: "SMS_GATEWAY_ID"
+                  value: "{{ .Values.integration_tests.smsGatewayId }}"
+                - name: "EMAIL_GATEWAY_ID"
+                  value: "{{ .Values.integration_tests.emailGatewayId }}"
+                - name: "WEB_PORTAL_ADDRESS"
+                  value: "https://{{ .Release.Name}}-web-portal-service.{{.Release.Namespace }}.svc.cluster.local:3000"
+                - name: "WEB_PORTAL_REMOTE_WEB_DRIVER_URL"
+                  value: "http://{{ .Release.Name}}-selenium-hub-service.{{.Release.Namespace }}.svc.cluster.local:4444/wd/hub"
+                - name: "WEB_PORTAL_ENVIRONMENT"
+                  value: "server"
+                - name: "WEB_PORTAL_IMPLICIT_WAIT"
+                  value: "{{ .Values.integration_tests.selenium.implicitWait }}"
+                - name: "WEB_PORTAL_EXPLICIT_WAIT"
+                  value: "{{ .Values.integration_tests.selenium.explicitWait }}"
+                - name: "TEST_FILTER_EXPRESSION"
+                  value: "{{ .Values.integration_tests.filterExpression }}"
+                - name: "HISTORY_API_ADDRESS"
+                  value: "https://{{ .Release.Name}}-history-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/workflow"
+                - name: "SCHEDULE_API_ADDRESS"
+                  value: "https://{{ .Release.Name}}-schedule-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/schedule"
+                - name: "PREFERENCES_API_ADDRESS"
+                  value: "https://{{ .Release.Name}}-preferences-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/preferences"
+                - name: "GATEWAY_API_ADDRESS"
+                  value: "https://{{ .Release.Name}}-gateway-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/gateway"
+                - name: "DATA_CONVERTER_API_ADDRESS"
+                  value: "http://{{ .Release.Name}}-data-converter-api-service.{{.Release.Namespace }}.svc.cluster.local:8080/codec"
+                - name: "AUTH_API_ADDRESS"
+                  value: "https://{{ .Release.Name}}-auth-api-service.{{.Release.Namespace}}.svc.cluster.local:8080/auth"
+                - name: "TEMPORAL_HOST"
+                  value: "{{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local:7233"
+                - name: "TEMPORAL_NAMESPACE"
+                  value: "{{ .Values.integration_tests.temporalNamespace }}"
+                - name: "KUBERNETES_NAMESPACE"
+                  value: "{{ .Values.integration_tests.kubernetesNamespace }}"
+                - name: "LOGGING_LEVEL"
+                  value: "{{ .Values.integration_tests.loggingLevel }}"
+                - name: "MONGODB_DATABASE_NAME"
+                  valueFrom:
+                    secretKeyRef:
+                      key: mongo-db-name
+                      name: {{ .Release.Name }}-gateway-api
+                - name: "MONGODB_CONNECTION_STRING"
+                  valueFrom:
+                    secretKeyRef:
+                      key: mongo-db-connection-string
+                      name: {{ .Release.Name }}-gateway-api
+                - name: "ENCRYPTION_PASSWORD"
+                  valueFrom:
+                    secretKeyRef:
+                      key: password
+                      name: {{ .Release.Name}}-data-converter-encryption
+                - name: "ENCRYPTION_SALT"
+                  valueFrom:
+                    secretKeyRef:
+                      key: salt
+                      name: {{ .Release.Name}}-data-converter-encryption
+          initContainers:
+            - name: wait-for-temporal-worker
+              image: busybox
+              command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-temporal-worker-headless.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for temporal worker; sleep 2; done;']
+            - name: wait-for-temporal-frontend
+              image: busybox
+              command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-temporal-frontend.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for temporal frontend; sleep 2; done;']
+            - name: wait-for-email-gateway
+              image: busybox
+              command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-email-gateway-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for email gateway; sleep 2; done;']
+            - name: wait-for-sms-gateway
+              image: busybox
+              command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-sms-gateway-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for sms gateway; sleep 2; done;']
+            - name: wait-for-mock-gateway
+              image: busybox
+              command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-mock-gateway-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for sms gateway; sleep 2; done;' ]
+            - name: wait-for-gateway-api
+              image: busybox
+              command: ['sh', '-c', 'until nslookup {{ .Release.Name}}-gateway-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for gateway api; sleep 2; done;']
+            - name: wait-for-preferences-api
+              image: busybox
+              command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-preferences-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for preferences api; sleep 2; done;' ]
+            - name: wait-for-schedule-api
+              image: busybox
+              command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-schedule-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for schedule api; sleep 2; done;' ]
+            - name: wait-for-history-api
+              image: busybox
+              command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-history-api-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for history api; sleep 2; done;' ]
+            - name: wait-for-web-portal-bff
+              image: busybox
+              command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-web-portal-bff-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for web-portal-bff api; sleep 2; done;' ]
+            - name: wait-for-web-portal
+              image: busybox
+              command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-web-portal-service.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for web-portal; sleep 2; done;' ]
+          restartPolicy: Never
+      backoffLimit: 0

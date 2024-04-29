@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * This class is used to load some initial data into the database.
+ * The context here is users using a security protection service.
+ */
 @Component
 public class ContentLoader implements CommandLineRunner {
 

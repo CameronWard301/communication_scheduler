@@ -19,7 +19,7 @@ Feature: History Pages
     When I set the status filter to "running-checkbox"
     And I click by id on "gateway-filter-button"
     And I set the "gateway-id-search" to be the gateway id
-    And I click the first gateway in the data grid filter results
+    And I click the first gateway in the data grid filter results and refresh with: "gateway-filter-search"
     And I click by id on "gateway-filter-apply-button"
     And I set the userId filter to be: "test-user-id-integration-test"
     And I set the "user-id-filter-input" to be the user id
@@ -73,7 +73,7 @@ Feature: History Pages
   @RemoveTestWorkflows
   Scenario: Should load history items
     When I navigate to "/history?userId=user-integration-test-1&status=Running"
-    Then the total history results should be "1–10 of 10"
+    Then the total history results should be "1–5 of 5"
     And the status cell of the first item should be set to "Running"
 
   @TerminateExistingWorkflows

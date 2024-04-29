@@ -10,7 +10,7 @@ module "eks" {
   cluster_endpoint_private_access       = true
   cluster_endpoint_public_access        = true
   cluster_additional_security_group_ids = [aws_security_group.eks_cluster_internal.id]
-  kms_key_administrators                = var.kms_key_administrators
+  kms_key_administrators                = concat(["arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/GitHubActions"], var.kms_key_administrators)
 
   cluster_addons = {
     aws-ebs-csi-driver = {

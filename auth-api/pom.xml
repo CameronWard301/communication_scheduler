@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.2.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>auth-api</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <name>auth-api</name>
     <description>auth-api</description>
     <properties>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>9.31</version>
+            <version>9.37.3</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>

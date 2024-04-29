@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class is responsible for loading the users into the database.
+ * It simulates a business that already has customers in their internal database
+ */
 @Component
 public class UserLoader implements CommandLineRunner {
 

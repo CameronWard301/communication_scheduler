@@ -117,6 +117,6 @@ class EmailMonthlyReportContentDeliveryServiceTest extends Specification {
 
         then: "exception is thrown"
         ContentDeliveryException e = thrown(ContentDeliveryException)
-        e.getMessage() == "Could complete API request to Sendgrid"
+        e.getMessage() == "Could not complete API request to Sendgrid"
     }
 }

@@ -6,6 +6,9 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration properties for Twilio read from the application.yml file
+ */
 @Configuration
 @ConfigurationProperties(prefix = "twilio")
 @Getter

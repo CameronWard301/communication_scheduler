@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GatewayRepository extends MongoRepository<Gateway, String> {
+    void deleteGatewayByEndpointUrl (String endpointUrl);
 }

@@ -35,4 +35,11 @@ terraform.tfvars
 # Chart dependencies
 **/charts/*.tgz
 /deployment/helm/values-secrets.yaml
-/deployment/helm/certs/
+/deployment/helm/certs/*.txt
+/deployment/helm/certs/*.p12
+/deployment/helm/certs/*.key
+/deployment/helm/certs/*.pem
+/deployment/helm/certs/*.crt
+!/deployment/terraform/tf-states/.terraform/
+
+!/deployment/terraform/tf-states/.terraform.lock.hcl

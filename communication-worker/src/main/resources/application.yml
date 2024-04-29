@@ -1,7 +1,7 @@
 logging:
   level:
-    io.github.cameronward301.communication_scheduler.worker.communication_worker: ${WORKER_DEBUG:info}
-    root: ${SPRING_DEBUG:info}
+    io.github.cameronward301.communication_scheduler.worker.communication_worker: ${WORKER_LOGGING:info}
+    root: ${ROOT_LOGGING:info}
 
 worker:
   apiKey: ${GATEWAY_API_KEY:replace-me}
@@ -15,7 +15,7 @@ temporal-properties:
   endpoint: ${TEMPORAL_ENDPOINT:localhost:7233}
   encryption:
     password: ${ENCRYPTION_PASSWORD:changeme}
-    salt: ${ENCRYPTION_SALT:4573c195d6593c}
+    salt: ${ENCRYPTION_SALT:changeme}
 
 mongodb:
   database:

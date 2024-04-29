@@ -12,7 +12,7 @@ Gateway URL with API key;
 if (API key is valid) is (no) then
 :return invalid status 401/403;
 |Worker|
-:Retry Activity;
+:Activity failed;
 stop
 else (yes)
 
@@ -38,10 +38,13 @@ else (no)
     :Remove message hash
     from communication DB;
     :return error 500;
+    |Worker|
+    :Activity failed;
+    stop
     endif
 
 endif
 |Worker|
-:Complete activity;
+:Activity completed;
 stop
 @enduml

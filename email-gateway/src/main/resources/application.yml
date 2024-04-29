@@ -1,6 +1,3 @@
-worker:
-  apiKey: ${WORKER_API_KEY:replace-me}
-
 sendgrid:
   email-newsletter-api-key: ${EMAIL_NEWSLETTER_API:SG.1234}
   from-email: ${FROM_EMAIL:test@example.com}
@@ -24,10 +21,24 @@ user1:
 
 user2:
   email: ${USER2_EMAIL:test+1@example.com}
-default-communication-history-access-provider:
-  region: ${REGION:eu-west-1}
-  table-name: ${COMMUNICATION_HISTORY_TABLE_NAME:communication-history}
+
 logging:
   level:
-    io.github.cameronward301.communication_scheduler.gateway_library: ${GATEWAY_LOGGING:DEBUG}
-    root: ${ROOT_LOGGING:debug}
+    io.github.cameronward301.communication_scheduler.gateway_library: ${GATEWAY_LOGGING:info}
+    root: ${ROOT_LOGGING:info}
+io:
+  github:
+    cameronward301:
+      communication-scheduler:
+        gateway-library:
+          worker:
+            apiKey: ${WORKER_API_KEY:replace-me}
+          default-communication-history-access-provider:
+            enabled: true
+            region: ${REGION:eu-west-1}
+            table-name: ${COMMUNICATION_HISTORY_TABLE_NAME:communication-history}
+          security:
+            cors:
+              enabled: ${CORS_ENABLED:true}
+            csrf:
+              enabled: ${CSRF_ENABLED:true}

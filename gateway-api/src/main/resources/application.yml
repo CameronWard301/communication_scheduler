@@ -2,10 +2,10 @@ gateway:
   verify-hostnames: ${VERIFY_HOSTNAMES:true}
   mongodb:
     database:
-      name: ${MONGODB_DATABASE_NAME:gateway-database-name}
+      name: ${MONGODB_DATABASE_NAME}
     connection:
-      string: ${MONGODB_CONNECTION_STRING:mongodb://localhost:27017}
-aws.region: ${AWS_REGION:eu-west-1}
+      string: ${MONGODB_CONNECTION_STRING}
+
 logging:
   level:
     root: ${LOGGING_LEVEL:info}
@@ -16,13 +16,3 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${JWKS_URI:https://localhost:53655/auth/.well-known/jwks.json}
-
-
-server:
-  ssl:
-    key-store: ${GATEWAY_API_SSL_KEY_STORE:classpath:keystore/auth-api.p12}
-    key-store-password: ${GATEWAY_API_SSL_KEY_STORE_PASSWORD}
-    key-store-type: PKCS12
-    enabled: true
-    key-alias: gateway-api
-    key-password: ${GATEWAY_API_SSL_KEY_STORE_PASSWORD}
