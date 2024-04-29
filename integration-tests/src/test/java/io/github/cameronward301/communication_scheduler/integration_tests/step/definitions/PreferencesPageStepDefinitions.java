@@ -89,12 +89,15 @@ public class PreferencesPageStepDefinitions {
         wait.until(ExpectedConditions.textMatches(By.id("transition-modal-title"), Pattern.compile("Save Changes")));
         assertThat(driver.findElement(By.id("transition-modal-title")).getText(), is("Save Changes"));
         assertThat(driver.findElement(By.id("max-attempts-confirm-table-cell")).getText(), is("Maximum Attempts"));
+        wait.until(ExpectedConditions.textMatches(By.id("max-attempts-new-value"), Pattern.compile(fields.asMaps().get(0).get("maximumAttempts"))));
         assertThat(driver.findElement(By.id("max-attempts-new-value")).getText(), is(fields.asMaps().get(0).get("maximumAttempts")));
 
         assertThat(driver.findElement(By.id("gateway-timeout-confirm-table-cell")).getText(), is("Gateway Timeout"));
+        wait.until(ExpectedConditions.textMatches(By.id("gateway-timeout-new-value"), Pattern.compile(fields.asMaps().get(0).get("gatewayTimeout"))));
         assertThat(driver.findElement(By.id("gateway-timeout-new-value")).getText(), is(fields.asMaps().get(0).get("gatewayTimeout")));
 
         assertThat(driver.findElement(By.id("backoff-coefficient-confirm-table-cell")).getText(), is("Backoff Coefficient"));
+        wait.until(ExpectedConditions.textMatches(By.id("backoff-coefficient-new-value"), Pattern.compile(fields.asMaps().get(0).get("backoffCoefficient"))));
         assertThat(driver.findElement(By.id("backoff-coefficient-new-value")).getText(), is(fields.asMaps().get(0).get("backoffCoefficient")));
 
         assertThat(driver.findElement(By.id("initial-interval-confirm-table-cell")).getText(), is("Initial Interval"));
@@ -106,6 +109,7 @@ public class PreferencesPageStepDefinitions {
         assertThat(driver.findElement(By.id("maximum-interval-new-value")).getText(), is(fields.asMaps().get(0).get("maximumInterval")));
 
         assertThat(driver.findElement(By.id("start-to-close-confirm-table-cell")).getText(), is("Start To Close Timeout"));
+        wait.until(ExpectedConditions.textMatches(By.id("start-to-close-new-value"), Pattern.compile(fields.asMaps().get(0).get("startToCloseTimeout"))));
         assertThat(driver.findElement(By.id("start-to-close-new-value")).getText(), is(fields.asMaps().get(0).get("startToCloseTimeout")));
     }
 
