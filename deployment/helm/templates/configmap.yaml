@@ -34,7 +34,8 @@ metadata:
 data:
   config.json: |
     {
-      "bffBaseUrl": "{{ .Values.web_portal.bffUri }}",
+      "bffBaseUrl": "/v1/bff",
+      "bffGrafanaUrl": "/grafana",
       "verifyHttps": "{{ .Values.web_portal.verifyHttps }}",
       "environment": "{{ .Values.web_portal.environment }}"
     }

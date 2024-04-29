@@ -5,6 +5,9 @@ import io.github.cameronward301.communication_scheduler.mock_gateway.model.MockC
 import io.github.cameronward301.communication_scheduler.mock_gateway.model.MockUser;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Properties for the mock gateway
+ */
 @SuperBuilder
 public class MockGatewayProperties extends GatewayProperties<MockUser, MockContent> {
 

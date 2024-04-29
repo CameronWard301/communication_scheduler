@@ -49,7 +49,7 @@ package "Communication Gateway" as communicationGateway {
     }
 
     interface GatewayController <TUser, TContent extends Content>{
-        + {static} ResponseEntity<GatewayResponse sendCommunication(GatewayRequest gatewayRequest, GatewayProperties<TUser, TContent> gatewayProperties, CommunicationGatewayService<TUser, TContent> communicationGatewayService)
+        + {static} ResponseEntity<GatewayResponse> sendCommunication(GatewayRequest gatewayRequest, GatewayProperties<TUser, TContent> gatewayProperties, CommunicationGatewayService<TUser, TContent> communicationGatewayService)
         + ResponseEntity<GatewayResponse> processGatewayRequest(GatewayRequest gatewayRequest)
     }
 

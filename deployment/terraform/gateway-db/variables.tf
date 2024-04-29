@@ -1,48 +1,49 @@
 //REQUIRED VARIABLES:
-variable "default_tags" {
-  type = map(string)
-}
-
-variable "region" {
+variable "development_environment_tag" {
   type = string
+  description = "The type of environment this is, e.g. dev, test, prod"
 }
 
-variable "account_name" {
+variable "mongo_public_key" {
   type = string
+  description = "Your MongoDB public key, see: https://www.mongodb.com/docs/atlas/configure-api-access/#grant-programmatic-access-to-services"
 }
 
-variable "billing_mode" {
-  type = string // Can be either PROVISIONED or PAY_PER_REQUEST
+variable "mongo_private_key" {
+  type = string
+  description = "Your MongoDB private key, see: https://www.mongodb.com/docs/atlas/configure-api-access/#grant-programmatic-access-to-services"
+}
+
+variable "aws_EIP_public_ip" {
+  type = string
+  description = "The AWS Elastic IP address to whitelist for MongoDB access"
 }
 
 //Optional Variables:
 
-variable "deletion_protection_enabled" {
-  type = bool
-  default = false
+variable "cluster_type" {
+  type = string
+  default = "REPLICASET"
+  description = "The type of cluster to create, e.g. REPLICASET, SHARDED"
+  # See: https://www.terraform.io/docs/providers/mongodbatlas/r/cluster.html#cluster_type
 }
 
-variable "read_capacity" {
-  type = number
-  default = 5
+variable "cluster_name" {
+  type = string
+  default = "communication-scheduling-platform"
+  description = "The name of the cluster to create"
+  # I don't recommend changing this
 }
 
-variable "write_capacity" {
-  type = number
-  default = 5
+variable "mongo_db_project_name" {
+  type = string
+  default = "CSP"
+  description = "The name of the project to create"
 }
 
-variable "deploy_mock_gateway_api" {
-  type = bool
-  default = false
-}
-
-variable "enable_mock_gateway_logs" {
-  type = bool
-  default = false
-}
-
-variable "configure_global_api_gateway_log_role" {
-  type = bool
-  default = false
+variable "mongo_db_region_name" {
+  type = string
+  default = "EU_WEST_1"
+  description = "The region to create the cluster in"
+  # Must be all caps and with underscores
 }

@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+/**
+ * This service is responsible for generating the message contents and using the Sendgrid API to send the email
+ */
 @Service
 @Slf4j
 public class EmailMonthlyReportContentDeliveryService implements ContentDeliveryService<EmailUser, EmailContent> {
@@ -36,6 +39,13 @@ public class EmailMonthlyReportContentDeliveryService implements ContentDelivery
         mail.setTemplateId(sendgridProperties.getMonthlyNewsletterTemplateId());
     }
 
+    /**
+     * Reads the email content and completes the template data for the email
+     * Sends the personalised email to the user.
+     * @param emailUser    the user to send the content to
+     * @param emailContent the content to send to the user
+     * @throws ContentDeliveryException if the email could not be sent for any reason
+     */
     @Override
     public void sendContent(EmailUser emailUser, EmailContent emailContent) throws ContentDeliveryException {
         Personalization personalization = new Personalization();
@@ -56,7 +66,7 @@ public class EmailMonthlyReportContentDeliveryService implements ContentDelivery
             }
         } catch (IOException e) {
             log.error("Could not send the email: {}", e.getMessage());
-            throw new ContentDeliveryException("Could complete API request to Sendgrid");
+            throw new ContentDeliveryException("Could not complete API request to Sendgrid");
         }
     }
 }

@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Loads the users and their usage into the database
+ *
+ */
 @Component
 @RequiredArgsConstructor
 public class UserAndUsageLoader implements CommandLineRunner {

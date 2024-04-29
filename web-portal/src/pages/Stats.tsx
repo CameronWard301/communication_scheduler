@@ -15,6 +15,8 @@ const Stats = () => {
 
   const [refresh, setRefresh] = useState("10");
   const refreshOptions = ["1", "5", "10", "30", "60"];
+  const encodedGrafanaUrl = encodeURI(config.bffGrafanaUrl);
+  const encodedRefresh = encodeURIComponent(refresh);
 
   const handleRefreshClick = () => {
     document.getElementsByName("grafana-iframe").forEach((element: HTMLElement) => {
@@ -59,17 +61,16 @@ const Stats = () => {
         <Grid xs={12} lg={4} container spacing={1}>
           <Grid xs={12} display={"flex"}>
             <iframe style={iFrameStyles} name={"grafana-iframe"} title={"Cluster memory usage gauge"}
-                    src={config.bffGrafanaUrl+ "/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh="+ refresh +"s&panelId=4"}></iframe>
+                    src={`${encodedGrafanaUrl}/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh=${encodedRefresh}s&panelId=4`}></iframe>
           </Grid>
 
           <Grid xs={6} display={"flex"}>
             <iframe style={iFrameStyles} name={"grafana-iframe"} title={"Cluster memory usage used"}
-                    src={config.bffGrafanaUrl+ "/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh="+ refresh +"s&panelId=9"
-                    }            ></iframe>
+                    src={`${encodedGrafanaUrl}/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh=${encodedRefresh}s&panelId=9`}></iframe>
           </Grid>
           <Grid xs={6} display={"flex"}>
             <iframe style={iFrameStyles} name={"grafana-iframe"} title={"Cluster total memory available"}
-                    src={config.bffGrafanaUrl+ "/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh="+ refresh +"s&panelId=10"}
+                    src={`${encodedGrafanaUrl}/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh=${encodedRefresh}s&panelId=10`}
             ></iframe>
           </Grid>
         </Grid>
@@ -77,17 +78,17 @@ const Stats = () => {
         <Grid xs={12} lg={4} container spacing={1}>
           <Grid xs={12} display={"flex"}>
             <iframe style={iFrameStyles} name={"grafana-iframe"} title={"Cluster CPU usage gauge"}
-                    src={config.bffGrafanaUrl + "/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh="+ refresh +"s&panelId=6"}></iframe>
+                    src={`${encodedGrafanaUrl}/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh=${encodedRefresh}s&panelId=6`}></iframe>
           </Grid>
 
           <Grid xs={6} display={"flex"}>
             <iframe style={iFrameStyles} name={"grafana-iframe"} title={"Cluster CPU usage used"}
-                    src={config.bffGrafanaUrl + "/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh="+ refresh +"s&panelId=11"}
+                    src={`${encodedGrafanaUrl}/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh=${encodedRefresh}s&panelId=11`}
             ></iframe>
           </Grid>
           <Grid xs={6} display={"flex"}>
             <iframe style={iFrameStyles} name={"grafana-iframe"} title={"Cluster total CPU available"}
-                    src={config.bffGrafanaUrl + "/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh="+ refresh +"s&panelId=12"}
+                    src={`${encodedGrafanaUrl}/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh=${encodedRefresh}s&panelId=12`}
             ></iframe>
           </Grid>
         </Grid>
@@ -95,30 +96,30 @@ const Stats = () => {
         <Grid xs={12} lg={4} container spacing={1}>
           <Grid xs={12} display={"flex"}>
             <iframe style={iFrameStyles} name={"grafana-iframe"} title={"Cluster disk usage gauge"}
-                    src={config.bffGrafanaUrl + "/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh="+ refresh +"s&panelId=7"}></iframe>
+                    src={`${encodedGrafanaUrl}/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh=${encodedRefresh}s&panelId=7`}></iframe>
           </Grid>
 
           <Grid xs={6} display={"flex"}>
             <iframe style={iFrameStyles} name={"grafana-iframe"} title={"Cluster disk usage used"}
-                    src={config.bffGrafanaUrl + "/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh="+ refresh +"s&panelId=13"}
+                    src={`${encodedGrafanaUrl}/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh=${encodedRefresh}s&panelId=13`}
             ></iframe>
           </Grid>
           <Grid xs={6} display={"flex"}>
             <iframe style={iFrameStyles} name={"grafana-iframe"} title={"Cluster total disk available"}
-                    src={config.bffGrafanaUrl + "/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh="+ refresh +"s&panelId=14"}
+                    src={`${encodedGrafanaUrl}/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh=${encodedRefresh}s&panelId=14`}
             ></iframe>
           </Grid>
         </Grid>
 
         <Grid xs={12} display={"flex"} sx={{minHeight: "300px"}}>
-          <iframe src={config.bffGrafanaUrl + "/d-solo/edif6eeykmrcwd/custom-dashboard?orgId=1&refresh="+refresh+"&panelId=2"} name={"grafana-iframe"}
+          <iframe src={`${encodedGrafanaUrl}/d-solo/edif6eeykmrcwd/custom-dashboard?orgId=1&refresh=${encodedRefresh}s&panelId=2`} name={"grafana-iframe"}
                   style={iFrameStyles} title={"Workflow completion graph"}></iframe>
         </Grid>
         <Grid xs={4} display={"flex"} sx={{minHeight: "300px"}}>
           <iframe title={"Total communications sent in the last 24 hours"}
-            src={config.bffGrafanaUrl + "/d-solo/edif6eeykmrcwd/custom-dashboard?orgId=1&refresh=" + refresh + "&panelId=1"}
-            name={"grafana-iframe"}
-            style={iFrameStyles}></iframe>
+                  src={`${encodedGrafanaUrl}/d-solo/edif6eeykmrcwd/custom-dashboard?orgId=1&refresh=${encodedRefresh}s&panelId=1`}
+                  name={"grafana-iframe"}
+                  style={iFrameStyles}></iframe>
         </Grid>
 
 

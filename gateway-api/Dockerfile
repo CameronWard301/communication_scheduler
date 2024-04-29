@@ -11,8 +11,7 @@ FROM gcr.io/distroless/java21-debian12:latest
 WORKDIR /app
 COPY --from=build /src/app/target/*.jar /app/app.jar
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "/app/app.jar"]
 
 #docker buildx create --use
 #docker buildx build --platform linux/amd64,linux/arm64 -t cameronward/gateway-api:latest --push .

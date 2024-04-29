@@ -52,7 +52,7 @@ public class MongoDbHooks {
         }
     }
 
-    @After("MongoDbRemoveEntityFromWorld")
+    @After("@MongoDbRemoveEntityFromWorld")
     public void removeMongoDBEntityFromWorld() {
         if (doesEntityExist(world.getGateway().getId())) {
             gatewayRepository.deleteById(world.getGateway().getId());

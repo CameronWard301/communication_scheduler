@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>email_gateway</artifactId>
-    <version>0.1.4</version>
+    <version>0.1.6</version>
     <name>email-gateway</name>
     <description>email-gateway</description>
     <properties>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>io.github.cameronward301.communication_scheduler</groupId>
             <artifactId>gateway-library</artifactId>
-            <version>0.3.5</version>
+            <version>0.3.13</version>
         </dependency>
 
         <dependency>

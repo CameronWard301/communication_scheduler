@@ -39,12 +39,6 @@ locals {
 
 dependency "networking" {
   config_path = "${get_terragrunt_dir()}/../networking"
-/*  skip_outputs = true
-  mock_outputs = {
-    vpc_id = "vpc-07711fc9481557c6e"
-    private_subnet_id_1 = "subnet-12345678"
-    private_subnet_id_2 = "subnet-12345678"
-  }*/
 }
 
 

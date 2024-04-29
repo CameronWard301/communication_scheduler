@@ -342,11 +342,11 @@ paths:
                   properties:
                     gatewayId:
                       type:
-                          - string
+                        - string
                       format: uuid
                     userId:
                       type:
-                          - string
+                        - string
                       format: uuid
                     paused:
                       type:
@@ -397,12 +397,12 @@ paths:
                       format: uuid
                     gatewayId:
                       type:
-                          - string
+                        - string
                       format: uuid
                     userId:
-                        type:
-                            - string
-                        format: uuid
+                      type:
+                        - string
+                      format: uuid
                     paused:
                       type:
                         - boolean

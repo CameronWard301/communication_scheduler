@@ -7,10 +7,7 @@ import io.github.cameronward301.communication_scheduler.integration_tests.gatewa
 import io.github.cameronward301.communication_scheduler.integration_tests.model.schedule.ScheduleEntity;
 import io.github.cameronward301.communication_scheduler.integration_tests.world.World;
 import io.temporal.common.SearchAttributeKey;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -214,9 +211,17 @@ public class SchedulePageStepDefinitions {
         Wait<WebDriver> wait = new FluentWait<>(webDriver)
                 .withTimeout(Duration.ofSeconds(explicitWait))
                 .pollingEvery(Duration.ofMillis(500))
-                .ignoring(NoSuchElementException.class);
+                .ignoring(NoSuchElementException.class)
+                .ignoring(AssertionError.class);
         wait.until((driver -> {
             driver.navigate().refresh();
+            //check that result shown is not left over from previous test
+            //The id in the first row should be one of the new schedule entity Ids
+            String firstId = webDriver.findElement(By.cssSelector(".MuiDataGrid-row:nth-child(1) .MuiDataGrid-cell:nth-child(3)")).getText();
+            if (world.getCreatedScheduleIds().stream().noneMatch(scheduleEntityInList -> scheduleEntityInList.equals(firstId))) {
+                throw new AssertionError("The first schedule id is not one of the new schedule entity ids");
+            }
+            assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-row:nth-child(1) .MuiDataGrid-cell:nth-child(7)")).getText(), is(expectedId));
             return driver.findElement(By.cssSelector(".MuiDataGrid-row:nth-child(1) .PrivateSwitchBase-input"));
         }));
 
@@ -240,6 +245,16 @@ public class SchedulePageStepDefinitions {
 
     @When("I press the select all button in the data grid")
     public void iPressTheSelectAllButtonInTheDataGrid() {
+        Wait<WebDriver> wait = new FluentWait<>(webDriver)
+                .withTimeout(Duration.ofSeconds(explicitWait))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(NoSuchElementException.class);
+
+        wait.until((driver -> {
+            driver.findElement(By.id("refresh-schedules")).click();
+            return ExpectedConditions.not(ExpectedConditions.textMatches(By.cssSelector(".MuiTablePagination-displayedRows"), Pattern.compile("0–0 of 0")));
+        }));
+
         webDriver.findElement(By.cssSelector(".MuiDataGrid-checkboxInput > .PrivateSwitchBase-input")).click();
     }
 
@@ -249,6 +264,7 @@ public class SchedulePageStepDefinitions {
                 .withTimeout(Duration.ofSeconds(explicitWait))
                 .pollingEvery(Duration.ofMillis(500))
                 .ignoring(NoSuchElementException.class)
+                .ignoring(ElementClickInterceptedException.class)
                 .ignoring(AssertionError.class);
 
         wait.until((driver -> {

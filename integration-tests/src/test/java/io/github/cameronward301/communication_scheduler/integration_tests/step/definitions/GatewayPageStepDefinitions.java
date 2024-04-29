@@ -67,7 +67,7 @@ public class GatewayPageStepDefinitions {
 
     @Then("I should see the gateway with the id")
     public void iShouldSeeTheGatewayWithTheId() throws ParseException {
-        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait * 10L));
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
         wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(2)"), Pattern.compile(existingGatewayId)));
         assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(2)")).getText(), is(existingGatewayId));
         assertThat(webDriver.findElement(By.cssSelector(".MuiDataGrid-cell:nth-child(3)")).getText(), is(existingGateway.getFriendlyName()));
@@ -79,20 +79,20 @@ public class GatewayPageStepDefinitions {
 
     @Then("I should see the gateway with the name")
     public void iShouldSeeTheGatewayWithTheName() {
-        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait * 10L));
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
         wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(3)"), Pattern.compile(existingGateway.getFriendlyName())));
     }
 
     @Then("I should see the gateway with the description")
     public void iShouldSeeTheGatewayWithTheDescription() {
-        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait * 10L));
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
         wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(4)"), Pattern.compile(existingGateway.getDescription())));
 
     }
 
     @Then("I should see the gateway with the endpoint url")
     public void iShouldSeeTheGatewayWithTheEndpointUrl() {
-        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait * 10L));
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
         wait.until(ExpectedConditions.textMatches(By.cssSelector(".MuiDataGrid-cell:nth-child(5)"), Pattern.compile(existingGateway.getEndpointUrl())));
 
     }
@@ -110,16 +110,23 @@ public class GatewayPageStepDefinitions {
 
     @And("I click the modify gateway button")
     public void iClickTheModifyGatewayButton() {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("modify-gateway-" + existingGatewayId)));
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("modify-gateway-" + existingGatewayId)));
         webDriver.findElement(By.id("modify-gateway-" + existingGatewayId)).click();
     }
 
     @When("I click the delete gateway button")
     public void iClickTheDeleteGatewayButton() {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("delete-gateway-" + existingGatewayId)));
         webDriver.findElement(By.id("delete-gateway-" + existingGatewayId)).click();
     }
 
     @Then("the delete gateway fields are shown")
     public void theDeleteGatewayFieldsAreShown() {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.textMatches(By.id("transition-modal-title"), Pattern.compile("Delete Gateway")));
         assertThat(webDriver.findElement(By.id("transition-modal-title")).getText(), is("Delete Gateway"));
         assertThat(webDriver.findElement(By.id("gateway-id")).getText(), is(existingGatewayId));
         assertThat(webDriver.findElement(By.id("gateway-friendly-name")).getText(), is(existingGateway.getFriendlyName()));
@@ -129,6 +136,8 @@ public class GatewayPageStepDefinitions {
 
     @Then("the add gateway fields are shown")
     public void theAddGatewayFieldsAreShown() {
+        Wait<WebDriver> wait = new WebDriverWait(webDriver, Duration.ofSeconds(explicitWait));
+        wait.until(ExpectedConditions.textMatches(By.id("transition-modal-title"), Pattern.compile("Add Gateway")));
         assertThat(webDriver.findElement(By.id("transition-modal-title")).getText(), is("Add Gateway"));
         assertThat(webDriver.findElement(By.id("gateway-friendly-name")).getText(), is(world.getGateway().getFriendlyName()));
         assertThat(webDriver.findElement(By.id("gateway-endpoint-url")).getText(), is(world.getGateway().getEndpointUrl()));

@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Example controller for sending monthly reports via email
+ * Create a new controller for each type of communication that needs a different content delivery service
+ */
 @Controller
 @ComponentScan("io.github.cameronward301.communication_scheduler.email_gateway")
 @RequestMapping("/email/monthly-report")

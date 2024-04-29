@@ -6,6 +6,10 @@ import io.github.cameronward301.communication_scheduler.sms_gateway.properties.T
 import lombok.Generated;
 import org.springframework.stereotype.Service;
 
+/**
+ * Twilio service to send SMS messages
+ * This could be replaced by a businesses own SMS service in the real world.
+ */
 @Service
 @Generated
 public class TwilioService {

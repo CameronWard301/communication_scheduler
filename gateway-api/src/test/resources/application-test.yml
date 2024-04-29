@@ -1,2 +1,7 @@
 gateway:
   verify-hostnames: false
+  mongodb:
+    database:
+      name: "test-gateway-database-name"
+    connection:
+      string: "mongodb://localhost:27017"

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "default-communication-history-access-provider")
+@ConfigurationProperties(prefix = "io.github.cameronward301.communication-scheduler.gateway-library.default-communication-history-access-provider")
 public class DefaultCommunicationHistoryAccessProviderProperties {
 
     /**

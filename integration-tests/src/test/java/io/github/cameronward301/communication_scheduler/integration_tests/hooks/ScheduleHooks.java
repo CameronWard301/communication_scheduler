@@ -54,6 +54,7 @@ public class ScheduleHooks {
         for (String scheduleId : scheduleIds) {
             try {
                 scheduleClient.getHandle(scheduleId).delete();
+                checkScheduleIsDeleted(scheduleId);
             } catch (ScheduleException e) {
                 log.debug(e.getMessage());
             }
@@ -67,42 +68,20 @@ public class ScheduleHooks {
             scheduleIds.add(id);
             scheduleClient.createSchedule(id, schedule.getSchedule(), schedule.getScheduleOptions()).describe();
         }
+        world.setCreatedScheduleIds(scheduleIds);
     }
 
     @Before(value = "@CreateScheduleWithInterval", order = 2)
     public void createSchedule() {
         scheduleClient.createSchedule(scheduleEntity.getScheduleId(), scheduleEntity.getSchedule(), scheduleEntity.getScheduleOptions());
-        int attempts = 10;
-        while (attempts > 0) {
-            try {
-                scheduleClient.getHandle(scheduleEntity.getScheduleId()).describe();
-                break;
-            } catch (ScheduleException e) {
-                log.debug(e.getMessage());
-                attempts--;
-                if (attempts == 0) {
-                    throw new RuntimeException("Schedule not created");
-                }
-            }
-        }
+        checkScheduleIsCreated(scheduleEntity.getScheduleId());
+
     }
 
     @Before(value = "@CheckSchedulesAreCreated", order = 3)
     public void checkSchedulesAreCreated() {
         for (String scheduleId : scheduleIds) {
-            int attempts = 10;
-            while (attempts > 0) {
-                try {
-                    scheduleClient.getHandle(scheduleId).describe();
-                    break;
-                } catch (ScheduleException e) {
-                    log.debug(e.getMessage());
-                    attempts--;
-                    if (attempts == 0) {
-                        throw new RuntimeException("Schedule not created");
-                    }
-                }
-            }
+            checkScheduleIsCreated(scheduleId);
         }
     }
 
@@ -111,11 +90,13 @@ public class ScheduleHooks {
         for (String scheduleId : scheduleIds) {
             try {
                 scheduleClient.getHandle(scheduleId).delete();
+                checkScheduleIsDeleted(scheduleId);
 
             } catch (ScheduleException e) {
                 log.debug(e.getMessage());
             }
         }
+        world.setCreatedScheduleIds(new ArrayList<>());
     }
 
     @After("@RemoveScheduleByUserId")
@@ -131,6 +112,37 @@ public class ScheduleHooks {
     @After("@RemoveSchedule")
     public void deleteEntity() {
         scheduleClient.getHandle(scheduleEntity.getScheduleId()).delete();
+    }
+
+    private void checkScheduleIsDeleted(String scheduleId) {
+        int attempts = 10;
+        while (attempts > 0) {
+            try {
+                scheduleClient.getHandle(scheduleId).describe();
+                attempts--;
+                if (attempts == 0) {
+                    throw new RuntimeException("Schedule not deleted");
+                }
+            } catch (ScheduleException e) {
+                break;
+            }
+        }
+    }
+
+    private void checkScheduleIsCreated(String scheduleId) {
+        int attempts = 10;
+        while (attempts > 0) {
+            try {
+                scheduleClient.getHandle(scheduleId).describe();
+                break;
+            } catch (ScheduleException e) {
+                log.debug(e.getMessage());
+                attempts--;
+                if (attempts == 0) {
+                    throw new RuntimeException("Schedule not created");
+                }
+            }
+        }
     }
 
 

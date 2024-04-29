@@ -1,4 +1,0 @@
-##Auth API
-keytool -genkeypair -alias auth-api -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore auth-api.p12 -validity 3650
-base64 -e -i .\auth-api.p12 -o auth-api-base64.txt
-

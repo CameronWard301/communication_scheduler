@@ -3,7 +3,6 @@ const path = require("path");
 const axios = require("axios");
 const fs = require("fs");
 const {createServer, Agent} = require("https");
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.static(__dirname));
@@ -24,14 +23,7 @@ try {
 
 let axiosClient;
 
-if (process.env.SSL_VERIFICATION === "true") {
-    console.log("SSL Verification is on");
-    axiosClient = axios.create({
-        headers: {
-            "Content-Type": "application/json",
-        }
-    });
-} else {
+if (process.env.SSL_VERIFICATION === "false") {
     console.warn("SSL Verification is off");
     axiosClient = axios.create({
         httpsAgent: new Agent({rejectUnauthorized: false}),
@@ -39,7 +31,17 @@ if (process.env.SSL_VERIFICATION === "true") {
             "Content-Type": "application/json",
         }
     });
+} else {
+    console.log("SSL Verification is on");
+    axiosClient = axios.create({
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
 }
+
+const configFile = fs.readFileSync(path.join(__dirname, "config.json"));
+const indexFile = fs.readFileSync(path.join(__dirname, "index.html"));
 
 
 app.all(["/v1/bff/*", "/grafana/*"], async (req, res) => {
@@ -71,12 +73,14 @@ app.all(["/v1/bff/*", "/grafana/*"], async (req, res) => {
 
 app.get("/configuration", (req, res) => {
     console.log("Sending configuration");
-    res.sendFile(path.join(__dirname, "config.json"));
+    res.setHeader('Content-Type', 'application/json')
+    res.send(configFile);
 })
 
 app.get("/*", (req, res) => {
     console.log("Sending index.html");
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.setHeader('Content-Type', 'text/html')
+    res.send(indexFile)
 })
 
 let server;

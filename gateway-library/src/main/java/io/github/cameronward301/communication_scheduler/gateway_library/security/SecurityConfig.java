@@ -1,5 +1,6 @@
 package io.github.cameronward301.communication_scheduler.gateway_library.security;
 
+import io.github.cameronward301.communication_scheduler.gateway_library.configuration.SecurityConfigurationProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +15,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * Secures all gateway endpoints behind a valid api key to be provided by the worker
  */
 @Configuration
-@EnableWebSecurity
 @RequiredArgsConstructor
+@EnableWebSecurity
 public class SecurityConfig {
 
     private final GatewayApiKeyFilter gatewayApiKeyFilter;
+    private final SecurityConfigurationProperties securityConfigurationProperties;
 
     /**
      * Bean for securing the application
@@ -28,15 +30,22 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
+        httpSecurity
                 .addFilterBefore(gatewayApiKeyFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .build();
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        if (!securityConfigurationProperties.getCors().isEnabled()) {
+            httpSecurity.cors(AbstractHttpConfigurer::disable);
+        }
+
+        if (!securityConfigurationProperties.getCsrf().isEnabled()) {
+            httpSecurity.csrf(AbstractHttpConfigurer::disable);
+        }
+
+        return httpSecurity.build();
     }
 }

@@ -1,6 +1,6 @@
 {
   "bffBaseUrl": "http://localhost:9090/v1/bff",
   "bffGrafanaUrl": "http://localhost:9090/grafana",
-  "verifyHttps": false,
+  "verifyHttps": true,
   "environment": "local"
 }
