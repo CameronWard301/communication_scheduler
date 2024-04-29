@@ -55,7 +55,7 @@ variable "engine_version" {
 
 variable "minimum_scaling" {
   type    = number
-  default = 2
+  default = 0.5
   description = "The minimum capacity of the database"
   # See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster#min_capacity for more info
 }
@@ -67,23 +67,10 @@ variable "maximum_scaling" {
   # See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster#max_capacity for more info
 }
 
-variable "auto_pause" {
-  type    = bool
-  default = true
-  description = "Whether to enable the Aurora Serverless auto-pause feature"
-  # See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster#auto_pause for more info
-}
-
-variable "auto_pause_delay" {
-  type    = number
-  default = 300 //min = 300, max = 86400
-  description = "The time, in seconds, before the Aurora DB is paused after inactivity"
-}
-
 variable "backup_window" {
   type    = string
   default = "02:00-07:00"
-  description = "The perferred time a backup takes place"
+  description = "The preferred time a backup takes place"
   # See more info here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster#preferred_backup_window
 }
 
