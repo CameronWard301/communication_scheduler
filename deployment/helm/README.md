@@ -139,13 +139,15 @@ Ensure you have completed the following:
 1. Complete the eks deployment prerequisites.
 2. Run the following command to deploy the resources:
     ```bash
-    helm upgrade --install cs . -f ./values-eks.yaml -f ./values-example-secrets.yaml --wait --timeout=20m
+    helm upgrade --install cs . -f ./values-eks.yaml -f ./values-example-secrets.yaml --wait --timeout=5m
     ```
+   1. The first install will fail as Temporal tries to create the elastic search index when it already exists. Delete the `es-schema` job from the cluster to complete the installation. 
 3. Use a monitoring tool like [Lens](https://k8slens.dev/) to monitor the resources
 4. Follow the steps in the [integration tests project](../../integration-tests#add-using-mongodb-ui-simplest) to configure the Mock, Email and SMS gateway in the gateway database using the mongoDB UI.
     1. If using the web portal or gateway API to add the gateways. Update the ID in the mockGatewayId, emailGatewayId and smsGatewayId `values-eks.yaml` file to match the ID generated.
 5. Optionally, enable the integration testing by setting the `enableOnUpdate` or `enableOnSchedule` flag to `true` in the `values-eks.yaml` file
     * Don't enable both flags at the same time to prevent concurrent tests
+    * You will need to increase the --timeout value to be 20 minutes if enableOnUpdate is enabled.
 6. Finish configuring temporal by following the steps in the [deployment readme](../README.md)
 
 ## Local deployment:
