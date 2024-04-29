@@ -59,6 +59,16 @@ spec:
                   key: salt
                   name: {{ .Release.Name }}-data-converter-encryption
       initContainers:
+        - name: check-elasticsearch
+          image: "{{ $.Values.temporal.elasticsearch.admintools.image.repository }}:{{ $.Values.temporal.elasticsearch.admintools.image.tag }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          command: [ 'sh', '-c', 'until curl --silent --fail {{- if and .Values.temporal.elasticsearch.username .Values.temporal.elasticsearch.password }} --user {{ .Values.temporal.elasticsearch.username }}:{{ .Values.temporal.elasticsearch.password }} {{- end }} {{ .Values.temporal.elasticsearch.scheme }}://{{ .Values.temporal.elasticsearch.host }}:{{ .Values.temporal.elasticsearch.port }} 2>&1 > /dev/null; do echo waiting for elasticsearch to start; sleep 1; done;' ]
+        - name: create-elasticsearch-index
+          image: "{{ $.Values.temporal.admintools.image.repository }}:{{ $.Values.temporal.admintools.image.tag }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          command: [ 'sh', '-c' ]
+          args:
+            - 'if curl --head --fail {{- if and .Values.temporal.elasticsearch.username .Values.temporal.elasticsearch.password }} --user {{ .Values.temporal.elasticsearch.username }}:{{ .Values.temporal.elasticsearch.password }} {{- end }} {{ .Values.temporal.elasticsearch.scheme }}://{{ .Values.temporal.elasticsearch.host }}:{{ .Values.temporal.elasticsearch.port }}/{{ .Values.temporal.elasticsearch.visibilityIndex }} 2>&1; then echo "Index already exists"; else curl -X PUT --fail {{- if and .Values.temporal.elasticsearch.username .Values.temporal.elasticsearch.password }} --user {{ .Values.temporal.elasticsearch.username }}:{{ .Values.temporal.elasticsearch.password }} {{- end }} {{ .Values.temporal.elasticsearch.scheme }}://{{ .Values.temporal.elasticsearch.host }}:{{ .Values.temporal.elasticsearch.port }}/_template/temporal_visibility_v1_template -H "Content-Type: application/json" --data-binary "@schema/elasticsearch/visibility/index_template_{{ .Values.temporal.elasticsearch.version }}.json" 2>&1 && curl -X PUT --fail {{- if and .Values.temporal.elasticsearch.username .Values.temporal.elasticsearch.password }} --user {{ .Values.temporal.elasticsearch.username }}:{{ .Values.temporal.elasticsearch.password }} {{- end }} {{ .Values.temporal.elasticsearch.scheme }}://{{ .Values.temporal.elasticsearch.host }}:{{ .Values.temporal.elasticsearch.port }}/{{ .Values.temporal.elasticsearch.visibilityIndex }} 2>&1; fi'
         - name: wait-for-temporal-worker
           image: busybox
           command: [ 'sh', '-c', 'until nslookup {{ .Release.Name}}-temporal-worker-headless.{{.Release.Namespace}}.svc.cluster.local; do echo waiting for temporal worker; sleep 2; done;' ]
