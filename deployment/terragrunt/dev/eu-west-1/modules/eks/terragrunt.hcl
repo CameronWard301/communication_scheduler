@@ -13,18 +13,18 @@ inputs = {
 
   on_demand_nodes = {
     ami_type       = "AL2_ARM_64" # "AL2_x86_64" for t3 and lower
-    instance_types = ["t4g.small"]
+    instance_types = ["t4g.large"]
     min_size       = 1
     max_size       = 5
-    desired_size   = 0
+    desired_size   = 1
     max_pods       = 110 # 96 for t3a.small, 34 for t3.micro and nano. 110 for anything above that
   }
   spot_nodes = {
     ami_type       = "AL2_ARM_64" # "AL2_x86_64" for t3 and lower
-    instance_types = ["t4g.small"]
+    instance_types = ["t4g.large"]
     min_size       = 2
     max_size       = 5
-    desired_size   = 1
+    desired_size   = 2
     max_pods       = 110 # 96 for t3a.small, 34 for t3.micro and nano. 110 for anything above that
   }
 }
