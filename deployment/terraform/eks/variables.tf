@@ -22,7 +22,7 @@ variable "eks_private_subnet_ids" {
 #### Optional variables ####
 variable "cluster_version" {
   type    = string
-  default = "1.28"
+  default = "1.29"
 }
 
 variable "kms_key_administrators" {
@@ -32,7 +32,7 @@ variable "kms_key_administrators" {
 
 variable "ebs_csi_driver_version" {
   type    = string
-  default = "v1.25.0-eksbuild.1"
+  default = "v1.30.0-eksbuild.1"
 }
 
 variable "vpc_cni_version" {
@@ -51,8 +51,8 @@ variable "on_demand_nodes" {
   })
   default = {
     ami_type       = "AL2_x86_64"
-    instance_types = ["t3a.medium"]
-    min_size       = 0
+    instance_types = ["t4g.medium"]
+    min_size       = 1
     max_size       = 2
     desired_size   = 1
     max_pods       = 110
@@ -70,8 +70,8 @@ variable "spot_nodes" {
   })
   default = {
     ami_type       = "AL2_x86_64"
-    instance_types = ["t3a.medium"]
-    min_size       = 0
+    instance_types = ["t4g.medium"]
+    min_size       = 2
     max_size       = 2
     desired_size   = 1
     max_pods       = 110
