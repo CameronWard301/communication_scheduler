@@ -4,7 +4,7 @@
 
 replicaCount: 1
 image:
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 useAwsKubernetesSecret: false # Set to true for local kubernetes testing, false for EKS - this is managed through IAM roles.
 
 temporal:
