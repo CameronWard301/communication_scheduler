@@ -20,7 +20,7 @@ See the temporal documentation for the [API contract](https://docs.temporal.io/p
 ## Getting Started
 
 This project is [deployed](../deployment/helm) on the cluster and can be forwarded to your local machine with the Temporal UI.
-See the [temporal codec server guide](https://docs.temporal.io/production-deployment/data-encryption#set-your-codec-server-endpoints-with-web-ui-and-cli) on how to find the codec server configuraiton seetings for the Web UI and CLI.
+See the [temporal codec server guide](https://docs.temporal.io/production-deployment/data-encryption#set-your-codec-server-endpoints-with-web-ui-and-cli) on how to find the codec server configuration settings for the Web UI and CLI.
 - In the Web UI, set the codec server to `http://localhost:<port_number>/codec`.
 
 Follow the instructions below to run the project locally and configure for kubernetes deployment

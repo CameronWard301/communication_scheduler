@@ -82,7 +82,7 @@ The following table describes the common configuration between EKS and local dep
 | integration_tests.selenium.implicitWait  | Set the selenium [implicit wait](https://www.selenium.dev/documentation/webdriver/waits/#implicit-waits) in seconds for the tests                                                                                      | 5                                                                                                                                             |
 | integration_tests.selenium.explicitWait  | Set the selenium [explicit wait](https://www.selenium.dev/documentation/webdriver/waits/#explicit-waits) in seconds for the tests                                                                                      | 10                                                                                                                                            |
 | PreferenceDefaults.GatewayTimeoutSeconds | Sets the default config map parameter for the gateway timeout. This value is only used if the config map doesn't yet exist. Go to the preferences page in the portal to learn more.                                    | 60                                                                                                                                            |
-| PreferenceDefaults.RetryPolicy           | A JSON object representing the default retry policy. This value is only used if the config map doesn't yet exist. Go to the preferences page in the web-portal to learn more.                                          | { "maximumAttempts": "100", "backoffCoefficient": 2, "initialInterval": "PT1S", "maximumInterval": "PT100S", "startToCloseTimeout": "PT10S" } |
+| PreferenceDefaults.RetryPolicy           | A JSON object representing the default retry policy. This value is only used if the config map doesn't yet exist. Go to the preferences page in the web portal to learn more.                                          | { "maximumAttempts": "100", "backoffCoefficient": 2, "initialInterval": "PT1S", "maximumInterval": "PT100S", "startToCloseTimeout": "PT10S" } |
 
 ### Secrets File
 The following section describes the secrets that need to be inserted into the `values-example-secrets.yaml` file.
@@ -160,7 +160,7 @@ Ensure you have completed the following:
     ```bash
     helm upgrade --install cs . -f ./values-eks.yaml -f ./values-example-secrets.yaml --wait --timeout=5m
     ```
-   1. The first install will fail as Temporal tries to create the elastic search index when it already exists. Delete the `es-schema` job from the cluster to complete the installation. 
+    1. The first install will fail as Temporal tries to create the elastic search index when it already exists. Delete the `es-schema` job from the cluster to complete the installation.
 3. Use a monitoring tool like [Lens](https://k8slens.dev/) to monitor the resources
 4. Follow the steps in the [integration tests project](../../integration-tests#add-using-mongodb-ui-simplest) to configure the Mock, Email and SMS gateway in the gateway database using the mongoDB UI.
     1. If using the web portal or gateway API to add the gateways. Update the ID in the mockGatewayId, emailGatewayId and smsGatewayId `values-eks.yaml` file to match the ID generated.
@@ -195,7 +195,7 @@ Ensure you have completed the following:
     2. Don't commit the new file to the repository
 8. Run `helm dependency update` to download the dependencies
 9. Create an AWS Access key for the resources to use. See [this guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) for help
-   1. The user should have permissions to read and write to the dynamodb message history table
+    1. The user should have permissions to read and write to the dynamodb message history table
 10. Use the kubectl command to create the secret within your local cluster:
     1. ```bash
        kubectl create secret generic aws-credentials --from-literal=AWS_ACCESS_KEY_ID=<your-access-key-id> --from-literal=AWS_SECRET_ACCESS_KEY=<your-secret-access-key>
@@ -227,13 +227,13 @@ kubectl rollout restart deployment/cs-auth-api deployment/cs-gateway-api deploym
 ## Deployment pipeline:
 - To automate the helm deployment, use the [GitHub Actions Readme](../../.github/workflows).
 - Each value in the secrets file should be set as a secret in the GitHub repository and passed as an argument to the helm command
-  - E.g. 
+    - E.g.
   ```bash
   helm upgrade cs ./deployment/helm/ --install --dry-run --namespace=default
     --values=./deployment/helm/values-eks.yaml
     --set "env.temporal.password=${{ secrets.TEMPORAL_DB_PASSWORD }}"
   ```
-  - Where secrets.TEMPORAL_DB_PASSWORD is a secret in the GitHub repository
+    - Where secrets.TEMPORAL_DB_PASSWORD is a secret in the GitHub repository
 
 ## Next Steps:
 - Finish configuring temporal by following the steps in the [deployment readme](../README.md)
