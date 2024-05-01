@@ -39,12 +39,12 @@ In summary:
 - Terragrunt uses the [Terraform modules](../terraform) provided to deploy the cloud resources to different AWS accounts, regions and environments.
 - The `_envcommon` directory contains the common module configuration for all environments.
 - Which AWS account, region and environment resources are deployed to is determined by the folder structure in this directory. It uses the hierarchy: environment -> account -> region -> modules.
-  - The first folder is the account configuration, some users might have separate AWS accounts to separate environments.  It contains the `account.hcl` file specifying the account id and the credentials profile to use.
-  - The next folder is the region within the account to deploy the resources to e.g. eu-west-1, us-east-1. It contains the `region.hcl` file specifying the region to deploy to.
-  - The last folder contains all the modules to deploy and which development environment the modules belong to in the `env.hcl` file.
-    - Each module directory contains a `terragrunt.hcl` file that specifies the source of the module and any configuration variables to pass to the module that are not included in the common configuration.
+    - The first folder is the account configuration, some users might have separate AWS accounts to separate environments.  It contains the `account.hcl` file specifying the account id and the credentials profile to use.
+    - The next folder is the region within the account to deploy the resources to e.g. eu-west-1, us-east-1. It contains the `region.hcl` file specifying the region to deploy to.
+    - The last folder contains all the modules to deploy and which development environment the modules belong to in the `env.hcl` file.
+        - Each module directory contains a `terragrunt.hcl` file that specifies the source of the module and any configuration variables to pass to the module that are not included in the common configuration.
 - If you want to deploy to a new region within the dev account, simply create a new folder with the new region name and the `region.hcl` file.
-  - Within new region directory, create an `env.hcl` file and create a "modules" directory. Then copy the modules you want to deploy to that region and configure any input variables.
+    - Within new region directory, create an `env.hcl` file and create a "modules" directory. Then copy the modules you want to deploy to that region and configure any input variables.
 - Terragrunt automatically works out the dependencies between modules and deploys them in the correct order.
 > [!NOTE]  
 > It is not possible to run a plan command before deploying all resources. You could run a plan command and deploy each module individually if you want to see the changes before deploying.
@@ -56,22 +56,22 @@ In summary:
 
 ### AWS pre-requisites:
 1. An [AWS account](https://aws.amazon.com/resources/create-account/) with the necessary permissions to create resources.
-   1. See [this guide](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html#cli-configure-files-format) on how to get your credentials and store them in the correct format.
+    1. See [this guide](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html#cli-configure-files-format) on how to get your credentials and store them in the correct format.
 2. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) installed and configured with the necessary credentials.
-   1. Ensure your public and private keys are stored in the `~/.aws/credentials` file under a profile called `[saml]` for the Terragrunt project to access them.
+    1. Ensure your public and private keys are stored in the `~/.aws/credentials` file under a profile called `[saml]` for the Terragrunt project to access them.
 3. Remote state storage - an S3 bucket and DynamoDB table to store the Terraform state (Recommended).
-   1. Deploy using the [tf-states module provided](../terraform/tf-states). Otherwise, deploy manually using the following steps.
-      1. This stores your Terraform state files in an S3 bucket and uses a DynamoDB table to lock the state files to prevent developers from making concurrent changes. 
-      2. [Create a new S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html) called `terraform-state-<account_name>-<account_id>-<aws_region>` replacing the name, id and region with the appropriate values as configured account and region hcl files.
-      3. [Create a new DynamoDB table](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/getting-started-step-1.html) called `terraform-locks`.
-      4. To change the name of the S3 bucket and DynamoDB table to use existing buckets, tables, or to use a local state configuration, update the remote state configuration block in the [terragrunt.hcl](terragrunt.hcl) file.
+    1. Deploy using the [tf-states module provided](../terraform/tf-states). Otherwise, deploy manually using the following steps.
+        1. This stores your Terraform state files in an S3 bucket and uses a DynamoDB table to lock the state files to prevent developers from making concurrent changes.
+        2. [Create a new S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html) called `terraform-state-<account_name>-<account_id>-<aws_region>` replacing the name, id and region with the appropriate values as configured account and region hcl files.
+        3. [Create a new DynamoDB table](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/getting-started-step-1.html) called `terraform-locks`.
+        4. To change the name of the S3 bucket and DynamoDB table to use existing buckets, tables, or to use a local state configuration, update the remote state configuration block in the [terragrunt.hcl](terragrunt.hcl) file.
 
 ### MongoDB pre-requisites:
 1. A [MongoDB Atlas account](https://www.mongodb.com/cloud/atlas) with the necessary permissions to create a cluster.
 2. Create public and private keys within an organisation [using these instructions](https://www.mongodb.com/docs/atlas/configure-api-access/#grant-programmatic-access-to-an-organization).
-   1. You may need to create an organisation if you do not have one.
-   2. Make sure the keys generated have the `Ogranization Member` role.
-   3. Note down the public and private keys and see the configuration section below on how to use them.
+    1. You may need to create an organisation if you do not have one.
+    2. Make sure the keys generated have the `Ogranization Member` role.
+    3. Note down the public and private keys and see the configuration section below on how to use them.
 
 ## Configuration.
 1. **Set the MongoDB Atlas and AWS credentials as described in the configuration section below.**
@@ -81,31 +81,31 @@ In summary:
 ### MongoDB Atlas Authentication
 There are two ways to set the MongoDB Atlas credentials, using a variable file or environment variables
 - Using a variable file
-  - In the `/dev/eu-west-1/modules/gateway-db/` directory create a `terraform.tfvars` file.
-  - Add the following content to the file and replace the placeholders with the actual values retrieved from the pre-requisites section:
-    ```hcl
-    mongo_private_key = "<private_key>" 
-    mongo_public_key = "<public_key>"
-    ```
+    - In the `/dev/eu-west-1/modules/gateway-db/` directory create a `terraform.tfvars` file.
+    - Add the following content to the file and replace the placeholders with the actual values retrieved from the pre-requisites section:
+      ```hcl
+      mongo_private_key = "<private_key>" 
+      mongo_public_key = "<public_key>"
+      ```
 - Using environment variables. Set these variables for CI/CD pipelines.
-  - Set the following environment variables in your terminal:
-    ```bash
-    export TF_VAR_mongo_private_key="<private_key>"
-    export TF_VAR_mongo_public_key="<public_key>"
-    ```
+    - Set the following environment variables in your terminal:
+      ```bash
+      export TF_VAR_mongo_private_key="<private_key>"
+      export TF_VAR_mongo_public_key="<public_key>"
+      ```
 
 ### AWS Authentication
 An AWS credential file should be used for local deployments and environment variables for CI/CD pipelines.
 - Using a credential file:
-  - Your AWS credentials should be stored in the `~/.aws/credentials` file under a profile called `[saml]`. Ensure you have the correct credentials stored in this file.
-  - See [this guide](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html#cli-configure-files-format) for help
+    - Your AWS credentials should be stored in the `~/.aws/credentials` file under a profile called `[saml]`. Ensure you have the correct credentials stored in this file.
+    - See [this guide](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html#cli-configure-files-format) for help
 - Using environment variables. Set these variables for CI/CD pipelines.
-  - Set the following environment variables in your terminal, replacing the placeholders with the actual values retrieved from the pre-requisites section:
-    ```bash
-    export AWS_ACCESS_KEY_ID="<access_key>"
-    export AWS_SECRET_ACCESS_KEY="<secret_key>"
-    ```
-    
+    - Set the following environment variables in your terminal, replacing the placeholders with the actual values retrieved from the pre-requisites section:
+      ```bash
+      export AWS_ACCESS_KEY_ID="<access_key>"
+      export AWS_SECRET_ACCESS_KEY="<secret_key>"
+      ```
+
 ### Temporal Database Credentials
 The Temporal database credentials can be set using a variable file or environment variables for CI/CD pipelines. You can pick any username and password you want.
 - Using a variable file
@@ -121,7 +121,7 @@ The Temporal database credentials can be set using a variable file or environmen
       export TF_VAR_temporal_db_username ="<password>"
       export TF_VAR_temporal_db_password ="<username>"
       ```
-      
+
 ### Module Configurations:
 This section describes the optional configurations you can set for each module. The _envcommon directory contains the common configuration for all cloud accounts and environments.
 Further configurations can be set in the [Terraform modules](../terraform) provided.
@@ -151,7 +151,7 @@ Ensure you have completed the pre-requisites and configuration steps above befor
 2. Complete the pre-requisites and configuration steps above.
 3. Navigate to the `deployment/terragrunt/dev/eu-west-1/modules` directory.
 4. Run `terragrunt run-all apply` to deploy all the modules. Terragrunt will automatically deploy the modules in the correct order.
-   1. Once you have deployed the resources, you can use `terragrunt run-all plan` to see the changes before applying them next time if needed.
+    1. Once you have deployed the resources, you can use `terragrunt run-all plan` to see the changes before applying them next time if needed.
 5. Type `yes` when prompted to confirm the deployment.
 6. To destroy all the resources, run `terragrunt run-all destroy` and type `yes` when prompted to confirm the destruction.
 
@@ -162,7 +162,7 @@ I recommend this only when troubleshooting, most of the time you should apply al
 3. Navigate to the `deployment/terragrunt/dev/eu-west-1/modules` directory.
 4. Navigate into the module you want to deploy such as `cd networking`.
 5. Run `terragrunt apply` to deploy the module. Terragrunt will automatically deploy the module.
-   1. Once you have deployed the resources, you can use `terragrunt plan` to see the changes before applying them next time if needed
+    1. Once you have deployed the resources, you can use `terragrunt plan` to see the changes before applying them next time if needed
 6. Type `yes` when prompted to confirm the deployment.
 7. To destroy the resources, run `terragrunt destroy` and type `yes` when prompted to confirm the destruction.
 

@@ -122,7 +122,7 @@ The gateway receives a message containing the user ID, run ID. It validates the 
 15. [Communication History (DynamoDB) Schema](Database/CommunicationHistoryDbSchema.puml)  
 - The schema consists of the message hash being the primary key which is generated from the message contents and the workflow run ID.
 - This distinguishes between different messages and prevents duplicate messages.
-   - If the message content or the run ID is different than a different message hash is generated resulting in a new message being sent.
+   - If the message content or the run ID changes, then a different message hash is generated resulting in a new message being sent.
 - The gateways use the history database to check if they have previously sent the message.
 - The database also holds the run ID and the user ID for debugging purposes.
 - If you need to see further details, use the run ID and the user ID to find the workflow within Temporal.  
