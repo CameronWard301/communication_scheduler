@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.cameronward301.communication_scheduler</groupId>
     <artifactId>mock-gateway</artifactId>
-    <version>0.1.2</version>
+    <version>1.0.0</version>
     <name>mock-gateway</name>
     <description>mock-gateway</description>
     <properties>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>io.github.cameronward301.communication_scheduler</groupId>
             <artifactId>gateway-library</artifactId>
-            <version>0.3.13</version>
+            <version>1.0.1</version>
         </dependency>
 
         <dependency>

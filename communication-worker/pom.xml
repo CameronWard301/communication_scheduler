@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.CameronWard301.communication_scheduler.worker</groupId>
     <artifactId>communication_worker</artifactId>
-    <version>0.7.3</version>
+    <version>1.0.0</version>
     <name>communication_worker</name>
     <description>communication_worker</description>
     <properties>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>io.github.cameronward301.communication_scheduler.workflows</groupId>
             <artifactId>communication_workflow</artifactId>
-            <version>0.18.1</version>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>

@@ -301,7 +301,7 @@ grafana:
 
 communication_worker:
   repository: cameronward/communication-worker
-  tag: latest
+  tag: 1.0.0
   logging: info
   rootLogging: info
   sslVerification: false
@@ -312,7 +312,7 @@ communication_worker:
 email_gateway:
   enabled: true
   repository: cameronward/email-gateway
-  tag: latest
+  tag: 1.0.0
   region: eu-west-1
   loggingLevel: INFO
   rootLoggingLevel: INFO
@@ -325,7 +325,7 @@ sms_gateway:
   repository: cameronward/sms-gateway
   twilioPollingInterval: 5
   maximumPollingAttempts: 10
-  tag: latest
+  tag: 1.0.0
   region: eu-west-1
   profile: ssl
   loggingLevel: INFO
@@ -334,7 +334,7 @@ sms_gateway:
 
 mock_gateway:
   repository: cameronward/mock-gateway
-  tag: latest
+  tag: 1.0.0
   rootLoggingLevel: info
   loggingLevel: info
   region: eu-west-1
@@ -343,7 +343,7 @@ mock_gateway:
 
 gateway_api:
   repository: cameronward/gateway-api
-  tag: latest
+  tag: 1.0.0
   region: eu-west-1
   loggingLevel: INFO
   verifyHostnames: false
@@ -351,7 +351,7 @@ gateway_api:
 
 preferences_api:
   repository: cameronward/preferences-api
-  tag: latest
+  tag: 1.0.0
   region: eu-west-1
   loggingLevel: INFO
   profile: ssl
@@ -362,19 +362,19 @@ auth_api:
   keyId: "communication-auth-api"
   repository: cameronward/auth-api
   tokenExpiration: 86400
-  tag: latest
+  tag: 1.0.0
   region: eu-west-1
   loggingLevel: INFO
   profile: ssl
 
 data_converter_api:
   repository: cameronward/data-converter-api
-  tag: latest
+  tag: 1.0.0
   loggingLevel: INFO
 
 schedule_api:
   repository: cameronward/schedule-api
-  tag: latest
+  tag: 1.0.0
   loggingLevel: info
   profile: ssl
   temporalNamespace: default
@@ -382,7 +382,7 @@ schedule_api:
 
 history_api:
   repository: cameronward/history-api
-  tag: latest
+  tag: 1.0.0
   loggingLevel: info
   profile: ssl
   temporalNamespace: default
@@ -390,14 +390,14 @@ history_api:
 
 web_bff:
   repository: cameronward/cs-web-portal-bff
-  tag: latest
+  tag: 1.0.0
   sslVerification: "false"
   limitPeriodSeconds: "120"
   limitNumberRequests: "1000"
 
 web_portal:
   repository: cameronward/cs-web-portal
-  tag: latest
+  tag: 1.0.0
   verifyHttps: "false"
   environment: "eks-dev"
 
@@ -407,7 +407,7 @@ integration_tests:
   enableOnSchedule: false # Setting both to true will run cause conflicts between the tests.
   cronSchedule: "0 */2 * * *" # Every 2 hours
   repository: cameronward/cs-integration-tests
-  tag: latest
+  tag: 1.0.0
   temporalNamespace: default
   kubernetesNamespace: default
   loggingLevel: INFO
