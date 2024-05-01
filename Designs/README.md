@@ -19,6 +19,7 @@ This folder contains the PlantUML design diagrams for the Communication Scheduli
   - [Communication APIs](communication-api.yaml)
   - [Reference Gateway API](reference-gateway-api.yaml)
 
+For a cost analysis of the platform, download the [Cost Analysis](Cost%20Analysis%20V2.xlsx) spreadsheet.
 
 ## Design diagrams:
 This section contains the design diagrams with explanations for the Communication Scheduling Platform created with PlantUML.
@@ -26,7 +27,7 @@ This section contains the design diagrams with explanations for the Communicatio
 ### System Context (C1):
 The system has two users. A business user manages and monitors the communications sent to customers and a customer user receives the communications by different communication channels (gateways).
 
-The gateways are the components that send messages to the customer, ensuring that a gateway only sends the same message once
+The gateways are the components that send messages to the customer, ensuring that a gateway only sends the same message once.
 
 1. [System Context Diagram:](System%20Context/SystemContextDiagram.puml)  
    ![systemContext](Images/System%20Context/SystemContextDiagram.svg)
