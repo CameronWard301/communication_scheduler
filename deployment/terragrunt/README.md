@@ -1,4 +1,8 @@
 # Terragrunt Deployment Project
+Use these instructions to deploy the cloud resources to AWS and MongoDB from your local machine. Ensure you follow the pre-requisites before proceeding.
+The section at the end of this readme talks about how automate the deployment using GitHub Actions. I recommend deploying from a local machine first before automating the deployment.  
+This project is configured to deploy resources in the AWS eu-west-1 region.
+
 <!-- TOC -->
 * [Terragrunt Deployment Project](#terragrunt-deployment-project)
   * [Resources Deployed](#resources-deployed)
