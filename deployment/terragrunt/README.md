@@ -84,8 +84,7 @@ In summary:
 
 1. An [AWS account](https://aws.amazon.com/resources/create-account/) with the necessary permissions to create
    resources.
-    1.
-    See [this guide](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html#cli-configure-files-format)
+    1. See [this guide](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html#cli-configure-files-format)
     on how to get your credentials and store them in the correct format.
 2. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) installed and configured with the
    necessary credentials.
