@@ -13,16 +13,20 @@
 <!-- TOC -->
 
 This is an API built with Spring Boot to generate JWT tokens to authenticate with the following APIs:
+
 - [History API](../history-api)
 - [Gateway API](../gateway-api)
 - [Schedule API](../schedule-api)
 - [Preferences API](../preferences-api)
 
 Use this as a reference to integrate into your identity provider (IdP).  
-Right now the Auth API will generate a JWT token for any request. Therefore, any user who was EKS access can use this API to generate a JWT token to access the other APIs.
+Right now the Auth API will generate a JWT token for any request. Therefore, any user who was EKS access can use this
+API to generate a JWT token to access the other APIs.
 
 ## API Specification
-See [swagger specification](https://app.swaggerhub.com/apis/CameronWard301/Communication_APIs/1.0.3#/Authentication%20API) for the exposed endpoints.
+
+See [swagger specification](https://app.swaggerhub.com/apis/CameronWard301/Communication_APIs/1.0.3#/Authentication%20API)
+for the exposed endpoints.
 
 ## Getting Started
 
@@ -37,14 +41,17 @@ Ensure you have the following installed and configured locally:
 - [Open SSL](https://www.openssl.org/source/)
 
 ### Configuration
-This section describes the configuration options available for the auth API via environment variables and spring profiles
+
+This section describes the configuration options available for the auth API via environment variables and spring
+profiles
 
 Generating the public and private keys for the Auth API requires the use of OpenSSL.
+
 - `openssl genrsa -out ./private.key 4096`
 - `openssl rsa -in private.key -pubout -outform PEM -out public.key`
 - `openssl pkcs8 -topk8 -inform PEM -in private.key -out private_key.pem -nocrypt`
-- This will generate a private_key.pem file and a public.key file. Use the contents of these to set the environment variable set out below
-
+- This will generate a private_key.pem file and a public.key file. Use the contents of these to set the environment
+  variable set out below
 
 
 - Run the project with the `ssl` profile to enable SSL
@@ -53,7 +60,8 @@ Generating the public and private keys for the Auth API requires the use of Open
         - Follow prompts to set the keystore password.
         - Place the generated file in src/main/resources/keystore
     - If you don't want to place the file in the resources folder:
-        - Run `base64 -e -i .\auth-api.p12 -o auth-api-base64.txt` to encode the keystore file for use in kubernetes secrets that will set the `AUTH_API_SSL_KEY_STORE` to be the data in the text file you've just generated.
+        - Run `base64 -e -i .\auth-api.p12 -o auth-api-base64.txt` to encode the keystore file for use in kubernetes
+          secrets that will set the `AUTH_API_SSL_KEY_STORE` to be the data in the text file you've just generated.
 
 | Environment Variable            | Description                                                                                                                                                             | Default Value                   | Required               |
 |---------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|------------------------|
@@ -65,7 +73,6 @@ Generating the public and private keys for the Auth API requires the use of Open
 | AUTH_API_PORT                   | The port number that the server will run on                                                                                                                             | 8080                            | N                      |
 | LOGGING_LEVEL                   | The root [logging level](https://docs.spring.io/spring-boot/docs/2.1.13.RELEASE/reference/html/boot-features-logging.html#boot-features-logging-format) for the project | info                            | N                      |
 
-
 ### Installing & Running Locally
 
 Follow the instructions below to get a development environment running::
@@ -74,13 +81,15 @@ Follow the instructions below to get a development environment running::
 2. Navigate to the project directory
 3. Run `mvn clean install` to build and test the project
 4. Run `mvn spring-boot:run` to start the server
-    - Run `mvn spring-boot:run -Dspring-boot.run.profiles=ssl` to start the server with SSL enabled (requires extra configuration)
+    - Run `mvn spring-boot:run -Dspring-boot.run.profiles=ssl` to start the server with SSL enabled (requires extra
+      configuration)
 
 ## Running the tests
 
 - To run the unit tests, run `mvn test` in the project directory
 - To run the integration tests see the [Integration Tests Project](../integration-tests)
-  The tests for the auth API are part of the History, Gateway, Schedule and Preferences integration tests. See these projects for the required filter annotation needed to run them in the integration test.
+  The tests for the auth API are part of the History, Gateway, Schedule and Preferences integration tests. See these
+  projects for the required filter annotation needed to run them in the integration test.
 
 ## Deployment
 
@@ -89,6 +98,7 @@ Follow the instructions below to get a development environment running::
 - See [helm deployment](../deployment/helm) to deploy the Auth API to a kubernetes cluster.
 
 ## Built With
+
 - [Spring Boot](https://spring.io/projects/spring-boot)
 - [Maven](https://maven.apache.org/)
 - [Nimbus JOSE + JWT (JWK)](https://connect2id.com/products/nimbus-jose-jwt/examples/jwk-generation)

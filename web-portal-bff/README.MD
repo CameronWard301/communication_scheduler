@@ -13,10 +13,11 @@
   * [Built With](#built-with)
 <!-- TOC -->
 
-This is a middleware API built with Node.js with Typescript and Express to communicate with the backend services (gateway-api, schedule-api, history-api, auth-api, preferences-api and Grafana) and the [web-portal](../web-portal).
-
+This is a middleware API built with Node.js with Typescript and Express to communicate with the backend services (
+gateway-api, schedule-api, history-api, auth-api, preferences-api and Grafana) and the [web-portal](../web-portal).
 
 ## API Specification
+
 See [swagger specification](src/swagger_output.json) for the exposed endpoints.
 
 ## Getting Started
@@ -30,7 +31,9 @@ Ensure you have the following installed and configured locally:
 - [Node 20.11.1 or newer](https://nodejs.org/en)
 - [OpenSSL](https://www.openssl.org/)
 
-See [helm-deployment](../deployment/helm) to deploy the following components to a kubernetes cluster if not running locally:
+See [helm-deployment](../deployment/helm) to deploy the following components to a kubernetes cluster if not running
+locally:
+
 - [Auth API](../auth-api) running locally or in a development environment
 - [Gateway API](../gateway-api) running locally or in a development environment
 - [Schedule API](../schedule-api) running locally or in a development environment
@@ -38,19 +41,21 @@ See [helm-deployment](../deployment/helm) to deploy the following components to 
 - [Preferences API](../preferences-api) running locally or in a development environment
 - Grafana running locally or in a development environment (helm deployment only)
 
-
 ### Configuration
 
 This section describes the configuration options available for the Web Portal BFF API via environment variables
+
 - Run the project with the `HTTPS_ENABLED` environment variable set to true to enable SSL
-- To generate self-signed certificate files for development purposes, run the following command in the project directory:
+- To generate self-signed certificate files for development purposes, run the following command in the project
+  directory:
     - `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./private.key -out public.crt`
         - Follow prompts to enter the certificate information.
         - This will create a private.key file and a public.crt file in the project directory.
     - Use the contents of these files in `PRIVATE_KEY` and `CERTIFICATE` environment variables.
 
 > [!CAUTION]
-> Setting SSL_VERIFICATION to false or ALLOW_ORIGIN to "*" should NOT be used in a live production environment, it should only be used when testing with self-signed SSL certificates.
+> Setting SSL_VERIFICATION to false or ALLOW_ORIGIN to "*" should NOT be used in a live production environment, it
+> should only be used when testing with self-signed SSL certificates.
 
 | Environment Variable  | Description                                                                                                                          | Default Value                       | Required         |
 |-----------------------|--------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|------------------|
@@ -69,16 +74,14 @@ This section describes the configuration options available for the Web Portal BF
 | LIMIT_NUMBER_REQUESTS | Sets the number of requests allowed in the given period for the rate limiter. I.e. 1000 means 1000 requests can be made in 2 minutes | 1000                                | Y                |
 | SSL_VERIFICATION      | If using self signed certificates for SSL, set this to false for **non production environments only** for development                | true                                | N                |
 
-
 ### Installing & Running Locally
- 
+
 Follow the instructions below to get a development environment running:
 
 1. Clone the repository
 2. Navigate to the project directory
 3. Run `npm i` to install the project dependencies
 4. Run `npm run dev` to start the server
-
 
 ## Running the tests
 
@@ -93,10 +96,18 @@ Follow the instructions below to get a development environment running:
 - See [helm deployment](../deployment/helm) to deploy the Web Portal BFF API to a kubernetes cluster.
 
 ## Generate Swagger API Documentation
-This project uses the [Swagger Autogen](https://swagger-autogen.github.io/docs/getting-started/quick-start/) package to generate the swagger documentation.
- - Once an update has been made to the API documentation, run `npm run swagger-autogen` to generate the updated swagger documentation.
-   - The output file is located in `src/swagger_output.json` and can be accessed by visiting [`http://localhost:9090/api-docs`](http://localhost:9090/api-docs) or [`https://localhost:9090/api-docs`](https://localhost:9090/api-docs) when the server is running.
+
+This project uses the [Swagger Autogen](https://swagger-autogen.github.io/docs/getting-started/quick-start/) package to
+generate the swagger documentation.
+
+- Once an update has been made to the API documentation, run `npm run swagger-autogen` to generate the updated swagger
+  documentation.
+    - The output file is located in `src/swagger_output.json` and can be accessed by
+      visiting [`http://localhost:9090/api-docs`](http://localhost:9090/api-docs)
+      or [`https://localhost:9090/api-docs`](https://localhost:9090/api-docs) when the server is running.
+
 ## Built With
+
 - [NodeJS](https://nodejs.org/en)
 - [Express](https://expressjs.com/)
 - [Jest](https://jestjs.io/)
