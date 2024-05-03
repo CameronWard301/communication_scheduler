@@ -15,7 +15,9 @@
 This is an API built with Spring Boot to perform CRUD operations on the gateway database.
 
 ## API Specification
-See [swagger specification](https://app.swaggerhub.com/apis/CameronWard301/Communication_APIs/1.0.3#/Communication%20Gateway%20API) for the exposed endpoints.
+
+See [swagger specification](https://app.swaggerhub.com/apis/CameronWard301/Communication_APIs/1.0.3#/Communication%20Gateway%20API)
+for the exposed endpoints.
 
 ## Getting Started
 
@@ -28,22 +30,28 @@ Ensure you have the following installed and configured locally:
 - [Java 21](https://www.oracle.com/java/technologies/downloads/#java21)
 - [Maven 3.8.7 or newer](https://maven.apache.org/download.cgi)
 - [Auth API](../auth-api) running locally or in a development environment
-- [MongoDB Collection](https://www.mongodb.com/docs/atlas/getting-started/) running locally or in an Atlas free tier cluster
-  - Deploy one using the [Terragrunt library](../deployment/terragrunt)
+- [MongoDB Collection](https://www.mongodb.com/docs/atlas/getting-started/) running locally or in an Atlas free tier
+  cluster
+    - Deploy one using the [Terragrunt library](../deployment/terragrunt)
 
 ### Configuration
 
-This section describes the configuration options available for the gateway API via environment variables and spring profiles
+This section describes the configuration options available for the gateway API via environment variables and spring
+profiles
+
 - Run the project with the `ssl` profile to enable SSL
 - To generate a self-signed keystore file for development purposes, run the following command in the project directory:
     - `keytool -genkeypair -alias gateway-api -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore gateway-api.p12 -validity 3650`
         - Follow prompts to set the keystore password.
         - Place the generated file in src/main/resources/keystore
     - If you don't want to place the file in the resources folder:
-        - Run `base64 -e -i .\gateway-api.p12 -o gateway-api-base64.txt` to encode the keystore file for use in kubernetes secrets that will set the `GATEWAY_API_SSL_KEY_STORE` to be the data in the text file you've just generated.
+        - Run `base64 -e -i .\gateway-api.p12 -o gateway-api-base64.txt` to encode the keystore file for use in
+          kubernetes secrets that will set the `GATEWAY_API_SSL_KEY_STORE` to be the data in the text file you've just
+          generated.
 
 > [!CAUTION]
-> Setting VERIFY_HOSTNAMES to false should NOT be used in a live production environment, it should only be used when testing with self-signed SSL certificates.
+> Setting VERIFY_HOSTNAMES to false should NOT be used in a live production environment, it should only be used when
+> testing with self-signed SSL certificates.
 
 | Environment Variable               | Description                                                                                                                                                             | Default Value                                      | Required                       |
 |------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------|--------------------------------| 
@@ -55,16 +63,16 @@ This section describes the configuration options available for the gateway API v
 | VERIFY_HOSTNAMES                   | If using self signed certificates for SSL, set this to false for **non production environments only** for development                                                   | true                                               | N                              |
 | LOGGING_LEVEL                      | The root [logging level](https://docs.spring.io/spring-boot/docs/2.1.13.RELEASE/reference/html/boot-features-logging.html#boot-features-logging-format) for the project | info                                               | N                              |
 
-
-
 ### Installing & Running Locally
 
 Follow the instructions below to get a development environment running:
+
 1. Clone the repository
 2. Navigate to the project directory
 3. Run `mvn clean install` to build and test the project
 4. Run `mvn spring-boot:run` to start the server
-    - Run `mvn spring-boot:run -Dspring-boot.run.profiles=ssl` to start the server with SSL enabled (requires extra configuration)
+    - Run `mvn spring-boot:run -Dspring-boot.run.profiles=ssl` to start the server with SSL enabled (requires extra
+      configuration)
 
 ## Running the tests
 
@@ -79,6 +87,7 @@ Follow the instructions below to get a development environment running:
 - See [helm deployment](../deployment/helm) to deploy the Gateway API to a kubernetes cluster.
 
 ## Built With
+
 - [Spring Boot](https://spring.io/projects/spring-boot)
 - [Maven](https://maven.apache.org/)
 - [MongoDB Spring JPA](https://spring.io/guides/gs/accessing-data-mongodb)

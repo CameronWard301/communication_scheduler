@@ -1,4 +1,5 @@
 # Helm Deployment
+
 <!-- TOC -->
 * [Helm Deployment](#helm-deployment)
   * [Gateways:](#gateways)
@@ -24,27 +25,36 @@ The application can either be deployed in a local Kubernetes cluster or in a clo
 > [!CAUTION]
 > * Do not use the example-secrets.yaml file in a production environment. It is only for demonstration purposes.
 > * For production ensure that CORS, CSRF and verify SSL/hostnames are set to true
-> * This configuration uses self-signed certificates for development purposes. In production, use a certificate from a trusted CA.
+> * This configuration uses self-signed certificates for development purposes. In production, use a certificate from a
+    trusted CA.
 
 ## Gateways:
-* By default, the sms and email gateways are disabled. To enable them, set the `enabled` flag to `true` in the `values.yaml` file.
+
+* By default, the sms and email gateways are disabled. To enable them, set the `enabled` flag to `true` in
+  the `values.yaml` file.
 * Set the secrets needed in the `values-example-secrets.yaml` file
-* Use the [email-gateway](../../email-gateway) and [sms-gateway](../../sms-gateway) projects to learn more about configuration needed
+* Use the [email-gateway](../../email-gateway) and [sms-gateway](../../sms-gateway) projects to learn more about
+  configuration needed
 
 ## Common Configuration:
+
 This section describes the configuration for both local and cloud deployment.
+
 * All the API components allow you to set the repository and tag for the image to use.
     * This allows you to deploy your own versions and test them in the cluster
 * Components also allow you to set the logging level for the application
     * This can be set to `debug`, `info`, `warn`, `error` or `fatal`
 * Components that have the `profile` configuration allow you to set the Spring profile to use
     * This can be set to `default`, or `ssl` for the components that you want to use SSL for
-* `corsEnabled` and `csrfEnabled` allow you to enable or disable CORS and CSRF protection. By default, this is set to false for development.
-* `verifyHostnames` allows you to enable or disable hostname verification for SSL. By default, this is set to false for development.
-
+* `corsEnabled` and `csrfEnabled` allow you to enable or disable CORS and CSRF protection. By default, this is set to
+  false for development.
+* `verifyHostnames` allows you to enable or disable hostname verification for SSL. By default, this is set to false for
+  development.
 
 ### Values Files
-The following table describes the common configuration between EKS and local deployments that you may wish to change in the values-eks.yaml and values-local.yaml files.
+
+The following table describes the common configuration between EKS and local deployments that you may wish to change in
+the values-eks.yaml and values-local.yaml files.
 
 | Configuration parameter/block            | Description                                                                                                                                                                                                            | Default Value                                                                                                                                 |
 |------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
@@ -85,7 +95,9 @@ The following table describes the common configuration between EKS and local dep
 | PreferenceDefaults.RetryPolicy           | A JSON object representing the default retry policy. This value is only used if the config map doesn't yet exist. Go to the preferences page in the web portal to learn more.                                          | { "maximumAttempts": "100", "backoffCoefficient": 2, "initialInterval": "PT1S", "maximumInterval": "PT100S", "startToCloseTimeout": "PT10S" } |
 
 ### Secrets File
+
 The following section describes the secrets that need to be inserted into the `values-example-secrets.yaml` file.
+
 1. Generate the secrets using the [Makefile](certs/README.md) in the certs directory
 2. The new certificates will be placed in the certs directory
 3. Fill in the placeholders with the correct values in the `values-example-secrets.yaml` file
@@ -109,10 +121,11 @@ The table below describes the other secrets that need to be set in the `values-e
 | env.gateway_api.mongo.databaseName              | The database name of the mongo DB. You shouldn't have to change this if you deployed using Terragrunt                             | communication-scheduling-platform |
 | env.gateway_api.mongo.connectionString          | The gateway API connection string. See [MongoDB Connection Strings](#mongodb-connection-strings)                                  |                                   |
 
-
 ### MongoDB Connection Strings:
+
 Generate MongoDB connection strings for use in the worker and gateway api, follow these steps:  
 You must have completed the [Terragrunt](../terragrunt) deployment first.
+
 1. Go to the [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) console
 2. Go to the CSP project
 3. In the left hand menu, select `Database Access` under security
@@ -125,9 +138,11 @@ You must have completed the [Terragrunt](../terragrunt) deployment first.
 7. Note down the connection string and replace the password with the password you set for the users.
 
 ## Cloud EKS Deployment
+
 Use this section to deploy to an AWS EKS cluster from your local machine.
 
 ### EKS Value configuration:
+
 This section describes the settings in the `values-eks.yaml` file that for the EKS deployment.
 
 | Configuration Parameter                                                                                      | Description                                                                                                                                                                                                                                                                                                                                                            | Default Value (if any) |
@@ -138,10 +153,10 @@ This section describes the settings in the `values-eks.yaml` file that for the E
 | temporal.server.config.persistence.visibility.sql.host                                                       | Change this value to be the host of your RDS instance deployed through the [Terragrunt project](../terragrunt). You can find the host string by logging into the AWS console and looking at the RDS details. See [this guide](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.Connect.html#CHAP_CommonTasks.Connect.EndpointAndPort) for help. |                        |
 | temporal.casandra<br/>temporal.mysql<br/>temporal.PostgreSQL<br/>temporal.grafana<br/>temporal.elasticsearch | These are all set to false as they're not needed or replaced by this helm charts own configuration E.g. grafana.                                                                                                                                                                                                                                                       | enabled: false         |
 
-
-
 ### Prerequisites
+
 Ensure you have completed the following:
+
 1. [Install helm](https://helm.sh/docs/intro/install/) on your local machine
 2. [Install kubectl](https://kubernetes.io/docs/tasks/tools/) on your local machine
 3. Clone this repository to your local machine
@@ -155,25 +170,33 @@ Ensure you have completed the following:
 9. Run `helm dependency update` to download the dependencies
 
 ### Deploying the resources:
+
 1. Complete the eks deployment prerequisites.
 2. Run the following command to deploy the resources:
     ```bash
     helm upgrade --install cs . -f ./values-eks.yaml -f ./values-example-secrets.yaml --wait --timeout=5m
     ```
-    1. The first install will fail as Temporal tries to create the elastic search index when it already exists. Delete the `es-schema` job from the cluster to complete the installation.
+    1. The first install will fail as Temporal tries to create the elastic search index when it already exists. Delete
+       the `es-schema` job from the cluster to complete the installation.
 3. Use a monitoring tool like [Lens](https://k8slens.dev/) to monitor the resources
-4. Follow the steps in the [integration tests project](../../integration-tests#add-using-mongodb-ui-simplest) to configure the Mock, Email and SMS gateway in the gateway database using the mongoDB UI.
-    1. If using the web portal or gateway API to add the gateways. Update the ID in the mockGatewayId, emailGatewayId and smsGatewayId `values-eks.yaml` file to match the ID generated.
-5. Optionally, enable the integration testing by setting the `enableOnUpdate` or `enableOnSchedule` flag to `true` in the `values-eks.yaml` file
+4. Follow the steps in the [integration tests project](../../integration-tests#add-using-mongodb-ui-simplest) to
+   configure the Mock, Email and SMS gateway in the gateway database using the mongoDB UI.
+    1. If using the web portal or gateway API to add the gateways. Update the ID in the mockGatewayId, emailGatewayId
+       and smsGatewayId `values-eks.yaml` file to match the ID generated.
+5. Optionally, enable the integration testing by setting the `enableOnUpdate` or `enableOnSchedule` flag to `true` in
+   the `values-eks.yaml` file
     * Don't enable both flags at the same time to prevent concurrent tests
     * You will need to increase the --timeout value to be 20 minutes if enableOnUpdate is enabled.
 6. Finish configuring temporal by following the steps in the [deployment readme](../README.md)
 
 ## Local deployment:
+
 Use this section to deploy the application to a local Kubernetes cluster.  
-The main difference between a local deployment and the EKS deployment is that a local cassandra and elasticsearch instances are also deployed to the cluster for Temporal to connect to.
+The main difference between a local deployment and the EKS deployment is that a local cassandra and elasticsearch
+instances are also deployed to the cluster for Temporal to connect to.
 
 ### Local Value configuration:
+
 This section describes the settings in the `values-local.yaml` file that are specific to the local deployment.
 
 | Configuration Parameter                                     | Description                                                                                                      | Default Value (if any) |
@@ -183,7 +206,9 @@ This section describes the settings in the `values-local.yaml` file that are spe
 | temporal.mysql<br/>temporal.PostgreSQL<br/>temporal.grafana | These are all set to false as they're not needed or replaced by this helm charts own configuration E.g. grafana. | enabled: false         |
 
 ### Prerequisites
+
 Ensure you have completed the following:
+
 1. [Install helm](https://helm.sh/docs/intro/install/) on your local machine
 2. [Install kubectl](https://kubernetes.io/docs/tasks/tools/) on your local machine
 3. Clone this repository to your local machine
@@ -194,7 +219,8 @@ Ensure you have completed the following:
     1. Use this file as an example to create your own secrets file
     2. Don't commit the new file to the repository
 8. Run `helm dependency update` to download the dependencies
-9. Create an AWS Access key for the resources to use. See [this guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) for help
+9. Create an AWS Access key for the resources to use.
+   See [this guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) for help
     1. The user should have permissions to read and write to the dynamodb message history table
 10. Use the kubectl command to create the secret within your local cluster:
     1. ```bash
@@ -203,30 +229,38 @@ Ensure you have completed the following:
     2. This secret is not managed by the helm deployment to prevent it from being overridden if its updated.
 
 ### Deploying the resources:
+
 1. Complete the local deployment prerequisites.
 2. Run the following command to deploy the resources:
     ```bash
     helm upgrade --install cs . -f ./values-local.yaml -f ./values-example-secrets.yaml --wait --timeout=20m
     ```
-    1. The first install will fail as Temporal tries to create the elastic search index when it already exists. Delete the `es-schema` job from the cluster to complete the installation.
+    1. The first install will fail as Temporal tries to create the elastic search index when it already exists. Delete
+       the `es-schema` job from the cluster to complete the installation.
 3. Use a monitoring tool like [Lens](https://k8slens.dev/) to monitor the resources
-4. Follow the steps in the [integration tests project](../../integration-tests#add-using-mongodb-ui-simplest) to configure the Mock, Email and SMS gateway in the gateway database using the mongoDB UI.
-    1. If using the web portal or gateway API to add the gateways. Update the ID in the mockGatewayId, emailGatewayId and smsGatewayId `values-local.yaml` file to match the ID generated.
-5. Optionally, enable the integration testing by setting the `enableOnUpdate` or `enableOnSchedule` flag to `true` in the `values-local.yaml` file
+4. Follow the steps in the [integration tests project](../../integration-tests#add-using-mongodb-ui-simplest) to
+   configure the Mock, Email and SMS gateway in the gateway database using the mongoDB UI.
+    1. If using the web portal or gateway API to add the gateways. Update the ID in the mockGatewayId, emailGatewayId
+       and smsGatewayId `values-local.yaml` file to match the ID generated.
+5. Optionally, enable the integration testing by setting the `enableOnUpdate` or `enableOnSchedule` flag to `true` in
+   the `values-local.yaml` file
     * Don't enable both flags at the same time to prevent concurrent tests
 6. Finish configuring temporal by following the steps in the [deployment readme](../README.md)
 
-
 ## Updating the resources:
+
 If a new image is deployed, you can restart the deployments by running the following command.
 Adjust the command to include the deployments you want to restart.
+
 ```bash
 kubectl rollout restart deployment/cs-auth-api deployment/cs-gateway-api deployment/cs-communication-worker deployment/cs-data-converter-api deployment/cs-email-gateway deployment/cs-history-api deployment/cs-mock-gateway deployment/cs-preferences-api deployment/cs-schedule-api deployment/cs-sms-gateway deployment/cs-web-portal deployment/cs-web-portal-bff-api
 ```  
 
 ## Deployment pipeline:
+
 - To automate the helm deployment, use the [GitHub Actions Readme](../../.github/workflows).
-- Each value in the secrets file should be set as a secret in the GitHub repository and passed as an argument to the helm command
+- Each value in the secrets file should be set as a secret in the GitHub repository and passed as an argument to the
+  helm command
     - E.g.
   ```bash
   helm upgrade cs ./deployment/helm/ --install --dry-run --namespace=default
@@ -236,5 +270,6 @@ kubectl rollout restart deployment/cs-auth-api deployment/cs-gateway-api deploym
     - Where secrets.TEMPORAL_DB_PASSWORD is a secret in the GitHub repository
 
 ## Next Steps:
+
 - Finish configuring temporal by following the steps in the [deployment readme](../README.md)
 
